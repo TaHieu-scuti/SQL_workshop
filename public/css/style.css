@@ -5759,3 +5759,7 @@ a.guest-on i {
     right: 0;
     left: auto;
 }
+
+.csv-file > div > div > div,span {
+    color: #797979;
+}
