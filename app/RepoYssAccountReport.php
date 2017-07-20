@@ -36,7 +36,7 @@ class RepoYssAccountReport extends Model
         'network',    //                    Specify advertising system
         'device',    //                     device
         'day',    /*                        The record of the object Date: year (year), month (monthofYear), 
-                                            day (day). Converted to DATETIME by processing the left item*/
+                                            day (day).*/
         'dayOfWeek',    //                  Day of the week
         'quarter',    //                    quarter
         'month',    //                      monthly

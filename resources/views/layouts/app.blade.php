@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="images/favicon.ico">
 
     <title>Account list</title>
-    <!-- @yeild('title') -->
+    <!-- @yield('title') -->
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -66,7 +66,7 @@
                     <div class="col-md-12">
                     <!--breadcrumbs start -->
                     <ul class="breadcrumb">
-                    <!-- @yeild('breadcrumb') -->
+                    <!-- @yield('breadcrumb') -->
                         <li class="breadcrumb-item">
                             <div class="breadcrumb-item-detail">
                                 <span class="title">Account<br></span>
@@ -178,9 +178,9 @@
                     <div class="col-md-4 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                @yield
+                                <!-- @yield -->
                                 <span class="title">Campaign<br></span>
-                                <span class="campaign-name">
+                                <span class="element-name">
                                     <img src="images/yahoo.png">
                                     Campaign name
                                 </span>
@@ -347,34 +347,6 @@
                             </li>
                         </ul>
                     </div>
-                    <!-- <div class="col-md-2 col-xs-12 selection-dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <section class="panel">
-                            <div class="panel-body">
-                                    <span>Show all
-                                    <strong class="caret selection"></strong>
-                                    </span>
-                            </div>
-                        </section>
-                        </a>
-                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
-                            <li>
-                                <a href="#">
-                                    <div class="desc">Show all</div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="desc">Show all but removed</div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="desc">Show enabled</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div> -->
                 </div>
 
                 <div class="row line-chart">
@@ -391,6 +363,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Clicks<br></span>
+                                    <!-- yield('clickStatistic') -->
                                     <span class="content"><i class="fa fa-circle"></i>5,341<br> </span>
                                     <span class="explication">Adv: 30,858(17.3%)</span>
                                 </div>
@@ -402,6 +375,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Impr<br></span>
+                                    <!-- yield('impressionStatistic') -->
                                     <span class="content">28,400<br> </span>
                                     <span class="explication">Adv: 1,409,701(2.01%)</span>
                                 </div>
@@ -413,6 +387,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Cost<br></span>
+                                    <!-- yield('costStatistic') -->
                                     <span class="content"><i class="fa fa-rmb"></i>272,061<br> </span>
                                     <span class="explication">Adv: <i class="fa fa-rmb"></i>2,337,088(11,6%)</span>
                                 </div>
@@ -424,6 +399,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">CTR<br></span>
+                                    <!-- yield('clickThroughRateStatistic') -->
                                     <span class="content">18.8%<br> </span>
                                     <span class="explication">Adv: 2.19%(859%)</span>
                                 </div>
@@ -435,6 +411,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">AvgCPC<br></span>
+                                    <!-- yield('averageCostPerClickStatistic') -->
                                     <span class="content"><i class="fa fa-rmb"></i>51<br> </span>
                                     <span class="explication">Adv: <i class="fa fa-rmb"></i>76(67.3%)</span>
                                 </div>
@@ -446,6 +423,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Avg pos<br></span>
+                                    <!-- yield('averagePositionStatistic') -->
                                     <span class="content">1.0<br> </span>
                                     <span class="explication">Adv: 2.8(35.6%)</span>
                                 </div>
@@ -493,6 +471,7 @@
                                         </div>
                                         <div class="items-to-display">
                                             <p>Items to display</p>
+                                            <!-- yield('itemsToDisplay') -->
                                             <div>
                                                 <div class="form-group">
                                                     <input type="checkbox" name="" value=""> Clicks
@@ -600,6 +579,7 @@
 
                 <div class="row report-table">
                     <div class="col-md-12">
+                    <!-- yield('table') -->
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -803,7 +783,6 @@
         </section>
     </section>
     <!--main content end-->
-    <!-- js placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -811,7 +790,7 @@
     <script src="js/raphael-min.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
     <script src="js/jquery-date-range.js"></script>
-    <!-- script for this page only-->
+    <!-- Custom js-->
     <script src="js/morris-script.js"></script>
     <script src="js/common.js"></script>
 </body>
