@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RepoYssAccountReport extends Model
 {
+    public $timestamps = false;
     protected $table = 'repo_yss_account_report';
     protected $fillable = [
         'account_id',    //                 Account ID
