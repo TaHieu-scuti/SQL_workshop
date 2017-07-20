@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\RepoYssAccountReport;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class RepoYssAccountReportController extends Controller
 {
