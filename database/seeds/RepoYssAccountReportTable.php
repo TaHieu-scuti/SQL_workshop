@@ -45,8 +45,8 @@ class RepoYssAccountReportTable extends Seeder
                 'network' => str_random(20),
                 'device' => str_random(20),
                 'day' => date("Y/m/d"),
-                'dayOfWeek' => '12',
-                'quarter' => '2',
+                'dayOfWeek' => 'Monday',
+                'quarter' => 'First',
                 'month' => 'March',
                 'week' => 'Second',
             ]);
