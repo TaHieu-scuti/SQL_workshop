@@ -346,11 +346,7 @@
                 </div>
 
                 <div class="row line-chart">
-                    <section class="panel">
-                        <div class="panel-body">
-                            <div id="report-graph" class="graph"></div>
-                        </div>
-                    </section>
+                    <canvas id="myChart" width="400" height="110"></canvas>
                 </div>
 
                 <div class="row statistic">
@@ -604,5 +600,7 @@
     <!-- Custom js-->
     <script src="js/morris-script.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script src="js/chartData.js"></script>
 </body>
 </html>
