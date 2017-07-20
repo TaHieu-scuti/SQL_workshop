@@ -178,6 +178,7 @@
                     <div class="col-md-4 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
+                                @yield
                                 <span class="title">Campaign<br></span>
                                 <span class="campaign-name">
                                     <img src="images/yahoo.png">
