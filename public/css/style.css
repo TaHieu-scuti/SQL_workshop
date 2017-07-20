@@ -5754,3 +5754,8 @@ a.guest-on i {
 .lobby {
     padding: 0 !important;
 }
+
+.dropdown-menu {
+    right: 0;
+    left: auto;
+}

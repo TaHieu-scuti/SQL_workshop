@@ -423,8 +423,17 @@
                 </div>
 
                 <div class="row csv-file">
-                    <div class="col-md-1 col-xs-6 icon">
-                        <a href="#"><div class="glyphicon glyphicon-download-alt"></div></a>
+                    <div class="col-md-1 col-xs-6 icon dropdown">
+                        <div class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <div class="glyphicon glyphicon-download-alt"></div>
+                            <span class="caret"></span>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">Action</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Action</a></li>
+                        </ul>
                     </div>
                     <div class="col-md-1 col-xs-6 columns">
                         <a data-toggle="modal" href="#columnsModal">
