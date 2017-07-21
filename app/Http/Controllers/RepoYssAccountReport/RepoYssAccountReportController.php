@@ -13,9 +13,21 @@ class RepoYssAccountReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $RepoYssAccountReport;
+
+    public function __construct(RepoYssAccountReport $RepoYssAccountReport)
+    {
+        $this->RepoYssAccountReport = $RepoYssAccountReport;
+    }
+
     public function index()
     {
-        $yssAccountReports =  RepoYssAccountReport::all();
+        $yssAccountReports =  $this->RepoYssAccountReport->getAllData();
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
+    }
+
+    public function test()
+    {
+        $test = new RepoYssAccountReport();
     }
 }

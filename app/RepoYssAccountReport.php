@@ -43,4 +43,9 @@ class RepoYssAccountReport extends Model
         'month',    //                      monthly
         'week',    //                       Every week
     ];
+
+    public function getAllData()
+    {
+        return self::all();
+    }
 }
