@@ -374,11 +374,7 @@
                 </div>
 
                 <div class="row line-chart">
-                    <section class="panel">
-                        <div class="panel-body">
-                            <div id="report-graph" class="graph"></div>
-                        </div>
-                    </section>
+                    <canvas id="myChart" width="400" height="110"></canvas>
                 </div>
 
                 <div class="row statistic">
@@ -451,8 +447,17 @@
                 </div>
 
                 <div class="row csv-file">
-                    <div class="col-md-1 col-xs-6 icon">
-                        <a href="#"><div class="glyphicon glyphicon-download-alt"></div></a>
+                    <div class="col-md-1 col-xs-6 icon dropdown">
+                        <div class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <div class="glyphicon glyphicon-download-alt"></div>
+                            <span class="caret"></span>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">Action</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Action</a></li>
+                        </ul>
                     </div>
                     <div class="col-md-1 col-xs-6 columns">
                         <a data-toggle="modal" href="#columnsModal">
@@ -702,5 +707,7 @@
     <!-- Custom js-->
     <script src="js/morris-script.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script src="js/chartData.js"></script>
 </body>
 </html>
