@@ -297,7 +297,7 @@
                 </div>
 
                 <div class="row group">
-                    <div class="col-md-12 col-xs-12 pull-left">
+                    <div class="col-md-10 col-xs-12 pull-left">
                         <ul class="panel">
                             <li class="panel-body">
                                 <a href="campaign-list.html">
@@ -339,6 +339,34 @@
                             <li class="panel-body">
                                 <a href="./devices.html">
                                     DEVICES
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-xs-12 selection-dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <section class="panel">
+                            <div class="panel-body">
+                                    <span>Show all
+                                    <strong class="caret selection"></strong>
+                                    </span>
+                            </div>
+                        </section>
+                        </a>
+                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show all</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show all but removed</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show enabled</div>
                                 </a>
                             </li>
                         </ul>
@@ -514,37 +542,116 @@
                                 <a href="#">Avg Pos</a>
                             </th>
                             <th>
-                                <a href="#">Invalid Clicks</a>
+                                <a href="#">InvalidClicks</a>
                             </th>
                             <th>
-                                <a href="#">Invalid Clicks Rate</a>
+                                <a href="#">InvalidClickRate</a>
                             </th>
                             <th>
-                                <a href="#">Impression Share</a>
+                                <a href="#">ImpressionShare</a>
                             </th>
                             <th>
-                                <a href="#">Exact Match Impression Share</a>
+                                <a href="#">ExactMatchImpressionShare</a>
                             </th>
                             <th>
-                                <a href="#">Budget Lost Impression Share</a>
+                                <a href="#">BudgetLostImpressionShare</a>
                             </th>
                             <th>
-                                <a href="#">Quality Lost Impression Share</a>
+                                <a href="#">QualityLostImpressionShare</a>
                             </th>
                             <th>
-                                <a href="#">Tracking URL</a>
+                                <a href="#">TrackingURL</a>
                             </th>
                             <th>
                                 <a href="#">Conversions</a>
                             </th>
-                            <!-- th repreat -->
-                        </tr>
+                            <th>
+                                <a href="#">ConvRate</a>
+                            </th>
+                            <th>
+                                <a href="#">ConvValue</a>
+                            </th>
+                            <th>
+                                <a href="#">CostPerConv</a>
+                            </th>
+                            <th>
+                                <a href="#">ValuePerConv</a>
+                            </th>
+                            <th>
+                                <a href="#">AllConv</a>
+                            </th>
+                            <th>
+                                <a href="#">AllConvRate</a>
+                            </th>
+                            <th>
+                                <a href="#">allConvValue</a>
+                            </th>
+                            <th>
+                                <a href="#">costPerAllConv</a>
+                            </th>
+                            <th>
+                                <a href="#">valuePerAllConv</a>
+                            </th>
+                            <th>
+                                <a href="#">network</a>
+                            </th>
+                            <th>
+                                <a href="#">device</a>
+                            </th>
+                            <th>
+                                <a href="#">day</a>
+                            </th>
+                            <th>
+                                <a href="#">dayOfWeek</a>
+                            </th>
+                            <th>
+                                <a href="#">quarter</a>
+                            </th>
+                            <th>
+                                <a href="#">month</a>
+                            </th>
+                            <th>
+                                <a href="#">week</a>
+                            </th>
+                    </tr>
                         </thead>
                     <tbody>
+                        @foreach($yssAccountReports as $yssAccountReport)
+
                         <tr>
-                            <td>Samsung</td>
-                            <!-- td repeat -->
+                            <td>{{ $yssAccountReport->account_id }}</td>
+                            <td>{{ $yssAccountReport->clicks }}</td>
+                            <td>{{ $yssAccountReport->impressions }}</td>
+                            <td>{{ $yssAccountReport->cost }}</td>
+                            <td>{{ $yssAccountReport->ctr }}</td>
+                            <td>{{ $yssAccountReport->averageCpc }}</td>
+                            <td>{{ $yssAccountReport->averagePosition }}</td>
+                            <td>{{ $yssAccountReport->invalidClicks }}</td>
+                            <td>{{ $yssAccountReport->invalidClickRate }}</td>
+                            <td>{{ $yssAccountReport->impressionShare }}</td>
+                            <td>{{ $yssAccountReport->exactMatchImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->budgetLostImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->qualityLostImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->trackingURL }}</td>
+                            <td>{{ $yssAccountReport->conversions }}</td>
+                            <td>{{ $yssAccountReport->convRate }}</td>
+                            <td>{{ $yssAccountReport->convValue }}</td>
+                            <td>{{ $yssAccountReport->costPerConv }}</td>
+                            <td>{{ $yssAccountReport->valuePerConv }}</td>
+                            <td>{{ $yssAccountReport->allConv }}</td>
+                            <td>{{ $yssAccountReport->allConvRate }}</td>
+                            <td>{{ $yssAccountReport->allConvValue }}</td>
+                            <td>{{ $yssAccountReport->costPerAllConv }}</td>
+                            <td>{{ $yssAccountReport->valuePerAllConv }}</td>
+                            <td>{{ $yssAccountReport->network }}</td>
+                            <td>{{ $yssAccountReport->device }}</td>
+                            <td>{{ $yssAccountReport->day }}</td>
+                            <td>{{ $yssAccountReport->dayOfWeek }}</td>
+                            <td>{{ $yssAccountReport->quarter }}</td>
+                            <td>{{ $yssAccountReport->month }}</td>
+                            <td>{{ $yssAccountReport->week }}</td>
                         </tr>
+                        @endforeach
                         <tr>
                             <td>Total - all networks</td>
                             <!-- td repeat -->

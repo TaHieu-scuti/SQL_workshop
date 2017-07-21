@@ -15,7 +15,7 @@ class RepoYssAccountReportController extends Controller
      */
     public function index()
     {
-        $abc =  RepoYssAccountReport::all();
-        return view('yssAccountReport.index');
+        $yssAccountReports =  RepoYssAccountReport::all();
+        return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
     }
 }

@@ -301,7 +301,7 @@
                 </div>
 
                 <div class="row group">
-                    <div class="col-md-12 col-xs-12 pull-left">
+                    <div class="col-md-10 col-xs-12 pull-left">
                         <ul class="panel">
                             <li class="panel-body">
                                 <a href="campaign-list.html">
@@ -343,6 +343,34 @@
                             <li class="panel-body">
                                 <a href="./devices.html">
                                     DEVICES
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 col-xs-12 selection-dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <section class="panel">
+                            <div class="panel-body">
+                                    <span>Show all
+                                    <strong class="caret selection"></strong>
+                                    </span>
+                            </div>
+                        </section>
+                        </a>
+                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show all</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show all but removed</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div class="desc">Show enabled</div>
                                 </a>
                             </li>
                         </ul>

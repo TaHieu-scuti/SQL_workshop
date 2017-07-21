@@ -641,6 +641,7 @@ a, a:hover, a:focus {
 .wrapper .row.report-table th {
     color: #797979;;
     text-align: center;
+    white-space: nowrap;
 }
 
 .wrapper .row.report-table th>a{
@@ -659,6 +660,10 @@ a, a:hover, a:focus {
     padding-left: 30px;
     text-align: left;
     width: 250px;
+}
+
+.wrapper .row.report-table td  {
+    white-space: nowrap;
 }
 
 .wrapper .row.report-table td .ad-title {
