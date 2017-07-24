@@ -4634,6 +4634,7 @@ tr.odd.gradeX td.sorting_1, tr.even.gradeX td.sorting_1, table.display tr.even.g
 
 .full-width .dropdown-menu {
     box-shadow: none;
+    border-radius:0;
 }
 
 .full-width .dropdown-menu > li > a {
