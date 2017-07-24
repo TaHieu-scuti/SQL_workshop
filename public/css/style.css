@@ -630,11 +630,20 @@ a, a:hover, a:focus {
 
 .wrapper .row.report-table .table {
     width: 2200px;
+    margin-bottom: 0;
 }
 @media screen and (min-width: 2049px) {
     .wrapper .row.report-table .table {
         width: 100% !important;
     }
+}
+.wrapper .row.report-table .table .pagination {
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.wrapper .row.report-table .table .pagination .disabled {
+    cursor: not-allowed;
 }
 
 .wrapper .row.report-table .fa-circle {
