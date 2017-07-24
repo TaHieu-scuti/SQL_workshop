@@ -621,6 +621,16 @@ a, a:hover, a:focus {
     color: #797979;
 }
 
+.wrapper .row.csv-file .btn-primary {
+    border-color: #569fd4;
+    background-color: #569fd4;
+}
+
+.wrapper .row.csv-file .btn-primary:hover {
+    border-color: #0d88e0;
+    background-color: #0d88e0;
+}
+
 /*row report-table*/
 .wrapper .row.report-table {
     border-bottom: none;

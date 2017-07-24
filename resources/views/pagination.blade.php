@@ -1,7 +1,8 @@
 @if ($paginator->hasPages())
+    <?php $firstPage = 1; ?>
     <ul class="pagination">
         {{-- Previous ON First Page --}}
-        <a class="page-link fa fa-step-backward" href="{{ $paginator->url(1) }}"></a>    
+        <a class="page-link fa fa-step-backward" href="{{ $paginator->url($firstPage) }}"></a>    
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
             <span class="page-link disabled fa fa-angle-left"></span>
