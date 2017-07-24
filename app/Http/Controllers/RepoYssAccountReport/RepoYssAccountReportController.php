@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RepoYssAccountReport;
 
-const YSS_ACCOUNT_PER_PAGE = '5';
 class RepoYssAccountReportController extends Controller
 {
     /**
@@ -21,9 +20,17 @@ class RepoYssAccountReportController extends Controller
         $this->RepoYssAccountReport = $RepoYssAccountReport;
     }
 
+    // public function index($yssAccountPerPage)
+    // {
+    //     $yssAccountReports =  $this->RepoYssAccountReport
+    //                          -> where('account_id', 'thisADgainerId')
+    //                          ->paginate($yssAccountPerPage);
+    //     return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
+    // }
     public function index()
     {
-        $yssAccountReports =  $this->RepoYssAccountReport->paginate(YSS_ACCOUNT_PER_PAGE);
+        $yssAccountReports =  $this->RepoYssAccountReport
+                            ->paginate(15);
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
     }
 }
