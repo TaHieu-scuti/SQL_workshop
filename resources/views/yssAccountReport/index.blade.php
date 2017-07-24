@@ -452,7 +452,7 @@
                             <div class="glyphicon glyphicon-download-alt"></div>
                             <span class="caret"></span>
                         </div>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <ul class="dropdown-menu extended"  aria-labelledby="dropdownMenu1">
                            
                             <li><a href="#">CSV</a></li>
                             <li><a href="#">Excel</a></li>
