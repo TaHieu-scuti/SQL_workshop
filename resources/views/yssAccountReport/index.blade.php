@@ -806,12 +806,13 @@
                             <td></td>
                             <td></td> -->
                             <td class="paginator" colspan="6">
-                                {{ $yssAccountReports->links() }}
+                                {!! $yssAccountReports->links('pagination') !!}
                                 <!-- <a href="#"><i class="fa fa-step-backward"></i></a>
                                 <a href="#"><i class="fa fa-angle-left"></i></a> 
                                 1-1 of 1
                                 <a href="#"><i class="fa fa-angle-right"></i></a> 
                                 <a href="#"><i class="fa fa-step-forward"></i></a> -->
+
                             </td>
                         </tr>
                     </tbody>
