@@ -453,10 +453,9 @@
                             <span class="caret"></span>
                         </div>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a href="#">Action</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Action</a></li>
+                           
+                            <li><a href="#">CSV</a></li>
+                            <li><a href="#">Excel</a></li>
                         </ul>
                     </div>
                     <div class="col-md-1 col-xs-6 columns">
@@ -511,6 +510,9 @@
                                         </div>
                                         <div class="notation">
                                             The settings you have saved are stored in a cookie on your browser and will be remembered.    
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-primary">Apply</button>
                                         </div>
                                         </form>
                                     </div>
