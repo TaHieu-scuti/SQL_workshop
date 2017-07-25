@@ -39,8 +39,8 @@ class RepoYssAccountReportController extends Controller
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
     }
 
-    public function update()
+    public function test()
     {
-
+        dd('Fuck DUONG');
     }
 }

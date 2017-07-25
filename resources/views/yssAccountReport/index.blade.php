@@ -7,6 +7,7 @@
     <meta name="author" content="">
     <meta name="keyword" content="">
     <link rel="shortcut icon" href="images/favicon.ico">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Account report</title>
 
