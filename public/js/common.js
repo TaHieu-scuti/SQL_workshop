@@ -30,3 +30,16 @@
             $('.custom-date').hide();
             $('.selected-time .dropdown-menu.extended.tasks-bar').css('height', '294px');
         });
+        /*
+        *
+        * 
+        */
+        $(".apply-button").click(function() {
+            $.ajax({
+                url: "/updateYssAccountReport",
+                type: "POST",
+                success: function() {
+                    console.log("ok");
+                }
+            })
+        })

@@ -20,7 +20,12 @@ class RepoYssAccountReportController extends Controller
         $this->RepoYssAccountReport = $RepoYssAccountReport;
     }
 
-    // public function index($yssAccountPerPage)
+    // public function index($yssAccountPerPage,
+    //                       $account_id = null,
+    //                       $clicks = null,
+    //                       $impressions = null,
+                          
+    // )
     // {
     //     $yssAccountReports =  $this->RepoYssAccountReport
     //                          -> where('account_id', 'thisADgainerId')
@@ -32,5 +37,10 @@ class RepoYssAccountReportController extends Controller
         $yssAccountReports =  $this->RepoYssAccountReport
                             ->paginate(15);
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
+    }
+
+    public function update()
+    {
+
     }
 }
