@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\RepoYssAccountReport;
 
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RepoYssAccountReport;
 
+const YSS_ACCOUNT_PER_PAGE = '5';
 class RepoYssAccountReportController extends Controller
 {
     /**
@@ -20,27 +22,40 @@ class RepoYssAccountReportController extends Controller
         $this->RepoYssAccountReport = $RepoYssAccountReport;
     }
 
-    // public function index($yssAccountPerPage,
-    //                       $account_id = null,
-    //                       $clicks = null,
-    //                       $impressions = null,
-                          
-    // )
-    // {
-    //     $yssAccountReports =  $this->RepoYssAccountReport
-    //                          -> where('account_id', 'thisADgainerId')
-    //                          ->paginate($yssAccountPerPage);
-    //     return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
-    // }
     public function index()
     {
-        $yssAccountReports =  $this->RepoYssAccountReport
-                            ->paginate(15);
+        $yssAccountReports =  $this->RepoYssAccountReport->paginate(YSS_ACCOUNT_PER_PAGE);
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
     }
 
-    public function test()
+    public function export_Excel()
     {
-        dd('Fuck DUONG');
+        # code...
+        date_default_timezone_set("Asia/Ho_Chi_Minh");
+        $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
+        $yssAccountReports =  $this->RepoYssAccountReport->get();
+        Excel::create($filename, function($excel) use($yssAccountReports)  {
+
+            $excel->sheet('Account Report', function($sheet) use($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')->with('yssAccountReports', $yssAccountReports);
+
+            });
+
+        })->download('xlsx');
+    }
+    public function export_CSV()
+    {
+        # code...
+        date_default_timezone_set("Asia/Ho_Chi_Minh");
+        $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
+        $yssAccountReports =  $this->RepoYssAccountReport->get();
+        Excel::create($filename, function($excel) use($yssAccountReports)  {
+
+            $excel->sheet('Account Report', function($sheet) use($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')->with('yssAccountReports', $yssAccountReports);
+
+            });
+
+        })->download('csv');
     }
 }

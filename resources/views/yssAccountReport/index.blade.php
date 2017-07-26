@@ -7,7 +7,6 @@
     <meta name="author" content="">
     <meta name="keyword" content="">
     <link rel="shortcut icon" href="images/favicon.ico">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Account report</title>
 
@@ -455,8 +454,8 @@
                         </div>
                         <ul class="dropdown-menu extended"  aria-labelledby="dropdownMenu1">
                            
-                            <li><a href="#">CSV</a></li>
-                            <li><a href="#">Excel</a></li>
+                            <li><a href="{{ route('export_csv') }}">CSV</a></li>
+                            <li><a href="{{ route('export_excel') }}">Excel</a></li>
                         </ul>
                     </div>
                     <div class="col-md-1 col-xs-6 columns">
@@ -480,15 +479,15 @@
                                         <div class="result-per-page">
                                             <p>Results per page</p>
                                             <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="20" checked> 20<br>
+                                                <input type="radio" name="gender" value="male" checked> 20<br>
                                             </div> 
 
                                             <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="50"> 50<br>
+                                                <input type="radio" name="gender" value="female"> 50<br>
                                             </div>
 
                                             <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="100"> 100
+                                                <input type="radio" name="gender" value="other"> 100
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
@@ -496,138 +495,141 @@
                                             <p>Items to display</p>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="clicks" value="clicks"> Clicks
+                                                    <input type="checkbox" name="" value=""> Clicks
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="impressions" value="impressions"> Impr
+                                                    <input type="checkbox" name="" value=""> Impr
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="cost" value="cost"> Cost
+                                                    <input type="checkbox" name="" value=""> Cost
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="ctr" value="ctr"> CTR
+                                                    <input type="checkbox" name="" value=""> CTR
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="averageCpc" value="averageCpc"> AvgCPC
+                                                    <input type="checkbox" name="" value=""> AvgCPC
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="averagePosition" value="averagePosition"> Avg Pos
+                                                    <input type="checkbox" name="" value=""> Avg Pos
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="invalidClicks" value=""> InvalidClicks
+                                                    <input type="checkbox" name="" value=""> InvalidClicks
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="invalidClickRate" value="invalidClickRate"> InvalidClickRate
+                                                    <input type="checkbox" name="" value=""> InvalidClickRate
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="impressionShare" value="impressionShare"> ImpressionShare
+                                                    <input type="checkbox" name="" value=""> ImpressionShare
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="exactMatchImpressionShare" value="exactMatchImpressionShare"> ExactMatchImpressionShare
+                                                    <input type="checkbox" name="" value=""> ExactMatchImpressionShare
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="budgetLostImpressionShare" value="budgetLostImpressionShare"> BudgetLostImpressionShare
+                                                    <input type="checkbox" name="" value=""> BudgetLostImpressionShare
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="qualityLostImpressionShare" value="qualityLostImpressionShare"> QualityLostImpressionShare
+                                                    <input type="checkbox" name="" value=""> QualityLostImpressionShare
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="trackingURL" value="trackingURL"> TrackingURL
+                                                    <input type="checkbox" name="" value=""> TrackingURL
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="conversions" value="conversions"> Conversions
+                                                    <input type="checkbox" name="" value=""> Conversions
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="ConvRate" value="ConvRate"> ConvRate
+                                                    <input type="checkbox" name="" value=""> ConvRate
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="convValue" value="convValue"> ConvValue
+                                                    <input type="checkbox" name="" value=""> ConvValue
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="costPerConv" value="costPerConv"> CostPerConv
+                                                    <input type="checkbox" name="" value=""> CostPerConv
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="valuePerConv" value="valuePerConv"> ValuePerConv
+                                                    <input type="checkbox" name="" value=""> ValuePerConv
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="allConv" value="allConv"> AllConv
+                                                    <input type="checkbox" name="" value=""> AllConv
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="AllConvRate" value="AllConvRate"> AllConvRate
+                                                    <input type="checkbox" name="" value=""> AllConvRate
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="allConvValue" value="allConvValue"> AllConvValue
+                                                    <input type="checkbox" name="" value=""> AllConvValue
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="costPerAllConv" value="costPerAllConv"> CostPerAllConv
+                                                    <input type="checkbox" name="" value=""> CostPerAllConv
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="valuePerAllConv" value="valuePerAllConv"> ValuePerAllConv
+                                                    <input type="checkbox" name="" value=""> ValuePerAllConv
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="network" value="network"> Network
+                                                    <input type="checkbox" name="" value=""> Network
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="device" value="device"> Device
+                                                    <input type="checkbox" name="" value=""> Device
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="day" value="day"> Day
+                                                    <input type="checkbox" name="" value=""> Day
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="DayOfWeek" value="DayOfWeek"> DayOfWeek
+                                                    <input type="checkbox" name="" value=""> DayOfWeek
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="quarter" value="quarter"> Quarter
+                                                    <input type="checkbox" name="" value=""> Quarter
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="month" value="month"> Month
+                                                    <input type="checkbox" name="" value=""> Month
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="" value="week"> Week
+                                                    <input type="checkbox" name="" value=""> Week
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
+                                        <div class="notation">
+                                            The settings you have saved are stored in a cookie on your browser and will be remembered.
+                                        </div>
                                         <div>
-                                            <button type="button" class="apply-button btn btn-primary">Apply</button>
+                                            <button type="button" class="btn btn-primary">Apply</button>
                                         </div>
                                         </form>
                                     </div>
@@ -642,97 +644,97 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th class="Account">
+                            <th>
                                 <a href="#">Account</a>
                             </th>
-                            <th class="Clicks">
-                                <a href="#">Clicks</a>
+                            <th>
+                                <a href="#"><div><i class="fa fa-arrow-down"></i>Clicks</div></a>
                             </th>
-                            <th class="Impr">
+                            <th>
                                 <a href="#">Impr</a>
                             </th>
-                            <th class="Cost">
+                            <th>
                                 <a href="#">Cost</a>
                             </th>
-                            <th class="CTR">
+                            <th>
                                 <a href="#">CTR</a>
                             </th>
-                            <th class="AvgCPC">
+                            <th>
                                 <a href="#">AvgCPC</a>
                             </th>
-                            <th class="AvgPos">
+                            <th>
                                 <a href="#">Avg Pos</a>
                             </th>
-                            <th class="InvalidClicks">
+                            <th>
                                 <a href="#">InvalidClicks</a>
                             </th>
-                            <th class="InvalidClickRate">
+                            <th>
                                 <a href="#">InvalidClickRate</a>
                             </th>
-                            <th class="ImpressionShare">
+                            <th>
                                 <a href="#">ImpressionShare</a>
                             </th>
-                            <th class="ExactMatchImpressionShare">
+                            <th>
                                 <a href="#">ExactMatchImpressionShare</a>
                             </th>
-                            <th class="BudgetLostImpressionShare">
+                            <th>
                                 <a href="#">BudgetLostImpressionShare</a>
                             </th>
-                            <th class="QualityLostImpressionShare">
+                            <th>
                                 <a href="#">QualityLostImpressionShare</a>
                             </th>
-                            <th class="TrackingURL">
+                            <th>
                                 <a href="#">TrackingURL</a>
                             </th>
-                            <th class="Conversions">
+                            <th>
                                 <a href="#">Conversions</a>
                             </th>
-                            <th class="ConvRate">
+                            <th>
                                 <a href="#">ConvRate</a>
                             </th>
-                            <th class="ConvValue">
+                            <th>
                                 <a href="#">ConvValue</a>
                             </th>
-                            <th class="CostPerConv">
+                            <th>
                                 <a href="#">CostPerConv</a>
                             </th>
-                            <th class="ValuePerConv">
+                            <th>
                                 <a href="#">ValuePerConv</a>
                             </th>
-                            <th class="AllConv">
+                            <th>
                                 <a href="#">AllConv</a>
                             </th>
-                            <th class="AllConvRate">
+                            <th>
                                 <a href="#">AllConvRate</a>
                             </th>
-                            <th class="AllConvValue">
+                            <th>
                                 <a href="#">AllConvValue</a>
                             </th>
-                            <th class="CostPerAllConv">
+                            <th>
                                 <a href="#">CostPerAllConv</a>
                             </th>
-                            <th class="ValuePerAllConv">
+                            <th>
                                 <a href="#">ValuePerAllConv</a>
                             </th>
-                            <th class="Network">
+                            <th>
                                 <a href="#">Network</a>
                             </th>
-                            <th class="Device">
+                            <th>
                                 <a href="#">Device</a>
                             </th>
-                            <th class="Day">
+                            <th>
                                 <a href="#">Day</a>
                             </th>
-                            <th class="DayOfWeek">
+                            <th>
                                 <a href="#">DayOfWeek</a>
                             </th>
-                            <th class="Quarter">
+                            <th>
                                 <a href="#">Quarter</a>
                             </th>
-                            <th class="Month">
+                            <th>
                                 <a href="#">Month</a>
                             </th>
-                            <th class="Week">
+                            <th>
                                 <a href="#">Week</a>
                             </th>
                     </tr>
@@ -740,72 +742,41 @@
                     <tbody>
                         @foreach($yssAccountReports as $yssAccountReport)
                         <tr>
-                            <td class="Account">{{ $yssAccountReport->account_id }}</td>
-                            <td class="Clicks">{{ $yssAccountReport->clicks }}</td>
-                            <td class="Impr">{{ $yssAccountReport->impressions }}</td>
-                            <td class="Cost">{{ $yssAccountReport->cost }}</td>
-                            <td class="CTR">{{ $yssAccountReport->ctr }}</td>
-                            <td class="AvgCPC">{{ $yssAccountReport->averageCpc }}</td>
-                            <td class="AvgPos">{{ $yssAccountReport->averagePosition }}</td>
-                            <td class="InvalidClicks">{{ $yssAccountReport->invalidClicks }}</td>
-                            <td class="InvalidClickRate">{{ $yssAccountReport->invalidClickRate }}</td>
-                            <td class="ImpressionShare">{{ $yssAccountReport->impressionShare }}</td>
-                            <td class="ExactMatchImpressionShare">{{ $yssAccountReport->exactMatchImpressionShare }}</td>
-                            <td class="BudgetLostImpressionShare">{{ $yssAccountReport->budgetLostImpressionShare }}</td>
-                            <td class="QualityLostImpressionShare">{{ $yssAccountReport->qualityLostImpressionShare }}</td>
-                            <td class="TrackingURL">{{ $yssAccountReport->trackingURL }}</td>
-                            <td class="Conversions">{{ $yssAccountReport->conversions }}</td>
-                            <td class="ConvRate">{{ $yssAccountReport->convRate }}</td>
-                            <td class="ConvValue">{{ $yssAccountReport->convValue }}</td>
-                            <td class="CostPerAllConv">{{ $yssAccountReport->costPerConv }}</td>
-                            <td class="ValuePerConv">{{ $yssAccountReport->valuePerConv }}</td>
-                            <td class="AllConv">{{ $yssAccountReport->allConv }}</td>
-                            <td class="AllConvRate">{{ $yssAccountReport->allConvRate }}</td>
-                            <td class="AllConvValue">{{ $yssAccountReport->allConvValue }}</td>
-                            <td class="CostPerConv">{{ $yssAccountReport->costPerAllConv }}</td>
-                            <td class="ValuePerAllConv">{{ $yssAccountReport->valuePerAllConv }}</td>
-                            <td class="Network">{{ $yssAccountReport->network }}</td>
-                            <td class="Device">{{ $yssAccountReport->device }}</td>
-                            <td class="Day">{{ $yssAccountReport->day }}</td>
-                            <td class="DayOfWeek">{{ $yssAccountReport->dayOfWeek }}</td>
-                            <td class="Quarter">{{ $yssAccountReport->quarter }}</td>
-                            <td class="Month">{{ $yssAccountReport->month }}</td>
-                            <td class="Week">{{ $yssAccountReport->week }}</td>
+                            <td>{{ $yssAccountReport->account_id }}</td>
+                            <td>{{ $yssAccountReport->clicks }}</td>
+                            <td>{{ $yssAccountReport->impressions }}</td>
+                            <td>{{ $yssAccountReport->cost }}</td>
+                            <td>{{ $yssAccountReport->ctr }}</td>
+                            <td>{{ $yssAccountReport->averageCpc }}</td>
+                            <td>{{ $yssAccountReport->averagePosition }}</td>
+                            <td>{{ $yssAccountReport->invalidClicks }}</td>
+                            <td>{{ $yssAccountReport->invalidClickRate }}</td>
+                            <td>{{ $yssAccountReport->impressionShare }}</td>
+                            <td>{{ $yssAccountReport->exactMatchImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->budgetLostImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->qualityLostImpressionShare }}</td>
+                            <td>{{ $yssAccountReport->trackingURL }}</td>
+                            <td>{{ $yssAccountReport->conversions }}</td>
+                            <td>{{ $yssAccountReport->convRate }}</td>
+                            <td>{{ $yssAccountReport->convValue }}</td>
+                            <td>{{ $yssAccountReport->costPerConv }}</td>
+                            <td>{{ $yssAccountReport->valuePerConv }}</td>
+                            <td>{{ $yssAccountReport->allConv }}</td>
+                            <td>{{ $yssAccountReport->allConvRate }}</td>
+                            <td>{{ $yssAccountReport->allConvValue }}</td>
+                            <td>{{ $yssAccountReport->costPerAllConv }}</td>
+                            <td>{{ $yssAccountReport->valuePerAllConv }}</td>
+                            <td>{{ $yssAccountReport->network }}</td>
+                            <td>{{ $yssAccountReport->device }}</td>
+                            <td>{{ $yssAccountReport->day }}</td>
+                            <td>{{ $yssAccountReport->dayOfWeek }}</td>
+                            <td>{{ $yssAccountReport->quarter }}</td>
+                            <td>{{ $yssAccountReport->month }}</td>
+                            <td>{{ $yssAccountReport->week }}</td>
                         </tr>
                         @endforeach
                         <tr>
                             <td>Total - all networks</td>
-                            <td class="Clicks"></td>
-                            <td class="Impr"></td>
-                            <td class="Cost"></td>
-                            <td class="CTR"></td>
-                            <td class="AvgCPC"></td>
-                            <td class="AvgPos"></td>
-                            <td class="InvalidClicks"></td>
-                            <td class="InvalidClickRate"></td>
-                            <td class="ImpressionShare"></td>
-                            <td class="ExactMatchImpressionShare"></td>
-                            <td class="BudgetLostImpressionShare"></td>
-                            <td class="QualityLostImpressionShare"></td>
-                            <td class="TrackingURL"></td>
-                            <td class="Conversions"></td>
-                            <td class="ConvRate"></td>
-                            <td class="ConvValue"></td>
-                            <td class="CostPerAllConv"></td>
-                            <td class="ValuePerConv"></td>
-                            <td class="AllConv"></td>
-                            <td class="AllConvRate"></td>
-                            <td class="AllConvValue"></td>
-                            <td class="CostPerConv"></td>
-                            <td class="ValuePerAllConv"></td>
-                            <td class="Network"></td>
-                            <td class="Device"></td>
-                            <td class="Day"></td>
-                            <td class="DayOfWeek"></td>
-                            <td class="Quarter"></td>
-                            <td class="Month"></td>
-                            <td class="Week"></td>
-                        </tr><tr>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -830,12 +801,18 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td><!-- 
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="paginator" colspan="3">
-                                {!! $yssAccountReports->links('pagination') !!}
+                            <td></td> -->
+                            <td class="paginator" colspan="6">
+                                {{ $yssAccountReports->links('pagination') }}
+                                <!-- <a href="#"><i class="fa fa-step-backward"></i></a>
+                                <a href="#"><i class="fa fa-angle-left"></i></a> 
+                                1-1 of 1
+                                <a href="#"><i class="fa fa-angle-right"></i></a> 
+                                <a href="#"><i class="fa fa-step-forward"></i></a> -->
+
                             </td>
                         </tr>
                     </tbody>
@@ -848,9 +825,12 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/morris.min.js"></script>
+    <script src="js/raphael-min.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
     <script src="js/jquery-date-range.js"></script>
     <!-- Custom js-->
+    <script src="js/morris-script.js"></script>
     <script src="js/common.js"></script>
     <script src="js/Chart.min.js"></script>
     <script src="js/chartData.js"></script>
