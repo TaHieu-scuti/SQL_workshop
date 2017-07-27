@@ -496,132 +496,132 @@
                                             <p>Items to display</p>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="clicks" value="clicks"> Clicks
+                                                    <input type="checkbox" name="fieldName" value="clicks"> Clicks
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="impressions" value="impressions"> Impr
+                                                    <input type="checkbox" name="fieldName" value="impressions"> Impr
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="cost" value="cost"> Cost
+                                                    <input type="checkbox" name="fieldName" value="cost"> Cost
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="ctr" value="ctr"> CTR
+                                                    <input type="checkbox" name="fieldName" value="ctr"> CTR
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="averageCpc" value="averageCpc"> AvgCPC
+                                                    <input type="checkbox" name="fieldName" value="averageCpc"> AvgCPC
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="averagePosition" value="averagePosition"> Avg Pos
+                                                    <input type="checkbox" name="fieldName" value="averagePosition"> Avg Pos
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="invalidClicks" value=""> InvalidClicks
+                                                    <input type="checkbox" name="fieldName" value=""> InvalidClicks
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="invalidClickRate" value="invalidClickRate"> InvalidClickRate
+                                                    <input type="checkbox" name="fieldName" value="invalidClickRate"> InvalidClickRate
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="impressionShare" value="impressionShare"> ImpressionShare
+                                                    <input type="checkbox" name="fieldName" value="impressionShare"> ImpressionShare
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="exactMatchImpressionShare" value="exactMatchImpressionShare"> ExactMatchImpressionShare
+                                                    <input type="checkbox" name="fieldName" value="exactMatchImpressionShare"> ExactMatchImpressionShare
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="budgetLostImpressionShare" value="budgetLostImpressionShare"> BudgetLostImpressionShare
+                                                    <input type="checkbox" name="fieldName" value="budgetLostImpressionShare"> BudgetLostImpressionShare
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="qualityLostImpressionShare" value="qualityLostImpressionShare"> QualityLostImpressionShare
+                                                    <input type="checkbox" name="fieldName" value="qualityLostImpressionShare"> QualityLostImpressionShare
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="trackingURL" value="trackingURL"> TrackingURL
+                                                    <input type="checkbox" name="fieldName" value="trackingURL"> TrackingURL
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="conversions" value="conversions"> Conversions
+                                                    <input type="checkbox" name="fieldName" value="conversions"> Conversions
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="ConvRate" value="ConvRate"> ConvRate
+                                                    <input type="checkbox" name="fieldName" value="ConvRate"> ConvRate
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="convValue" value="convValue"> ConvValue
+                                                    <input type="checkbox" name="fieldName" value="convValue"> ConvValue
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="costPerConv" value="costPerConv"> CostPerConv
+                                                    <input type="checkbox" name="fieldName" value="costPerConv"> CostPerConv
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="valuePerConv" value="valuePerConv"> ValuePerConv
+                                                    <input type="checkbox" name="fieldName" value="valuePerConv"> ValuePerConv
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="allConv" value="allConv"> AllConv
+                                                    <input type="checkbox" name="fieldName" value="allConv"> AllConv
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="AllConvRate" value="AllConvRate"> AllConvRate
+                                                    <input type="checkbox" name="fieldName" value="AllConvRate"> AllConvRate
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="allConvValue" value="allConvValue"> AllConvValue
+                                                    <input type="checkbox" name="fieldName" value="allConvValue"> AllConvValue
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="costPerAllConv" value="costPerAllConv"> CostPerAllConv
+                                                    <input type="checkbox" name="fieldName" value="costPerAllConv"> CostPerAllConv
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="valuePerAllConv" value="valuePerAllConv"> ValuePerAllConv
+                                                    <input type="checkbox" name="fieldName" value="valuePerAllConv"> ValuePerAllConv
                                                 </div> 
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="network" value="network"> Network
+                                                    <input type="checkbox" name="fieldName" value="network"> Network
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="device" value="device"> Device
+                                                    <input type="checkbox" name="fieldName" value="device"> Device
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="day" value="day"> Day
+                                                    <input type="checkbox" name="fieldName" value="day"> Day
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="DayOfWeek" value="DayOfWeek"> DayOfWeek
+                                                    <input type="checkbox" name="fieldName" value="DayOfWeek"> DayOfWeek
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="quarter" value="quarter"> Quarter
+                                                    <input type="checkbox" name="fieldName" value="quarter"> Quarter
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="month" value="month"> Month
+                                                    <input type="checkbox" name="fieldName" value="month"> Month
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="" value="week"> Week
+                                                    <input type="checkbox" name="fieldName" value="week"> Week
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>

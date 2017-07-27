@@ -34,13 +34,25 @@ class RepoYssAccountReportController extends Controller
     // }
     public function index()
     {
+        // $accountReportSession = ['account_id', 'clicks', 'impressions', 'ctr', 'averageCpc',
+        //          'averagePosition', 'invalidClicks', 'invalidClickRate',
+        //          'impressionShare', 'exactMatchImpressionShare', 'budgetLostImpressionShare',
+        //          'qualityLostImpressionShare', 'trackingURL', 'conversions',
+        //          'convRate', 'convValue', 'costPerConv', 'valuePerConv', 'allConv',
+        //          'allConvRate', 'allConvValue', 'costPerAllConv', 'valuePerAllConv',
+        //          'network', 'device', 'day', 'dayOfWeek', 'quarter', 'month', 'week'
+        //          ];
+        // if $accountReportSession[] = null
         $yssAccountReports =  $this->RepoYssAccountReport
                             ->paginate(15);
         return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
     }
 
-    public function test()
+    public function test(Request $request)
     {
-        dd('Fuck DUONG');
+        // $yssAccountReports = $this->RepoYssAccountReport->paginate($request->pagination);
+        // dd($request->fieldName);
+        $yssAccountReports = $this->RepoYssAccountReport->select($request->fieldName)->paginate($request->pagination);
+        return response()->json($yssAccountReports);
     }
 }

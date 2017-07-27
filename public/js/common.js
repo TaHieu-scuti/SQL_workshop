@@ -32,19 +32,35 @@
         });
         /*
         *
-        * 
+        *
         */
         $(".apply-button").click(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+            // console.log('fuckyou');
+            // console.log($("input[name='fieldName']").is(":checked").val());
+            $array = [];
+            if (!$array['fieldName']) {
+                $array['fieldName'] = [];
+            }
+
+            if(!$array['paginaton']) {
+                $array['pagination'] = $("input[name='resultPerPage']:checked").val();
+            }
+            $.each($("input[name='fieldName']:checked"), function(){
+                $array['fieldName'].push($(this).val());
             });
             $.ajax({
-                url: "/updateYssAccountReport",
+                url: "updateYssAccountReport",
                 type: "POST",
-                success: function() {
-                    console.log("ok");
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'pagination' : $array['pagination'],
+                    'fieldName' : $array['fieldName'],
+                },
+                success: function(result) {
+                    console.log(result.data);
+                    // $('table ')
                 }
-            })
-        })
+            });
+        });
