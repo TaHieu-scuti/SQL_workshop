@@ -35,8 +35,6 @@
         *
         */
         $(".apply-button").click(function() {
-            // console.log('fuckyou');
-            // console.log($("input[name='fieldName']").is(":checked").val());
             $array = [];
             if (!$array['fieldName']) {
                 $array['fieldName'] = [];
@@ -45,11 +43,13 @@
             if(!$array['paginaton']) {
                 $array['pagination'] = $("input[name='resultPerPage']:checked").val();
             }
+
             $.each($("input[name='fieldName']:checked"), function(){
                 $array['fieldName'].push($(this).val());
             });
+
             $.ajax({
-                url: "updateYssAccountReport",
+                url: "filter_account_report",
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -59,8 +59,7 @@
                     'fieldName' : $array['fieldName'],
                 },
                 success: function(result) {
-                    console.log(result.data);
-                    // $('table ')
+                    $('table').html(result);
                 }
             });
         });

@@ -43,6 +43,7 @@ class RepoYssAccountReportController extends Controller
 
         })->download('xlsx');
     }
+
     public function export_CSV()
     {
         # code...
@@ -57,5 +58,12 @@ class RepoYssAccountReportController extends Controller
             });
 
         })->download('csv');
+    }
+
+    public function getDataByFilter(Request $request)
+    {
+        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter($request->fieldName, $request->pagination);
+        $data = $yssAccountReports->toArray()['data'];
+        return view('yssAccountReport.table_data')->with('yssAccountReports', $data)->with('fieldName', $request->fieldName);
     }
 }
