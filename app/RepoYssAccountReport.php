@@ -51,7 +51,6 @@ class RepoYssAccountReport extends Model
 
     public function getDataByFilter($fieldName, $resultPerPage)
     {
-        array_unshift($fieldName, 'account_id');
         return self::select($fieldName)->paginate($resultPerPage);
     }
 }

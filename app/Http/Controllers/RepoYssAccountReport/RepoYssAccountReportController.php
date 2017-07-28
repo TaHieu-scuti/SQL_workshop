@@ -62,8 +62,20 @@ class RepoYssAccountReportController extends Controller
 
     public function getDataByFilter(Request $request)
     {
-        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter($request->fieldName, $request->pagination);
-        $data = $yssAccountReports->toArray()['data'];
-        return view('yssAccountReport.table_data')->with('yssAccountReports', $data)->with('fieldName', $request->fieldName);
+        if(!session('account_report')) {
+            session(['account_report' => []]);
+        }
+        session(['account_report' => $request->all()]);
+        $filterOption = [];
+        if (!isset($filterOption['fieldName'])) {
+            $filterOption['fieldName'] = session('account_report')['fieldName'];
+        }
+        if (!isset($filterOption['pagnation'])) {
+            $filterOption['pagination'] = session('account_report')['pagination'];
+        }
+        array_unshift($filterOption['fieldName'], 'account_id');
+        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter($filterOption['fieldName'], $filterOption['pagination']);
+        $filteredData = $yssAccountReports->toArray()['data'];
+        return response()->json(view('yssAccountReport.table_data')->with('yssAccountReports', $filteredData)->with('fieldName', $filterOption['fieldName'])->render());
     }
 }
