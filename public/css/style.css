@@ -534,7 +534,7 @@ a, a:hover, a:focus {
     text-align: center;
 }
 
-.wrapper .row.csv-file .columns input[type=checkbox]
+.wrapper .row.csv-file .columns input[type=checkbox], input[type=radio]
 {
   -ms-transform: scale(1.2); /* IE */
   -moz-transform: scale(1.2); /* FF */
