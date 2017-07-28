@@ -521,7 +521,7 @@
                                             </div>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="fieldName" value=""> InvalidClicks
+                                                    <input type="checkbox" name="fieldName" value="invalidClicks"> InvalidClicks
                                                 </div>
 
                                                 <div class="form-group">
