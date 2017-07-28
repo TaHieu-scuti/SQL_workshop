@@ -639,12 +639,12 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.report-table .table {
-    width: 2200px;
+    max-width: 2200px;
     margin-bottom: 0;
 }
 @media screen and (min-width: 2049px) {
     .wrapper .row.report-table .table {
-        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 .wrapper .row.report-table .table .pagination {
