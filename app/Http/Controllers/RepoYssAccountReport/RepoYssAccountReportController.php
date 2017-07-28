@@ -24,8 +24,7 @@ class RepoYssAccountReportController extends Controller
 
     public function index()
     {
-        $yssAccountReports =  $this->RepoYssAccountReport->paginate(YSS_ACCOUNT_PER_PAGE);
-        return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
+        return view('yssAccountReport.index');
     }
 
     public function export_Excel()
@@ -60,22 +59,36 @@ class RepoYssAccountReportController extends Controller
         })->download('csv');
     }
 
+    public function getAllData(Request $request)
+    {
+        $fieldName = $request->fieldName;
+        array_unshift($fieldName, 'account_id');
+        if(!session('accountReport')) {
+            session(['accountReport' => [
+                'fieldName' => $fieldName,
+                'pagination' => 20,
+            ]]);
+        }
+
+        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter(session('accountReport')['fieldName'], session('accountReport')['pagination'])->toArray()['data'];
+        return response()->json(view('yssAccountReport.table_data')->with('yssAccountReports', $yssAccountReports)->with('fieldName', session('accountReport')['fieldName'])->render());
+    }
+
     public function getDataByFilter(Request $request)
     {
-        if(!session('account_report')) {
-            session(['account_report' => []]);
+        if ($request->fieldName === null) {
+            session()->put('accountReport.pagination',$request->pagination);
+        } else {
+            $fieldName = $request->fieldName;
+            array_unshift($fieldName, 'account_id');
+            session()->put('accountReport', [
+                'fieldName' => $fieldName,
+                'pagination' => $request->pagination,
+            ]);
         }
-        session(['account_report' => $request->all()]);
-        $filterOption = [];
-        if (!isset($filterOption['fieldName'])) {
-            $filterOption['fieldName'] = session('account_report')['fieldName'];
-        }
-        if (!isset($filterOption['pagnation'])) {
-            $filterOption['pagination'] = session('account_report')['pagination'];
-        }
-        array_unshift($filterOption['fieldName'], 'account_id');
-        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter($filterOption['fieldName'], $filterOption['pagination']);
+
+        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter(session('accountReport')['fieldName'], session('accountReport')['pagination']);
         $filteredData = $yssAccountReports->toArray()['data'];
-        return response()->json(view('yssAccountReport.table_data')->with('yssAccountReports', $filteredData)->with('fieldName', $filterOption['fieldName'])->render());
+        return response()->json(view('yssAccountReport.table_data')->with('yssAccountReports', $filteredData)->with('fieldName', session('accountReport')['fieldName'])->render());
     }
 }

@@ -34,6 +34,25 @@
         *
         *
         */
+        var fieldName = [];
+        $.each($("input[name='fieldName']"), function(){
+                fieldName.push($(this).val());
+            });
+        $.ajax({
+            url : 'get_all_account_report_data',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data : {
+                'fieldName' : fieldName,
+            },
+            success: function(result) {
+                $('table').html(result);
+                $('#columnsModal').modal('hide');
+            }
+        });
+
         $(".apply-button").click(function() {
             $array = [];
             if (!$array['fieldName']) {
@@ -60,6 +79,7 @@
                 },
                 success: function(result) {
                     $('table').html(result);
+                    $('#columnsModal').modal('hide');
                 }
             });
         });

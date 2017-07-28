@@ -16,3 +16,4 @@ Route::get('/account_report', 'RepoYssAccountReport\RepoYssAccountReportControll
 Route::post('/filter_account_report','RepoYssAccountReport\RepoYssAccountReportController@getDataByFilter');
 Route::get('/account_report/export_excel','RepoYssAccountReport\RepoYssAccountReportController@export_Excel')->name('export_excel');
 Route::get('/account_report/export_csv','RepoYssAccountReport\RepoYssAccountReportController@export_CSV')->name('export_csv');
+Route::post('/get_all_account_report_data', 'RepoYssAccountReport\RepoYssAccountReportController@getAllData');
