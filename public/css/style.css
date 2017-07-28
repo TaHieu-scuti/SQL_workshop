@@ -534,6 +534,14 @@ a, a:hover, a:focus {
     text-align: center;
 }
 
+.wrapper .row.csv-file .columns input[type=checkbox]
+{
+  -ms-transform: scale(1.2); /* IE */
+  -moz-transform: scale(1.2); /* FF */
+  -webkit-transform: scale(1.2); /* Safari and Chrome */
+  -o-transform: scale(1.2); /* Opera */
+}
+
 .wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-header {
     background: #0d88e0;
 }
