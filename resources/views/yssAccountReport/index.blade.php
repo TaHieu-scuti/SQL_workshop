@@ -343,7 +343,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-2 col-xs-12 colum-selection">
+                    <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body">

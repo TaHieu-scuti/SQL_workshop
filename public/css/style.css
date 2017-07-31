@@ -439,7 +439,6 @@ a, a:hover, a:focus {
 .wrapper .row.group .selection-dropdown {
     border-bottom: 1px solid #ecedf1;
     border-left: solid 1px #ecedf1;
-    float: right;
     height: 52px;
     padding: 0px;
     text-align: center;
@@ -460,6 +459,8 @@ a, a:hover, a:focus {
     margin-top: 9px;
     max-width: none !important;
     width: 100% !important;
+    max-height: 294px;
+    overflow: auto;
 }
 
 .wrapper .row.group .selection-dropdown .panel {
