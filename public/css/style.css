@@ -529,8 +529,7 @@ a, a:hover, a:focus {
 .wrapper .row.csv-file .columns {
     border-left: solid 1px #ecedf1;
     float: right;
-    height: 55px;
-    padding: 0px ;
+    padding: 0;
     text-align: center;
 }
 
@@ -601,6 +600,11 @@ a, a:hover, a:focus {
     height: 100%;
 }
 
+.wrapper .row.csv-file .columns .panel {
+    color: inherit;
+    padding: 10px 0;
+}
+
 .wrapper .row.csv-file .icon:hover {
     background-color: #ecedf1;
     border-radius: 0px;
@@ -608,10 +612,15 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.csv-file .columns .panel-body { 
-    color: inherit;
-    padding: 18px 0px 0px 0px;
+    color: #797979;
+    padding: 0;
 }
 
+.wrapper .row.csv-file .icon.dropdown .dropdown-toggle {
+    padding: 10px 0;
+}
+
+.wrapper .row.csv-file .columns
 .wrapper .row.csv-file a {
     color: inherit;
 }
@@ -619,9 +628,8 @@ a, a:hover, a:focus {
 .wrapper .row.csv-file .icon {
     border-left: 1px solid #ecedf1;
     cursor: pointer;
-    font-size: 25px;
     float: right;
-    padding: 10px 0px;
+    padding: 0;
     text-align: center;
 }
 
