@@ -612,7 +612,7 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.csv-file .columns .panel-body { 
-    color: inherit;
+    color: #797979;
     padding: 0;
 }
 
