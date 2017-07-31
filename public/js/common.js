@@ -1,4 +1,5 @@
 /*
+=======
 * stop drop-down menu form disappearing on clicking
 */
 $('.dropdown-menu').click(function(e) {
@@ -34,24 +35,6 @@ $('.btn-danger').click(function () {
 *
 *
 */
-var fieldName = [];
-$.each($("input[name='fieldName']"), function(){
-        fieldName.push($(this).val());
-    });
-$.ajax({
-    url : 'get_all_account_report_data',
-    type: 'POST',
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    data : {
-        'fieldName' : fieldName,
-    },
-    success: function(result) {
-        $('table').html(result);
-        $('#columnsModal').modal('hide');
-    }
-});
 
 $(".apply-button").click(function() {
     $array = [];
@@ -66,9 +49,9 @@ $(".apply-button").click(function() {
     $.each($("input[name='fieldName']:checked"), function(){
         $array['fieldName'].push($(this).val());
     });
-
+    
     $.ajax({
-        url: "filter_account_report",
+        url: "account_report",
         type: "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

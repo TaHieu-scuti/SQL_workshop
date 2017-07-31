@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Schema;
 
 class RepoYssAccountReport extends Model
 {
@@ -51,6 +52,21 @@ class RepoYssAccountReport extends Model
 
     public function getDataByFilter($fieldName, $resultPerPage)
     {
-        return self::select($fieldName)->paginate($resultPerPage);
+        return self::paginate($resultPerPage, $fieldName);
+    }
+
+    public function getColumnNames()
+    {
+        $columns = Schema::getColumnListing($this->getTable());
+        // unset "id" and "campaign_id" from array cause we dont need it for filter
+        if(($key = array_search('id', $columns)) !== false) {
+            unset($columns[$key]);
+        }
+
+        if(($key = array_search('campaign_id', $columns)) !== false) {
+            unset($columns[$key]);
+        }
+
+        return $columns;
     }
 }
