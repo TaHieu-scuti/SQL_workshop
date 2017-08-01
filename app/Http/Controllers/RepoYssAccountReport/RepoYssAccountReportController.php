@@ -10,29 +10,28 @@ use App\RepoYssAccountReport;
 const YSS_ACCOUNT_PER_PAGE = '5';
 class RepoYssAccountReportController extends Controller
 {
+    private $repoYssAccountReport;
     /**
      * Display a listing of account report
      *
-     * @return \Illuminate\Http\Response
+     * @param $repoYssAccountReport
      */
-    private $RepoYssAccountReport;
-
-    public function __construct(RepoYssAccountReport $RepoYssAccountReport)
+    public function __construct(RepoYssAccountReport $repoYssAccountReport)
     {
-        $this->RepoYssAccountReport = $RepoYssAccountReport;
+        $this->repoYssAccountReport = $repoYssAccountReport;
     }
 
     public function index()
     {
         if (!session('accountReport')) {
-            $columns = $this->RepoYssAccountReport->getColumnNames();
+            $columns = $this->repoYssAccountReport->getColumnNames();
             session([
                 'accountReport' => [
                     'fieldName' => $columns,
                     'pagination' => 20,
             ]]);
         }
-        $yssAccountReports = $this->RepoYssAccountReport
+        $yssAccountReports = $this->repoYssAccountReport
                 ->getDataByFilter(session('accountReport')['fieldName'],
                 session('accountReport')['pagination']);
         return view('yssAccountReport.index')
@@ -53,7 +52,7 @@ class RepoYssAccountReportController extends Controller
             ]);
         }
 
-        $yssAccountReports = $this->RepoYssAccountReport
+        $yssAccountReports = $this->repoYssAccountReport
                             ->getDataByFilter(session('accountReport')['fieldName'],
                             session('accountReport')['pagination']);
         return view('yssAccountReport.table_data')
@@ -64,7 +63,7 @@ class RepoYssAccountReportController extends Controller
     public function exportExcel()
     {
         $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
-        $yssAccountReports =  $this->RepoYssAccountReport->get();
+        $yssAccountReports =  $this->repoYssAccountReport->get();
         Excel::create($filename, function ($excel) use ($yssAccountReports)  {
 
             $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
@@ -79,7 +78,7 @@ class RepoYssAccountReportController extends Controller
     public function exportCsv()
     {
         $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
-        $yssAccountReports =  $this->RepoYssAccountReport->get();
+        $yssAccountReports =  $this->repoYssAccountReport->get();
         Excel::create($filename, function ($excel) use ($yssAccountReports)  {
 
             $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
