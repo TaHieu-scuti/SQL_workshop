@@ -2,45 +2,91 @@
 
 namespace App\Http\Controllers\RepoYssAccountReport;
 
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RepoYssAccountReport;
 
+const YSS_ACCOUNT_PER_PAGE = '5';
 class RepoYssAccountReportController extends Controller
 {
+    private $repoYssAccountReport;
     /**
      * Display a listing of account report
      *
-     * @return \Illuminate\Http\Response
+     * @param $repoYssAccountReport
      */
-    private $RepoYssAccountReport;
-
-    public function __construct(RepoYssAccountReport $RepoYssAccountReport)
+    public function __construct(RepoYssAccountReport $repoYssAccountReport)
     {
-        $this->RepoYssAccountReport = $RepoYssAccountReport;
+        $this->repoYssAccountReport = $repoYssAccountReport;
     }
 
-    // public function index($yssAccountPerPage,
-    //                       $account_id = null,
-    //                       $clicks = null,
-    //                       $impressions = null,
-                          
-    // )
-    // {
-    //     $yssAccountReports =  $this->RepoYssAccountReport
-    //                          -> where('account_id', 'thisADgainerId')
-    //                          ->paginate($yssAccountPerPage);
-    //     return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
-    // }
     public function index()
     {
-        $yssAccountReports =  $this->RepoYssAccountReport
-                            ->paginate(15);
-        return view('yssAccountReport.index')->with('yssAccountReports', $yssAccountReports);
+        if (!session('accountReport')) {
+            $columns = $this->repoYssAccountReport->getColumnNames();
+            session([
+                'accountReport' => [
+                    'fieldName' => $columns,
+                    'pagination' => 20,
+            ]]);
+        }
+        $yssAccountReports = $this->repoYssAccountReport
+                ->getDataByFilter(session('accountReport')['fieldName'],
+                session('accountReport')['pagination']);
+        return view('yssAccountReport.index')
+                ->with('fieldNames', session('accountReport')['fieldName'])
+                ->with('yssAccountReports', $yssAccountReports);
     }
 
-    public function test()
+    public function getDataByFilter(Request $request)
     {
-        dd('Fuck DUONG');
+        if ($request->fieldName === null) {
+            session()->put('accountReport.pagination',$request->pagination);
+        } else {
+            $fieldName = $request->fieldName;
+            array_unshift($fieldName, 'account_id');
+            session()->put('accountReport', [
+                'fieldName' => $fieldName,
+                'pagination' => $request->pagination,
+            ]);
+        }
+
+        $yssAccountReports = $this->repoYssAccountReport
+                            ->getDataByFilter(session('accountReport')['fieldName'],
+                            session('accountReport')['pagination']);
+        return view('yssAccountReport.table_data')
+                ->with('yssAccountReports', $yssAccountReports)
+                ->with('fieldNames', session('accountReport')['fieldName']);
+    }
+
+    public function exportExcel()
+    {
+        $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
+        $yssAccountReports =  $this->repoYssAccountReport->get();
+        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
+
+            $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')
+                      ->with('yssAccountReports', $yssAccountReports);
+
+            });
+
+        })->download('xlsx');
+    }
+
+    public function exportCsv()
+    {
+        $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
+        $yssAccountReports =  $this->repoYssAccountReport->get();
+        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
+
+            $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')
+                      ->with('yssAccountReports', $yssAccountReports);
+
+            });
+
+        })->download('csv');
     }
 }

@@ -439,7 +439,6 @@ a, a:hover, a:focus {
 .wrapper .row.group .selection-dropdown {
     border-bottom: 1px solid #ecedf1;
     border-left: solid 1px #ecedf1;
-    float: right;
     height: 52px;
     padding: 0px;
     text-align: center;
@@ -460,6 +459,8 @@ a, a:hover, a:focus {
     margin-top: 9px;
     max-width: none !important;
     width: 100% !important;
+    max-height: 294px;
+    overflow: auto;
 }
 
 .wrapper .row.group .selection-dropdown .panel {
@@ -529,9 +530,16 @@ a, a:hover, a:focus {
 .wrapper .row.csv-file .columns {
     border-left: solid 1px #ecedf1;
     float: right;
-    height: 55px;
-    padding: 0px ;
+    padding: 0;
     text-align: center;
+}
+
+.wrapper .row.csv-file .columns input[type=checkbox], input[type=radio]
+{
+  -ms-transform: scale(1.2); /* IE */
+  -moz-transform: scale(1.2); /* FF */
+  -webkit-transform: scale(1.2); /* Safari and Chrome */
+  -o-transform: scale(1.2); /* Opera */
 }
 
 .wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-header {
@@ -593,6 +601,11 @@ a, a:hover, a:focus {
     height: 100%;
 }
 
+.wrapper .row.csv-file .columns .panel {
+    color: inherit;
+    padding: 10px 0;
+}
+
 .wrapper .row.csv-file .icon:hover {
     background-color: #ecedf1;
     border-radius: 0px;
@@ -600,10 +613,15 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.csv-file .columns .panel-body { 
-    color: inherit;
-    padding: 18px 0px 0px 0px;
+    color: #797979;
+    padding: 0;
 }
 
+.wrapper .row.csv-file .icon.dropdown .dropdown-toggle {
+    padding: 10px 0;
+}
+
+.wrapper .row.csv-file .columns
 .wrapper .row.csv-file a {
     color: inherit;
 }
@@ -611,9 +629,8 @@ a, a:hover, a:focus {
 .wrapper .row.csv-file .icon {
     border-left: 1px solid #ecedf1;
     cursor: pointer;
-    font-size: 25px;
     float: right;
-    padding: 10px 0px;
+    padding: 0;
     text-align: center;
 }
 
@@ -639,12 +656,12 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.report-table .table {
-    width: 2200px;
+    max-width: 2200px;
     margin-bottom: 0;
 }
 @media screen and (min-width: 2049px) {
     .wrapper .row.report-table .table {
-        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 .wrapper .row.report-table .table .pagination {
