@@ -798,7 +798,7 @@
 </body>
 <script>
     $(document).ready(function() { 
-    $("#reportTable").tablesorter(); 
-}); 
+        $("#reportTable").tablesorter(); 
+    }); 
 </script>
 </html>
