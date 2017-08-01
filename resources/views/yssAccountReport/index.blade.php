@@ -662,7 +662,7 @@
 
                 <div class="row report-table">
                     <div class="col-md-12">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="reportTable">
                         <thead>
                             <tr>
                                 @foreach($fieldNames as $fieldName)
@@ -794,5 +794,11 @@
     <script src="js/common.js"></script>
     <script src="js/Chart.min.js"></script>
     <script src="js/chartData.js"></script>
+    <script src="js/jquery.tablesorter.min.js"></script>
 </body>
+<script>
+    $(document).ready(function() { 
+    $("#reportTable").tablesorter(); 
+}); 
+</script>
 </html>
