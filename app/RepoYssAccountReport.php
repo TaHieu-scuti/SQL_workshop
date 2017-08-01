@@ -59,11 +59,11 @@ class RepoYssAccountReport extends Model
     {
         $columns = Schema::getColumnListing($this->getTable());
         // unset "id" and "campaign_id" from array cause we dont need it for filter
-        if(($key = array_search('id', $columns)) !== false) {
+        if (($key = array_search('id', $columns)) !== false) {
             unset($columns[$key]);
         }
 
-        if(($key = array_search('campaign_id', $columns)) !== false) {
+        if (($key = array_search('campaign_id', $columns)) !== false) {
             unset($columns[$key]);
         }
 

@@ -472,8 +472,8 @@
                         </div>
                         <ul class="dropdown-menu extended"  aria-labelledby="dropdownMenu1">
                            
-                            <li><a href="#">CSV</a></li>
-                            <li><a href="#">Excel</a></li>
+                            <li><a href="{{ route('export_csv') }}">CSV</a></li>
+                            <li><a href="{{ route('export_excel') }}">Excel</a></li>
                         </ul>
                     </div>
                     <div class="col-md-1 col-xs-6 columns">

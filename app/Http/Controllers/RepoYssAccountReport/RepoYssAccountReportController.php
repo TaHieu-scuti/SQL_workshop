@@ -24,15 +24,20 @@ class RepoYssAccountReportController extends Controller
 
     public function index()
     {
-        if(!session('accountReport')) {
+        if (!session('accountReport')) {
             $columns = $this->RepoYssAccountReport->getColumnNames();
-            session(['accountReport' => [
+            session([
+                'accountReport' => [
                 'fieldName' => $columns,
                 'pagination' => 20,
             ]]);
         }
-        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter(session('accountReport')['fieldName'], session('accountReport')['pagination']);
-        return view('yssAccountReport.index')->with('fieldNames', session('accountReport')['fieldName'])->with('yssAccountReports', $yssAccountReports);
+        $yssAccountReports = $this->RepoYssAccountReport
+                ->getDataByFilter(session('accountReport')['fieldName'],
+                session('accountReport')['pagination']);
+        return view('yssAccountReport.index')
+                ->with('fieldNames', session('accountReport')['fieldName'])
+                ->with('yssAccountReports', $yssAccountReports);
     }
 
     public function getDataByFilter(Request $request)
@@ -48,36 +53,40 @@ class RepoYssAccountReportController extends Controller
             ]);
         }
 
-        $yssAccountReports = $this->RepoYssAccountReport->getDataByFilter(session('accountReport')['fieldName'], session('accountReport')['pagination']);
-        return view('yssAccountReport.table_data')->with('yssAccountReports', $yssAccountReports)->with('fieldNames', session('accountReport')['fieldName']);
+        $yssAccountReports = $this->RepoYssAccountReport
+                            ->getDataByFilter(session('accountReport')['fieldName'],
+                            session('accountReport')['pagination']);
+        return view('yssAccountReport.table_data')
+                ->with('yssAccountReports', $yssAccountReports)
+                ->with('fieldNames', session('accountReport')['fieldName']);
     }
 
-    public function export_Excel()
+    public function exportExcel()
     {
-        # code...
         date_default_timezone_set("Asia/Ho_Chi_Minh");
         $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->RepoYssAccountReport->get();
-        Excel::create($filename, function($excel) use($yssAccountReports)  {
+        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
 
-            $excel->sheet('Account Report', function($sheet) use($yssAccountReports) {
-                $sheet->loadView('yssAccountReport.table_report')->with('yssAccountReports', $yssAccountReports);
+            $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')
+                      ->with('yssAccountReports', $yssAccountReports);
 
             });
 
         })->download('xlsx');
     }
 
-    public function export_CSV()
+    public function exportCsv()
     {
-        # code...
         date_default_timezone_set("Asia/Ho_Chi_Minh");
         $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->RepoYssAccountReport->get();
-        Excel::create($filename, function($excel) use($yssAccountReports)  {
+        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
 
-            $excel->sheet('Account Report', function($sheet) use($yssAccountReports) {
-                $sheet->loadView('yssAccountReport.table_report')->with('yssAccountReports', $yssAccountReports);
+            $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
+                $sheet->loadView('yssAccountReport.table_report')
+                      ->with('yssAccountReports', $yssAccountReports);
 
             });
 
