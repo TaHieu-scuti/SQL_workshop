@@ -28,8 +28,8 @@ class RepoYssAccountReportController extends Controller
             $columns = $this->RepoYssAccountReport->getColumnNames();
             session([
                 'accountReport' => [
-                'fieldName' => $columns,
-                'pagination' => 20,
+                    'fieldName' => $columns,
+                    'pagination' => 20,
             ]]);
         }
         $yssAccountReports = $this->RepoYssAccountReport
@@ -63,7 +63,6 @@ class RepoYssAccountReportController extends Controller
 
     public function exportExcel()
     {
-        date_default_timezone_set("Asia/Ho_Chi_Minh");
         $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->RepoYssAccountReport->get();
         Excel::create($filename, function ($excel) use ($yssAccountReports)  {
@@ -79,7 +78,6 @@ class RepoYssAccountReportController extends Controller
 
     public function exportCsv()
     {
-        date_default_timezone_set("Asia/Ho_Chi_Minh");
         $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->RepoYssAccountReport->get();
         Excel::create($filename, function ($excel) use ($yssAccountReports)  {
