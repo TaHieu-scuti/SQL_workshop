@@ -37,7 +37,7 @@ class RepoYssAccountReport extends Model
         'valuePerAllConv',    //            Value / number of all conversions
         'network',    //                    Specify advertising system
         'device',    //                     device
-        'day',    /*                        The record of the object Date: year (year), month (monthofYear), 
+        'day',    /*                        The record of the object Date: year (year), month (monthofYear),
                                             day (day).*/
         'dayOfWeek',    //                  Day of the week
         'quarter',    //                    quarter

@@ -10,13 +10,13 @@ class RepoYssAdReport extends Model
     protected $fillable = [
         'account_id',    // Account ID
         'campaign_id',    // Campaign ID of ADgainer system
-        'campaignID',    // 
+        'campaignID',    //
         'adgroupID'
-        'adID',    // 
-        'campaignName',    // 
-        'adGroupName',    // 
-        'adName',    // 
-        'title',    // 
+        'adID',    //
+        'campaignName',    //
+        'adGroupName',    //
+        'adName',    //
+        'title',    //
         'description1',
         'displayURL',
         'destinationURL',

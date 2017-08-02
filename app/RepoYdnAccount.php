@@ -11,7 +11,7 @@ class RepoYdnAccount extends Model
         'accountid',    // Account ID
         'account_id',    // Account ID of ADgainer system
         'accountName',    // Account name
-        'accountType',    // Payment of the fee 
+        'accountType',    // Payment of the fee
         'accountStatus',    // Contract status of the account
         'deliveryStatus',    // Delivery status of the ad
     ];
