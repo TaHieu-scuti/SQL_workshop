@@ -29,11 +29,13 @@ class RepoYssAccountReportController extends Controller
                 'accountReport' => [
                     'fieldName' => $columns,
                     'pagination' => 20,
-            ]]);
+                ]]);
         }
         $yssAccountReports = $this->repoYssAccountReport
-                ->getDataByFilter(session('accountReport')['fieldName'],
-                session('accountReport')['pagination']);
+                ->getDataByFilter(
+                    session('accountReport')['fieldName'],
+                    session('accountReport')['pagination']
+                );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session('accountReport')['fieldName'])
                 ->with('yssAccountReports', $yssAccountReports);
@@ -42,7 +44,7 @@ class RepoYssAccountReportController extends Controller
     public function getDataByFilter(Request $request)
     {
         if ($request->fieldName === null) {
-            session()->put('accountReport.pagination',$request->pagination);
+            session()->put('accountReport.pagination', $request->pagination);
         } else {
             $fieldName = $request->fieldName;
             array_unshift($fieldName, 'account_id');
@@ -53,8 +55,10 @@ class RepoYssAccountReportController extends Controller
         }
 
         $yssAccountReports = $this->repoYssAccountReport
-                            ->getDataByFilter(session('accountReport')['fieldName'],
-                            session('accountReport')['pagination']);
+                            ->getDataByFilter(
+                                session('accountReport')['fieldName'],
+                                session('accountReport')['pagination']
+                            );
         return view('yssAccountReport.table_data')
                 ->with('yssAccountReports', $yssAccountReports)
                 ->with('fieldNames', session('accountReport')['fieldName']);
@@ -64,14 +68,12 @@ class RepoYssAccountReportController extends Controller
     {
         $filename =date("h:i") ." ". date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->repoYssAccountReport->get();
-        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
+        Excel::create($filename, function ($excel) use ($yssAccountReports) {
 
             $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
                 $sheet->loadView('yssAccountReport.table_report')
                       ->with('yssAccountReports', $yssAccountReports);
-
             });
-
         })->download('xlsx');
     }
 
@@ -79,14 +81,12 @@ class RepoYssAccountReportController extends Controller
     {
         $filename = date("h:i"). " " . date("Y-m-d")." Account_Report";
         $yssAccountReports =  $this->repoYssAccountReport->get();
-        Excel::create($filename, function ($excel) use ($yssAccountReports)  {
+        Excel::create($filename, function ($excel) use ($yssAccountReports) {
 
             $excel->sheet('Account Report', function ($sheet) use ($yssAccountReports) {
                 $sheet->loadView('yssAccountReport.table_report')
                       ->with('yssAccountReports', $yssAccountReports);
-
             });
-
         })->download('csv');
     }
 }

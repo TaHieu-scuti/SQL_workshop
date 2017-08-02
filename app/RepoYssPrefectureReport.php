@@ -41,5 +41,4 @@ class RepoYssPrefectureReport extends Model
         'city',
         'cityWardDistrict',
     ];
-
 }
