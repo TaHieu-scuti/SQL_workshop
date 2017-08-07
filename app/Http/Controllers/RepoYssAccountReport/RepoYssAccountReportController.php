@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\RepoYssAccountReport;
 
-const YSS_ACCOUNT_PER_PAGE = '5';
 class RepoYssAccountReportController extends Controller
 {
     private $repoYssAccountReport;
@@ -31,14 +30,14 @@ class RepoYssAccountReportController extends Controller
                     'pagination' => 20,
                 ]]);
         }
-        $yssAccountReports = $this->repoYssAccountReport
+        $reports = $this->repoYssAccountReport
                 ->getDataByFilter(
                     session('accountReport')['fieldName'],
                     session('accountReport')['pagination']
                 );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session('accountReport')['fieldName'])
-                ->with('yssAccountReports', $yssAccountReports);
+                ->with('reports', $reports);
     }
 
     public function getDataByFilter(Request $request)
