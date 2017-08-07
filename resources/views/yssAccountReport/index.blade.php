@@ -16,6 +16,7 @@
     <link href="css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/morris.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/style-responsive.css" rel="stylesheet" />
@@ -392,7 +393,11 @@
                 </div>
 
                 <div class="row line-chart">
-                    <canvas id="myChart" width="400" height="110"></canvas>
+                    <section class="panel">
+                        <div class="panel-body">
+                            <div id="report-graph" class="graph"></div>
+                        </div>
+                    </section>
                 </div>
 
                 <div class="row statistic">
@@ -785,20 +790,17 @@
         </section>
     </section>
     <!--main content end-->
+    <!-- Lib js -->
     <script src="js/jquery.js"></script>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
     <script src="js/jquery-date-range.js"></script>
+    <script src="js/morris.min.js"></script>
+    <script src="js/raphael-min.js"></script>
+    <script src="js/jquery.tablesorter.min.js"></script>
     <!-- Custom js-->
     <script src="js/common.js"></script>
-    <script src="js/Chart.min.js"></script>
-    <script src="js/chartData.js"></script>
-    <script src="js/jquery.tablesorter.min.js"></script>
+    <script src="js/morris-script.js"></script>
 </body>
-<script>
-    $(document).ready(function() { 
-        $("#reportTable").tablesorter(); 
-    }); 
-</script>
 </html>

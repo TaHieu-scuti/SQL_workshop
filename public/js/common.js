@@ -35,7 +35,6 @@ $('.btn-danger').click(function () {
 *
 *
 */
-
 $(".apply-button").click(function() {
     $array = [];
     if (!$array['fieldName']) {
@@ -83,3 +82,10 @@ $("#selectAll").click(function() {
         });
     }
 })
+/*
+*
+* sort table
+*/
+$(document).ready(function() { 
+    $("#reportTable").tablesorter(); 
+}); 
