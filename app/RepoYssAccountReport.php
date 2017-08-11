@@ -3,9 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Schema;
 
-class RepoYssAccountReport extends Model
+class RepoYssAccountReport extends AbstractReportModel
 {
     public $timestamps = false;
     protected $table = 'repo_yss_account_report';
@@ -44,29 +43,4 @@ class RepoYssAccountReport extends Model
         'month',    //                      monthly
         'week',    //                       Every week
     ];
-
-    public function getAllData()
-    {
-        return self::all();
-    }
-
-    public function getDataByFilter($fieldName, $resultPerPage)
-    {
-        return self::paginate($resultPerPage, $fieldName);
-    }
-
-    public function getColumnNames()
-    {
-        $columns = Schema::getColumnListing($this->getTable());
-        // unset "id" and "campaign_id" from array cause we dont need it for filter
-        if (($key = array_search('id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
-
-        if (($key = array_search('campaign_id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
-
-        return $columns;
-    }
 }

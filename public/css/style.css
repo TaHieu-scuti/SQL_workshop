@@ -648,6 +648,9 @@ a, a:hover, a:focus {
     background-color: #0d88e0;
 }
 
+.wrapper .row.csv-file .dropdown-menu.extended {
+    top: 38px;
+}
 /*row report-table*/
 .wrapper .row.report-table {
     border-bottom: none;
