@@ -19,7 +19,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
     public function index()
     {
-        $columns = $this->repoYssAccountReport->getColumnNames();
+        $columns = $this->model->getColumnNames();
         if (!session('accountReport')) {
             session([
                 'accountReport' => [
