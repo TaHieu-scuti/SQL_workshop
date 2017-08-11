@@ -19,8 +19,8 @@ class RepoYssAccountReportController extends AbstractReportController
 
     public function index()
     {
+        $columns = $this->repoYssAccountReport->getColumnNames();
         if (!session('accountReport')) {
-            $columns = $this->model->getColumnNames();
             session([
                 'accountReport' => [
                     'fieldName' => $columns,
@@ -34,7 +34,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session('accountReport')['fieldName'])
-                ->with('reports', $reports);
+                ->with('reports', $reports)
+                ->with('columns', $columns);
     }
 
     public function getDataByFilter(Request $request)
