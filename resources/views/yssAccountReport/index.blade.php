@@ -195,80 +195,80 @@
                             </div>
                         </section>
                         </a>
-                        <ul class="col-md-2 dropdown-menu extended date-option tasks-bar">
-                            <li>
+                        <ul class="col-md-2 dropdown-menu extended tasks-bar date-option">
+                            <li data-date="today">
                                 <a href="#">
                                     <div class="desc">Today</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="yesterday">
                                 <a href="#">
                                     <div class="desc">Yesterday</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="last7DaysToday">
                                 <a href="#">
                                     <div class="desc">Last 7 days( include today)</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="last7days">
                                 <a href="#">
                                     <div class="desc">Last 7 days( exclude today)</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="last30days">
                                 <a href="#">
                                     <div class="desc">Last 30 days</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="last90days">
                                 <a href="#">
                                     <div class="desc">Last 90 days</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
-                            <li>
+                            <li data-date="thisWeek">
                                 <a href="#">
                                     <div class="desc">This week</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="thisMonth">
                                 <a href="#">
                                     <div class="desc">This month</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="thisQuarter">
                                 <a href="#">
                                     <div class="desc">This quarter</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="thisYear">
                                 <a href="#">
                                     <div class="desc">This year</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
-                            <li>
+                            <li data-date="lastBusinessWeek">
                                 <a href="#">
                                     <div class="desc">Last business week (Mon – Fri)</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="lastFullWeek">
                                 <a href="#">
                                     <div class="desc">Last full week</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="lastMonth">
                                 <a href="#">
                                     <div class="desc">Last month</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="lastQuarter">
                                 <a href="#">
                                     <div class="desc">Last quarter</div>
                                 </a>
                             </li>
-                            <li>
+                            <li data-date="lastYear">
                                 <a href="#">
                                     <div class="desc">Last year</div>
                                 </a>
