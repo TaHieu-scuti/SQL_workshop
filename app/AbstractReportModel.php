@@ -31,4 +31,41 @@ abstract class AbstractReportModel extends Model
         }
         return $columns;
     }
+
+    public function getDataOnGraph($column, $status, $start, $end)
+    {
+        return self::select(DB::raw('SUM('.$column.') as data'), DB::raw('DATE(day) as day'))
+                    ->join('repo_yss_accounts', 'repo_yss_account_report.account_id', '=', 'repo_yss_accounts.account_id')
+                    ->where(function($query) use ($start, $end) {
+                        if ($start === $end) {
+                            $query->whereDate('day', '=', $end);
+                        } else {
+                            $query->whereDate('day', '>=', $end)
+                                ->whereDate('day', '<', $start);
+                        }
+                    })
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$status)
+                    ->groupBy('day')
+                    ->get();
+    }
+
+    public function getDataOnTable($column, $status, $start, $end, $resultPerPage)
+    {
+        //unset column 'account_id' ( need to be more specific about table name )
+        if (($key = array_search('account_id', $column)) !== false) {
+            unset($column[$key]);
+        }
+        $query = self::select($column)
+                    ->join('repo_yss_accounts', 'repo_yss_account_report.account_id', '=', 'repo_yss_accounts.account_id')
+                    ->where(function($query) use ($start, $end) {
+                        if ($start === $end) {
+                            $query->whereDate('day', '=', $end);
+                        } else {
+                            $query->whereDate('day', '>=', $end)
+                                ->whereDate('day', '<', $start);
+                        }
+                    })
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$status);
+        return $query->addSelect('repo_yss_account_report.account_id')->paginate($resultPerPage);
+    }
 }
