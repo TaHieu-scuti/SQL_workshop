@@ -60,4 +60,70 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('reports', $reports)
                 ->with('fieldNames', session('accountReport')['fieldName']);
     }
+
+    public function displayDataOnGraph()
+    {
+        if (!session('accountReport.graphColumnName')) {
+            session()->put('accountReport.graphColumnName', 'clicks');
+        }
+        
+        $data = $this->model
+                ->getDataOnGraph(
+                    session('accountReport.graphColumnName'),
+                    session('accountReport.accountStatus'),
+                    session('accountReport.startDay'),
+                    session('accountReport.endDay'),
+                    session('accountReport.pagination')
+                );
+        if ($data->isEmpty()) {
+            if (session('accountReport.endDay') === session('accountReport.startDay')) {
+                $data[] = ['day' => session('accountReport.startDay'), 'data' => 0];
+            } else {
+                $data[] = ['day' => session('accountReport.endDay'), 'data' => 0];
+                $data[] = ['day' => session('accountReport.startDay'), 'data' => 0];
+            }
+        }
+
+        return response()->json($data);
+    }
+
+    public function filteredGraphByColumn(Request $request)
+    {
+        session()->put('accountReport.graphColumnName', $request->columnName);
+        $data = $this->model
+                ->getDataOnGraph(
+                    session('accountReport.graphColumnName'),
+                    session('accountReport.accountStatus'),
+                    session('accountReport.startDay'),
+                    session('accountReport.endDay'),
+                    session('accountReport.pagination')
+                );
+        return response()->json($data);
+    }
+
+    public function filteredGraphByDate(Request $request)
+    {
+        session()->put([
+                    'accountReport.startDay' => $request->startDay,
+                    'accountReport.endDay' => $request->endDay,
+                    ]);
+        $data = $this->model
+                        ->getDataOnGraph(
+                            session('accountReport.graphColumnName'),
+                            session('accountReport.accountStatus'),
+                            session('accountReport.startDay'),
+                            session('accountReport.endDay'),
+                            session('accountReport.pagination')
+                        );
+        if ($data->isEmpty()) {
+            if ($request->startDay === $request->endDay) {
+                $data[] = ['day' => $request->startDay, 'data' => 0];
+            } else {
+                $data[] = ['day' => $request->endDay, 'data' => 0];
+                $data[] = ['day' => $request->startDay, 'data' => 0];
+            }
+        }
+
+        return response()->json($data);
+    }
 }

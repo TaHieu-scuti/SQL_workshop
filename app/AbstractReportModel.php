@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Schema;
+use DB;
 
 abstract class AbstractReportModel extends Model
 {
