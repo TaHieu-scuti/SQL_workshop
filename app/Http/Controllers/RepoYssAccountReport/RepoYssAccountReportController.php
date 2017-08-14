@@ -6,6 +6,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AbstractReportController;
 use App\RepoYssAccountReport;
+use DateTime;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
@@ -21,17 +22,19 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $columns = $this->model->getColumnNames();
         if (!session('accountReport')) {
+            $today = new DateTime();
+            $startDay = $today->format('Y-m-d');
+            $endDay = $today->modify('-90 days')->format('Y-m-d');
             session([
                 'accountReport' => [
                     'fieldName' => $columns,
                     'pagination' => 20,
-                ]]);
+                    'accountStatus' => '',
+                    'startDay' => $startDay,
+                    'endDay' => $endDay,
+            ]]);
         }
-        $reports = $this->model
-                ->getDataByFilter(
-                    session('accountReport')['fieldName'],
-                    session('accountReport')['pagination']
-                );
+        $reports = $this->model->getDataOnTable(session('accountReport.fieldName'), session('accountReport.accountStatus'), session('accountReport.startDay'), session('accountReport.endDay'), session('accountReport.pagination'));
         return view('yssAccountReport.index')
                 ->with('fieldNames', session('accountReport')['fieldName'])
                 ->with('reports', $reports)
@@ -45,16 +48,19 @@ class RepoYssAccountReportController extends AbstractReportController
         } else {
             $fieldName = $request->fieldName;
             array_unshift($fieldName, 'account_id');
-            session()->put('accountReport', [
-                'fieldName' => $fieldName,
-                'pagination' => $request->pagination,
+            session()->put([
+                'accountReport.fieldName' => $fieldName,
+                'accountReport.pagination' => $request->pagination
             ]);
         }
 
         $reports = $this->model
-                            ->getDataByFilter(
-                                session('accountReport')['fieldName'],
-                                session('accountReport')['pagination']
+                            ->getDataOnTable(
+                                session('accountReport.fieldName'),
+                                session('accountReport.accountStatus'),
+                                session('accountReport.startDay'),
+                                session('accountReport.endDay'),
+                                session('accountReport.pagination')
                             );
         return view('layouts.table_data')
                 ->with('reports', $reports)

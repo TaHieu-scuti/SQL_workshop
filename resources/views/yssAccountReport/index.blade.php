@@ -195,7 +195,7 @@
                             </div>
                         </section>
                         </a>
-                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
+                        <ul class="col-md-2 dropdown-menu extended date-option tasks-bar">
                             <li>
                                 <a href="#">
                                     <div class="desc">Today</div>
