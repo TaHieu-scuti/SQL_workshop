@@ -6,25 +6,25 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="keyword" content="">
-    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="/images/favicon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Account report</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-reset.css" rel="stylesheet">
     <!--external css-->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="css/morris.css" rel="stylesheet" />
+    <link href="/css/morris.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/style-responsive.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/style-responsive.css" rel="stylesheet" />
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
+      <script src="/js/html5shiv.js"></script>
+      <script src="/js/respond.min.js"></script>
       <![endif]-->
 </head>
 <body class="full-width">
@@ -87,7 +87,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="desc">
-                                                <img src="images/yahoo.png">
+                                                <img src="/images/yahoo.png">
                                                 All Yahoo Japan accounts
                                             </div>
                                         </a>
@@ -95,7 +95,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="desc">
-                                                <img src="images/yahoo.png">
+                                                <img src="/images/yahoo.png">
                                                 Samsung
                                             </div>
                                         </a>
@@ -103,7 +103,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="desc">
-                                                <img src="images/yahoo.png">
+                                                <img src="/images/yahoo.png">
                                                 Oppo
                                             </div>
                                         </a>
@@ -111,7 +111,7 @@
                                     <li>
                                         <a href="#">
                                             <div class="desc">
-                                                <img src="images/yahoo.png">
+                                                <img src="/images/yahoo.png">
                                                 Nokia
                                             </div>
                                         </a>
@@ -178,7 +178,7 @@
                             <div class="panel-body">
                                 <span class="title">Account<br></span>
                                 <span class="element-name">
-                                    <img src="images/yahoo.png">
+                                    <img src="/images/yahoo.png">
                                     Campaign name
                                 </span>
                             </div>
@@ -540,16 +540,16 @@
     </section>
     <!--main content end-->
     <!-- Lib js -->
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery-1.8.3.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/jquery-date-range.js"></script>
-    <script src="js/morris.min.js"></script>
-    <script src="js/raphael-min.js"></script>
-    <script src="js/jquery.tablesorter.min.js"></script>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/jquery-date-range.js"></script>
+    <script src="/js/morris.min.js"></script>
+    <script src="/js/raphael-min.js"></script>
+    <script src="/js/jquery.tablesorter.min.js"></script>
     <!-- Custom js-->
-    <script src="js/common.js"></script>
-    <script src="js/morris-script.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/morris-script.js"></script>
 </body>
 </html>
