@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\RepoYssAccountReport;
 
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Http\Request;
 use App\Http\Controllers\AbstractReportController;
 use App\RepoYssAccountReport;
+
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+
+use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
     /**
      * @param RepoYssAccountReport $model
      */
-    public function __construct(RepoYssAccountReport $model)
-    {
-        parent::__construct($model);
+    public function __construct(
+        ResponseFactory $responseFactory,
+        FormatIdentifier $formatIdentifier,
+        RepoYssAccountReport $model
+    ){
+        parent::__construct($responseFactory, $formatIdentifier, $model);
     }
 
     public function index()
