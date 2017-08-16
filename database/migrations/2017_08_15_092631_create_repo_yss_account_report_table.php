@@ -54,7 +54,7 @@ class CreateRepoYssAccountReportTable extends Migration
             $table->double('costPerAllConv')->comment('コスト/すべてのコンバージョン数')->nullable();
             $table->double('valuePerAllConv')->comment('価値/すべてのコンバージョン数')->nullable();
             $table->string('network', 50)->comment('広告掲載方式の指定')->nullable();
-            $table->double('device', 50)->comment('デバイス')->nullable();
+            $table->string('device', 50)->comment('デバイス')->nullable();
             $table->dateTime('day', 50)
                     ->comment('レコードの対象日：年（year）、月（monthofYear）、日'
                         .'（day）。左項目を加工してDATETIMEに変換')->nullable();

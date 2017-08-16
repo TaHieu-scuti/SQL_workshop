@@ -50,6 +50,6 @@ class CreateRepoYssAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('repo_yss_account');
+        Schema::drop('repo_yss_accounts');
     }
 }
