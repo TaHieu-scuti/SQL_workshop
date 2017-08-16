@@ -62,7 +62,7 @@ abstract class AbstractReportController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
             'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
-            'Cache-Control' => 'cache, must-revalidate',
+            'Cache-Control' => 'cache, must-revalidate, private',
             'Pragma' => 'public'
         ]);
     }
