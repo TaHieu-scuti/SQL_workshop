@@ -46,7 +46,7 @@ class MaatwebsiteCSVExporter implements CSVExporterInterface
         // get fields' names
         $fieldNames = $this->model->getColumnNames();
 
-        $this->fileName = date("Y_m_d h_i ") . "$tableName";
+        $this->fileName = date("Y_m_d h_i ") . "{$tableName}";
 
         $csvData = Excel::create($this->fileName, function ($csv) use ($reports, $fieldNames, $export, $tableName) {
             $csv->sheet($tableName, function ($sheet) use ($reports, $fieldNames, $export) {
