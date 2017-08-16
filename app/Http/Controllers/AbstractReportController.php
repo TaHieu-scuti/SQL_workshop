@@ -34,7 +34,7 @@ abstract class AbstractReportController extends Controller
         ResponseFactory $responseFactory,
         FormatIdentifier $formatIdentifier,
         AbstractReportModel $model
-    ){
+    ) {
         $this->responseFactory = $responseFactory;
         $this->formatIdentifier = $formatIdentifier;
         $this->model = $model;

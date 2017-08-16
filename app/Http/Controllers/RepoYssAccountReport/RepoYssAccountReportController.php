@@ -19,7 +19,7 @@ class RepoYssAccountReportController extends AbstractReportController
         ResponseFactory $responseFactory,
         FormatIdentifier $formatIdentifier,
         RepoYssAccountReport $model
-    ){
+    ) {
         parent::__construct($responseFactory, $formatIdentifier, $model);
     }
 
