@@ -25,6 +25,9 @@ abstract class AbstractReportController extends Controller
     protected $model;
 
     /**
+     * AbstractReportController constructor.
+     * @param ResponseFactory $responseFactory
+     * @param FormatIdentifier $formatIdentifier
      * @param AbstractReportModel $model
      */
     public function __construct(
