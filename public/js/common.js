@@ -206,8 +206,22 @@ $("#selectAll").click(function () {
 })
 /*
 *
+* onclicking table header
 * sort table
 */
-$(document).ready(function () { 
-    $("#reportTable").tablesorter(); 
-}); 
+$('table').delegate('th', 'click', function() {
+    var th = $("th").eq($(this).index());
+    $.ajax({
+        url : "update-table",
+        type : "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            'columnSort' : th.text(),
+        },
+        success : function (response) {
+            $('table').html(response);
+        }
+    });
+}) 

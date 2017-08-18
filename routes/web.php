@@ -18,6 +18,6 @@ Route::get(
     '/account_report/export_csv',
     'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
 )->name('export_csv');
-
 Route::get('/display-graph', 'RepoYssAccountReport\RepoYssAccountReportController@displayDataOnGraph');
 Route::post('/display-graph', 'RepoYssAccountReport\RepoYssAccountReportController@updateGraph');
+Route::post('/account_report/sort_table', 'RepoYssAccountReport\RepoYssAccountReportController@sortTable');

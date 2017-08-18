@@ -44,7 +44,7 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',                        //  monthly
         'week',                         //  Every week
     ];
-    public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination)
+    public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
     {
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldName)) !== false) {
@@ -67,20 +67,21 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus);
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus)
+                    ->orderBy($columnSort, $sort);
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
     }
 
-    public function getDataForGraph($column, $accountStatus, $start, $end)
+    public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
     {
         return self::select(DB::raw('SUM('.$column.') as data'), DB::raw('DATE(day) as day'))
                     ->join('repo_yss_accounts', 'repo_yss_account_report.account_id', '=', 'repo_yss_accounts.account_id')
-                    ->where(function($query) use ($start, $end) {
-                        if ($start === $end) {
-                            $query->whereDate('day', '=', $end);
+                    ->where(function($query) use ($startDay, $endDay) {
+                        if ($startDay === $endDay) {
+                            $query->whereDate('day', '=', $endDay);
                         } else {
-                            $query->whereDate('day', '>=', $end)
-                                ->whereDate('day', '<', $start);
+                            $query->whereDate('day', '>=', $endDay)
+                                ->whereDate('day', '<', $startDay);
                         }
                     })
                     ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
