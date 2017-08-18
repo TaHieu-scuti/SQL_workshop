@@ -111,18 +111,18 @@ class RepoYssAccountReportController extends AbstractReportController
             );
         }
         //get column sort and sort by if available
-        if ($request->columnSort !== null && self::SESSION_KEY_SORT !== 'desc') {
-            session()->put(
-                [
-                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                    self::SESSION_KEY_SORT => 'desc'
-                ]
-            );
-        } elseif ($request->columnSort !== null && self::SESSION_KEY_SORT === 'desc') {
+        if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
             session()->put(
                 [
                     self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
                     self::SESSION_KEY_SORT => 'asc'
+                ]
+            );
+        } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
+            session()->put(
+                [
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'desc'
                 ]
             );
         }
