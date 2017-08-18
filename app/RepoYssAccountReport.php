@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class RepoYssAccountReport extends AbstractReportModel
 {
@@ -43,12 +44,13 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',                        //  monthly
         'week',                         //  Every week
     ];
-    public function displayDataOnTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination)
+    public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination)
     {
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldName)) !== false) {
             unset($fieldName[$key]);
         }
+        // dd($acccountStatus);
         $query = self::select($fieldName)
                     ->join(
                         'repo_yss_accounts',
@@ -67,5 +69,22 @@ class RepoYssAccountReport extends AbstractReportModel
                     )
                     ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus);
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
+    }
+
+    public function getDataForGraph($column, $accountStatus, $start, $end)
+    {
+        return self::select(DB::raw('SUM('.$column.') as data'), DB::raw('DATE(day) as day'))
+                    ->join('repo_yss_accounts', 'repo_yss_account_report.account_id', '=', 'repo_yss_accounts.account_id')
+                    ->where(function($query) use ($start, $end) {
+                        if ($start === $end) {
+                            $query->whereDate('day', '=', $end);
+                        } else {
+                            $query->whereDate('day', '>=', $end)
+                                ->whereDate('day', '<', $start);
+                        }
+                    })
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
+                    ->groupBy('day')
+                    ->get();
     }
 }

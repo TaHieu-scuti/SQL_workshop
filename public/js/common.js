@@ -73,7 +73,6 @@ $(".apply-button").click(function () {
 * update table with selected time period
 */
 $('.date-option li').click(function () {
-    console.log('abc');
     var option = $(this).data('date');
     var today = moment();
     var startDay;
@@ -165,7 +164,7 @@ $('.status-option li').click(function () {
     var status;
     switch(option) {
         case 'all' : 
-            status = '';
+            status = "";
             break;
         case 'disabled' : 
             status = 'disabled';

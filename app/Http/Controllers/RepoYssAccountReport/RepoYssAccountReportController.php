@@ -19,6 +19,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
+    const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
 
     /**
      * @param RepoYssAccountReport $model
@@ -43,7 +44,8 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         // initialize session for table with fieldName,
         // status, start and end date, pagination
-        if (!session(self::SESSION_KEY_PREFIX)) {
+
+        if (!session('accountReport')) {
             $today = new DateTime();
             $startDay = $today->format('Y-m-d');
             $endDay = $today->modify('-90 days')->format('Y-m-d');
@@ -54,7 +56,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_PAGINATION => 20]);
         }
         // display data on the table with current session of date, status and column
-        $reports = $this->model->displayDataOnTable(
+        $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
@@ -102,7 +104,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ]
             );
         }
-        $reports = $this->model->displayDataOnTable(
+        $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
@@ -113,4 +115,71 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('reports', $reports)
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
     }
+
+    public function displayDataOnGraph()
+    {
+        // if get no column name, set selected column click
+        if (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
+            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
+        } 
+        $data = $this->model
+                ->getDataForGraph(
+                    session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                    session(self::SESSION_KEY_ACCOUNT_STATUS),
+                    session(self::SESSION_KEY_START_DAY),
+                    session(self::SESSION_KEY_END_DAY)
+                );
+        if ($data->isEmpty()) {
+            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            } else {
+                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            }
+        }
+        return response()->json($data);
+    }
+
+    public function updateGraph(Request $request)
+    {
+        // update session.graphColumnName
+        if ($request->graphColumnName !== null) {
+            session()->put('accountReport.graphColumnName', $request->graphColumnName);
+        }
+        // get startDay and endDay if available
+        if ($request->startDay !== null && $request->endDay !== null) {
+            session()->put(
+                [
+                    self::SESSION_KEY_START_DAY => $request->startDay,
+                    self::SESSION_KEY_END_DAY => $request->endDay
+                ]
+            );
+        }
+        // get status if available
+        if ($request->status !== null) {
+            session()->put(
+                [
+                    self::SESSION_KEY_ACCOUNT_STATUS => $request->status,
+                ]
+            );
+        }
+        $data = $this->model
+                ->getDataForGraph(
+                    session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                    session(self::SESSION_KEY_ACCOUNT_STATUS),
+                    session(self::SESSION_KEY_START_DAY),
+                    session(self::SESSION_KEY_END_DAY)
+                );
+        if ($data->isEmpty()) {
+            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            } else {
+                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            }
+        }
+
+        return response()->json($data);
+    }
+
 }
