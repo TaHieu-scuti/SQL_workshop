@@ -50,7 +50,7 @@ class RepoYssAccountReport extends AbstractReportModel
         if (($key = array_search('account_id', $fieldName)) !== false) {
             unset($fieldName[$key]);
         }
-        // dd($acccountStatus);
+
         $query = self::select($fieldName)
                     ->join(
                         'repo_yss_accounts',
