@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Schema;
-use DB;
 
 abstract class AbstractReportModel extends Model
 {
@@ -36,4 +35,6 @@ abstract class AbstractReportModel extends Model
 
         return $columns;
     }
+    abstract public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination);
+    abstract public function getDataFor
 }

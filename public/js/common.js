@@ -164,7 +164,7 @@ $('.status-option li').click(function () {
     var status;
     switch(option) {
         case 'all' : 
-            status = "";
+            status = '';
             break;
         case 'disabled' : 
             status = 'disabled';
