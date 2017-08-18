@@ -3,3 +3,4 @@
 *.scss linguist-vendored
 *.js linguist-vendored
 CHANGELOG.md export-ignore
+tests/resources/repo_yss_account_report.csv eol=crlf
