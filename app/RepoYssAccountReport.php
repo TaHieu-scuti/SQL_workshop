@@ -43,7 +43,7 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',                        //  monthly
         'week',                         //  Every week
     ];
-    public function displayDataOnTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination)
+    public function displayDataOnTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
     {
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldName)) !== false) {
@@ -65,7 +65,8 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus);
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus)
+                    ->orderBy($columnSort, $sort);
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
     }
 }

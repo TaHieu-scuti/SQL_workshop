@@ -19,6 +19,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
+    const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
+    const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
     /**
      * @param RepoYssAccountReport $model
@@ -52,6 +54,8 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
+            session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
+            session([self::SESSION_KEY_SORT => 'desc']);
         }
         // display data on the table with current session of date, status and column
         $reports = $this->model->displayDataOnTable(
@@ -59,7 +63,9 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY),
-            session(self::SESSION_KEY_PAGINATION)
+            session(self::SESSION_KEY_PAGINATION),
+            session(self::SESSION_KEY_COLUMN_SORT),
+            session(self::SESSION_KEY_SORT)
         );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
@@ -107,7 +113,44 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY),
-            session(self::SESSION_KEY_PAGINATION)
+            session(self::SESSION_KEY_PAGINATION),
+            session(self::SESSION_KEY_COLUMN_SORT),
+            session(self::SESSION_KEY_SORT)
+        );
+        return view('layouts.table_data')
+                ->with('reports', $reports)
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
+    }
+
+    /**
+     * update data by request( colum sort, sort by) on table
+     */
+    public function sortTable(Request $request)
+    {
+        //get column sort and sort by if available
+        if (session(self::SESSION_KEY_SORT) !== 'desc') {
+            session()->put(
+                [
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'desc'
+                ]
+            );
+        } else {
+            session()->put(
+                [
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'asc'
+                ]
+            );
+        }
+        $reports = $this->model->displayDataOnTable(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY),
+            session(self::SESSION_KEY_PAGINATION),
+            session(self::SESSION_KEY_COLUMN_SORT),
+            session(self::SESSION_KEY_SORT)
         );
         return view('layouts.table_data')
                 ->with('reports', $reports)

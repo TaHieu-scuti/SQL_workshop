@@ -18,3 +18,4 @@ Route::get(
     '/account_report/export_csv',
     'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
 )->name('export_csv');
+Route::post('/account_report/sort_table', 'RepoYssAccountReport\RepoYssAccountReportController@sortTable');
