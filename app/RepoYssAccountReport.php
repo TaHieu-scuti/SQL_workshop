@@ -74,18 +74,30 @@ class RepoYssAccountReport extends AbstractReportModel
 
     public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
     {
-        return self::select(DB::raw('SUM('.$column.') as data'), DB::raw('DATE(day) as day'))
-                    ->join('repo_yss_accounts', 'repo_yss_account_report.account_id', '=', 'repo_yss_accounts.account_id')
-                    ->where(function($query) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
-                        } else {
-                            $query->whereDate('day', '>=', $endDay)
-                                ->whereDate('day', '<', $startDay);
-                        }
-                    })
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
-                    ->groupBy('day')
-                    ->get();
+        return self::select(
+            DB::raw('SUM('.$column.') as data'),
+            DB::raw(
+                'DATE(day) as day'
+            )
+        )
+            ->join(
+                'repo_yss_accounts',
+                'repo_yss_account_report.account_id',
+                '=',
+                'repo_yss_accounts.account_id'
+            )
+            ->where(
+                function ($query) use ($startDay, $endDay) {
+                    if ($startDay === $endDay) {
+                        $query->whereDate('day', '=', $endDay);
+                    } else {
+                        $query->whereDate('day', '>=', $endDay)
+                            ->whereDate('day', '<', $startDay);
+                    }
+                }
+            )
+            ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
+            ->groupBy('day')
+            ->get();
     }
 }

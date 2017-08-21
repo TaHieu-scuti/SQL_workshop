@@ -35,6 +35,19 @@ abstract class AbstractReportModel extends Model
 
         return $columns;
     }
-    abstract public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort);
-    abstract public function getDataForGraph($column, $accountStatus, $startDay, $endDay);
+    abstract public function getDataForTable(
+        $fieldName,
+        $acccountStatus,
+        $startDay,
+        $endDay,
+        $pagination,
+        $columnSort,
+        $sort
+    );
+    abstract public function getDataForGraph(
+        $column,
+        $accountStatus,
+        $startDay,
+        $endDay
+    );
 }

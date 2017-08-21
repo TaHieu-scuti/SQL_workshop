@@ -145,7 +145,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // if get no column name, set selected column click
         if (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
-        } 
+        }
         $data = $this->model
                 ->getDataForGraph(
                     session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
@@ -205,5 +205,4 @@ class RepoYssAccountReportController extends AbstractReportController
 
         return response()->json($data);
     }
-
 }
