@@ -10,7 +10,7 @@
             <tr>
                 @foreach($fieldNames as $fieldName)
                 <th>
-                    <a href="#">{{ $fieldName }}</a>
+                    <a href="javascript:void(0)">{{ $fieldName }}</a>
                 </th>
                 @endforeach
             </tr>
