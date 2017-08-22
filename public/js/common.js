@@ -73,7 +73,6 @@ $(".apply-button").click(function () {
 * update table with selected time period
 */
 $('.date-option li').click(function () {
-    console.log('abc');
     var option = $(this).data('date');
     var today = moment();
     var startDay;
@@ -213,7 +212,7 @@ $("#selectAll").click(function () {
 $('table').delegate('th', 'click', function() {
     var th = $("th").eq($(this).index());
     $.ajax({
-        url : "account_report/sort_table",
+        url : "update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
