@@ -109,6 +109,12 @@ class RepoYssAccountReportController extends AbstractReportController
                     self::SESSION_KEY_ACCOUNT_STATUS => $request->status,
                 ]
             );
+        } else {
+            session()->put(
+                [
+                    self::SESSION_KEY_ACCOUNT_STATUS => "",
+                ]
+            );
         }
         //get column sort and sort by if available
         if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
@@ -184,6 +190,12 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put(
                 [
                     self::SESSION_KEY_ACCOUNT_STATUS => $request->status,
+                ]
+            );
+        } else {
+            session()->put(
+                [
+                    self::SESSION_KEY_ACCOUNT_STATUS => "",
                 ]
             );
         }
