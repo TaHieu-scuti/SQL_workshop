@@ -86,7 +86,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                 ->with('startDay', session(self::SESSION_KEY_START_DAY))
                 ->with('endDay', session(self::SESSION_KEY_END_DAY));
-		->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search   
+                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
     /**
