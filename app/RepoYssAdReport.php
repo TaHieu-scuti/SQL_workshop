@@ -11,7 +11,7 @@ class RepoYssAdReport extends Model
         'account_id',    // Account ID
         'campaign_id',    // Campaign ID of ADgainer system
         'campaignID',    //
-        'adgroupID'
+        'adgroupID',
         'adID',    //
         'campaignName',    //
         'adGroupName',    //
