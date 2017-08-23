@@ -17,7 +17,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX 
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX
                                           . self::TIME_PERIOD_TITLE;
     const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
