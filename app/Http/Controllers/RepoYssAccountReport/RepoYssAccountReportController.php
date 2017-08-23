@@ -85,7 +85,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                 ->with('startDay', session(self::SESSION_KEY_START_DAY))
-                ->with('endDay', session(self::SESSION_KEY_END_DAY));
+                ->with('endDay', session(self::SESSION_KEY_END_DAY))
                 ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
