@@ -56,7 +56,6 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
             session([self::SESSION_KEY_ACCOUNT_STATUS => '']);
             session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
-            // session([self::SESSION_KEY_STATUS_TITLE => $statusTitle]);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
@@ -223,14 +222,13 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         return response()->json($data);
-            }
+    }
 
     public function updateTimePeriodTitle(Request $request)
     {
         $startDay = $request->startDay;
         $endDay = $request->endDay;
         $timePeriodTitle = $request->timePeriodTitle;
-        // dd($timePeriodTitle);
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
         return view('layouts.time-period')
                     ->with('startDay', $startDay)
