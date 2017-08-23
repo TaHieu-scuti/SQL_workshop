@@ -138,6 +138,30 @@ var Script = function () {
                 }
             });
         });
+        /*
+        *
+        * onclicking column button
+        * update graph with selected column
+        */
+        $('#listSearch').delegate('li', 'click', function() {
+            $.ajax({
+                url : "display-graph",
+                type : "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : {
+                    'graphColumnName' : $(this).text(),
+                },
+                success : function (response) {
+                    var data = [];
+                    for(var i = 0; i < response.length; i++) {
+                        data.push({ "date" : response[i].day, "clicks" : response[i].data });
+                    }
+                    setMorris(data);
+                }
+            });
+        });
         // initialise graph
         function initMorris()
         {

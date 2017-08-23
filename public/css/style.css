@@ -527,7 +527,7 @@ a, a:hover, a:focus {
 }
 
 /*row csv-file*/
- .row.csv-file .columns {
+.wrapper .row.csv-file .columns {
     border-left: solid 1px #ecedf1;
     float: right;
     padding: 0;
@@ -5818,4 +5818,16 @@ a.guest-on i {
 .dropdown-menu {
     right: 0;
     left: auto;
+}
+
+#txtLiveSearch {
+    border: 0;
+    padding-left: 10px;
+}
+
+.row .selection-dropdown .tasks-bar .heading {
+    border-bottom: 1px solid #ddd;
+}
+.wrapper .row .breadcrumb .breadcrumb-item .breadcrumb-item-detail .tasks-bar {
+    left: 0;
 }

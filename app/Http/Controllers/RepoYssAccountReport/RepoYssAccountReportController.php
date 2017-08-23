@@ -48,6 +48,11 @@ class RepoYssAccountReportController extends AbstractReportController
         if (($key = array_search('account_id', $columns)) !== false) {
             unset($columns[$key]);
         }
+        //get data column live search
+        // unset day, day of week....
+
+        $unsetColumns = array('network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
         if (!session('accountReport')) {
@@ -81,6 +86,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                 ->with('startDay', session(self::SESSION_KEY_START_DAY))
                 ->with('endDay', session(self::SESSION_KEY_END_DAY));
+		->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search   
     }
 
     /**
@@ -236,5 +242,10 @@ class RepoYssAccountReportController extends AbstractReportController
                     ->with('startDay', $startDay)
                     ->with('endDay', $endDay)
                     ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE));
+    }
+    public function liveSearch(Request $request)
+    {
+        $result = $this->model->getColumnLiveSearch($request["keywords"]);
+        return view('layouts.dropdown_search')->with('columnsLiveSearch', $result);
     }
 }

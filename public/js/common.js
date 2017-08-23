@@ -328,3 +328,34 @@ $('table').delegate('th', 'click', function() {
         }
     });
 }) 
+
+var timer;
+function searchUp() {
+    timer = setTimeout(function()
+    {
+        var keywords = $('#txtLiveSearch').val();
+        if (keywords.length >= 0) {
+            $.ajax({
+                url: "account_report/live_search",
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'keywords' : keywords,
+                },
+                success: function(result) {
+                    $('#listSearch').empty();
+                    $('#listSearch').html(result);
+                }
+            });
+        }
+    }, 500);
+} 
+
+$('#listSearch').delegate('li', 'click', function() {
+    $('#txtColumn').text($(this).text());
+    if($(".selection-dropdown").hasClass("open")){
+        $(".selection-dropdown").removeClass("open");
+    }
+})
