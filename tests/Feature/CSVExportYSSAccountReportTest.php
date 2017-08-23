@@ -31,8 +31,18 @@ class CSVExportYSSAccountReportTest extends TestCase
         $response->assertHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
         $response->assertHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 
-        $lastModifiedDateTime = (new DateTime)->format('D, d M Y H:i:s');
-        $response->assertHeader('Last-Modified', $lastModifiedDateTime);
+        $response->assertHeader('Last-Modified');
+
+        $now = new DateTime;
+        $lastModifiedDateTime = $now->format('D, d M Y H:i:s');
+        $lastModifiedHeader = $response->headers->get('Last-Modified');
+
+        if ($lastModifiedDateTime !== $lastModifiedHeader) {
+            $lastModifiedDateTime = $now->modify('+1 second')->format('D, d M Y H:i:s');
+        }
+
+        $this->assertSame($lastModifiedDateTime, $lastModifiedHeader);
+
         $response->assertHeader('Cache-Control', 'cache, must-revalidate, private');
         $response->assertHeader('Pragma', 'public');
     }
