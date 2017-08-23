@@ -40,10 +40,25 @@ abstract class AbstractReportController extends Controller
         $this->model = $model;
     }
 
+    /**
+     * @return \Illuminate\Http\Response
+     */
     public function exportToExcel()
     {
         $exporter = new MaatwebsiteExcelExporter($this->model);
-        $exporter->export();
+        $excelData = $exporter->export();
+
+        $format = $this->formatIdentifier->getFormatByExtension('xlsx');
+        $contentType = $this->formatIdentifier->getContentTypeByFormat($format);
+
+        return $this->responseFactory->make($excelData, 200, [
+            'Content-Type' => $contentType,
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+        ]);
     }
 
     /**
