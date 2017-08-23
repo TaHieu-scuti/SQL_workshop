@@ -9,12 +9,12 @@
         <thead>
             <tr>
                 @foreach($fieldNames as $fieldName)
-                    @if ($columnSort === $fieldName && $sort ==="desc")
+                    @if ($columnSort === $fieldName && $sort === "desc")
                         <th>
                             <a href="javascript:void(0)">
                             <i class="fa fa-arrow-down"></i>{{ $fieldName }}</a>
                         </th>
-                    @elseif ($columnSort === $fieldName && $sort ==="asc")
+                    @elseif ($columnSort === $fieldName && $sort === "asc")
                         <th>
                             <a href="javascript:void(0)">
                             <i class="fa fa-arrow-up"></i>{{ $fieldName }}</a>
