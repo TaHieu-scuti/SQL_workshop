@@ -5820,3 +5820,15 @@ a.guest-on i {
 .csv-file > div > div > div,span {
     color: #797979;
 }
+
+#txtLiveSearch {
+    border: 0;
+    padding-left: 10px;
+}
+
+.row .selection-dropdown .tasks-bar .heading {
+    border-bottom: 1px solid #ddd;
+}
+.wrapper .row .breadcrumb .breadcrumb-item .breadcrumb-item-detail .tasks-bar {
+    left: 0;
+}

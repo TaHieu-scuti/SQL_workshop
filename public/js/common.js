@@ -73,7 +73,6 @@ $(".apply-button").click(function () {
 * update table with selected time period
 */
 $('.date-option li').click(function () {
-    console.log('abc');
     var option = $(this).data('date');
     var today = moment();
     var startDay;
@@ -207,8 +206,53 @@ $("#selectAll").click(function () {
 })
 /*
 *
+* onclicking table header
 * sort table
 */
-$(document).ready(function () { 
-    $("#reportTable").tablesorter(); 
-}); 
+$('table').delegate('th', 'click', function() {
+    var th = $("th").eq($(this).index());
+    $.ajax({
+        url : "update-table",
+        type : "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            'columnSort' : th.text(),
+        },
+        success : function (response) {
+            $('table').html(response);
+        }
+    });
+}) 
+
+var timer;
+function searchUp() {
+    timer = setTimeout(function()
+    {
+        var keywords = $('#txtLiveSearch').val();
+        if (keywords.length >= 0) {
+            $.ajax({
+                url: "account_report/live_search",
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'keywords' : keywords,
+                },
+                success: function(result) {
+                    $('#listSearch').empty();
+                    $('#listSearch').html(result);
+                }
+            });
+        }
+    }, 500);
+} 
+
+$('#listSearch').delegate('li', 'click', function() {
+    $('#txtColumn').text($(this).text());
+    if($(".selection-dropdown").hasClass("open")){
+        $(".selection-dropdown").removeClass("open");
+    }
+})

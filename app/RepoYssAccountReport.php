@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class RepoYssAccountReport extends AbstractReportModel
 {
@@ -43,12 +44,13 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',                        //  monthly
         'week',                         //  Every week
     ];
-    public function displayDataOnTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination)
+    public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
     {
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldName)) !== false) {
             unset($fieldName[$key]);
         }
+
         $query = self::select($fieldName)
                     ->join(
                         'repo_yss_accounts',
@@ -65,7 +67,65 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus);
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus)
+                    ->orderBy($columnSort, $sort);
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
+    }
+
+    public function unsetColumns($columnsLiveSearch, array $names)
+    {
+        foreach ($names as $name) {
+            if (($key = array_search($name, $columnsLiveSearch)) !== false) {
+                unset($columnsLiveSearch[$key]);
+            }
+        }
+        return $columnsLiveSearch;
+    }
+
+    public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
+    {
+        return self::select(
+            DB::raw('SUM('.$column.') as data'),
+            DB::raw(
+                'DATE(day) as day'
+            )
+        )
+            ->join(
+                'repo_yss_accounts',
+                'repo_yss_account_report.account_id',
+                '=',
+                'repo_yss_accounts.account_id'
+            )
+            ->where(
+                function ($query) use ($startDay, $endDay) {
+                    if ($startDay === $endDay) {
+                        $query->whereDate('day', '=', $endDay);
+                    } else {
+                        $query->whereDate('day', '>=', $endDay)
+                            ->whereDate('day', '<', $startDay);
+                    }
+                }
+            )
+            ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
+            ->groupBy('day')
+            ->get();
+    }
+
+    public function getColumnLiveSearch($keywords)
+    {
+        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'" 
+            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
+        $result = array();
+        foreach ($searchColumns as $searchColumn) {
+            foreach ($searchColumn as $value) {
+                array_push($result, $value);
+            }
+        }
+        // remove column id, campaign_id ....
+        $unsetColumns = array('id', 'campaign_id', 'account_id', 'network',
+                             'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        
+        return $this->unsetColumns($result, $unsetColumns);
     }
 }
