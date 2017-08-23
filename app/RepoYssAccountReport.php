@@ -72,6 +72,16 @@ class RepoYssAccountReport extends AbstractReportModel
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
     }
 
+    public function unsetColumns($columnsLiveSearch, array $names)
+    {
+        foreach ($names as $name) {
+            if (($key = array_search($name, $columnsLiveSearch)) !== false) {
+                unset($columnsLiveSearch[$key]);
+            }
+        }
+        return $columnsLiveSearch;
+    }
+
     public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
     {
         return self::select(
@@ -99,5 +109,23 @@ class RepoYssAccountReport extends AbstractReportModel
             ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
             ->groupBy('day')
             ->get();
+    }
+
+    public function getColumnLiveSearch($keywords)
+    {
+        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'" 
+            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
+        $result = array();
+        foreach ($searchColumns as $searchColumn) {
+            foreach ($searchColumn as $value) {
+                array_push($result, $value);
+            }
+        }
+        // remove column id, campaign_id ....
+        $unsetColumns = array('id', 'campaign_id', 'account_id', 'network',
+                             'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        
+        return $this->unsetColumns($result, $unsetColumns);
     }
 }
