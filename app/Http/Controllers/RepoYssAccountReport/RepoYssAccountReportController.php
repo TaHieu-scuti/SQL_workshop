@@ -13,10 +13,12 @@ use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
+    const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX . 'timePeriodTitle';
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX 
+                                          . self::TIME_PERIOD_TITLE;
     const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
@@ -76,7 +78,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
-                ->with('timePeriodTitle', session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                 ->with('startDay', session(self::SESSION_KEY_START_DAY))
                 ->with('endDay', session(self::SESSION_KEY_END_DAY));
     }
@@ -233,6 +235,6 @@ class RepoYssAccountReportController extends AbstractReportController
         return view('layouts.time-period')
                     ->with('startDay', $startDay)
                     ->with('endDay', $endDay)
-                    ->with('timePeriodTitle', session(self::SESSION_KEY_TIME_PERIOD_TITLE));
+                    ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE));
     }
 }
