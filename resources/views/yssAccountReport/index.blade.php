@@ -188,10 +188,8 @@
                     <div class="col-md-3 col-xs-12 selected-time">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
-                            <div class="panel-body">
-                                    <span class="title">Last 90 days<br></span>
-                                    <span>Feb 18, 2017 - May 18, 2017</span>
-                                    <strong class="caret"></strong>
+                            <div class="panel-body" id="time-period">
+                                @include('layouts.time-period')
                             </div>
                         </section>
                         </a>

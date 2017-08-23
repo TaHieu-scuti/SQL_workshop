@@ -26,8 +26,12 @@ var Script = function () {
                     endDay = startDay;
                     break;
                 case 'yesterday' : 
-                    startDay = today.format("YYYY-MM-DD");
+                    startDay = today.subtract(1, 'd').format("YYYY-MM-DD");
                     endDay = startDay;
+                    break;
+                case 'last7DaysToday' :
+                    startDay = today.add(1, 'days').format("YYYY-MM-DD");
+                    endDay = today.subtract(7, 'd').format("YYYY-MM-DD");
                     break;
                 case 'last7days' :
                     startDay = today.format("YYYY-MM-DD");
@@ -60,10 +64,6 @@ var Script = function () {
                 case 'lastBusinessWeek' :
                     startDay = moment(moment().subtract(1, 'weeks')).day(3).format("YYYY-MM-DD");
                     endDay = moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD");
-                    break;
-                case 'last7DaysToday' :
-                    startDay = today.add(1, 'days').format("YYYY-MM-DD");
-                    endDay = today.subtract(7, 'd').format("YYYY-MM-DD");
                     break;
                 case 'lastFullWeek' :
                     startDay = moment().subtract(1, 'weeks').endOf('isoWeek').format("YYYY-MM-DD");

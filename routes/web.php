@@ -20,3 +20,4 @@ Route::get(
 )->name('export_csv');
 Route::get('/display-graph', 'RepoYssAccountReport\RepoYssAccountReportController@displayDataOnGraph');
 Route::post('/display-graph', 'RepoYssAccountReport\RepoYssAccountReportController@updateGraph');
+Route::post('/update-time-period', 'RepoYssAccountReport\RepoYssAccountReportController@updateTimePeriodTitle');

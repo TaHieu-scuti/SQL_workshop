@@ -7,6 +7,7 @@ use App\AbstractReportModel;
 use App\Export\MaatwebsiteCSVExporter;
 use App\Export\MaatwebsiteExcelExporter;
 
+use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Maatwebsite\Excel\Classes\FormatIdentifier;

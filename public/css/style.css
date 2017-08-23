@@ -527,13 +527,16 @@ a, a:hover, a:focus {
 }
 
 /*row csv-file*/
-.wrapper .row.csv-file .columns {
+ .row.csv-file .columns {
     border-left: solid 1px #ecedf1;
     float: right;
     padding: 0;
     text-align: center;
 }
 
+.wrapper .csv-file .icon.dropdown {
+    color: #797979;
+}
 .wrapper .row.csv-file .columns input[type=checkbox], input[type=radio]
 {
   -ms-transform: scale(1.2); /* IE */
@@ -5815,8 +5818,4 @@ a.guest-on i {
 .dropdown-menu {
     right: 0;
     left: auto;
-}
-
-.csv-file > div > div > div,span {
-    color: #797979;
 }
