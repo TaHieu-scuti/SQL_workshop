@@ -348,18 +348,27 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body">
-                                    <span>Columns
-                                    <strong class="caret selection"></strong>
-                                    </span>
+                                    <span id="txtColumn">Columns</span>
+                                    <strong class="caret selection"></strong>        
                             </div>
                         </section>
                         </a>
                         <ul class="col-md-2 dropdown-menu extended tasks-bar">
                             <li>
-                                <a href="#">
-                                    <div class="desc">Clicks</div>
-                                </a>
+                                <p class="heading">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <input type="text" placeholder="Search by columns" onkeyup="searchUp()" id="txtLiveSearch">
+                                </p>
                             </li>
+                            <div id="listSearch">
+                                @foreach ($columnsLiveSearch as $columnsSearch)
+                                <li>
+                                    <a href="#">
+                                        <div class="desc">{{ $columnsSearch }}</div>
+                                    </a>
+                                </li>
+                                @endforeach
+                            </div>
                         </ul>
                     </div>
                     <div class="col-md-2 col-xs-12 selection-dropdown">

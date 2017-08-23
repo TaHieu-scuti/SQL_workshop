@@ -44,6 +44,11 @@ class RepoYssAccountReportController extends AbstractReportController
         if (($key = array_search('account_id', $columns)) !== false) {
             unset($columns[$key]);
         }
+        //get data column live search
+        // unset day, day of week....
+
+        $unsetColumns = array('network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
 
@@ -75,6 +80,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT));
+    		->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
     /**
@@ -230,5 +236,11 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         return response()->json($data);
+    }
+
+    public function liveSearch(Request $request)
+    {
+        $result = $this->model->getColumnLiveSearch($request["keywords"]);
+        return view('layouts.dropdown_search')->with('columnsLiveSearch', $result);
     }
 }
