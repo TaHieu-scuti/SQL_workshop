@@ -51,7 +51,6 @@ class MaatwebsiteExcelExporter implements ExcelExporterInterface
                       ->with('reports', $reports)
                       ->with('fieldNames', $fieldNames)
                       ->with('export', true); // remove pagination on view
-
             });
         })->string('xlsx');
 
