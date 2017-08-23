@@ -80,7 +80,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT));
-    		->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
     /**
