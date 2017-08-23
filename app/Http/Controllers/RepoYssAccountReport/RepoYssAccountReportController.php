@@ -16,7 +16,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_TIME_PERIOD = self::SESSION_KEY_PREFIX . 'timePeriod';
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX . 'timePeriodTitle';
+    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
@@ -51,9 +52,11 @@ class RepoYssAccountReportController extends AbstractReportController
             $today = new DateTime();
             $startDay = $today->format('Y-m-d');
             $endDay = $today->modify('-90 days')->format('Y-m-d');
+            $timePeriodTitle = "Last 90 days";
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
             session([self::SESSION_KEY_ACCOUNT_STATUS => '']);
-            session([self::SESSION_KEY_TIME_PERIOD => $timePeriod]);
+            session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+            // session([self::SESSION_KEY_STATUS_TITLE => $statusTitle]);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
@@ -70,12 +73,11 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-        // dd(session(self::SESSION_KEY_TIME_PERIOD));
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
-                ->with('timePeriod', session(self::SESSION_KEY_TIME_PERIOD))
+                ->with('timePeriodTitle', session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                 ->with('startDay', session(self::SESSION_KEY_START_DAY))
                 ->with('endDay', session(self::SESSION_KEY_END_DAY));
     }
@@ -227,13 +229,12 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $startDay = $request->startDay;
         $endDay = $request->endDay;
-        $timePeriod = $request->timePeriod;
-        if ($request->timePeriod !== null) {
-            session()->put('accountReport.timePeriod', $request->timePeriod);
-        }
+        $timePeriodTitle = $request->timePeriodTitle;
+        // dd($timePeriodTitle);
+        session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
         return view('layouts.time-period')
                     ->with('startDay', $startDay)
                     ->with('endDay', $endDay)
-                    ->with('timePeriod', session(self::SESSION_KEY_TIME_PERIOD));
+                    ->with('timePeriodTitle', session(self::SESSION_KEY_TIME_PERIOD_TITLE));
     }
 }
