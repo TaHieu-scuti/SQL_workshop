@@ -14,14 +14,16 @@ use Maatwebsite\Excel\Classes\FormatIdentifier;
 class RepoYssAccountReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const START_DAY = 'startDay';
+    const END_DAY = 'endDay';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX
                                           . self::TIME_PERIOD_TITLE;
     const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
-    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
-    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
+    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
+    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
@@ -84,8 +86,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('reports', $reports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                ->with('startDay', session(self::SESSION_KEY_START_DAY))
-                ->with('endDay', session(self::SESSION_KEY_END_DAY))
+                ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+                ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
                 ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
@@ -239,8 +241,8 @@ class RepoYssAccountReportController extends AbstractReportController
         $timePeriodTitle = $request->timePeriodTitle;
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
         return view('layouts.time-period')
-                    ->with('startDay', $startDay)
-                    ->with('endDay', $endDay)
+                    ->with(self::START_DAY, $startDay)
+                    ->with(self::END_DAY, $endDay)
                     ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE));
     }
     public function liveSearch(Request $request)
