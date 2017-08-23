@@ -72,7 +72,9 @@ class RepoYssAccountReportController extends AbstractReportController
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
-                ->with('columns', $columns); // all columns that show up in modal
+                ->with('columns', $columns) // all columns that show up in modal
+                ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
+                ->with('sort', session(self::SESSION_KEY_SORT));
     }
 
     /**
@@ -117,21 +119,31 @@ class RepoYssAccountReportController extends AbstractReportController
             );
         }
         //get column sort and sort by if available
-        if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
-            session()->put(
-                [
-                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                    self::SESSION_KEY_SORT => 'asc'
-                ]
-            );
-        } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
+        if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort) {
             session()->put(
                 [
                     self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
                     self::SESSION_KEY_SORT => 'desc'
                 ]
             );
+        } else {
+            if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
+                session()->put(
+                    [
+                        self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                        self::SESSION_KEY_SORT => 'asc'
+                    ]
+                );
+            } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
+                session()->put(
+                    [
+                        self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                        self::SESSION_KEY_SORT => 'desc'
+                    ]
+                );
+            }
         }
+        
         $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
@@ -143,7 +155,9 @@ class RepoYssAccountReportController extends AbstractReportController
         );
         return view('layouts.table_data')
                 ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
+                ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
+                ->with('sort', session(self::SESSION_KEY_SORT));
     }
 
     public function displayDataOnGraph()
