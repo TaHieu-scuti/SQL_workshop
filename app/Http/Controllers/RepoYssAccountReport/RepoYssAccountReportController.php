@@ -57,7 +57,7 @@ class RepoYssAccountReportController extends AbstractReportController
             $startDay = $today->format('Y-m-d');
             $endDay = $today->modify('-90 days')->format('Y-m-d');
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
-            session([self::SESSION_KEY_ACCOUNT_STATUS => '']);
+            session([self::SESSION_KEY_ACCOUNT_STATUS => 'enabled']);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
@@ -74,6 +74,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
