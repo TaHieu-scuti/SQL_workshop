@@ -7,8 +7,13 @@ use DB;
 
 class RepoYssAccountReport extends AbstractReportModel
 {
+    /** @var bool */
     public $timestamps = false;
+
+    /** @var string */
     protected $table = 'repo_yss_account_report';
+
+    /** @var array */
     protected $fillable = [
         'account_id',                   //  Account ID
         'campaign_id',                  //  Campaign ID of ADgainer system
@@ -44,6 +49,17 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',                        //  monthly
         'week',                         //  Every week
     ];
+
+    /**
+     * @param string[] $fieldName
+     * @param string   $acccountStatus
+     * @param string   $startDay
+     * @param string   $endDay
+     * @param int      $pagination
+     * @param string   $columnSort
+     * @param string   $sort
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
     {
         //unset column 'account_id' ( need to be more specific about table name )
@@ -69,9 +85,15 @@ class RepoYssAccountReport extends AbstractReportModel
                     )
                     ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus)
                     ->orderBy($columnSort, $sort);
+
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
     }
 
+    /**
+     * @param string[] $columnsLiveSearch
+     * @param string[] $names
+     * @return string[]
+     */
     public function unsetColumns($columnsLiveSearch, array $names)
     {
         foreach ($names as $name) {
@@ -82,6 +104,13 @@ class RepoYssAccountReport extends AbstractReportModel
         return $columnsLiveSearch;
     }
 
+    /**
+     * @param string $column
+     * @param string $accountStatus
+     * @param string $startDay
+     * @param string $endDay
+     * @return \Illuminate\Support\Collection
+     */
     public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
     {
         return self::select(
@@ -111,6 +140,10 @@ class RepoYssAccountReport extends AbstractReportModel
             ->get();
     }
 
+    /**
+     * @param string $keywords
+     * @return string[]
+     */
     public function getColumnLiveSearch($keywords)
     {
         $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
