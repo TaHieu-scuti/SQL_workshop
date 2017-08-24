@@ -50,8 +50,8 @@ class RepoYssAccountReport extends AbstractReportModel
     ];
 
     /**
-     * @param string[] $fieldName
-     * @param string   $acccountStatus
+     * @param string[] $fieldNames
+     * @param string   $accountStatus
      * @param string   $startDay
      * @param string   $endDay
      * @param int      $pagination
@@ -59,14 +59,14 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param string   $sort
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getDataForTable($fieldName, $acccountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
+    public function getDataForTable($fieldNames, $accountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
     {
         //unset column 'account_id' ( need to be more specific about table name )
-        if (($key = array_search('account_id', $fieldName)) !== false) {
-            unset($fieldName[$key]);
+        if (($key = array_search('account_id', $fieldNames)) !== false) {
+            unset($fieldNames[$key]);
         }
 
-        $query = self::select($fieldName)
+        $query = self::select($fieldNames)
                     ->join(
                         'repo_yss_accounts',
                         'repo_yss_account_report.account_id',
@@ -82,7 +82,7 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus)
+                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
                     ->orderBy($columnSort, $sort);
 
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
