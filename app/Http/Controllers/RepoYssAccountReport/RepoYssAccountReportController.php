@@ -24,6 +24,9 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
     /**
+     * RepoYssAccountReportController constructor.
+     * @param ResponseFactory      $responseFactory
+     * @param FormatIdentifier     $formatIdentifier
      * @param RepoYssAccountReport $model
      */
     public function __construct(
@@ -35,7 +38,7 @@ class RepoYssAccountReportController extends AbstractReportController
     }
 
     /**
-     * @return index view
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -84,6 +87,8 @@ class RepoYssAccountReportController extends AbstractReportController
 
     /**
      * update data by request( date, status, columns) on table
+     * @param Request $request
+     * @return \Illuminate\View\View
      */
     public function updateTable(Request $request)
     {
@@ -153,6 +158,9 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function displayDataOnGraph()
     {
         // if get no column name, set selected column click
@@ -166,6 +174,7 @@ class RepoYssAccountReportController extends AbstractReportController
                     session(self::SESSION_KEY_START_DAY),
                     session(self::SESSION_KEY_END_DAY)
                 );
+
         if ($data->isEmpty()) {
             if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
                 $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
@@ -177,6 +186,10 @@ class RepoYssAccountReportController extends AbstractReportController
         return response()->json($data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateGraph(Request $request)
     {
         // update session.graphColumnName
@@ -225,6 +238,10 @@ class RepoYssAccountReportController extends AbstractReportController
         return response()->json($data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function liveSearch(Request $request)
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);
