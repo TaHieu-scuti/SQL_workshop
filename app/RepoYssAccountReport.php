@@ -59,8 +59,15 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param string   $sort
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getDataForTable($fieldNames, $accountStatus, $startDay, $endDay, $pagination, $columnSort, $sort)
-    {
+    public function getDataForTable(
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $pagination,
+        $columnSort,
+        $sort
+    ) {
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldNames)) !== false) {
             unset($fieldNames[$key]);
