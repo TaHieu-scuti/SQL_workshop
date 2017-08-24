@@ -35,15 +35,34 @@ abstract class AbstractReportModel extends Model
 
         return $columns;
     }
+
+    /**
+     * @param string[] $fieldNames
+     * @param string   $accountStatus
+     * @param string   $startDay
+     * @param string   $endDay
+     * @param int      $pagination
+     * @param string   $columnSort
+     * @param string   $sort
+     * @return string[]
+     */
     abstract public function getDataForTable(
-        $fieldName,
-        $acccountStatus,
+        array $fieldNames,
+        $accountStatus,
         $startDay,
         $endDay,
         $pagination,
         $columnSort,
         $sort
     );
+
+    /**
+     * @param string $column
+     * @param string $accountStatus
+     * @param string $startDay
+     * @param string $endDay
+     * @return \Illuminate\Support\Collection
+     */
     abstract public function getDataForGraph(
         $column,
         $accountStatus,
