@@ -14,7 +14,10 @@ class RepoYssAccounts extends Seeder
      */
     public function run()
     {
-        $yssAccountReports = App\RepoYssAccountReport::all();
+        $yssAccountReports = App\RepoYssAccountReport::query()
+            ->select('account_id')
+            ->distinct()
+            ->get();
 
         foreach ($yssAccountReports as $yssAccountReport) {
             $account = new RepoYssAccount;
