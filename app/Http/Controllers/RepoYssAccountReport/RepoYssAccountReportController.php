@@ -235,6 +235,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function calculateTotal($reports, $fieldNames)
     {
         $totalDataArray = [];
+        $averageFieldArray = ['averagePosition', 'averageCpc'];
         $timeFieldArray = ['quarter', 'week'];
         foreach ($fieldNames as $fieldName) {
             // skip calculate at account_id field.
@@ -249,9 +250,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 }
             }
             // calculate the average in 2 field : averagePosition and averageCpc
-            if (($fieldName === 'averagePosition' || $fieldName === 'averageCpc') && $reports->count() !== 0) {
-                $totalEachField = $totalEachField / $reports->count();
-            }
+            $totalEachField = (in_array($fieldName, $averageFieldArray) && $reports->count() !== 0) ? ($totalEachField / $reports->count()) : $totalEachField;
             // change the total of 2 field Quarter and Week into empty string.
             $totalEachField = (!in_array($fieldName, $timeFieldArray)) ? $totalEachField : '';
 
