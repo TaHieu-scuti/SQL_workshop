@@ -72,29 +72,6 @@ class RepoYssAccountReport extends AbstractReportModel
         return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
     }
 
-    public function calculateTotal($fieldsWithTotalCalculated, $acccountStatus, $startDay, $endDay)
-    {
-        $query = self::select($fieldsWithTotalCalculated)
-                    ->join(
-                        'repo_yss_accounts',
-                        'repo_yss_account_report.account_id',
-                        '=',
-                        'repo_yss_accounts.account_id'
-                    )->where(
-                        function ($query) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
-                            } else {
-                                $query->whereDate('day', '>=', $endDay)
-                                    ->whereDate('day', '<', $startDay);
-                            }
-                        }
-                    )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$acccountStatus);
-        foreach ($fieldsWithTotalCalculated as $field) {
-            var_dump($query->sum($field));
-        }
-    }
     public function unsetColumns($columnsLiveSearch, array $names)
     {
         foreach ($names as $name) {

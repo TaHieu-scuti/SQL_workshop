@@ -25,6 +25,9 @@
             @endforeach
             <tr>
                 <td>Total - all networks</td>
+                @foreach($totalDataArray as $totalData)
+                <td>{{ $totalData }}</td>
+                @endforeach
             </tr>
             @if (!$export)
             <tr>

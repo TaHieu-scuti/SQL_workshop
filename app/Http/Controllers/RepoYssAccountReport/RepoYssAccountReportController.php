@@ -72,38 +72,13 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-        //divide columns into those which calculate toal and average
-        $fieldsWithTotalCalculated = array('cost', 'impressions',
-                                            'clicks', 'invalidClicsks'
-                                            );
-        $fieldsWithAverageCalculated = array('averageCpc', 'averagePosition',
-                                            'invalidClickRate', 'impressionShare',
-                                            'exactMatchImpressionShare',
-                                            'budgetLostImpressionShare',
-                                            'qualityLostImpressionShare',
-                                            'conversions', 'convRate',
-                                            'convValue', 'costPerConv',
-                                            'valuePerConv', 'allConv',
-                                            'allConvRate', 'allConvValue',
-                                            'costPerAllConv', 'valuePerAllConv'
-                                            );
-        $total = $this->model->calculateTotal(
-            $fieldsWithTotalCalculated,
-            session(self::SESSION_KEY_ACCOUNT_STATUS),
-            session(self::SESSION_KEY_START_DAY),
-            session(self::SESSION_KEY_END_DAY)
-        );
-        // $average = $this->model->calculateAverage(
-        //     $fieldsWithAverageCalculated,
-        //     session(self::SESSION_KEY_ACCOUNT_STATUS),
-        //     session(self::SESSION_KEY_START_DAY),
-        //     session(self::SESSION_KEY_END_DAY),
-        // )
-        // return view('yssAccountReport.index')
-        //         ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-        //         ->with('reports', $reports)  // data that returned from query
-        //         ->with('columns', $columns) // all columns that show up in modal
-        //         ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+        $totalDataArray = $this->calculateTotal($reports, session(self::SESSION_KEY_FIELD_NAME));
+        return view('yssAccountReport.index')
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+                ->with('reports', $reports)  // data that returned from query
+                ->with('columns', $columns) // all columns that show up in modal
+                ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
@@ -172,9 +147,11 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+        $totalDataArray = $this->calculateTotal($reports, session(self::SESSION_KEY_FIELD_NAME));
         return view('layouts.table_data')
                 ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     public function displayDataOnGraph()
@@ -253,5 +230,39 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);
         return view('layouts.dropdown_search')->with('columnsLiveSearch', $result);
+    }
+
+    public function calculateTotal($reports, $fieldNames)
+    {
+        $totalDataArray = [];
+        foreach ($fieldNames as $fieldName) {
+            // skip calculate at account_id field.
+            if ($fieldName === 'account_id') {
+                continue;
+            }
+            $totalEachField = 0;
+            // calculate data if it's not a string or date, others will return empty string.
+            foreach ($reports as $report) {
+                if (!is_string($report->$fieldName)) {
+                    $totalEachField += $report->$fieldName;
+                }
+            }       
+            // calculate the average in 2 field : averagePosition and averageCpc
+            if ($fieldName === 'averagePosition' || $fieldName === 'averageCpc') {
+                if ($reports->count() !== 0) {
+                    $totalEachField = $totalEachField / $reports->count();
+                }
+            }
+            // change the total of 2 field Quarter and Week into empty string.
+            if ($fieldName === 'quarter' || $fieldName === 'week') {
+                $totalEachField = '';
+            }
+
+            if (!isset($totalDataArray[$fieldName])) {
+                $totalDataArray[$fieldName] = $totalEachField;
+            }
+        }
+
+        return $totalDataArray;
     }
 }
