@@ -60,8 +60,8 @@ class RepoYssAccountReportController extends AbstractReportController
 
         if (!session('accountReport')) {
             $today = new DateTime();
-            $startDay = $today->format('Y-m-d');
-            $endDay = $today->modify('-90 days')->format('Y-m-d');
+            $endDay = $today->format('Y-m-d');
+            $startDay = $today->modify('-90 days')->format('Y-m-d');
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
             session([self::SESSION_KEY_ACCOUNT_STATUS => 'enabled']);
             session([self::SESSION_KEY_START_DAY => $startDay]);
@@ -70,6 +70,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
             session([self::SESSION_KEY_SORT => 'desc']);
         }
+
         // display data on the table with current session of date, status and column
         $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),

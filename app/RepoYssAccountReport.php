@@ -84,8 +84,8 @@ class RepoYssAccountReport extends AbstractReportModel
                             if ($startDay === $endDay) {
                                 $query->whereDate('day', '=', $endDay);
                             } else {
-                                $query->whereDate('day', '>=', $endDay)
-                                    ->whereDate('day', '<', $startDay);
+                                $query->whereDate('day', '>=', $startDay)
+                                    ->whereDate('day', '<', $endDay);
                             }
                         }
                     )
