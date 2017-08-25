@@ -68,6 +68,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort
     ) {
+        // TODO: unset column using $this->unsetColumns()
         //unset column 'account_id' ( need to be more specific about table name )
         if (($key = array_search('account_id', $fieldNames)) !== false) {
             unset($fieldNames[$key]);
@@ -96,6 +97,7 @@ class RepoYssAccountReport extends AbstractReportModel
     }
 
     /**
+     * @todo move to AbstractReportModel
      * @param string[] $columnsLiveSearch
      * @param string[] $names
      * @return string[]
