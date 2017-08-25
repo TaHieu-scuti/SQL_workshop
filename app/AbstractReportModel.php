@@ -24,15 +24,8 @@ abstract class AbstractReportModel extends Model
     {
         $columns = Schema::getColumnListing($this->getTable());
 
-        // TODO: after moving unsetColumns here use it to unset these columns
         // unset "id" and "campaign_id" from array cause we dont need it for filter
-        if (($key = array_search('id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
-
-        if (($key = array_search('campaign_id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+        $this->unsetColumns(['id', 'campaign_id']);
 
         return $columns;
     }
