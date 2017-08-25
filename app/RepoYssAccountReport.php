@@ -97,22 +97,6 @@ class RepoYssAccountReport extends AbstractReportModel
     }
 
     /**
-     * @todo move to AbstractReportModel
-     * @param string[] $columnsLiveSearch
-     * @param string[] $names
-     * @return string[]
-     */
-    public function unsetColumns($columnsLiveSearch, array $names)
-    {
-        foreach ($names as $name) {
-            if (($key = array_search($name, $columnsLiveSearch)) !== false) {
-                unset($columnsLiveSearch[$key]);
-            }
-        }
-        return $columnsLiveSearch;
-    }
-
-    /**
      * @param string $column
      * @param string $accountStatus
      * @param string $startDay

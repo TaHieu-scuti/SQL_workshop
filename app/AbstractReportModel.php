@@ -38,6 +38,21 @@ abstract class AbstractReportModel extends Model
     }
 
     /**
+     * @param string[] $columnsLiveSearch
+     * @param string[] $names
+     * @return string[]
+     */
+    public function unsetColumns(array $columnsLiveSearch, array $names)
+    {
+        foreach ($names as $name) {
+            if (($key = array_search($name, $columnsLiveSearch)) !== false) {
+                unset($columnsLiveSearch[$key]);
+            }
+        }
+        return $columnsLiveSearch;
+    }
+
+    /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
