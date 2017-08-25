@@ -171,13 +171,13 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
         }
-        $data = $this->model
-                ->getDataForGraph(
-                    session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                    session(self::SESSION_KEY_ACCOUNT_STATUS),
-                    session(self::SESSION_KEY_START_DAY),
-                    session(self::SESSION_KEY_END_DAY)
-                );
+
+        $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
 
         if ($data->isEmpty()) {
             if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
@@ -187,6 +187,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
             }
         }
+
         return response()->json($data);
     }
 
