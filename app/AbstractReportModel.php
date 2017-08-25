@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 abstract class AbstractReportModel extends Model
 {
@@ -25,24 +25,24 @@ abstract class AbstractReportModel extends Model
         $columns = Schema::getColumnListing($this->getTable());
 
         // unset "id" and "campaign_id" from array cause we dont need it for filter
-        $this->unsetColumns(['id', 'campaign_id']);
+        $columns = $this->unsetColumns($columns, ['id', 'campaign_id']);
 
         return $columns;
     }
 
     /**
-     * @param string[] $columnsLiveSearch
-     * @param string[] $names
+     * @param string[] $columns
+     * @param string[] $columnsToUnset
      * @return string[]
      */
-    public function unsetColumns(array $columnsLiveSearch, array $names)
+    public function unsetColumns(array $columns, array $columnsToUnset)
     {
-        foreach ($names as $name) {
-            if (($key = array_search($name, $columnsLiveSearch)) !== false) {
-                unset($columnsLiveSearch[$key]);
+        foreach ($columnsToUnset as $name) {
+            if (($key = array_search($name, $columns)) !== false) {
+                unset($columns[$key]);
             }
         }
-        return $columnsLiveSearch;
+        return $columns;
     }
 
     /**
