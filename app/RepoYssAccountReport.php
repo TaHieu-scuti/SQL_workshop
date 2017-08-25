@@ -2,7 +2,7 @@
 
 namespace App;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class RepoYssAccountReport extends AbstractReportModel
 {
@@ -68,17 +68,14 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        // TODO: unset column using $this->unsetColumns()
         //unset column 'account_id' ( need to be more specific about table name )
-        if (($key = array_search('account_id', $fieldNames)) !== false) {
-            unset($fieldNames[$key]);
-        }
+        $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
 
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $query = self::select($fieldNames)
                     ->join(
-                        $tableName,
+                        $joinTableName,
                         $tableName . '.account_id',
                         '=',
                         $joinTableName . '.account_id'
