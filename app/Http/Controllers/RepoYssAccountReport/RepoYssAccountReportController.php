@@ -246,7 +246,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 if (!is_string($report->$fieldName)) {
                     $totalEachField += $report->$fieldName;
                 }
-            }       
+            }
             // calculate the average in 2 field : averagePosition and averageCpc
             if ($fieldName === 'averagePosition' || $fieldName === 'averageCpc') {
                 if ($reports->count() !== 0) {
