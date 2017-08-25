@@ -23,6 +23,9 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
+    /** @var \App\RepoYssAccountReport */
+    protected $model;
+
     /**
      * RepoYssAccountReportController constructor.
      * @param ResponseFactory      $responseFactory
@@ -35,6 +38,7 @@ class RepoYssAccountReportController extends AbstractReportController
         RepoYssAccountReport $model
     ) {
         parent::__construct($responseFactory, $formatIdentifier, $model);
+        $this->model = $model;
     }
 
     /**
@@ -44,14 +48,12 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $columns = $this->model->getColumnNames();
         //unset account_id from all $columns
-        // TODO: add this columnName to the array below to unset it
-        if (($key = array_search('account_id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+        $columns = $this->model->unsetColumns($columns, ['account_id']);
+
         //get data column live search
         // unset day, day of week....
 
-        $unsetColumns = array('network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
