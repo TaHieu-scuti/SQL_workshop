@@ -40,23 +40,21 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $columns = $this->model->getColumnNames();
+        session([self::SESSION_KEY_FIELD_NAME => $columns]);
         //unset account_id from all $columns
         if (($key = array_search('account_id', $columns)) !== false) {
             unset($columns[$key]);
         }
         //get data column live search
         // unset day, day of week....
-
         $unsetColumns = array('network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
-
         if (!session('accountReport')) {
             $today = new DateTime();
             $startDay = $today->format('Y-m-d');
             $endDay = $today->modify('-90 days')->format('Y-m-d');
-            session([self::SESSION_KEY_FIELD_NAME => $columns]);
             session([self::SESSION_KEY_ACCOUNT_STATUS => '']);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
@@ -74,11 +72,38 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-        return view('yssAccountReport.index')
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with('reports', $reports)  // data that returned from query
-                ->with('columns', $columns) // all columns that show up in modal
-                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+        //divide columns into those which calculate toal and average
+        $fieldsWithTotalCalculated = array('cost', 'impressions',
+                                            'clicks', 'invalidClicsks'
+                                            );
+        $fieldsWithAverageCalculated = array('averageCpc', 'averagePosition',
+                                            'invalidClickRate', 'impressionShare',
+                                            'exactMatchImpressionShare',
+                                            'budgetLostImpressionShare',
+                                            'qualityLostImpressionShare',
+                                            'conversions', 'convRate',
+                                            'convValue', 'costPerConv',
+                                            'valuePerConv', 'allConv',
+                                            'allConvRate', 'allConvValue',
+                                            'costPerAllConv', 'valuePerAllConv'
+                                            );
+        $total = $this->model->calculateTotal(
+            $fieldsWithTotalCalculated,
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+        // $average = $this->model->calculateAverage(
+        //     $fieldsWithAverageCalculated,
+        //     session(self::SESSION_KEY_ACCOUNT_STATUS),
+        //     session(self::SESSION_KEY_START_DAY),
+        //     session(self::SESSION_KEY_END_DAY),
+        // )
+        // return view('yssAccountReport.index')
+        //         ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+        //         ->with('reports', $reports)  // data that returned from query
+        //         ->with('columns', $columns) // all columns that show up in modal
+        //         ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
     /**
