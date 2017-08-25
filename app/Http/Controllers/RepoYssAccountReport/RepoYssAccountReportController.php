@@ -248,10 +248,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 }
             }
             // calculate the average in 2 field : averagePosition and averageCpc
-            if ($fieldName === 'averagePosition' || $fieldName === 'averageCpc') {
-                if ($reports->count() !== 0) {
-                    $totalEachField = $totalEachField / $reports->count();
-                }
+            if (($fieldName === 'averagePosition' || $fieldName === 'averageCpc') && $reports->count() !== 0) {
+                $totalEachField = $totalEachField / $reports->count();
             }
             // change the total of 2 field Quarter and Week into empty string.
             if ($fieldName === 'quarter' || $fieldName === 'week') {
