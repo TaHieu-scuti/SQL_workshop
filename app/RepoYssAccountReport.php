@@ -74,12 +74,14 @@ class RepoYssAccountReport extends AbstractReportModel
             unset($fieldNames[$key]);
         }
 
+        $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
         $query = self::select($fieldNames)
                     ->join(
-                        'repo_yss_accounts',
-                        'repo_yss_account_report.account_id',
+                        $tableName,
+                        $tableName . '.account_id',
                         '=',
-                        'repo_yss_accounts.account_id'
+                        $joinTableName . '.account_id'
                     )->where(
                         function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
@@ -90,10 +92,10 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
+                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
                     ->orderBy($columnSort, $sort);
 
-        return $query->addSelect('repo_yss_account_report.account_id')->paginate($pagination);
+        return $query->addSelect($tableName . '.account_id')->paginate($pagination);
     }
 
     /**
