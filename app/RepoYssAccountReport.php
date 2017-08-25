@@ -144,15 +144,16 @@ class RepoYssAccountReport extends AbstractReportModel
             WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'" 
             AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
 
-        $result = array();
+        $result = [];
         foreach ($searchColumns as $searchColumn) {
             foreach ($searchColumn as $value) {
-                array_push($result, $value);
+                $result[] = $value;
             }
         }
+
         // remove column id, campaign_id ....
-        $unsetColumns = array('id', 'campaign_id', 'account_id', 'network',
-                             'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        $unsetColumns = ['id', 'campaign_id', 'account_id', 'network',
+                             'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         
         return $this->unsetColumns($result, $unsetColumns);
     }
