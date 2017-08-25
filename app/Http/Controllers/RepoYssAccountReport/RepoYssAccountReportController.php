@@ -235,6 +235,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function calculateTotal($reports, $fieldNames)
     {
         $totalDataArray = [];
+        $timeFieldArray = ['quarter', 'week'];
         foreach ($fieldNames as $fieldName) {
             // skip calculate at account_id field.
             if ($fieldName === 'account_id') {
@@ -252,9 +253,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 $totalEachField = $totalEachField / $reports->count();
             }
             // change the total of 2 field Quarter and Week into empty string.
-            if ($fieldName === 'quarter' || $fieldName === 'week') {
-                $totalEachField = '';
-            }
+            $totalEachField = (!in_array($fieldName, $timeFieldArray)) ? $totalEachField : '';
 
             if (!isset($totalDataArray[$fieldName])) {
                 $totalDataArray[$fieldName] = $totalEachField;
