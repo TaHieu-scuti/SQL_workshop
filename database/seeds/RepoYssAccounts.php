@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\RepoYssAccount;
+
 // @codingStandardsIgnoreLine
 class RepoYssAccounts extends Seeder
 {
@@ -12,18 +14,22 @@ class RepoYssAccounts extends Seeder
      */
     public function run()
     {
-        $yssAccountReports = App\RepoYssAccountReport::all();
+        $yssAccountReports = App\RepoYssAccountReport::query()
+            ->select('account_id')
+            ->distinct()
+            ->get();
+
         foreach ($yssAccountReports as $yssAccountReport) {
-            DB::table('repo_yss_accounts')->insert([
-                'accountid' => rand(1, 1000),
-                'account_id' => $yssAccountReport->account_id,
-                'accountName' => str_random(10),
-                'accountType' => str_random(10),
-                'accountStatus' => 'enabled',
-                'deliveryStatus' => 'enabled',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]);
+            $account = new RepoYssAccount;
+            $account->accountid = rand(1, 1000);
+            $account->account_id = $yssAccountReport->account_id;
+            $account->accountName = str_random(10);
+            $account->accountType = str_random(10);
+            $account->accountStatus = 'enabled';
+            $account->deliveryStatus = 'enabled';
+            $account->created_at = date('Y-m-d H:i:s');
+            $account->updated_at = date('Y-m-d H:i:s');
+            $account->saveOrFail();
         }
     }
 }

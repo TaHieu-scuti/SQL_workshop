@@ -52,7 +52,7 @@ $(".apply-button").click(function () {
     });
     
     $.ajax({
-        url: "update-table",
+        url: "/update-table",
         type: "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -140,7 +140,7 @@ $('.date-option li').click(function () {
             break;
     }
     $.ajax({
-        url : "update-table",
+        url : "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -174,7 +174,7 @@ $('.status-option li').click(function () {
             break;
     }
     $.ajax({
-        url : "update-table",
+        url : "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -212,7 +212,7 @@ $("#selectAll").click(function () {
 $('table').delegate('th', 'click', function() {
     var th = $("th").eq($(this).index());
     $.ajax({
-        url : "update-table",
+        url : "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
