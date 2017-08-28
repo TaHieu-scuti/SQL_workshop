@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 
 use App\RepoYssAccountReport;
 
+// @codingStandardsIgnoreLine
 class RepoYssAccountReportGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
