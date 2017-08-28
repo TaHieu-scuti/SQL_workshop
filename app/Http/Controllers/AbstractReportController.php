@@ -7,6 +7,7 @@ use App\AbstractReportModel;
 use App\Export\MaatwebsiteCSVExporter;
 use App\Export\MaatwebsiteExcelExporter;
 
+use App\Export\NativePHPCsvExporter;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Maatwebsite\Excel\Classes\FormatIdentifier;
@@ -66,7 +67,7 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToCsv()
     {
-        $exporter = new MaatwebsiteCSVExporter($this->model);
+        $exporter = new NativePHPCsvExporter($this->model);
         $csvData = $exporter->export();
 
         $format = $this->formatIdentifier->getFormatByExtension('csv');
