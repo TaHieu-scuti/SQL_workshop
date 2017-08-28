@@ -25,9 +25,7 @@ abstract class AbstractReportModel extends Model
         $columns = $this->getAllColumnNames();
 
         // unset "id" and "campaign_id" from array cause we dont need it for filter
-        $columns = $this->unsetColumns($columns, ['id', 'campaign_id']);
-
-        return $columns;
+        return $this->unsetColumns($columns, ['id', 'campaign_id']);
     }
 
     /**
