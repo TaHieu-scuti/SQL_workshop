@@ -22,12 +22,20 @@ abstract class AbstractReportModel extends Model
      */
     public function getColumnNames()
     {
-        $columns = Schema::getColumnListing($this->getTable());
+        $columns = $this->getAllColumnNames();
 
         // unset "id" and "campaign_id" from array cause we dont need it for filter
         $columns = $this->unsetColumns($columns, ['id', 'campaign_id']);
 
         return $columns;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllColumnNames()
+    {
+        return Schema::getColumnListing($this->getTable());
     }
 
     /**
