@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\AbstractReportModel;
 
-use App\Export\MaatwebsiteCSVExporter;
 use App\Export\MaatwebsiteExcelExporter;
+use App\Export\Native\NativePHPCsvExporter;
 
-use App\Export\NativePHPCsvExporter;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Maatwebsite\Excel\Classes\FormatIdentifier;
@@ -70,11 +69,8 @@ abstract class AbstractReportController extends Controller
         $exporter = new NativePHPCsvExporter($this->model);
         $csvData = $exporter->export();
 
-        $format = $this->formatIdentifier->getFormatByExtension('csv');
-        $contentType = $this->formatIdentifier->getContentTypeByFormat($format);
-
         return $this->responseFactory->make($csvData, 200, [
-            'Content-Type' => $contentType,
+            'Content-Type' => 'application/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
             'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
