@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Export;
+namespace App\Export\Native;
 
 use App\AbstractReportModel;
+use App\Export\CSVExporterInterface;
 
 use ErrorException;
 
