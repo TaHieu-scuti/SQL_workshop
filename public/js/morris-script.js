@@ -83,7 +83,7 @@ var Script = function () {
                     break;
             }
             $.ajax({
-                url : "display-graph",
+                url : "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -121,7 +121,7 @@ var Script = function () {
                     break;
             }
             $.ajax({
-                url : "display-graph",
+                url : "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -145,7 +145,7 @@ var Script = function () {
         */
         $('#listSearch').delegate('li', 'click', function() {
             $.ajax({
-                url : "display-graph",
+                url : "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -188,7 +188,7 @@ var Script = function () {
         function getMorris()
         {
             $.ajax({
-                url : 'display-graph',
+                url : '/display-graph',
                 type : 'GET',
                 success: function(response) {
                     var data = [];
@@ -203,7 +203,7 @@ var Script = function () {
         function updateMorris(columnName)
         {
             $.ajax({
-                url : 'display-graph',
+                url : '/display-graph',
                 type : 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -23,7 +23,13 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
+    /** @var \App\RepoYssAccountReport */
+    protected $model;
+
     /**
+     * RepoYssAccountReportController constructor.
+     * @param ResponseFactory      $responseFactory
+     * @param FormatIdentifier     $formatIdentifier
      * @param RepoYssAccountReport $model
      */
     public function __construct(
@@ -32,38 +38,39 @@ class RepoYssAccountReportController extends AbstractReportController
         RepoYssAccountReport $model
     ) {
         parent::__construct($responseFactory, $formatIdentifier, $model);
+        $this->model = $model;
     }
 
     /**
-     * @return index view
+     * @return \Illuminate\View\View
      */
     public function index()
     {
         $columns = $this->model->getColumnNames();
         //unset account_id from all $columns
-        if (($key = array_search('account_id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+        $columns = $this->model->unsetColumns($columns, ['account_id']);
+
         //get data column live search
         // unset day, day of week....
 
-        $unsetColumns = array('network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter');
+        $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
 
         if (!session('accountReport')) {
             $today = new DateTime();
-            $startDay = $today->format('Y-m-d');
-            $endDay = $today->modify('-90 days')->format('Y-m-d');
+            $endDay = $today->format('Y-m-d');
+            $startDay = $today->modify('-90 days')->format('Y-m-d');
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
-            session([self::SESSION_KEY_ACCOUNT_STATUS => '']);
+            session([self::SESSION_KEY_ACCOUNT_STATUS => 'enabled']);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
             session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
             session([self::SESSION_KEY_SORT => 'desc']);
         }
+
         // display data on the table with current session of date, status and column
         $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
@@ -74,6 +81,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
@@ -83,6 +91,8 @@ class RepoYssAccountReportController extends AbstractReportController
 
     /**
      * update data by request( date, status, columns) on table
+     * @param Request $request
+     * @return \Illuminate\View\View
      */
     public function updateTable(Request $request)
     {
@@ -152,19 +162,23 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function displayDataOnGraph()
     {
         // if get no column name, set selected column click
         if (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
         }
-        $data = $this->model
-                ->getDataForGraph(
-                    session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                    session(self::SESSION_KEY_ACCOUNT_STATUS),
-                    session(self::SESSION_KEY_START_DAY),
-                    session(self::SESSION_KEY_END_DAY)
-                );
+
+        $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+
         if ($data->isEmpty()) {
             if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
                 $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
@@ -173,9 +187,14 @@ class RepoYssAccountReportController extends AbstractReportController
                 $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
             }
         }
+
         return response()->json($data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateGraph(Request $request)
     {
         // update session.graphColumnName
@@ -224,6 +243,10 @@ class RepoYssAccountReportController extends AbstractReportController
         return response()->json($data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function liveSearch(Request $request)
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);
