@@ -4,8 +4,7 @@ namespace App\Export\Native;
 
 use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
-
-use ErrorException;
+use App\Export\Native\Exceptions\CsvException;
 
 class NativePHPCsvExporter implements CSVExporterInterface
 {
@@ -42,7 +41,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
     {
         $bytesWritten = fputcsv($this->fileHandle, $data);
         if ($bytesWritten === false) {
-            throw new ErrorException('Failed to write line to csv!');
+            throw new CsvException('Failed to write line to csv!');
         }
 
         $this->fileSize += $bytesWritten;
@@ -74,16 +73,16 @@ class NativePHPCsvExporter implements CSVExporterInterface
         );
 
         if (rewind($this->fileHandle) === false) {
-            throw new ErrorException('Unable to rewind file handle!');
+            throw new CsvException('Unable to rewind file handle!');
         }
 
         $csvData = fread($this->fileHandle, $this->fileSize);
         if ($csvData === false) {
-            throw new ErrorException('Unable to read from file handle!');
+            throw new CsvException('Unable to read from file handle!');
         }
 
         if (fclose($this->fileHandle) === false) {
-            throw new ErrorException('Unable to close file handle!');
+            throw new CsvException('Unable to close file handle!');
         }
 
         return $csvData;
