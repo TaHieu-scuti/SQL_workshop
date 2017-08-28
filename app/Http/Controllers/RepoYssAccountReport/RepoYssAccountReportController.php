@@ -24,7 +24,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
     private $averageFieldArray = ['averagePosition', 'averageCpc'];
-    private $dateFieldArray = ['quarter', 'week'];
+    private $dateFieldArray = ['quarter', 'week', 'network', 'device', 'day', 'dayOfWeek', 'month', 'trackingURL'];
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
