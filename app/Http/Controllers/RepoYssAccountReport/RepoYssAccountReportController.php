@@ -22,8 +22,6 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
-    const FIELD_NAMES = 'fieldNames';
-    const REPORTS = 'reports';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -85,14 +83,14 @@ class RepoYssAccountReportController extends AbstractReportController
         );
         if ($request->ajax()) {
             return Response::json(view('layouts.table_data', [
-                self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                'reports' => $dataReports,
+                'fieldNames' => session(self::SESSION_KEY_FIELD_NAME),
             ])->render());
         }
 
         return view('yssAccountReport.index')
-                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with(self::REPORTS, $dataReports)  // data that returned from query
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+                ->with('reports', $dataReports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
