@@ -8,7 +8,7 @@ use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-
+use Response;
 use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
@@ -37,7 +37,7 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return index view
      */
-    public function index()
+    public function index(Request $request)
     {
         $columns = $this->model->getColumnNames();
         //unset account_id from all $columns
@@ -74,6 +74,12 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+        if ($request->ajax()) {
+            return Response::json(view('layouts.table_data', array(
+                'reports' => $reports,
+                'fieldNames' => session(self::SESSION_KEY_FIELD_NAME),
+            ))->render());
+        }
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query

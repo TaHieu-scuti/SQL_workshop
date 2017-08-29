@@ -544,7 +544,9 @@
                         </div><!-- /.modal -->
                     </div>
                 </div>
-                @include('layouts.table_data')
+                <div class="table_data_report">
+                    @include('layouts.table_data')
+                </div>
         </section>
     </section>
     <!--main content end-->
@@ -561,5 +563,46 @@
     <!-- Custom js-->
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>
+        $(window).on('hashchange', function() {
+            if (window.location.hash) {
+                var page = window.location.hash.replace('#', '');
+                if (page == Number.NaN || page <= 0) {
+                    return false;
+                } else {
+                    getAccountReports(page);
+                }
+            }
+        });
+        $(document).ready(function() {
+            $(document).on('click', '.pagination a', function (e) {
+                getAccountReports($(this).attr('href').split('page=')[1]);
+                e.preventDefault();
+            });
+        });
+        function getAccountReports(page) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type : 'GET',
+                url : '?page=' + page,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    $('.table_data_report').html('');
+                    $('.table_data_report').html(data);
+                    history.pushState("", "", '?page=' + page);
+                },
+                error: function (data) {
+                    alert('Reports could not be loaded.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

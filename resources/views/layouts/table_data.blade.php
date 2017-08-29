@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($reports as $report)
+           @foreach($reports as $report)
             <tr>
                 @foreach($fieldNames as $fieldName)
                     <td>{{ $report->$fieldName }}</td>
