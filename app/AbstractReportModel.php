@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 abstract class AbstractReportModel extends Model
 {
@@ -22,28 +22,62 @@ abstract class AbstractReportModel extends Model
      */
     public function getColumnNames()
     {
-        $columns = Schema::getColumnListing($this->getTable());
+        $columns = $this->getAllColumnNames();
 
         // unset "id" and "campaign_id" from array cause we dont need it for filter
-        if (($key = array_search('id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+        return $this->unsetColumns($columns, ['id', 'campaign_id']);
+    }
 
-        if (($key = array_search('campaign_id', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+    /**
+     * @return array
+     */
+    public function getAllColumnNames()
+    {
+        return Schema::getColumnListing($this->getTable());
+    }
 
+    /**
+     * @param string[] $columns
+     * @param string[] $columnsToUnset
+     * @return string[]
+     */
+    public function unsetColumns(array $columns, array $columnsToUnset)
+    {
+        foreach ($columnsToUnset as $name) {
+            if (($key = array_search($name, $columns)) !== false) {
+                unset($columns[$key]);
+            }
+        }
         return $columns;
     }
+
+    /**
+     * @param string[] $fieldNames
+     * @param string   $accountStatus
+     * @param string   $startDay
+     * @param string   $endDay
+     * @param int      $pagination
+     * @param string   $columnSort
+     * @param string   $sort
+     * @return string[]
+     */
     abstract public function getDataForTable(
-        $fieldName,
-        $acccountStatus,
+        array $fieldNames,
+        $accountStatus,
         $startDay,
         $endDay,
         $pagination,
         $columnSort,
         $sort
     );
+
+    /**
+     * @param string $column
+     * @param string $accountStatus
+     * @param string $startDay
+     * @param string $endDay
+     * @return \Illuminate\Support\Collection
+     */
     abstract public function getDataForGraph(
         $column,
         $accountStatus,
