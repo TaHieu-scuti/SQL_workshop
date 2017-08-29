@@ -563,7 +563,6 @@
     <!-- Custom js-->
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script>
         $(window).on('hashchange', function() {
             if (window.location.hash) {
@@ -593,7 +592,6 @@
                 url : '?page=' + page,
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     $('.table_data_report').html('');
                     $('.table_data_report').html(data);
                     history.pushState("", "", '?page=' + page);

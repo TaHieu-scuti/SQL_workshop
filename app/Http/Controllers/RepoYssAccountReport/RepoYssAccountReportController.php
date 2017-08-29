@@ -8,7 +8,6 @@ use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Response;
 use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
@@ -85,7 +84,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_SORT)
         );
         if ($request->ajax()) {
-            return Response::json(view('layouts.table_data', [
+            return $this->responseFactory->json(view('layouts.table_data', [
                 self::REPORTS => $dataReports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             ])->render());
