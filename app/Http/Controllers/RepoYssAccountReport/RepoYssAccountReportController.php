@@ -92,10 +92,10 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         return view('yssAccountReport.index')
-                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with(self::REPORTS, $dataReports)  // data that returned from query
-                ->with('columns', $columns) // all columns that show up in modal
-                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+            ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+            ->with(self::REPORTS, $dataReports)  // data that returned from query
+            ->with('columns', $columns) // all columns that show up in modal
+            ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
 
     /**
