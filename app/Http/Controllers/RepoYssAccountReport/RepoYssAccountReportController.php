@@ -74,7 +74,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         // display data on the table with current session of date, status and column
-        $reports = $this->model->getDataForTable(
+        $dataReports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
@@ -85,14 +85,14 @@ class RepoYssAccountReportController extends AbstractReportController
         );
         if ($request->ajax()) {
             return Response::json(view('layouts.table_data', [
-                self::REPORTS => $reports,
+                self::REPORTS => $dataReports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             ])->render());
         }
 
         return view('yssAccountReport.index')
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with('reports', $reports)  // data that returned from query
+                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+                ->with(self::REPORTS, $dataReports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
     }
