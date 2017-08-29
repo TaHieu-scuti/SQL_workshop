@@ -22,6 +22,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
+    const FIELD_NAMES = 'fieldNames';
+    const REPORTS = 'reports';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -81,11 +83,10 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-
         if ($request->ajax()) {
             return Response::json(view('layouts.table_data', [
-                'reports' => $reports,
-                'fieldNames' => session(self::SESSION_KEY_FIELD_NAME),
+                self::REPORTS => $reports,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             ])->render());
         }
 
