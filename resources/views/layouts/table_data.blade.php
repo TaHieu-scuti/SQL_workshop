@@ -25,8 +25,15 @@
             @endforeach
             <tr>
                 <td>Total - all networks</td>
-                @foreach($totalDataArray as $totalData)
-                <td>{{ $totalData }}</td>
+                @foreach($fieldNames as $fieldName)
+                    @if($fieldName === 'account_id')
+                        <?php continue; ?>
+                    @endif
+                    @if(isset($totalDataArray->$fieldName))
+                    <td>{{ $totalDataArray->$fieldName }}</td>
+                    @else
+                    <td></td>
+                    @endif
                 @endforeach
             </tr>
             @if (!$export)

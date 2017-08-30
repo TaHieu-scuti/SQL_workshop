@@ -23,9 +23,6 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
-    private $averageFieldArray = ['averagePosition', 'averageCpc'];
-    private $dateFieldArray = ['quarter', 'week', 'network', 'device', 'day', 'dayOfWeek', 'month', 'trackingURL'];
-
     /** @var \App\RepoYssAccountReport */
     protected $model;
 
@@ -83,7 +80,12 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-        $totalDataArray = $this->calculateTotal($reports, session(self::SESSION_KEY_FIELD_NAME));
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
@@ -160,11 +162,16 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-        $totalDataArray = $this->calculateTotal($reports, session(self::SESSION_KEY_FIELD_NAME));
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return view('layouts.table_data')
                 ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
-                ->with('totalDataArray', $totalDataArray); // total data of each field
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
+                ->with('totalDataArray', $totalDataArray); total data of each field
     }
 
     /**
@@ -256,34 +263,5 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);
         return view('layouts.dropdown_search')->with('columnsLiveSearch', $result);
-    }
-
-    public function calculateTotal($reports, $fieldNames)
-    {
-        $totalDataArray = [];
-        foreach ($fieldNames as $fieldName) {
-            // skip calculate at account_id field.
-            if ($fieldName === 'account_id') {
-                continue;
-            }
-            $totalEachField = 0;
-            // calculate data if it's not a string or date, others will return empty string.
-            foreach ($reports as $report) {
-                if (!is_string($report->$fieldName)) {
-                    $totalEachField += $report->$fieldName;
-                }
-            }
-            // calculate the average in 2 field : averagePosition and averageCpc
-            $totalEachField = (in_array($fieldName, $this->averageFieldArray)
-                && $reports->count() !== 0) ? ($totalEachField / $reports->count()) : $totalEachField;
-            // change the total of 2 field Quarter and Week into empty string.
-            $totalEachField = (!in_array($fieldName, $this->dateFieldArray)) ? $totalEachField : '';
-
-            if (!isset($totalDataArray[$fieldName])) {
-                $totalDataArray[$fieldName] = $totalEachField;
-            }
-        }
-
-        return $totalDataArray;
     }
 }
