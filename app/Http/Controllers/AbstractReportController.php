@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\AbstractReportModel;
-
-use App\Export\MaatwebsiteExcelExporter;
 use App\Export\Native\NativePHPCsvExporter;
+use App\Export\Spout\SpoutExcelExporter;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -37,7 +36,7 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToExcel()
     {
-        $exporter = new MaatwebsiteExcelExporter($this->model);
+        $exporter = new SpoutExcelExporter($this->model);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make($excelData, 200, [
