@@ -6,6 +6,8 @@ use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
 
+use DateTime;
+
 class NativePHPCsvExporter implements CSVExporterInterface
 {
     /** @var \App\AbstractReportModel */
