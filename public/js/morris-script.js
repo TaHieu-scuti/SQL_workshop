@@ -26,7 +26,7 @@ var Script = function () {
                     startDay = endDay;
                     break;
                 case 'yesterday' : 
-                    endDay = today.format("YYYY-MM-DD");
+                    endDay = today.subtract(1, 'd').format("YYYY-MM-DD");
                     startDay = endDay;
                     break;
                 case 'last7days' :
