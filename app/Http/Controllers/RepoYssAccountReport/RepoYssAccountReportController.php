@@ -54,12 +54,10 @@ class RepoYssAccountReportController extends AbstractReportController
 
         //get data column live search
         // unset day, day of week....
-
         $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
-
         if (!session('accountReport')) {
             $today = new DateTime();
             $endDay = $today->format('Y-m-d');
@@ -82,12 +80,21 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+
         if ($request->ajax()) {
             return $this->responseFactory->json(view('layouts.table_data', [
                 self::REPORTS => $dataReports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
-                'sort' => session(self::SESSION_KEY_SORT)
+                'sort' => session(self::SESSION_KEY_SORT),
+                'totalDataArray' => $totalDataArray
             ])->render());
         }
 
@@ -97,7 +104,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT))
-                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+                ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
@@ -178,11 +186,18 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return view('layouts.table_data')
                 ->with(self::REPORTS, $reports)
                 ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
-                ->with('sort', session(self::SESSION_KEY_SORT));
+                ->with('sort', session(self::SESSION_KEY_SORT))
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
