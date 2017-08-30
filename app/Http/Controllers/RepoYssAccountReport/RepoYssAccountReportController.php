@@ -9,8 +9,6 @@ use DateTime;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
-use Maatwebsite\Excel\Classes\FormatIdentifier;
-
 class RepoYssAccountReportController extends AbstractReportController
 {
     const SESSION_KEY_PREFIX = 'accountReport.';
@@ -29,15 +27,13 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * RepoYssAccountReportController constructor.
      * @param ResponseFactory      $responseFactory
-     * @param FormatIdentifier     $formatIdentifier
      * @param RepoYssAccountReport $model
      */
     public function __construct(
         ResponseFactory $responseFactory,
-        FormatIdentifier $formatIdentifier,
         RepoYssAccountReport $model
     ) {
-        parent::__construct($responseFactory, $formatIdentifier, $model);
+        parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
 
