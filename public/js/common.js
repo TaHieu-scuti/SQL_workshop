@@ -72,7 +72,7 @@ $(".apply-button").click(function () {
 * onclicking date button
 * update table with selected time period
 */
-$('.date-option li').click(function (test) {
+$('.date-option li').click(function () {
     var option = $(this).data('date');
     var milestone = getFilterDate(option);
     $.ajax({
