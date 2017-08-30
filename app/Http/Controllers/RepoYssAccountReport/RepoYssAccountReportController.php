@@ -99,13 +99,13 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         return view('yssAccountReport.index')
-                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with(self::REPORTS, $dataReports)  // data that returned from query
-                ->with('columns', $columns) // all columns that show up in modal
-                ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
-                ->with('sort', session(self::SESSION_KEY_SORT))
-                ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
-                ->with('totalDataArray', $totalDataArray); // total data of each field
+            ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+            ->with(self::REPORTS, $dataReports)  // data that returned from query
+            ->with('columns', $columns) // all columns that show up in modal
+            ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
+            ->with('sort', session(self::SESSION_KEY_SORT))
+            ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
+            ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
@@ -186,12 +186,14 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+
         $totalDataArray = $this->model->calculateData(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY)
         );
+
         return view('layouts.table_data')
                 ->with(self::REPORTS, $reports)
                 ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
