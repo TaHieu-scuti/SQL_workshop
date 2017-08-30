@@ -169,8 +169,8 @@ class RepoYssAccountReportController extends AbstractReportController
         );
         return view('layouts.table_data')
                 ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
-                ->with('totalDataArray', $totalDataArray); total data of each field
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**

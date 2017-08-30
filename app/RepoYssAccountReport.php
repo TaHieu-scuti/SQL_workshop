@@ -64,7 +64,8 @@ class RepoYssAccountReport extends AbstractReportModel
         'day',
         'dayOfWeek',
         'month',
-        'trackingURL'
+        'trackingURL',
+        'account_id',
     ];
 
     /**
