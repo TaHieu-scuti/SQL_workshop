@@ -47,7 +47,6 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $columns = $this->model->getColumnNames();
-        session([self::SESSION_KEY_FIELD_NAME => $columns]);
         //unset account_id from all $columns
         $columns = $this->model->unsetColumns($columns, ['account_id']);
 
