@@ -41,8 +41,10 @@ class ExcelExportYSSAccountReportTest extends TestCase
         $lastModifiedDateTime = $now->format('D, d M Y H:i:s');
         $lastModifiedHeader = $response->headers->get('Last-Modified');
 
-        if ($lastModifiedDateTime !== $lastModifiedHeader) {
+        $i = 0;
+        while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 4) {
             $lastModifiedDateTime = $now->modify('+1 second')->format('D, d M Y H:i:s');
+            $i++;
         }
 
         $this->assertSame($lastModifiedDateTime, $lastModifiedHeader);

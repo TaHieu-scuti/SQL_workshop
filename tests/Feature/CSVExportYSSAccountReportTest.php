@@ -38,7 +38,7 @@ class CSVExportYSSAccountReportTest extends TestCase
         $lastModifiedHeader = $response->headers->get('Last-Modified');
 
         $i = 0;
-        while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 2) {
+        while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 4) {
             $lastModifiedDateTime = $now->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
