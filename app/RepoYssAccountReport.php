@@ -49,6 +49,25 @@ class RepoYssAccountReport extends AbstractReportModel
         'week',                         //  Every week
     ];
 
+    /** @var array */
+    private $averageFieldArray = [
+        'averagePosition',
+        'averageCpc',
+    ];
+
+    /** @var array */
+    private $emptyCalculateFieldArray = [
+        'quarter',
+        'week',
+        'network',
+        'device',
+        'day',
+        'dayOfWeek',
+        'month',
+        'trackingURL',
+        'account_id',
+    ];
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -156,5 +175,37 @@ class RepoYssAccountReport extends AbstractReportModel
                              'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         
         return $this->unsetColumns($result, $unsetColumns);
+    }
+
+    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    {
+        $arrayCalculate = [];
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw('AVG('.$fieldName.') as '.$fieldName);
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+                $arrayCalculate[] = DB::raw('SUM('.$fieldName.')as '.$fieldName);
+            }
+        }
+        $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
+        return self::select($arrayCalculate)
+                    ->join(
+                        $joinTableName,
+                        $tableName . '.account_id',
+                        '=',
+                        $joinTableName . '.account_id'
+                    )->where(
+                        function ($query) use ($startDay, $endDay) {
+                            if ($startDay === $endDay) {
+                                $query->whereDate('day', '=', $endDay);
+                            } else {
+                                $query->whereDate('day', '>=', $startDay)
+                                    ->whereDate('day', '<', $endDay);
+                            }
+                        }
+                    )
+                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+                   ->first();
     }
 }

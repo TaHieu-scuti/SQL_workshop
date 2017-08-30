@@ -52,12 +52,10 @@ class RepoYssAccountReportController extends AbstractReportController
 
         //get data column live search
         // unset day, day of week....
-
         $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
         // initialize session for table with fieldName,
         // status, start and end date, pagination
-
         if (!session('accountReport')) {
             $today = new DateTime();
             $endDay = $today->format('Y-m-d');
@@ -81,12 +79,18 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return view('yssAccountReport.index')
                 ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
                 ->with('reports', $reports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
-                ->with('columnsLiveSearch', $columnsLiveSearch); // all columns that show columns live search
+                ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
@@ -157,9 +161,16 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+        $totalDataArray = $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return view('layouts.table_data')
                 ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME));
+                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
+                ->with('totalDataArray', $totalDataArray); // total data of each field
     }
 
     /**
