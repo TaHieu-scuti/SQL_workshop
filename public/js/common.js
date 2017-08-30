@@ -224,7 +224,7 @@ $('table').delegate('th', 'click', function() {
             $('table').html(response);
         }
     });
-}) 
+})
 
 var timer;
 function searchUp() {
@@ -248,7 +248,7 @@ function searchUp() {
             });
         }
     }, 500);
-} 
+}
 
 $('#listSearch').delegate('li', 'click', function() {
     $('#txtColumn').text($(this).text());
