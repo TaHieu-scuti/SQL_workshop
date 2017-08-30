@@ -561,6 +561,7 @@
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <!-- Custom js-->
+    <script src="/js/get-filter-date.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
     <script>
