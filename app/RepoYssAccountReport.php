@@ -193,7 +193,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         return self::select($arrayCalculate)
-                   ->join(
+                    ->join(
                         $joinTableName,
                         $tableName . '.account_id',
                         '=',
