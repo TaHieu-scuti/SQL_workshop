@@ -8,7 +8,6 @@ use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-
 use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
@@ -22,6 +21,9 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
+
+    const REPORTS = 'reports';
+    const FIELD_NAMES = 'fieldNames';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -44,7 +46,7 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         $columns = $this->model->getColumnNames();
         //unset account_id from all $columns
@@ -70,9 +72,8 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
             session([self::SESSION_KEY_SORT => 'desc']);
         }
-
         // display data on the table with current session of date, status and column
-        $reports = $this->model->getDataForTable(
+        $dataReports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
@@ -81,10 +82,18 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
+        if ($request->ajax()) {
+            return $this->responseFactory->json(view('layouts.table_data', [
+                self::REPORTS => $dataReports,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
+                'sort' => session(self::SESSION_KEY_SORT)
+            ])->render());
+        }
 
         return view('yssAccountReport.index')
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-                ->with('reports', $reports)  // data that returned from query
+                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
+                ->with(self::REPORTS, $dataReports)  // data that returned from query
                 ->with('columns', $columns) // all columns that show up in modal
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT))
@@ -159,7 +168,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 );
             }
         }
-        
+
         $reports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
@@ -170,8 +179,8 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_SORT)
         );
         return view('layouts.table_data')
-                ->with('reports', $reports)
-                ->with('fieldNames', session(self::SESSION_KEY_FIELD_NAME))
+                ->with(self::REPORTS, $reports)
+                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT));
     }
