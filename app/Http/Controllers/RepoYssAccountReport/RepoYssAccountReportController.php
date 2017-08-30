@@ -8,7 +8,6 @@ use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Classes\FormatIdentifier;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
@@ -32,15 +31,13 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * RepoYssAccountReportController constructor.
      * @param ResponseFactory      $responseFactory
-     * @param FormatIdentifier     $formatIdentifier
      * @param RepoYssAccountReport $model
      */
     public function __construct(
         ResponseFactory $responseFactory,
-        FormatIdentifier $formatIdentifier,
         RepoYssAccountReport $model
     ) {
-        parent::__construct($responseFactory, $formatIdentifier, $model);
+        parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
 
@@ -71,6 +68,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
             session([self::SESSION_KEY_SORT => 'desc']);
         }
+
         // display data on the table with current session of date, status and column
         $dataReports = $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),

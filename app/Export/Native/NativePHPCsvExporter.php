@@ -6,6 +6,8 @@ use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
 
+use DateTime;
+
 class NativePHPCsvExporter implements CSVExporterInterface
 {
     /** @var \App\AbstractReportModel */
@@ -34,9 +36,15 @@ class NativePHPCsvExporter implements CSVExporterInterface
         // get table name
         $tableName = $this->model->getTable();
 
-        $this->fileName = date("Y_m_d h_i ") . "{$tableName}" . '.csv';
+        $this->fileName = (new DateTime)->format("Y_m_d h_i ")
+            . "{$tableName}"
+            . '.csv';
     }
 
+    /**
+     * @param array $data
+     * @throws CsvException
+     */
     private function writeLine(array $data)
     {
         $bytesWritten = fputcsv($this->fileHandle, $data);
@@ -55,11 +63,18 @@ class NativePHPCsvExporter implements CSVExporterInterface
         return $this->fileName;
     }
 
+    /**
+     * @return bool|string
+     * @throws CsvException
+     */
     public function export()
     {
         $this->generateFilename();
 
         $this->fileHandle = tmpfile();
+        if ($this->fileHandle === false) {
+            throw new CsvException('Unable to open temporary file!');
+        }
 
         // get fields' names
         $fieldNames = $this->model->getColumnNames();
