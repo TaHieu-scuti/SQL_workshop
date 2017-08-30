@@ -561,5 +561,6 @@
     <!-- Custom js-->
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
+    <script src="/js/get-filter-date.js"></script>
 </body>
 </html>
