@@ -24,6 +24,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
+    const TOTAL_DATA_ARRAY = 'totalDataArray';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -94,7 +95,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
                 'sort' => session(self::SESSION_KEY_SORT),
-                'totalDataArray' => $totalDataArray
+                self::TOTAL_DATA_ARRAY => $totalDataArray
             ])->render());
         }
 
@@ -105,7 +106,7 @@ class RepoYssAccountReportController extends AbstractReportController
             ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
             ->with('sort', session(self::SESSION_KEY_SORT))
             ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
-            ->with('totalDataArray', $totalDataArray); // total data of each field
+            ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
     }
 
     /**
@@ -199,7 +200,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
                 ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT))
-                ->with('totalDataArray', $totalDataArray); // total data of each field
+                ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
     }
 
     /**
