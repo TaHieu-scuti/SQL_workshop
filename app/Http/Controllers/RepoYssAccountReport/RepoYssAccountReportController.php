@@ -86,6 +86,9 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY)
         );
+        $columnsWithAccountId = $columns;
+        array_unshift($columnsWithAccountId, 'account_id');
+        session()->put(self::SESSION_KEY_FIELD_NAME, $columnsWithAccountId);
 
         if ($request->ajax()) {
             return $this->responseFactory->json(view('layouts.table_data', [
