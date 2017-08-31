@@ -11,8 +11,13 @@ use ZipArchive;
 
 class ExcelExportYSSAccountReportTest extends TestCase
 {
+    /** @var DateTime */
+    private $now;
+
     public function testReturnsStatus200()
     {
+        $this->now = new DateTime;
+
         $response = $this->get('/account_report/export_excel');
 
         $response->assertStatus(200);
@@ -31,19 +36,18 @@ class ExcelExportYSSAccountReportTest extends TestCase
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
         );
 
-        $fileName = date("Y_m_d h_i ") . 'repo_yss_account_report.xlsx';
+        $fileName = $this->now->format("Y_m_d h_i ") . 'repo_yss_account_report.xlsx';
         $response->assertHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
         $response->assertHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 
         $response->assertHeader('Last-Modified');
 
-        $now = new DateTime;
-        $lastModifiedDateTime = $now->format('D, d M Y H:i:s');
+        $lastModifiedDateTime = $this->now->format('D, d M Y H:i:s');
         $lastModifiedHeader = $response->headers->get('Last-Modified');
 
         $i = 0;
         while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 4) {
-            $lastModifiedDateTime = $now->modify('+1 second')->format('D, d M Y H:i:s');
+            $lastModifiedDateTime = $this->now->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
 
