@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\User;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->provider(
             'adgainer',
             function () {
-                return new AdGainerUserProvider;
+                return new AdGainerUserProvider(new User);
             }
         );
     }
