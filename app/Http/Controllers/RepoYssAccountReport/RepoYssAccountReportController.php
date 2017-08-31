@@ -154,28 +154,30 @@ class RepoYssAccountReportController extends AbstractReportController
             );
         }
         //get column sort and sort by if available
-        if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort) {
-            session()->put(
-                [
-                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                    self::SESSION_KEY_SORT => 'desc'
-                ]
-            );
-        } else {
-            if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
-                session()->put(
-                    [
-                        self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                        self::SESSION_KEY_SORT => 'asc'
-                    ]
-                );
-            } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
+        if ($request->columnSort) {
+            if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort) {
                 session()->put(
                     [
                         self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
                         self::SESSION_KEY_SORT => 'desc'
                     ]
                 );
+            } else {
+                if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
+                    session()->put(
+                        [
+                            self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                            self::SESSION_KEY_SORT => 'asc'
+                        ]
+                    );
+                } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
+                    session()->put(
+                        [
+                            self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                            self::SESSION_KEY_SORT => 'desc'
+                        ]
+                    );
+                }
             }
         }
 
