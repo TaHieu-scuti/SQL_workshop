@@ -10,12 +10,21 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -24,12 +33,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
     public function setPasswordAttribute($password)
     {
 
-        $this->attributes['password'] = bcrypt($password);
+        $this->attributes['password'] = md5($password);
     }
 }
