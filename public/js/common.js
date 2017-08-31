@@ -50,7 +50,7 @@ $(".apply-button").click(function () {
     $.each($("input[name='fieldName']:checked"), function () {
         $array['fieldName'].push($(this).val());
     });
-    
+    var th = $("th").eq($(this).index());
     $.ajax({
         url: "/update-table",
         type: "POST",
@@ -60,6 +60,7 @@ $(".apply-button").click(function () {
         data: {
             'pagination' : $array['pagination'],
             'fieldName' : $array['fieldName'],
+            'columnSort' : th.text(),
         },
         success: function(result) {
             $('table').html(result);
@@ -145,7 +146,7 @@ $("#selectAll").click(function () {
 * onclicking table header
 * sort table
 */
-$('table').delegate('th', 'click', function() {
+$('.table_data_report').delegate('th', 'click', function() {
     var th = $("th").eq($(this).index());
     $.ajax({
         url : "/update-table",
