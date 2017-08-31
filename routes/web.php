@@ -9,6 +9,11 @@
 Auth::routes();
 
 Route::get(
+    '/login',
+    'Auth\LoginController@showLoginForm'
+)->name('login');
+
+Route::get(
     '/account_report',
     'RepoYssAccountReport\RepoYssAccountReportController@index'
 );
