@@ -41,7 +41,7 @@ class ExcelExportYSSAccountReportTest extends TestCase
         $lastModifiedHeader = $response['response']->headers->get('Last-Modified');
 
         $i = 0;
-        while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 30) {
+        while ($lastModifiedDateTime !== $lastModifiedHeader && $i < 180) {
             $lastModifiedDateTime = $response['now']->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
