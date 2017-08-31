@@ -89,7 +89,6 @@ class RepoYssAccountReport extends AbstractReportModel
     ) {
         //unset column 'account_id' ( need to be more specific about table name )
         $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
-
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $query = self::select($fieldNames)
@@ -110,7 +109,6 @@ class RepoYssAccountReport extends AbstractReportModel
                     )
                     ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
                     ->orderBy($columnSort, $sort);
-
         return $query->addSelect($tableName . '.account_id')->paginate($pagination);
     }
 
