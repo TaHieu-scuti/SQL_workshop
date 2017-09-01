@@ -10,7 +10,9 @@ Auth::routes();
 
 Route::get(
     '/',
-    'Auth\LoginController@showLoginForm'
+    function () {
+        return redirect('login');
+    }
 );
 
 Route::get(
