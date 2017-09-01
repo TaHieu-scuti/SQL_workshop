@@ -7,6 +7,7 @@ use App\RepoYssAccountReport;
 use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class RepoYssAccountReportController extends AbstractReportController
@@ -54,6 +55,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // unset day, day of week....
         $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
+
         // initialize session for table with fieldName,
         // status, start and end date, pagination
         if (!session('accountReport')) {
@@ -216,12 +218,20 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
         }
 
-        $data = $this->model->getDataForGraph(
-            session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-            session(self::SESSION_KEY_ACCOUNT_STATUS),
-            session(self::SESSION_KEY_START_DAY),
-            session(self::SESSION_KEY_END_DAY)
-        );
+        try {
+            $data = $this->model->getDataForGraph(
+                session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                session(self::SESSION_KEY_ACCOUNT_STATUS),
+                session(self::SESSION_KEY_START_DAY),
+                session(self::SESSION_KEY_END_DAY)
+            );
+        } catch (QueryException $exception) {
+            $errorObject = new \stdClass;
+            $errorObject->code = 500;
+            $errorObject->error = $exception->getMessage();
+
+            return $this->responseFactory->json($errorObject, 500);
+        }
 
         if ($data->isEmpty()) {
             if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
@@ -243,7 +253,7 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         // update session.graphColumnName
         if ($request->graphColumnName !== null) {
-            session()->put('accountReport.graphColumnName', $request->graphColumnName);
+            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
         }
         // get startDay and endDay if available
         if ($request->startDay !== null && $request->endDay !== null) {
