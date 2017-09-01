@@ -11,11 +11,16 @@ use Illuminate\Http\Request;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
+    const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const START_DAY = 'startDay';
+    const END_DAY = 'endDay';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . 'startDay';
-    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . 'endDay';
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
+    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
+    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
+    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
@@ -60,8 +65,10 @@ class RepoYssAccountReportController extends AbstractReportController
             $today = new DateTime();
             $endDay = $today->format('Y-m-d');
             $startDay = $today->modify('-90 days')->format('Y-m-d');
+            $timePeriodTitle = "Last 90 days";
             session([self::SESSION_KEY_FIELD_NAME => $columns]);
             session([self::SESSION_KEY_ACCOUNT_STATUS => 'enabled']);
+            session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
             session([self::SESSION_KEY_START_DAY => $startDay]);
             session([self::SESSION_KEY_END_DAY => $endDay]);
             session([self::SESSION_KEY_PAGINATION => 20]);
@@ -95,6 +102,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::REPORTS => $dataReports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
+                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
                 'sort' => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray
             ])->render());
@@ -106,6 +114,9 @@ class RepoYssAccountReportController extends AbstractReportController
             ->with('columns', $columns) // all columns that show up in modal
             ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
             ->with('sort', session(self::SESSION_KEY_SORT))
+            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
             ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
             ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
     }
@@ -246,11 +257,12 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put('accountReport.graphColumnName', $request->graphColumnName);
         }
         // get startDay and endDay if available
-        if ($request->startDay !== null && $request->endDay !== null) {
+        if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
             session()->put(
                 [
                     self::SESSION_KEY_START_DAY => $request->startDay,
-                    self::SESSION_KEY_END_DAY => $request->endDay
+                    self::SESSION_KEY_END_DAY => $request->endDay,
+                    self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle,
                 ]
             );
         }
@@ -284,13 +296,23 @@ class RepoYssAccountReportController extends AbstractReportController
             }
         }
 
-        return response()->json($data);
+        $timePeriodLayout = view('layouts.time-period')
+                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                        ->render();
+
+        return response()->json([
+                        'data' => $data,
+                        'timePeriodLayout' => $timePeriodLayout
+                ]);
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\View\View
      */
+
     public function liveSearch(Request $request)
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);

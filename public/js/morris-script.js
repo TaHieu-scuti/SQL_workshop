@@ -26,14 +26,16 @@ var Script = function () {
                 },
                 data : {
                     'startDay' : milestone['startDay'],
-                    'endDay' : milestone['endDay']
+                    'endDay' : milestone['endDay'],
+                    'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 success : function (response) {
                     var data = [];
-                    for(var i = 0; i < response.length; i++) {
-                        data.push({ "date" : response[i].day, "clicks" : response[i].data });
+                    for(var i = 0; i < response.data.length; i++) {
+                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
                     }
                     setMorris(data);
+                    $('#time-period').html(response.timePeriodLayout);
                 }
             });
         });

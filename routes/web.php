@@ -32,7 +32,7 @@ Route::get(
 
 Route::get(
     '/home',
-    function() {
+    function () {
         return redirect('account_report');
     }
 );
