@@ -248,7 +248,7 @@ a, a:hover, a:focus {
 }
 
 .wrapper .row.breadcrumb-list .breadcrumb .breadcrumb-item .breadcrumb-item-detail .heading {
-    border-bottom: solid 1px #ddd
+    border-bottom: solid 1px #ddd;
     width: 100%;
 }
 .wrapper .row.breadcrumb-list .breadcrumb .breadcrumb-item .breadcrumb-item-detail .heading>input {
@@ -814,8 +814,8 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     /* Safari and Chrome */
     .dropdown-menu.extended  {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.176) !important;
-    };
     }
+}
 
 .dropdown-menu.extended li p {
     color: #666666;
@@ -1007,7 +1007,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .log-arrow-up {
-    background: url("../img/arrow-up.png") no-repeat;
+    background: url("../images/arrow-up.png") no-repeat;
     width: 20px;
     height: 11px;
     position: absolute;
@@ -1062,7 +1062,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     transition: all .3s ease;
     border: 1px solid #fff;
     box-shadow: none;
-    background: url("../img/search-icon.jpg") no-repeat 10px 8px;
+    background: url("../images/search-icon.jpg") no-repeat 10px 8px;
     padding:0 5px 0 35px;
     color: #fff;
 }
@@ -1193,7 +1193,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     float: left;
     text-align: center;
     -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0x;
+    -moz-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
     z-index: 10;
 }
@@ -1342,7 +1342,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 /**/
 
 .panel-body.chart-texture {
-    background: url("../img/chart-texture.jpg");
+    background: url("../images/chart-texture.jpg");
     -webkit-border-radius: 4px 4px 0px 0px;
     border-radius: 4px 4px 0px 0px;
 }
@@ -1699,9 +1699,8 @@ h3.timeline-title {
     /* Safari and Chrome */
     .panel-footer.revenue-foot {
         margin-bottom: -4px;
-    };
     }
-
+}
 
 .panel-footer.revenue-foot ul  {
     margin: 0;
@@ -1841,7 +1840,7 @@ ul.ft-link li a i {
 
 .owl-buttons .owl-prev {
     text-indent: -9999px;
-    background: url("../img/left-arrow.png") no-repeat;
+    background: url("../images/left-arrow.png") no-repeat;
     width: 6px;
     height: 10px;
     display: inline-block;
@@ -1849,7 +1848,7 @@ ul.ft-link li a i {
 
 .owl-buttons .owl-next {
     text-indent: -9999px;
-    background: url("../img/right-arrow.png") no-repeat;
+    background: url("../images/right-arrow.png") no-repeat;
     width: 6px;
     height: 10px;
     display: inline-block;
@@ -2580,7 +2579,7 @@ ul.inbox-pagination li {
 }
 
 .error-wrapper .icon-404{
-    background: url("../img/404_icon.png") no-repeat;
+    background: url("../images/404_icon.png") no-repeat;
     width: 289px;
     height: 274px;
     display: inline-block;
@@ -2626,7 +2625,7 @@ ul.inbox-pagination li {
 }
 
 .error-wrapper .icon-500{
-    background: url("../img/500_icon.png") no-repeat;
+    background: url("../images/500_icon.png") no-repeat;
     width: 289px;
     height: 274px;
     display: inline-block;
@@ -3459,7 +3458,7 @@ ul.amounts li {
 }
 
 input.spinner[type="text"], input.spinner[type="password"], input.spinner[type="datetime"], input.spinner[type="datetime-local"], input.spinner[type="date"], input.spinner[type="month"], input.spinner[type="time"], input.spinner[type="week"], input.spinner[type="number"], input.spinner[type="email"], input.spinner[type="url"], input.spinner[type="search"], input.spinner[type="tel"], input.spinner[type="color"] {
-    background: url("../img/input-spinner.gif") right no-repeat !important;
+    background: url("../images/input-spinner.gif") right no-repeat !important;
 }
 
 
@@ -3584,8 +3583,8 @@ table.sliders tr td {
     position: relative;
     text-align: left;
     width: 80px;
-    -webkit-mask: url('../img/mask.png') 0 0 no-repeat;
-    mask: url('../img/mask.png') 0 0 no-repeat;
+    -webkit-mask: url('../images/mask.png') 0 0 no-repeat;
+    mask: url('../images/mask.png') 0 0 no-repeat;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -3691,8 +3690,8 @@ table.sliders tr td {
 .switch-square {
     border-radius: 6px;
     -webkit-border-radius: 6px;
-    -webkit-mask: url('../img/mask.png') 0 0 no-repeat;
-    mask: url('../img/mask.png') 0 0 no-repeat;
+    -webkit-mask: url('../images/mask.png') 0 0 no-repeat;
+    mask: url('../images/mask.png') 0 0 no-repeat;
 }
 .switch-square > div.switch-off label {
     border-color: #7f8c9a;
@@ -3854,19 +3853,19 @@ table.sliders tr td {
 }
 
 .has-js .label_radio {
-    background: url(../img/checkbox/radio-off.png) no-repeat;
+    background: url(../images/checkbox/radio-off.png) no-repeat;
 }
 
 .has-js .label_check {
-    background: url(../img/checkbox/check-off.png) no-repeat;
+    background: url(../images/checkbox/check-off.png) no-repeat;
 }
 
 .has-js label.c_on {
-    background: url(../img/checkbox/check-on.png) no-repeat;
+    background: url(../images/checkbox/check-on.png) no-repeat;
 }
 
 .has-js label.r_on {
-    background: url(../img/checkbox/radio-on.png) no-repeat;
+    background: url(../images/checkbox/radio-on.png) no-repeat;
 }
 
 .has-js .label_check input,
@@ -3938,7 +3937,7 @@ table.sliders tr td {
 
 .cke_top, .cke_bottom {
     background: #F5F5F5 !important;
-    background: -moz-linear-gradient(center top , #F5F5F5, #F5F5F5) repeat scroll 0 0 #F5F5F5 !important;
+    background: -moz-linear-gradient(center top, #F5F5F5, #F5F5F5) repeat scroll 0 0 #F5F5F5 !important;
     background: -webkit-linear-gradient(center top , #F5F5F5, #F5F5F5) repeat scroll 0 0 #F5F5F5 !important;
     background: -o-linear-gradient(center top , #F5F5F5, #F5F5F5) repeat scroll 0 0 #F5F5F5 !important;
     box-shadow: none;
@@ -4320,7 +4319,7 @@ span.customSelect.changed {
     background-color: #fff;
 }
 .customSelectInner {
-    background:url(../img/customSelect-arrow.gif) no-repeat center right;
+    background:url(../images/customSelect-arrow.gif) no-repeat center right;
 }
 
 /*boxed page */
@@ -4798,7 +4797,7 @@ tr.odd.gradeX td.sorting_1, tr.even.gradeX td.sorting_1, table.display tr.even.g
 /*lock screen*/
 
 .lock-screen {
-    background:#02bac6 url("../img/lock-bg.jpg");
+    background:#02bac6 url("../images/lock-bg.jpg");
     background-size: cover;
     background-repeat: repeat;
 }
@@ -5529,7 +5528,7 @@ tr.odd.gradeX td.sorting_1, tr.even.gradeX td.sorting_1, table.display tr.even.g
     -o-transition: all .3s ease;
     transition: all .3s ease;
     box-shadow: none;
-    background: #01a6b2 url("../img/chat-search.png") no-repeat 12px 9px;
+    background: #01a6b2 url("../images/chat-search.png") no-repeat 12px 9px;
     padding:0 5px 0 35px;
     margin-top: 2px;
     border: none;
