@@ -9,6 +9,11 @@
 Auth::routes();
 
 Route::get(
+    '/',
+    'Auth\LoginController@showLoginForm'
+);
+
+Route::get(
     '/login',
     'Auth\LoginController@showLoginForm'
 )->name('login');
@@ -24,9 +29,16 @@ Route::get(
 );
 
 Route::get(
+    '/home',
+    function() {
+        return redirect('account_report');
+    }
+);
+
+Route::get(
     '/account_report',
     'RepoYssAccountReport\RepoYssAccountReportController@index'
-);
+)->name('account_report');
 
 Route::post(
     '/update-table',
