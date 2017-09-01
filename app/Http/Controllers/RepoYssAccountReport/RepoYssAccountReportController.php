@@ -17,8 +17,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX
-                                          . self::TIME_PERIOD_TITLE;
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
     const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
@@ -116,6 +115,8 @@ class RepoYssAccountReportController extends AbstractReportController
             ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
             ->with('sort', session(self::SESSION_KEY_SORT))
             ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
             ->with('columnsLiveSearch', $columnsLiveSearch) // all columns that show columns live search
             ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
     }
@@ -256,11 +257,12 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put('accountReport.graphColumnName', $request->graphColumnName);
         }
         // get startDay and endDay if available
-        if ($request->startDay !== null && $request->endDay !== null) {
+        if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
             session()->put(
                 [
                     self::SESSION_KEY_START_DAY => $request->startDay,
-                    self::SESSION_KEY_END_DAY => $request->endDay
+                    self::SESSION_KEY_END_DAY => $request->endDay,
+                    self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle,
                 ]
             );
         }
@@ -294,7 +296,13 @@ class RepoYssAccountReportController extends AbstractReportController
             }
         }
 
-        return response()->json($data);
+        $timePeriodLayout = view('layouts.time-period')
+                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                        ->render();
+
+        return response()->json(['data' => $data, 'timePeriodLayout' => $timePeriodLayout]);
     }
 
     /**
