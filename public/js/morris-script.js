@@ -18,7 +18,6 @@ var Script = function () {
         $('.date-option li').click(function() {
             var option = $(this).data('date');
             var milestone = getFilterDate(option);
-            console.log(milestone);
             $.ajax({
                 url : "/display-graph",
                 type : "POST",
