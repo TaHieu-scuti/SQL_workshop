@@ -930,12 +930,11 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
     float: left;
     text-align: center;
     width: 100%;
-    background: #a9d96c;
+    background: #f1f2f7;
     border-radius: 0 0 3px 3px;
 }
 
 .dropdown-menu.extended.logout > li:last-child > a, .dropdown-menu.extended.logout > li:last-child > a:hover {
-    color: #fff;
     border-bottom: none !important;
     text-transform: uppercase;
 }
