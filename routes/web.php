@@ -57,11 +57,6 @@ Route::get(
     'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
 )->name('export_csv');
 
-Route::post(
-    '/update-time-period',
-    'RepoYssAccountReport\RepoYssAccountReportController@updateTimePeriodTitle'
-);
-
 Route::get(
     '/display-graph',
     'RepoYssAccountReport\RepoYssAccountReportController@displayDataOnGraph'
