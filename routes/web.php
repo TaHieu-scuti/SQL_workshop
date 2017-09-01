@@ -13,6 +13,16 @@ Route::get(
     'Auth\LoginController@showLoginForm'
 )->name('login');
 
+Route::post(
+    '/login',
+    'Auth\LoginController@login'
+);
+
+Route::get(
+    '/logout',
+    'Auth\LoginController@logout'
+);
+
 Route::get(
     '/account_report',
     'RepoYssAccountReport\RepoYssAccountReportController@index'
