@@ -302,7 +302,10 @@ class RepoYssAccountReportController extends AbstractReportController
                         ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                         ->render();
 
-        return response()->json(['data' => $data, 'timePeriodLayout' => $timePeriodLayout]);
+        return response()->json([
+                        'data' => $data,
+                        'timePeriodLayout' => $timePeriodLayout
+                ]);
     }
 
     /**

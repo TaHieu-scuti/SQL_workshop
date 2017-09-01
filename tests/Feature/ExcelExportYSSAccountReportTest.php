@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\User;
+
 use Tests\TestCase;
 
 use DateTime;
@@ -13,7 +15,10 @@ class ExcelExportYSSAccountReportTest extends TestCase
     {
         $now = new DateTime;
 
-        $response = $this->get('/account_report/export_excel');
+        $user = (new User)->find(1)->first();
+
+        $response = $this->actingAs($user)
+                         ->get('/account_report/export_excel');
 
         $response->assertStatus(200);
 
@@ -70,5 +75,12 @@ class ExcelExportYSSAccountReportTest extends TestCase
         $actualSheet = $actualZipArchive->getFromName('xl/worksheets/sheet1.xml');
 
         $this->assertSame($expectedSheet, $actualSheet);
+    }
+
+    public function testRedirectsToLoginRouteWhenNotLoggedIn()
+    {
+        $response = $this->get('/account_report/export_excel');
+
+        $response->assertRedirect('/login');
     }
 }

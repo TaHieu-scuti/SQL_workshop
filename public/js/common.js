@@ -38,17 +38,17 @@ $('.btn-danger').click(function () {
 * update table with selected columns
 */
 $(".apply-button").click(function () {
-    $array = [];
-    if (!$array['fieldName']) {
-        $array['fieldName'] = [];
+    var array = [];
+    if (!array['fieldName']) {
+        array['fieldName'] = [];
     }
 
-    if(!$array['paginaton']) {
-        $array['pagination'] = $("input[name='resultPerPage']:checked").val();
+    if(!array['paginaton']) {
+        array['pagination'] = $("input[name='resultPerPage']:checked").val();
     }
 
     $.each($("input[name='fieldName']:checked"), function () {
-        $array['fieldName'].push($(this).val());
+        array['fieldName'].push($(this).val());
     });
     var th = $("th").eq($(this).index());
     $.ajax({
@@ -58,8 +58,8 @@ $(".apply-button").click(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data: {
-            'pagination' : $array['pagination'],
-            'fieldName' : $array['fieldName'],
+            'pagination' : array['pagination'],
+            'fieldName' : array['fieldName'],
             'columnSort' : th.text(),
         },
         success: function(result) {

@@ -29,6 +29,8 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
+
+        $this->middleware('auth');
     }
 
     /**
