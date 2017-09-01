@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\User;
+
 use Tests\TestCase;
 
 use DateTime;
@@ -12,7 +14,10 @@ class CSVExportYSSAccountReportTest extends TestCase
     {
         $now = new DateTime;
 
-        $response = $this->get('/account_report/export_csv');
+        $user = (new User)->find(1)->first();
+
+        $response = $this->actingAs($user)
+                         ->get('/account_report/export_csv');
 
         $response->assertStatus(200);
 
@@ -56,5 +61,12 @@ class CSVExportYSSAccountReportTest extends TestCase
     {
         $expectedContent = file_get_contents(__DIR__ . '/../resources/repo_yss_account_report.csv');
         $this->assertSame($expectedContent, $response['response']->getContent());
+    }
+
+    public function testRedirectsToLoginRouteWhenNotLoggedIn()
+    {
+        $response = $this->get('/account_report/export_csv');
+
+        $response->assertRedirect('/login');
     }
 }
