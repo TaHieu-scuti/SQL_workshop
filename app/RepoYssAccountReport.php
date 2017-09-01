@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Support\Facades\DB;
 
+use DateTime;
+use Exception;
+
 class RepoYssAccountReport extends AbstractReportModel
 {
     /** @var bool */
@@ -121,6 +124,13 @@ class RepoYssAccountReport extends AbstractReportModel
      */
     public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
     {
+        try {
+            new DateTime($startDay);
+            new DateTime($endDay);
+        } catch (Exception $exception) {
+            throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
+        }
+
         return self::select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
