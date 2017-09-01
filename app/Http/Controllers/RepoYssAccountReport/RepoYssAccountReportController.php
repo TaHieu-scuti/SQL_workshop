@@ -4,11 +4,13 @@ namespace App\Http\Controllers\RepoYssAccountReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\RepoYssAccountReport;
-use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+
+use DateTime;
+use Exception;
+use StdClass;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
@@ -42,8 +44,18 @@ class RepoYssAccountReportController extends AbstractReportController
         $this->model = $model;
     }
 
+    private function generateJSONErrorResponse(Exception $exception)
+    {
+        $errorObject = new StdClass;
+        $errorObject->code = 500;
+        $errorObject->error = $exception->getMessage();
+
+        return $this->responseFactory->json($errorObject, 500);
+    }
+
     /**
-     * @return \Illuminate\View\View
+     * @param Request $request
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
@@ -225,12 +237,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 session(self::SESSION_KEY_START_DAY),
                 session(self::SESSION_KEY_END_DAY)
             );
-        } catch (QueryException $exception) {
-            $errorObject = new \stdClass;
-            $errorObject->code = 500;
-            $errorObject->error = $exception->getMessage();
-
-            return $this->responseFactory->json($errorObject, 500);
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
         }
 
         if ($data->isEmpty()) {
@@ -242,7 +250,7 @@ class RepoYssAccountReportController extends AbstractReportController
             }
         }
 
-        return response()->json($data);
+        return $this->responseFactory->json($data);
     }
 
     /**
