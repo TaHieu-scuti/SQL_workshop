@@ -13,7 +13,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 {
     const ROUTE_DISPLAY_GRAPH = '/display-graph';
     const ROUTE_LOGIN = '/login';
-    const CORRECT_DATA_90_DAYS = '[{"data":"553148","day":"2017-01-01"},'
+    const CORRECT_DATA_90_DAYS = '{"data":[{"data":"553148","day":"2017-01-01"},'
         . '{"data":"707527","day":"2017-01-02"},{"data":"582703","day":"2017-01-03"},'
         . '{"data":"481094","day":"2017-01-04"},{"data":"532685","day":"2017-01-05"},'
         . '{"data":"432597","day":"2017-01-06"},{"data":"582879","day":"2017-01-07"},'
@@ -58,7 +58,10 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"528918","day":"2017-03-25"},{"data":"445791","day":"2017-03-26"},'
         . '{"data":"523383","day":"2017-03-27"},{"data":"723413","day":"2017-03-28"},'
         . '{"data":"501060","day":"2017-03-29"},{"data":"674264","day":"2017-03-30"},'
-        . '{"data":"532990","day":"2017-03-31"}]';
+        . '{"data":"532990","day":"2017-03-31"}],"timePeriodLayout":'
+        . '"<span class=\"title\"><br><\/span>\n'
+        . '<span>2017-01-01 - 2017-04-01<\/span>\n'
+        . '<strong class=\"caret\"><\/strong>\n"}';
 
     const DEFAULT_FIELD_NAMES = [
         3 => "cost",
@@ -198,12 +201,15 @@ class GraphApiYSSAccountReportTest extends TestCase
                                  RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016
                              ]
                          )->get(self::ROUTE_DISPLAY_GRAPH);
+        $object = [
+            'data' => [
+                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+            ],
+            'timePeriodLayout' => "<span class=\"title\"><br></span>\n"
+                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
+        ];
 
-        $object = new StdClass();
-        $object->data = 0;
-        $object->day = self::DATE_FIRST_DAY_2016;
-
-        $response->assertExactJson([$object]);
+        $response->assertExactJson($object);
     }
 
     public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame()
@@ -219,15 +225,15 @@ class GraphApiYSSAccountReportTest extends TestCase
                 ]
             )->get(self::ROUTE_DISPLAY_GRAPH);
 
-        $object1 = new StdClass();
-        $object1->data = 0;
-        $object1->day = '2016-02-01';
+        $object = [
+            'data' => [
+                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+            ],
+            'timePeriodLayout' => "<span class=\"title\"><br></span>\n"
+                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n"
+        ];
 
-        $object2 = new StdClass();
-        $object2->data = 0;
-        $object2->day = self::DATE_FIRST_DAY_2016;
-
-        $response->assertExactJson([$object1, $object2]);
+        $response->assertExactJson($object);
     }
 
     public function testErrorHandlingIncorrectFieldName()
