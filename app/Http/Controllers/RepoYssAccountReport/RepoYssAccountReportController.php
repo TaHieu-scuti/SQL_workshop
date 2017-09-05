@@ -17,6 +17,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const START_DAY = 'startDay';
     const END_DAY = 'endDay';
+    const COLUMN_SORT = 'columnSort';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -26,7 +27,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
-    const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . 'columnSort';
+    const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . 'sort';
 
     const REPORTS = 'reports';
@@ -115,7 +116,7 @@ class RepoYssAccountReportController extends AbstractReportController
             return $this->responseFactory->json(view('layouts.table_data', [
                 self::REPORTS => $dataReports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-                'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
                 'sort' => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray
@@ -126,7 +127,7 @@ class RepoYssAccountReportController extends AbstractReportController
             ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
             ->with(self::REPORTS, $dataReports)  // data that returned from query
             ->with('columns', $columns) // all columns that show up in modal
-            ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
+            ->with(self::COLUMN_SORT, session(self::SESSION_KEY_COLUMN_SORT))
             ->with('sort', session(self::SESSION_KEY_SORT))
             ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -226,7 +227,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return view('layouts.table_data')
                 ->with(self::REPORTS, $reports)
                 ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
-                ->with('columnSort', session(self::SESSION_KEY_COLUMN_SORT))
+                ->with(self::COLUMN_SORT, session(self::SESSION_KEY_COLUMN_SORT))
                 ->with('sort', session(self::SESSION_KEY_SORT))
                 ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
     }
@@ -274,6 +275,7 @@ class RepoYssAccountReportController extends AbstractReportController
         if ($request->graphColumnName !== null) {
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
         }
+
         // get startDay and endDay if available
         if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
             session()->put(
