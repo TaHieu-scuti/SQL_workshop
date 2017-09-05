@@ -18,6 +18,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const START_DAY = 'startDay';
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
+    const ACCOUNT_ID = 'account_id';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -67,7 +68,7 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $columns = $this->model->getColumnNames();
         //unset account_id from all $columns
-        $columns = $this->model->unsetColumns($columns, ['account_id']);
+        $columns = $this->model->unsetColumns($columns, [self::ACCOUNT_ID]);
 
         //get data column live search
         // unset day, day of week....
@@ -109,7 +110,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_END_DAY)
         );
         $columnsWithAccountId = $columns;
-        array_unshift($columnsWithAccountId, 'account_id');
+        array_unshift($columnsWithAccountId, self::ACCOUNT_ID);
         session()->put(self::SESSION_KEY_FIELD_NAME, $columnsWithAccountId);
 
         if ($request->ajax()) {
@@ -148,7 +149,7 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
         } else {
             $fieldName = $request->fieldName;
-            array_unshift($fieldName, 'account_id');
+            array_unshift($fieldName, self::ACCOUNT_ID);
             session()->put(
                 [
                     self::SESSION_KEY_FIELD_NAME => $fieldName,
