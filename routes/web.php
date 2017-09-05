@@ -59,12 +59,12 @@ Route::get(
 
 Route::get(
     '/display-graph',
-    'RepoYssAccountReport\RepoYssAccountReportController@displayDataOnGraph'
+    'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
 );
 
 Route::post(
     '/display-graph',
-    'RepoYssAccountReport\RepoYssAccountReportController@updateGraph'
+    'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
 );
 
 Route::post(
