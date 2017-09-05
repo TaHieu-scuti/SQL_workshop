@@ -193,6 +193,92 @@ class GraphApiYSSAccountReportTest extends TestCase
         $this->doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet('post');
     }
 
+    public function testUpdatesGraphColumnNameInSessionWhenPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->post(
+                self::ROUTE_DISPLAY_GRAPH,
+                ['graphColumnName' => 'someColumnName']
+            );
+
+        $response->assertSessionHas(
+            RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            'someColumnName'
+        );
+    }
+
+    public function testUpdatesStartDayEndDayAndTimePeriodTitleWhenPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->post(
+                self::ROUTE_DISPLAY_GRAPH,
+                [
+                    'startDay' => '2011-09-01',
+                    'endDay' => '2011-10-01',
+                    'timePeriodTitle' => 'someTitle'
+                ]
+            );
+
+        $response->assertSessionHasAll([
+            RepoYssAccountReportController::SESSION_KEY_START_DAY => '2011-09-01',
+            RepoYssAccountReportController::SESSION_KEY_END_DAY => '2011-10-01',
+            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTitle'
+        ]);
+    }
+
+    public function testDoesNotUpdateStartDayEndDayAndTimePeriodTitleWhenNotPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
+                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
+                    RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+            ])->post(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertSessionHasAll(                [
+            RepoYssAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
+            RepoYssAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
+            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+        ]);
+    }
+
+    public function testUpdatesStatusWhenPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->post(
+                self::ROUTE_DISPLAY_GRAPH,
+                ['status' => 'someStatus']
+            );
+
+        $response->assertSessionHas(
+            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            'someStatus'
+        );
+    }
+
+    public function testDoesNotUpdateStatusWhenNotPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => 'aStatus'
+            ])->post(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertSessionHas(
+            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            'aStatus'
+        );
+    }
+
     private function returnsCorrectDataFor90Days($method)
     {
         $this->flushSession();
