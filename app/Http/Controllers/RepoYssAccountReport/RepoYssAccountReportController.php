@@ -51,6 +51,10 @@ class RepoYssAccountReportController extends AbstractReportController
         $this->model = $model;
     }
 
+    /**
+     * @param Exception $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
     private function generateJSONErrorResponse(Exception $exception)
     {
         $errorObject = new StdClass;
@@ -58,6 +62,30 @@ class RepoYssAccountReportController extends AbstractReportController
         $errorObject->error = $exception->getMessage();
 
         return $this->responseFactory->json($errorObject, 500);
+    }
+
+    /**
+     * @return array|\Illuminate\Support\Collection
+     */
+    private function getDataForGraph()
+    {
+        $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+
+        if ($data->isEmpty()) {
+            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            } else {
+                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -234,87 +262,37 @@ class RepoYssAccountReportController extends AbstractReportController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function displayDataOnGraph()
-    {
-        // if get no column name, set selected column click
-        if (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
-            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
-        }
-
-        try {
-            $data = $this->model->getDataForGraph(
-                session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                session(self::SESSION_KEY_ACCOUNT_STATUS),
-                session(self::SESSION_KEY_START_DAY),
-                session(self::SESSION_KEY_END_DAY)
-            );
-        } catch (Exception $exception) {
-            return $this->generateJSONErrorResponse($exception);
-        }
-
-        if ($data->isEmpty()) {
-            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-            } else {
-                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-            }
-        }
-
-        return $this->responseFactory->json($data);
-    }
-
-    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateGraph(Request $request)
+    public function displayGraph(Request $request)
     {
         // update session.graphColumnName
         if ($request->graphColumnName !== null) {
             session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
+        } elseif (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
+            // if get no column name, set selected column click
+            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
         }
 
         // get startDay and endDay if available
         if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
-            session()->put(
-                [
+            session()->put([
                     self::SESSION_KEY_START_DAY => $request->startDay,
                     self::SESSION_KEY_END_DAY => $request->endDay,
                     self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle,
-                ]
-            );
+            ]);
         }
+
         // get status if available
         if ($request->status !== null) {
-            session()->put(
-                [
-                    self::SESSION_KEY_ACCOUNT_STATUS => $request->status,
-                ]
-            );
-        } else {
-            session()->put(
-                [
-                    self::SESSION_KEY_ACCOUNT_STATUS => "",
-                ]
-            );
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
         }
-        $data = $this->model
-                ->getDataForGraph(
-                    session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                    session(self::SESSION_KEY_ACCOUNT_STATUS),
-                    session(self::SESSION_KEY_START_DAY),
-                    session(self::SESSION_KEY_END_DAY)
-                );
-        if ($data->isEmpty()) {
-            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-            } else {
-                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-            }
+
+        try {
+            $data = $this->getDataForGraph();
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
         }
 
         $timePeriodLayout = view('layouts.time-period')
@@ -326,7 +304,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return response()->json([
                         'data' => $data,
                         'timePeriodLayout' => $timePeriodLayout
-                ]);
+        ]);
     }
 
     /**
