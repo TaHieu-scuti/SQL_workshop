@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
 use App\User;
 
+use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
 
 class GraphApiYSSAccountReportTest extends TestCase
@@ -121,6 +122,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function displayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn($method)
     {
+        /** @var TestResponse $response */
         $response = $this->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertRedirect(self::ROUTE_LOGIN);
@@ -134,6 +136,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function returns200StatusWhenLoggedIn($method)
     {
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -150,6 +153,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -171,6 +175,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession([
                 RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
@@ -192,6 +197,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
@@ -214,6 +220,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
@@ -243,6 +250,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
@@ -273,6 +281,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
@@ -309,6 +318,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
@@ -339,6 +349,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->flushSession();
 
+        /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession(
                 $this->getDefaultSessionValues() +
