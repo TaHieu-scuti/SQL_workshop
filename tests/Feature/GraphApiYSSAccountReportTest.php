@@ -7,8 +7,6 @@ use App\User;
 
 use Tests\TestCase;
 
-use StdClass;
-
 class GraphApiYSSAccountReportTest extends TestCase
 {
     const ROUTE_DISPLAY_GRAPH = '/display-graph';
@@ -121,34 +119,39 @@ class GraphApiYSSAccountReportTest extends TestCase
         ];
     }
 
-    public function testGetDisplayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn()
+    private function displayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn($method)
     {
-        $response = $this->get(self::ROUTE_DISPLAY_GRAPH);
+        $response = $this->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertRedirect(self::ROUTE_LOGIN);
     }
 
-    public function testPostDisplayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn()
+    public function testDisplayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn()
     {
-        $response = $this->post(self::ROUTE_DISPLAY_GRAPH);
-
-        $response->assertRedirect(self::ROUTE_LOGIN);
+        $this->displayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn('get');
+        $this->displayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn('post');
     }
 
-    public function testGetReturns200StatusWhenLoggedIn()
+    private function returns200StatusWhenLoggedIn($method)
     {
         $response = $this->actingAs($this->getUser())
-                         ->get(self::ROUTE_DISPLAY_GRAPH);
+            ->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertStatus(200);
     }
 
-    public function testGraphColumnNameInSessionIsSetToClicksAsDefaultValue()
+    public function testReturns200StatusWhenLoggedIn()
+    {
+        $this->returns200StatusWhenLoggedIn('get');
+        $this->returns200StatusWhenLoggedIn('post');
+    }
+
+    private function graphColumnNameInSessionIsSetToClicksAsDefaultValue($method)
     {
         $this->flushSession();
 
         $response = $this->actingAs($this->getUser())
-            ->get(self::ROUTE_DISPLAY_GRAPH);
+            ->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSuccessful();
 
@@ -158,14 +161,20 @@ class GraphApiYSSAccountReportTest extends TestCase
         );
     }
 
-    public function testDoesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet()
+    public function testGraphColumnNameInSessionIsSetToClicksAsDefaultValue()
+    {
+        $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('get');
+        $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('post');
+    }
+
+    private function doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet($method)
     {
         $this->flushSession();
 
         $response = $this->actingAs($this->getUser())
-             ->withSession([
-                 RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
-             ])->get(self::ROUTE_DISPLAY_GRAPH);
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
+            ])->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHas(
             RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
@@ -173,34 +182,46 @@ class GraphApiYSSAccountReportTest extends TestCase
         );
     }
 
-    public function testReturnsCorrectDataFor90Days()
+    public function testDoesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet()
+    {
+        $this->doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet('get');
+        $this->doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet('post');
+    }
+
+    private function returnsCorrectDataFor90Days($method)
     {
         $this->flushSession();
 
         $response = $this->actingAs($this->getUser())
-                         ->withSession(
-                             $this->getDefaultSessionValues() +
-                             [
-                                 RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
-                                 RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-04-01'
-                             ]
-                         )->get(self::ROUTE_DISPLAY_GRAPH);
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-04-01'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $this->assertSame(self::CORRECT_DATA_90_DAYS, $response->getContent());
     }
 
-    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame()
+    public function testReturnsCorrectDataFor90DaysForGetRequests()
+    {
+        $this->returnsCorrectDataFor90Days('get');
+        $this->returnsCorrectDataFor90Days('post');
+    }
+
+    private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame($method)
     {
         $this->flushSession();
 
         $response = $this->actingAs($this->getUser())
-                         ->withSession(
-                             $this->getDefaultSessionValues() +
-                             [
-                                 RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016
-                             ]
-                         )->get(self::ROUTE_DISPLAY_GRAPH);
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
             'data' => [
                 ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
@@ -212,7 +233,13 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertExactJson($object);
     }
 
-    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame()
+    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame()
+    {
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame('get');
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame('post');
+    }
+
+    private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame($method)
     {
         $this->flushSession();
 
@@ -223,7 +250,7 @@ class GraphApiYSSAccountReportTest extends TestCase
                     RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
                     RepoYssAccountReportController::SESSION_KEY_END_DAY => '2016-02-01'
                 ]
-            )->get(self::ROUTE_DISPLAY_GRAPH);
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $object = [
             'data' => [
@@ -236,7 +263,13 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertExactJson($object);
     }
 
-    public function testErrorHandlingIncorrectFieldName()
+    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame()
+    {
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame('get');
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame('post');
+    }
+
+    private function errorHandlingIncorrectFieldName($method)
     {
         $this->flushSession();
 
@@ -248,7 +281,7 @@ class GraphApiYSSAccountReportTest extends TestCase
                     RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-04-01',
                     RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
                 ]
-            )->get(self::ROUTE_DISPLAY_GRAPH);
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertStatus(500);
 
@@ -257,7 +290,7 @@ class GraphApiYSSAccountReportTest extends TestCase
             self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: '
                 . '1054 Unknown column \'someNonExistingColumnName\' in \'field list\' (SQL'
                 . ': select SUM(someNonExistingColumnName) as data, DATE(day) as day from `'
-                    . 'repo_yss_account_report` inner join `repo_yss_accounts` on `repo_yss_acc'
+                . 'repo_yss_account_report` inner join `repo_yss_accounts` on `repo_yss_acc'
                 . 'ount_report`.`account_id` = `repo_yss_accounts`.`account_id` where (date'
                 . '(`day`) >= 2017-01-01 and date(`day`) < 2017-04-01) and `repo_yss_accoun'
                 . 'ts`.`accountStatus` like %enabled group by `day`)'
@@ -266,7 +299,13 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertExactJson($errorObject);
     }
 
-    public function testErrorHandlingIncorrectStartDay()
+    public function testErrorHandlingIncorrectFieldName()
+    {
+        $this->errorHandlingIncorrectFieldName('get');
+        $this->errorHandlingIncorrectFieldName('post');
+    }
+
+    private function errorHandlingIncorrectStartDay($method)
     {
         $this->flushSession();
 
@@ -277,7 +316,37 @@ class GraphApiYSSAccountReportTest extends TestCase
                     RepoYssAccountReportController::SESSION_KEY_START_DAY => 'testing',
                     RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-01-05'
                 ]
-            )->get(self::ROUTE_DISPLAY_GRAPH);
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertStatus(500);
+
+        $errorObject = [
+            self::JSON_STATUS_CODE_FIELD_NAME => 500,
+            self::JSON_ERROR_FIELD_NAME => 'DateTime::__construct(): Failed to parse time string (testing) '
+                . 'at position 0 (t): The timezone could not be found in the database'
+        ];
+
+        $response->assertExactJson($errorObject);
+    }
+
+    public function testErrorHandlingIncorrectStartDayForGetRequests()
+    {
+        $this->errorHandlingIncorrectStartDay('get');
+        $this->errorHandlingIncorrectStartDay('post');
+    }
+
+    private function errorHandlingIncorrectEndDay($method)
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-05',
+                    RepoYssAccountReportController::SESSION_KEY_END_DAY => 'testing'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertStatus(500);
 
@@ -292,25 +361,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     public function testErrorHandlingIncorrectEndDay()
     {
-        $this->flushSession();
-
-        $response = $this->actingAs($this->getUser())
-            ->withSession(
-                $this->getDefaultSessionValues() +
-                [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-05',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => 'testing'
-                ]
-            )->get(self::ROUTE_DISPLAY_GRAPH);
-
-        $response->assertStatus(500);
-
-        $errorObject = [
-            self::JSON_STATUS_CODE_FIELD_NAME => 500,
-            self::JSON_ERROR_FIELD_NAME => 'DateTime::__construct(): Failed to parse time string (testing) '
-                . 'at position 0 (t): The timezone could not be found in the database'
-        ];
-
-        $response->assertExactJson($errorObject);
+        $this->errorHandlingIncorrectEndDay('get');
+        $this->errorHandlingIncorrectEndDay('post');
     }
 }
