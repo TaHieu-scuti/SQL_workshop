@@ -241,7 +241,7 @@ class GraphApiYSSAccountReportTest extends TestCase
                     RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
             ])->post(self::ROUTE_DISPLAY_GRAPH);
 
-        $response->assertSessionHasAll(                [
+        $response->assertSessionHasAll([
             RepoYssAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
             RepoYssAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
             RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
