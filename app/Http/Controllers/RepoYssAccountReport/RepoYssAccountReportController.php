@@ -140,10 +140,9 @@ class RepoYssAccountReportController extends AbstractReportController
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $columns = $this->model->getColumnNames();
 
@@ -163,23 +162,26 @@ class RepoYssAccountReportController extends AbstractReportController
 
         $totalDataArray = $this->getCalculatedData();
 
-        return view('yssAccountReport.index')
-            ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
-            ->with(self::REPORTS, $dataReports)  // data that returned from query
-            ->with(self::COLUMNS, $columns) // all columns that show up in modal
-            ->with(self::COLUMN_SORT, session(self::SESSION_KEY_COLUMN_SORT))
-            ->with(self::SORT, session(self::SESSION_KEY_SORT))
-            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-            ->with(self::COLUMNS_FOR_LIVE_SEARCH, $columnsLiveSearch) // all columns that show columns live search
-            ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
+        return $this->responseFactory->view(
+            'yssAccountReport.index',
+            [
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::REPORTS => $dataReports, // data that returned from query
+                self::COLUMNS => $columns, // all columns that show up in modal
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
+                self::START_DAY => session(self::SESSION_KEY_START_DAY),
+                self::END_DAY => session(self::SESSION_KEY_END_DAY),
+                self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
+                self::TOTAL_DATA_ARRAY => $totalDataArray // total data of each field
+            ]
+        );
     }
 
     /**
-     * update data by request( date, status, columns) on table
      * @param Request $request
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
     public function updateTable(Request $request)
     {
@@ -251,15 +253,13 @@ class RepoYssAccountReportController extends AbstractReportController
 
         $totalDataArray = $this->getCalculatedData();
 
-        if ($request->ajax()) {
-            return $this->responseFactory->json(view('layouts.table_data', [
-                self::REPORTS => $reports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-                'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
-                'sort' => session(self::SESSION_KEY_SORT),
-                self::TOTAL_DATA_ARRAY => $totalDataArray
-            ])->render());
-        }
+        return $this->responseFactory->json(view('layouts.table_data', [
+            self::REPORTS => $reports,
+            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+            self::SORT => session(self::SESSION_KEY_SORT),
+            self::TOTAL_DATA_ARRAY => $totalDataArray
+        ])->render());
     }
 
     /**
@@ -302,7 +302,7 @@ class RepoYssAccountReportController extends AbstractReportController
                         ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                         ->render();
 
-        return response()->json([
+        return $this->responseFactory->json([
                         'data' => $data,
                         'timePeriodLayout' => $timePeriodLayout
         ]);
@@ -310,12 +310,15 @@ class RepoYssAccountReportController extends AbstractReportController
 
     /**
      * @param Request $request
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
-
     public function liveSearch(Request $request)
     {
         $result = $this->model->getColumnLiveSearch($request["keywords"]);
-        return view('layouts.dropdown_search')->with('columnsLiveSearch', $result);
+
+        return $this->responseFactory->view(
+            'layouts.dropdown_search',
+            [self::COLUMNS_FOR_LIVE_SEARCH => $result]
+        );
     }
 }
