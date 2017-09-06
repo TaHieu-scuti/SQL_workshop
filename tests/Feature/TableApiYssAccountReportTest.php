@@ -87,6 +87,7 @@ class TableApiYssAccountReportTest extends TestCase
     const CUSTOM_COLUMN_SORT = 'someColumnName';
     const DEFAULT_SORT = 'desc';
     const CUSTOM_SORT = 'someSortOption';
+    const VIEW_PATH = 'yssAccountReport.index';
 
     /**
      * @return \App\User
@@ -320,5 +321,13 @@ class TableApiYssAccountReportTest extends TestCase
             RepoYssAccountReportController::SESSION_KEY_SORT,
             self::CUSTOM_SORT
         );
+    }
+
+    public function testReturnsCorrectView()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+
+        $response->assertViewIs(self::VIEW_PATH);
     }
 }
