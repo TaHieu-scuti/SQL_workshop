@@ -195,8 +195,12 @@ class RepoYssAccountReport extends AbstractReportModel
                 $arrayCalculate[] = DB::raw('SUM('.$fieldName.')as '.$fieldName);
             }
         }
+
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
+        if (empty($arrayCalculate)) {
+            return $arrayCalculate;
+        }
         return self::select($arrayCalculate)
                     ->join(
                         $joinTableName,
