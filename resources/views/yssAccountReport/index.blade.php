@@ -596,7 +596,6 @@
                     history.pushState("", "", '?page=' + page);
                 },
                 error: function (data) {
-                    console.log(data);
                     alert('Reports could not be loaded.');
                 }
             });

@@ -241,9 +241,9 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY)
         );
-        
+
         if ($request->ajax()) {
-            return $this->responseFactory->json(view('layouts.table_data', [ 
+            return $this->responseFactory->json(view('layouts.table_data', [
                 self::REPORTS => $reports,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
