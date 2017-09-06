@@ -163,17 +163,6 @@ class RepoYssAccountReportController extends AbstractReportController
 
         $totalDataArray = $this->getCalculatedData();
 
-        if ($request->ajax()) {
-            return $this->responseFactory->json(view('layouts.table_data', [
-                self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
-                self::SORT => session(self::SESSION_KEY_SORT),
-                self::TOTAL_DATA_ARRAY => $totalDataArray
-            ])->render());
-        }
-
         return view('yssAccountReport.index')
             ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME)) // field names which show on top of table
             ->with(self::REPORTS, $dataReports)  // data that returned from query
@@ -262,12 +251,15 @@ class RepoYssAccountReportController extends AbstractReportController
 
         $totalDataArray = $this->getCalculatedData();
 
-        return view('layouts.table_data')
-                ->with(self::REPORTS, $reports)
-                ->with(self::FIELD_NAMES, session(self::SESSION_KEY_FIELD_NAME))
-                ->with(self::COLUMN_SORT, session(self::SESSION_KEY_COLUMN_SORT))
-                ->with('sort', session(self::SESSION_KEY_SORT))
-                ->with(self::TOTAL_DATA_ARRAY, $totalDataArray); // total data of each field
+        if ($request->ajax()) {
+            return $this->responseFactory->json(view('layouts.table_data', [
+                self::REPORTS => $reports,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                'columnSort' => session(self::SESSION_KEY_COLUMN_SORT),
+                'sort' => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray
+            ])->render());
+        }
     }
 
     /**
