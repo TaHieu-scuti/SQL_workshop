@@ -28,7 +28,6 @@
       <![endif]-->
 </head>
 <body class="full-width">
-
     <section id="container" class="">
         <!--header start-->
         <header class="header white-bg">
@@ -400,6 +399,7 @@
                 </div>
 
                 <div class="row line-chart">
+                    <div class="loading-gif"></div>
                     <section class="panel">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>
@@ -559,6 +559,7 @@
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <!-- Custom js-->
+    <script src="/js/ajax-loading.js"></script>
     <script src="/js/get-filter-date.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
