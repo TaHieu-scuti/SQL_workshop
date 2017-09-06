@@ -587,8 +587,8 @@
             });
 
             $.ajax({
-                type : 'GET',
-                url : '?page=' + page,
+                type : 'POST',
+                url : 'update-table?page=' + page,
                 dataType: 'json',
                 success: function (data) {
                     $('.table_data_report').html('');
@@ -596,6 +596,7 @@
                     history.pushState("", "", '?page=' + page);
                 },
                 error: function (data) {
+                    console.log(data);
                     alert('Reports could not be loaded.');
                 }
             });
