@@ -38,6 +38,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
 
+    const DEFAULT_ACCOUNT_STATUS = 'enabled';
+
     /** @var \App\RepoYssAccountReport */
     protected $model;
 
@@ -130,13 +132,60 @@ class RepoYssAccountReportController extends AbstractReportController
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
         session([self::SESSION_KEY_FIELD_NAME => $columns]);
-        session([self::SESSION_KEY_ACCOUNT_STATUS => 'enabled']);
+        session([self::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS]);
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
         session([self::SESSION_KEY_START_DAY => $startDay]);
         session([self::SESSION_KEY_END_DAY => $endDay]);
         session([self::SESSION_KEY_PAGINATION => 20]);
         session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([self::SESSION_KEY_SORT => 'desc']);
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function updateSessionData(Request $request)
+    {
+        // get fieldName and pagination if available
+        if ($request->fieldName === null && $request->pagination !== null) {
+            session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
+        } elseif ($request->pagination !== null) {
+            session()->put([
+                self::SESSION_KEY_FIELD_NAME => $request->fieldName,
+                self::SESSION_KEY_PAGINATION => $request->pagination
+            ]);
+        }
+
+        // get startDay and endDay if available
+        if ($request->startDay !== null && $request->endDay !== null) {
+            session()->put([
+                self::SESSION_KEY_START_DAY => $request->startDay,
+                self::SESSION_KEY_END_DAY => $request->endDay
+            ]);
+        }
+
+        // get status if available
+        if ($request->status !== null) {
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
+        } else {
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS]);
+        }
+
+        //get column sort and sort by if available
+        if ($request->columnSort !== null) {
+            if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort
+                || session(self::SESSION_KEY_SORT) !== 'desc') {
+                session()->put([
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'desc'
+                ]);
+            } elseif (session(self::SESSION_KEY_SORT) !== 'asc') {
+                session()->put([
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'asc'
+                ]);
+            }
+        }
     }
 
     /**
@@ -185,69 +234,7 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function updateTable(Request $request)
     {
-        // get fieldName and pagination if available
-        if ($request->fieldName === null) {
-            session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
-        } else {
-            $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::ACCOUNT_ID);
-            session()->put(
-                [
-                    self::SESSION_KEY_FIELD_NAME => $fieldName,
-                    self::SESSION_KEY_PAGINATION => $request->pagination
-                ]
-            );
-        }
-        // get startDay and endDay if available
-        if ($request->startDay !== null && $request->endDay !== null) {
-            session()->put(
-                [
-                    self::SESSION_KEY_START_DAY => $request->startDay,
-                    self::SESSION_KEY_END_DAY => $request->endDay
-                ]
-            );
-        }
-        // get status if available
-        if ($request->status !== null) {
-            session()->put(
-                [
-                    self::SESSION_KEY_ACCOUNT_STATUS => $request->status,
-                ]
-            );
-        } else {
-            session()->put(
-                [
-                    self::SESSION_KEY_ACCOUNT_STATUS => "",
-                ]
-            );
-        }
-        //get column sort and sort by if available
-        if ($request->columnSort) {
-            if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort) {
-                session()->put(
-                    [
-                        self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                        self::SESSION_KEY_SORT => 'desc'
-                    ]
-                );
-            } else {
-                if ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'asc') {
-                    session()->put(
-                        [
-                            self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                            self::SESSION_KEY_SORT => 'asc'
-                        ]
-                    );
-                } elseif ($request->columnSort !== null && session(self::SESSION_KEY_SORT) !== 'desc') {
-                    session()->put(
-                        [
-                            self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                            self::SESSION_KEY_SORT => 'desc'
-                        ]
-                    );
-                }
-            }
-        }
+        $this->updateSessionData($request);
 
         $reports = $this->getDataForTable();
 
