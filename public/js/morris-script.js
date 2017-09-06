@@ -140,7 +140,6 @@ var Script = function () {
                 url : '/display-graph',
                 type : 'GET',
                 success: function(response) {
-                    console.log(response);
                     var data = [];
                     for(var i = 0; i < response.data.length; i++) {
                         data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
