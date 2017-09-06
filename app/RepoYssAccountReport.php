@@ -185,6 +185,13 @@ class RepoYssAccountReport extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
+    /**
+     * @param $fieldNames
+     * @param $accountStatus
+     * @param $startDay
+     * @param $endDay
+     * @return array
+     */
     public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
     {
         $arrayCalculate = [];
@@ -217,6 +224,6 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     )
                     ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
-                   ->first();
+                   ->first()->toArray();
     }
 }
