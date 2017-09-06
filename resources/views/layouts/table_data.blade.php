@@ -49,7 +49,7 @@
                     @if($fieldName === 'account_id')
                         <?php continue; ?>
                     @endif
-                    @if(isset($totalDataArray->$fieldName)  && !empty($totalDataArray))
+                    @if(isset($totalDataArray->$fieldName))
                     <td>{{ $totalDataArray->$fieldName }}</td>
                     @else
                     <td></td>

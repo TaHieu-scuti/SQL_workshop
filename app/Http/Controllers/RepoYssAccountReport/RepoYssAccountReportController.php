@@ -161,7 +161,6 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function updateTable(Request $request)
     {
-        // dd($request->fieldName);
         // get fieldName and pagination if available
         if ($request->fieldName === null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
@@ -235,7 +234,6 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_COLUMN_SORT),
             session(self::SESSION_KEY_SORT)
         );
-
 
         $totalDataArray = $this->model->calculateData(
             session(self::SESSION_KEY_FIELD_NAME),
