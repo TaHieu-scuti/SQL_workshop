@@ -296,7 +296,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         $this->assertSame(self::CORRECT_DATA_90_DAYS, $response->getContent());
     }
 
-    public function testReturnsCorrectDataFor90DaysForGetRequests()
+    public function testReturnsCorrectDataFor90Days()
     {
         $this->returnsCorrectDataFor90Days('get');
         $this->returnsCorrectDataFor90Days('post');
@@ -425,7 +425,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertExactJson($errorObject);
     }
 
-    public function testErrorHandlingIncorrectStartDayForGetRequests()
+    public function testErrorHandlingIncorrectStartDay()
     {
         $this->errorHandlingIncorrectStartDay('get');
         $this->errorHandlingIncorrectStartDay('post');

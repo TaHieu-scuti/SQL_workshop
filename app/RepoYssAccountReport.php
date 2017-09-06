@@ -185,14 +185,23 @@ class RepoYssAccountReport extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
+    /**
+     * @param $fieldNames
+     * @param $accountStatus
+     * @param $startDay
+     * @param $endDay
+     * @return array
+     */
     public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
     {
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('AVG('.$fieldName.') as '.$fieldName);
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                $arrayCalculate[] = DB::raw('SUM('.$fieldName.')as '.$fieldName);
+            if ($fieldName !== 'account_id') {
+                if (in_array($fieldName, $this->averageFieldArray)) {
+                    $arrayCalculate[] = DB::raw('AVG(' . $fieldName . ') as ' . $fieldName);
+                } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+                    $arrayCalculate[] = DB::raw('SUM(' . $fieldName . ')as ' . $fieldName);
+                }
             }
         }
 
@@ -207,7 +216,7 @@ class RepoYssAccountReport extends AbstractReportModel
                         $tableName . '.account_id',
                         '=',
                         $joinTableName . '.account_id'
-                    )->where(
+                    )->where( // TODO: this where condition is repeated 3 times throughout this file
                         function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
                                 $query->whereDate('day', '=', $endDay);
@@ -218,6 +227,6 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     )
                     ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
-                   ->first();
+                   ->first()->toArray();
     }
 }

@@ -48,6 +48,7 @@ abstract class AbstractReportModel extends Model
                 unset($columns[$key]);
             }
         }
+
         return $columns;
     }
 
