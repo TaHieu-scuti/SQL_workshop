@@ -195,25 +195,29 @@ class RepoYssAccountReport extends AbstractReportModel
                 $arrayCalculate[] = DB::raw('SUM('.$fieldName.')as '.$fieldName);
             }
         }
+
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
+        if (empty($arrayCalculate)) {
+            return $arrayCalculate;
+        }
         return self::select($arrayCalculate)
-                    ->join(
-                        $joinTableName,
-                        $tableName . '.account_id',
-                        '=',
-                        $joinTableName . '.account_id'
-                    )->where(
-                        function ($query) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
-                            } else {
-                                $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<', $endDay);
-                            }
-                        }
-                    )
-                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
-                   ->first();
+            ->join(
+                $joinTableName,
+                $tableName . '.account_id',
+                '=',
+                $joinTableName . '.account_id'
+            )->where(
+                function ($query) use ($startDay, $endDay) {
+                    if ($startDay === $endDay) {
+                        $query->whereDate('day', '=', $endDay);
+                    } else {
+                        $query->whereDate('day', '>=', $startDay)
+                            ->whereDate('day', '<', $endDay);
+                    }
+                }
+            )
+            ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+           ->first();
     }
 }
