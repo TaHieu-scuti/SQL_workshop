@@ -95,8 +95,6 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        //unset account_id from all $columns
-        $columns = $this->model->unsetColumns($columns, [self::ACCOUNT_ID]);
 
         //get data column live search
         // unset day, day of week....
@@ -137,9 +135,6 @@ class RepoYssAccountReportController extends AbstractReportController
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY)
         );
-        $columnsWithAccountId = $columns;
-        array_unshift($columnsWithAccountId, self::ACCOUNT_ID);
-        session()->put(self::SESSION_KEY_FIELD_NAME, $columnsWithAccountId);
 
         if ($request->ajax()) {
             return $this->responseFactory->json(view('layouts.table_data', [
