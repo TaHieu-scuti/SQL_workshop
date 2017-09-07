@@ -3,6 +3,7 @@
         $export = false;
     }
 ?>
+
 <div class="row report-table">
     <div class="col-md-12">
     <table class="table table-striped" id="reportTable">
@@ -49,8 +50,8 @@
                     @if($fieldName === 'account_id')
                         <?php continue; ?>
                     @endif
-                    @if(isset($totalDataArray->$fieldName))
-                    <td>{{ $totalDataArray->$fieldName }}</td>
+                    @if(isset($totalDataArray[$fieldName]))
+                    <td>{{ $totalDataArray[$fieldName] }}</td>
                     @else
                     <td></td>
                     @endif
