@@ -37,6 +37,16 @@ $('.btn-danger').click(function () {
 * display selected columns
 * update table with selected columns
 */
+$(window).on('hashchange', function() {
+    if (window.location.hash) {
+        var page = window.location.hash.replace('#', '');
+        if (page == Number.NaN || page <= 0) {
+            return false;
+        } else {
+            getAccountReports(page);
+        }
+    }
+});
 $(".apply-button").click(function () {
     var array = [];
     if (!array['fieldName']) {
@@ -65,6 +75,8 @@ $(".apply-button").click(function () {
         success: function(result) {
             $('table').html(result);
             $('#columnsModal').modal('hide');
+            var link = window.location.pathname;
+            history.pushState("", "", link);
         }
     });
 });
