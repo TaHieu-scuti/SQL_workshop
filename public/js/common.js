@@ -1,3 +1,4 @@
+var link = window.location.pathname;
 /*
 =======
 * stop drop-down menu form disappearing on clicking
@@ -75,7 +76,6 @@ $(".apply-button").click(function () {
         success: function(result) {
             $('table').html(result);
             $('#columnsModal').modal('hide');
-            var link = window.location.pathname;
             history.pushState("", "", link);
         }
     });
@@ -100,6 +100,7 @@ $('.date-option li').click(function () {
         },
         success : function (response) {
             $('table').html(response);
+            history.pushState("", "", link);
         }
     });
 });
@@ -133,6 +134,7 @@ $('.status-option li').click(function () {
         },
         success : function (response) {
             $('table').html(response);
+            history.pushState("", "", link);
         }
     });
 });
