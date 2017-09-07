@@ -528,7 +528,7 @@
                                                     <input type="checkbox" id="selectAll"> Select all
                                                 </div>
                                             </div>
-                                            <div class="clearfix"></div>
+                                            <div class="clearfix checkFieldName"></div>
                                             @include('layouts.fields_on_modal')
                                             <div class="clearfix"></div>
                                         </div>

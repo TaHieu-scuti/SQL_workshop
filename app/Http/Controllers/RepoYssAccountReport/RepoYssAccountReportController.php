@@ -150,8 +150,10 @@ class RepoYssAccountReportController extends AbstractReportController
         if ($request->fieldName === null && $request->pagination !== null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
         } elseif ($request->pagination !== null) {
+            $fieldName = $request->fieldName;
+            array_unshift($fieldName, self::ACCOUNT_ID);
             session()->put([
-                self::SESSION_KEY_FIELD_NAME => $request->fieldName,
+                self::SESSION_KEY_FIELD_NAME => $fieldName,
                 self::SESSION_KEY_PAGINATION => $request->pagination
             ]);
         }
@@ -194,7 +196,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $columns = $this->model->getColumnNames();
-
+        $columnsInModal = $this->model->unsetColumns($columns, ['account_id']);
         //get data column live search
         // unset day, day of week....
         $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
@@ -223,7 +225,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
-                self::TOTAL_DATA_ARRAY => $totalDataArray // total data of each field
+                self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
+                'columnsInModal' => $columnsInModal,
             ]
         );
     }
@@ -234,6 +237,10 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function updateTable(Request $request)
     {
+        $columns = $this->model->getColumnNames();
+        if (!session('accountReport')) {
+            $this->initializeSession($columns);
+        }
         $this->updateSessionData($request);
 
         $reports = $this->getDataForTable();
