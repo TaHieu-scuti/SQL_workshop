@@ -37,10 +37,10 @@ class RepoYssAccountReportController extends AbstractReportController
     const TOTAL_DATA_ARRAY = 'totalDataArray';
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
-    const COLUMNS_FOR_FILTER = 'keyPagination';
+    const KEY_PAGINATION = 'keyPagination';
     const DEFAULT_ACCOUNT_STATUS = 'enabled';
 
-    const COLUMNS_IN_MODAL = 'columnsInModal';
+    const COLUMNS_FOR_FILTER = 'columnsInModal';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -218,7 +218,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
-                self::COLUMNS_FOR_FILTER => session(self::SESSION_KEY_PAGINATION),
+                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $columns, // all columns that show up in modal
@@ -229,7 +229,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_IN_MODAL => $columnsInModal,
+                self::COLUMNS_FOR_FILTER => $columnsInModal,
             ]
         );
     }
