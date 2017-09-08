@@ -37,8 +37,10 @@ class RepoYssAccountReportController extends AbstractReportController
     const TOTAL_DATA_ARRAY = 'totalDataArray';
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
-
+    const KEY_PAGINATION = 'keyPagination';
     const DEFAULT_ACCOUNT_STATUS = 'enabled';
+
+    const COLUMNS_FOR_FILTER = 'columnsInModal';
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -147,12 +149,14 @@ class RepoYssAccountReportController extends AbstractReportController
     private function updateSessionData(Request $request)
     {
         // get fieldName and pagination if available
-        if ($request->fieldName === null && $request->pagination !== null) {
+        if ($request->pagination !== null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
-        } elseif ($request->pagination !== null) {
+        }
+        if ($request->fieldName !== null) {
+            $fieldName = $request->fieldName;
+            array_unshift($fieldName, self::ACCOUNT_ID);
             session()->put([
-                self::SESSION_KEY_FIELD_NAME => $request->fieldName,
-                self::SESSION_KEY_PAGINATION => $request->pagination
+                self::SESSION_KEY_FIELD_NAME => $fieldName,
             ]);
         }
 
@@ -195,7 +199,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $columns = $this->model->getColumnNames();
-
+        $columnsInModal = $this->model->unsetColumns($columns, ['account_id']);
         //get data column live search
         // unset day, day of week....
         $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
@@ -214,6 +218,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
+                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $columns, // all columns that show up in modal
@@ -223,7 +228,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
-                self::TOTAL_DATA_ARRAY => $totalDataArray // total data of each field
+                self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
+                self::COLUMNS_FOR_FILTER => $columnsInModal,
             ]
         );
     }
@@ -234,6 +240,10 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function updateTable(Request $request)
     {
+        $columns = $this->model->getColumnNames();
+        if (!session('accountReport')) {
+            $this->initializeSession($columns);
+        }
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
 
@@ -288,6 +298,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
         return $this->responseFactory->json([
                         'data' => $data,
+                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout
         ]);
     }

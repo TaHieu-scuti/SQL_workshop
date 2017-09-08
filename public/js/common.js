@@ -80,6 +80,23 @@ $(".apply-button").click(function () {
         }
     });
 });
+
+$('input[name="fieldName"]:checkbox').change(function() {
+    filterColumnChecked();
+});
+
+function filterColumnChecked() {
+    var array= [];
+    $.each($("input[name='fieldName']:checked"), function() {
+        array.push($(this).val());
+    });
+    if (array.length === 1) {
+        $("input[name='fieldName']:checked").attr("disabled", true);
+    } else if(array.length > 1) {
+        $("input[name='fieldName']:checkbox").removeAttr('disabled');
+    }
+}
+filterColumnChecked();
 /*
 *
 * onclicking date button
@@ -149,10 +166,13 @@ $("#selectAll").click(function () {
       $(':checkbox').each(function() {
           this.checked = true;
       });
+      filterColumnChecked();
     }
     else {
         $(':checkbox').each(function () {
             this.checked = false;
+            $("input[name='fieldName']:checkbox")[0].checked = true;
+            filterColumnChecked();
         });
     }
 })

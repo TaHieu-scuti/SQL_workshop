@@ -34,11 +34,7 @@ var Script = function () {
                     sendingRequest();
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -81,11 +77,7 @@ var Script = function () {
                     sendingRequest();
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -115,11 +107,7 @@ var Script = function () {
                     sendingRequest();
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -137,7 +125,7 @@ var Script = function () {
                 element: 'report-graph',
                 xkey: 'date',
                 ykeys: ['clicks'],
-                labels: ['Clicks'],
+                labels: ['clicks'],
                 lineColors:['#0d88e0'],
                 parseTime:false,
                 hideHover:false,
@@ -148,9 +136,10 @@ var Script = function () {
             });
             }
 
-        function setMorris(data)
+        function setMorris(data, fieldName)
         {
             lineChart.setData(data);
+            lineChart.options.labels = [fieldName];
         }
         // set graph with `click` for y-axis
         function getMorris()
@@ -162,11 +151,7 @@ var Script = function () {
                     sendingRequest();
                 },
                 success: function(response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -177,7 +162,15 @@ var Script = function () {
                 },
             });
         }
-
+        function processData(response)
+        {
+            var field = response.field;
+            var data = [];
+            for(var i = 0; i < response.data.length; i++) {
+                data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
+            }
+            setMorris(data, field);
+        }
         function updateMorris(columnName)
         {
             $.ajax({
@@ -194,11 +187,7 @@ var Script = function () {
                 },
                 success : function(response)
                 {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {

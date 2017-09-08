@@ -132,6 +132,39 @@ class TableApiYssAccountReportTest extends TestCase
         25 => self::COLUMN_NAME_VALUE_PER_ALL_CONV
     ];
 
+    const COLUMNS_FOR_FILTER = [
+        3 => self::COLUMN_NAME_COST,
+        4 => self::COLUMN_NAME_IMPRESSIONS,
+        5 => self::COLUMN_NAME_CLICKS,
+        6 => self::COLUMN_NAME_CTR,
+        7 => self::COLUMN_NAME_AVERAGE_CPC,
+        8  => self::COLUMN_NAME_AVERAGE_POSITION,
+        9  => self::COLUMN_NAME_INVALID_CLICKS,
+        10 => self::COLUMN_NAME_INVALID_CLICK_RATE,
+        11 => self::COLUMN_NAME_IMPRESSION_SHARE,
+        12 => self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE,
+        13 => self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE,
+        14 => self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE,
+        15 => self::COLUMN_NAME_TRACKING_URL,
+        16 => self::COLUMN_NAME_CONVERSIONS,
+        17 => self::COLUMN_NAME_CONV_RATE,
+        18 => self::COLUMN_NAME_CONV_VALUE,
+        19 => self::COLUMN_NAME_COST_PER_CONV,
+        20 => self::COLUMN_NAME_VALUE_PER_CONV,
+        21 => self::COLUMN_NAME_ALL_CONV,
+        22 => self::COLUMN_NAME_ALL_CONV_RATE,
+        23 => self::COLUMN_NAME_ALL_CONV_VALUE,
+        24 => self::COLUMN_NAME_COST_PER_ALL_CONV,
+        25 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+        26 => self::COLUMN_NAME_NETWORK,
+        27 => self::COLUMN_NAME_DEVICE,
+        28 => self::COLUMN_NAME_DAY,
+        29 => self::COLUMN_NAME_DAY_OF_WEEK,
+        30 => self::COLUMN_NAME_QUARTER,
+        31 => self::COLUMN_NAME_MONTH,
+        32 => self::COLUMN_NAME_WEEK
+    ];
+
     const DEFAULT_STATUS = 'enabled';
     const CUSTOM_STATUS = 'someStatus';
     const DEFAULT_TIME_PERIOD_TITLE = 'Last 90 days';
@@ -560,6 +593,26 @@ class TableApiYssAccountReportTest extends TestCase
             self::LIVE_SEARCH_FIELDS
         );
     }
+    public function testViewHasColumnsForFilter()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+            ])
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAccountReportController::COLUMNS_FOR_FILTER,
+            self::COLUMNS_FOR_FILTER
+        );
+    }
 
     public function testViewHasTotalDataArray()
     {
@@ -602,6 +655,27 @@ class TableApiYssAccountReportTest extends TestCase
                 self::COLUMN_NAME_COST_PER_ALL_CONV => 21916669.870765466,
                 self::COLUMN_NAME_VALUE_PER_ALL_CONV => 22237935.55070321
             ]
+        );
+    }
+
+    public function testViewHasPaginationFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+            ])
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAccountReportController::KEY_PAGINATION,
+            self::CUSTOM_PAGINATION
         );
     }
 }
