@@ -57,7 +57,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"528918","day":"2017-03-25"},{"data":"445791","day":"2017-03-26"},'
         . '{"data":"523383","day":"2017-03-27"},{"data":"723413","day":"2017-03-28"},'
         . '{"data":"501060","day":"2017-03-29"},{"data":"674264","day":"2017-03-30"},'
-        . '{"data":"532990","day":"2017-03-31"}],"timePeriodLayout":'
+        . '{"data":"532990","day":"2017-03-31"}],"field":"clicks","timePeriodLayout":'
         . '"<span class=\"title\"><br><\/span>\n'
         . '<span>2017-01-01 - 2017-04-01<\/span>\n'
         . '<strong class=\"caret\"><\/strong>\n"}';
