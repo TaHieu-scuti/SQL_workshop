@@ -319,6 +319,7 @@ class GraphApiYSSAccountReportTest extends TestCase
             'data' => [
                 ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
             ],
+            'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\"><br></span>\n"
                 . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
         ];
