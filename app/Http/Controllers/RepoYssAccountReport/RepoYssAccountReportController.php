@@ -157,10 +157,11 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         // get startDay and endDay if available
-        if ($request->startDay !== null && $request->endDay !== null) {
+        if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
             session()->put([
                 self::SESSION_KEY_START_DAY => $request->startDay,
-                self::SESSION_KEY_END_DAY => $request->endDay
+                self::SESSION_KEY_END_DAY => $request->endDay,
+                self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle
             ]);
         }
 
@@ -210,7 +211,6 @@ class RepoYssAccountReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
 
         $totalDataArray = $this->getCalculatedData();
-
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
@@ -235,11 +235,9 @@ class RepoYssAccountReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $this->updateSessionData($request);
-
         $reports = $this->getDataForTable();
 
         $totalDataArray = $this->getCalculatedData();
-
         return $this->responseFactory->json(view('layouts.table_data', [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
@@ -282,7 +280,6 @@ class RepoYssAccountReportController extends AbstractReportController
         } catch (Exception $exception) {
             return $this->generateJSONErrorResponse($exception);
         }
-
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
                         ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))

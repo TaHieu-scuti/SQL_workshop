@@ -97,6 +97,7 @@ $('.date-option li').click(function () {
         data : {
             'startDay' : milestone['startDay'],
             'endDay' : milestone['endDay'],
+            'timePeriodTitle' : milestone['timePeriodTitle'],
         },
         success : function (response) {
             $('table').html(response);
