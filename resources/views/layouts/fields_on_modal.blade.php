@@ -12,7 +12,7 @@ if (isset($fieldNames)) {
 
 @foreach(array_chunk($columnsInModal, \Config::get('constants.COLUMNS_PER_ROW')) as $columnsChunked)
 <div>
-    @foreach($columnsChunked as $key => $column)
+    @foreach($columnsChunked as $column)
     
     <div class="form-group">
         <input type="checkbox" name="fieldName" value="{{$column}}" {{!empty($arrField) && isset($arrField[$column]) ? "checked" : '' }} >
