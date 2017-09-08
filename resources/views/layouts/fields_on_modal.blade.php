@@ -1,12 +1,13 @@
 <?php
 $arrField = [];
 if (isset($fieldNames)) {
-	foreach ($fieldNames as $check)
-		if ($check === 'account_id') {
-			continue;
-		} else {
-			$arrField[$check] = $check;
-		}
+    foreach ($fieldNames as $check) {
+	    if ($check === 'account_id') {
+		    continue;
+	    } else {
+		    $arrField[$check] = $check;
+	    }
+    }
 }
 ?>
 

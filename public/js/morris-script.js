@@ -67,11 +67,7 @@ var Script = function () {
                     'status' : status,
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -146,10 +142,7 @@ var Script = function () {
             var field = response.field;
             var data = [];
             for(var i = 0; i < response.data.length; i++) {
-                var obj = {};
-                obj['date'] =  response.data[i].day;
-                obj['clicks'] = response.data[i].data;
-                data.push(obj);
+                data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
             setMorris(data, field);
         }
@@ -166,11 +159,7 @@ var Script = function () {
                 },
                 success : function(response)
                 {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
