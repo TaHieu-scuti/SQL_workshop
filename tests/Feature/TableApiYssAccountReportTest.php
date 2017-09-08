@@ -147,6 +147,7 @@ class TableApiYssAccountReportTest extends TestCase
     const DEFAULT_SORT = 'desc';
     const CUSTOM_SORT = 'someSortOption';
     const VIEW_PATH = 'yssAccountReport.index';
+    const COLUMNS_FOR_FILTER = 'keyPagination';
 
     /**
      * @return \App\User
@@ -502,6 +503,7 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::COLUMNS_FOR_FILTER,
                 RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
                 RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
                 RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,

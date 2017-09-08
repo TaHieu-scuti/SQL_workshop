@@ -37,7 +37,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const TOTAL_DATA_ARRAY = 'totalDataArray';
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
-    const KEY_PAGINATION = 'keyPagination';
+    const COLUMNS_FOR_FILTER = 'keyPagination';
     const DEFAULT_ACCOUNT_STATUS = 'enabled';
 
     const COLUMNS_IN_MODAL = 'columnsInModal';
@@ -149,14 +149,14 @@ class RepoYssAccountReportController extends AbstractReportController
     private function updateSessionData(Request $request)
     {
         // get fieldName and pagination if available
-        if ($request->fieldName === null && $request->pagination !== null) {
+        if ($request->pagination !== null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
-        } elseif ($request->pagination !== null) {
+        } 
+        if ($request->fieldName !== null) {
             $fieldName = $request->fieldName;
             array_unshift($fieldName, self::ACCOUNT_ID);
             session()->put([
                 self::SESSION_KEY_FIELD_NAME => $fieldName,
-                self::SESSION_KEY_PAGINATION => $request->pagination
             ]);
         }
 
@@ -218,7 +218,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
-                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
+                self::COLUMNS_FOR_FILTER => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $columns, // all columns that show up in modal
@@ -301,6 +301,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
         return $this->responseFactory->json([
                         'data' => $data,
+                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout
         ]);
     }

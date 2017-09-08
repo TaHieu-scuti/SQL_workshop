@@ -5,7 +5,7 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
-        getMorris();
+        getMorris();        
         $('.statistic .col-md-2').click(function() {
             var $active = $('.statistic .col-md-2.active');
             labels = $(this).data('name');
@@ -30,11 +30,7 @@ var Script = function () {
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -99,11 +95,7 @@ var Script = function () {
                     'graphColumnName' : $(this).text(),
                 },
                 success : function (response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -118,7 +110,7 @@ var Script = function () {
                 element: 'report-graph',
                 xkey: 'date',
                 ykeys: ['clicks'],
-                labels: ['Clicks'],
+                labels: ['clicks'],
                 lineColors:['#0d88e0'],
                 parseTime:false,
                 hideHover:false,
@@ -129,9 +121,10 @@ var Script = function () {
             });
             }
 
-        function setMorris(data)
+        function setMorris(data, fieldName)
         {
             lineChart.setData(data);
+            lineChart.options.labels = [fieldName];
         }
         // set graph with `click` for y-axis
         function getMorris()
@@ -140,11 +133,7 @@ var Script = function () {
                 url : '/display-graph',
                 type : 'GET',
                 success: function(response) {
-                    var data = [];
-                    for(var i = 0; i < response.data.length; i++) {
-                        data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
-                    }
-                    setMorris(data);
+                    processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
@@ -152,7 +141,18 @@ var Script = function () {
                 }
             });
         }
-
+        function processData(response)
+        {
+            var field = response.field;
+            var data = [];
+            for(var i = 0; i < response.data.length; i++) {
+                var obj = {};
+                obj['date'] =  response.data[i].day;
+                obj['clicks'] = response.data[i].data;
+                data.push(obj);
+            }
+            setMorris(data, field);
+        }
         function updateMorris(columnName)
         {
             $.ajax({
