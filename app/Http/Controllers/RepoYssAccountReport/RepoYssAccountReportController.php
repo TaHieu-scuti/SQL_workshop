@@ -151,7 +151,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // get fieldName and pagination if available
         if ($request->pagination !== null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
-        } 
+        }
         if ($request->fieldName !== null) {
             $fieldName = $request->fieldName;
             array_unshift($fieldName, self::ACCOUNT_ID);
