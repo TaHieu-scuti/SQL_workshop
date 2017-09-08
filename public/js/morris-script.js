@@ -5,7 +5,7 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
-        getMorris();        
+        getMorris();
         $('.statistic .col-md-2').click(function() {
             var $active = $('.statistic .col-md-2.active');
             labels = $(this).data('name');
