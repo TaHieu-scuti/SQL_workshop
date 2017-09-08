@@ -657,4 +657,25 @@ class TableApiYssAccountReportTest extends TestCase
             ]
         );
     }
+
+    public function testViewHasPaginationFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+            ])
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAccountReportController::KEY_PAGINATION,
+            self::CUSTOM_PAGINATION
+        );
+    }
 }
