@@ -23,12 +23,16 @@ var Script = function () {
                 url : "/display-graph",
                 type : "POST",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': $
+                    ('meta[name="csrf-token"]').attr('content')
                 },
                 data : {
                     'startDay' : milestone['startDay'],
                     'endDay' : milestone['endDay'],
                     'timePeriodTitle' : milestone['timePeriodTitle'],
+                },
+                beforeSend : function () {
+                    sendingRequest();
                 },
                 success : function (response) {
                     var data = [];
@@ -40,7 +44,10 @@ var Script = function () {
                 },
                 error : function (response) {
                     alert('Something went wrong!');
-                }
+                },
+                complete : function () {
+                    completeRequest();
+                },
             });
         });
         /*
@@ -71,6 +78,9 @@ var Script = function () {
                 data : {
                     'status' : status,
                 },
+                beforeSend : function () {
+                    sendingRequest();
+                },
                 success : function (response) {
                     var data = [];
                     for(var i = 0; i < response.data.length; i++) {
@@ -81,7 +91,10 @@ var Script = function () {
                 },
                 error : function (response) {
                     alert('Something went wrong!');
-                }
+                },
+                complete : function () {
+                    completeRequest();
+                },
             });
         });
         /*
@@ -99,6 +112,9 @@ var Script = function () {
                 data : {
                     'graphColumnName' : $(this).text(),
                 },
+                beforeSend : function () {
+                    sendingRequest();
+                },
                 success : function (response) {
                     var data = [];
                     for(var i = 0; i < response.data.length; i++) {
@@ -109,7 +125,10 @@ var Script = function () {
                 },
                 error : function (response) {
                     alert('Something went wrong!');
-                }
+                },
+                complete : function () {
+                    completeRequest();
+                },
             });
         });
         // initialise graph
@@ -140,6 +159,9 @@ var Script = function () {
             $.ajax({
                 url : '/display-graph',
                 type : 'GET',
+                beforeSend : function () {
+                    sendingRequest();
+                },
                 success: function(response) {
                     var data = [];
                     for(var i = 0; i < response.data.length; i++) {
@@ -150,7 +172,10 @@ var Script = function () {
                 },
                 error : function (response) {
                     alert('Something went wrong!');
-                }
+                },
+                complete : function () {
+                    completeRequest();
+                },
             });
         }
 
@@ -165,6 +190,9 @@ var Script = function () {
                 data : {
                     'graphColumnName' : columnName,
                 },
+                beforeSend : function () {
+                    sendingRequest();
+                },
                 success : function(response)
                 {
                     var data = [];
@@ -176,7 +204,10 @@ var Script = function () {
                 },
                 error : function (response) {
                     alert('Something went wrong!');
-                }
+                },
+                complete : function () {
+                    completeRequest();
+                },
             });
         }
     });

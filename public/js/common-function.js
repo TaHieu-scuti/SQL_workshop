@@ -3,6 +3,7 @@ function getFilterDate(option)
     var milestoneArray = [];
     var endDay;
     var startDay;
+    var timePeriodTitle;
     var today = moment();
     switch(option) {
         case 'today' :
@@ -91,4 +92,16 @@ function getFilterDate(option)
         milestoneArray['timePeriodTitle'] = timePeriodTitle;
     }
     return milestoneArray;
+}
+
+function sendingRequest()
+{
+    setTimeout(function() {
+        $('.loading-gif').show();
+    }, 500);
+}
+
+function completeRequest()
+{
+    $('.loading-gif').hide();
 }
