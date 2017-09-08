@@ -40,6 +40,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const KEY_PAGINATION = 'keyPagination';
     const DEFAULT_ACCOUNT_STATUS = 'enabled';
 
+    const COLUMNS_IN_MODAL = 'columnsInModal';
+
     /** @var \App\RepoYssAccountReport */
     protected $model;
 
@@ -227,7 +229,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                'columnsInModal' => $columnsInModal,
+                self::COLUMNS_IN_MODAL => $columnsInModal,
             ]
         );
     }
