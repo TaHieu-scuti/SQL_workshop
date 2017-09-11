@@ -399,7 +399,7 @@
                 </div>
 
                 <div class="row line-chart">
-                    <div class="loading-gif"></div>
+                    <div class="loading-gif hidden-graph"></div>
                     <section class="panel">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>

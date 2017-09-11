@@ -96,6 +96,7 @@ function getFilterDate(option)
 
 function sendingRequest()
 {
+    $('.loading-gif').removeClass('hidden-graph');
     setTimeout(function() {
         $('.loading-gif').show();
     }, 500);
@@ -103,5 +104,5 @@ function sendingRequest()
 
 function completeRequest()
 {
-    $('.loading-gif').hide();
+    $('.loading-gif').addClass('hidden-graph');
 }

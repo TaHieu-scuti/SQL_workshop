@@ -5835,7 +5835,6 @@ a.guest-on i {
 }
 
 .loading-gif {
-    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -5846,4 +5845,8 @@ a.guest-on i {
     background-repeat:no-repeat;
     background-position:center;
     z-index:10000000;
+}
+
+.hidden-graph {
+    display: none !important;
 }
