@@ -46,7 +46,7 @@ var Script = function () {
             });
         });
 
-        $('.apply-period').click(function() {
+        $('.apply-custom-period').click(function() {
             var option = $('.custom-li').data('date');
             var startDay = $('.dpd1').val();
             var endDay = $('.dpd2').val();
