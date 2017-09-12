@@ -128,7 +128,6 @@ $('.apply-period').click(function() {
     var startDay = $('.dpd1').val();
     var endDay = $('.dpd2').val();
     var milestone = getFilterDate(option);
-    console.log(milestone);
     $.ajax({
         url : "/update-table",
         type : "POST",
