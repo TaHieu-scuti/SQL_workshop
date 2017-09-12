@@ -19,6 +19,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
+    const ACCOUNT_NAME = 'accountName';
     const SORT = 'sort';
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -154,7 +155,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         if ($request->fieldName !== null) {
             $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::ACCOUNT_ID);
+            array_unshift($fieldName, self::ACCOUNT_NAME);
             session()->put([
                 self::SESSION_KEY_FIELD_NAME => $fieldName,
             ]);

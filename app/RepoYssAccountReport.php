@@ -229,4 +229,9 @@ class RepoYssAccountReport extends AbstractReportModel
                     ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
                    ->first()->toArray();
     }
+
+    public function repoYssAccounts()
+    {
+        return $this->hasOne('App\RepoYssAccount', 'account_id', 'account_id');
+    }
 }
