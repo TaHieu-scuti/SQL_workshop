@@ -101,7 +101,7 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     private function getDataForTable()
     {
-        return $this->model->getDataForTable(
+        return $this->model->testDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
             session(self::SESSION_KEY_START_DAY),
@@ -197,7 +197,7 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index2()
     {
         $columns = $this->model->getColumnNames();
         $columnsInModal = $this->model->unsetColumns($columns, ['account_id']);
@@ -315,6 +315,38 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->view(
             'layouts.dropdown_search',
             [self::COLUMNS_FOR_LIVE_SEARCH => $result]
+        );
+    }
+
+    public function index()
+    {
+        $allColumns = $this->model->getColumnNames();
+        $unpossibleColumnsDisplay = ['account_id', 'ctr', 'averagePosition', 'trackingURL', 'network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
+        $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
+        // if (!session('accountReport')) {
+        //     $this->initializeSession($availableColumns);
+        // }
+        // dd(session('accountReport'));
+        $this->initializeSession($availableColumns);
+        // $dataReports = RepoYssAccountReport::select('clicks', 'account_id')->paginate(15);
+        $dataReports = $this->getDataForTable();
+        $totalDataArray = $this->getCalculatedData();
+        return $this->responseFactory->view(
+            'yssAccountReport.index',
+            [
+                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::REPORTS => $dataReports, // data that returned from query
+                self::COLUMNS => $availableColumns, // all columns that show up in modal
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
+                self::START_DAY => session(self::SESSION_KEY_START_DAY),
+                self::END_DAY => session(self::SESSION_KEY_END_DAY),
+                self::COLUMNS_FOR_LIVE_SEARCH => $availableColumns, // all columns that show columns live search
+                self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
+                self::COLUMNS_FOR_FILTER => $availableColumns,
+            ]
         );
     }
 }

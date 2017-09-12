@@ -71,3 +71,5 @@ Route::post(
     '/account_report/live_search',
     'RepoYssAccountReport\RepoYssAccountReportController@liveSearch'
 );
+
+Route::get('/test', 'RepoYssAccountReport\RepoYssAccountReportController@test');

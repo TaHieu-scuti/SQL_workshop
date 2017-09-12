@@ -16,6 +16,7 @@
                         </th>
                     @endforeach
                 @else
+                    <th>accountName</th>
                     @foreach($fieldNames as $fieldName)
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th>
@@ -39,6 +40,7 @@
         <tbody>
            @foreach($reports as $report)
             <tr>
+                <td>{{ $report->repoYssAccounts->accountName }}</td>
                 @foreach($fieldNames as $fieldName)
                     <td>{{ $report->$fieldName }}</td>
                 @endforeach
@@ -47,9 +49,6 @@
             <tr>
                 <td>Total - all networks</td>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === \App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController::ACCOUNT_NAME)
-                        <?php continue; ?>
-                    @endif
                     @if(isset($totalDataArray[$fieldName]))
                     <td>{{ $totalDataArray[$fieldName] }}</td>
                     @else

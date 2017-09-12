@@ -234,4 +234,41 @@ class RepoYssAccountReport extends AbstractReportModel
     {
         return $this->hasOne('App\RepoYssAccount', 'account_id', 'account_id');
     }
+
+    public function testDataForTable(array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $pagination,
+        $columnSort,
+        $sort)
+    {
+        $arrayCalculate = [];
+        $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw('AVG(' . $fieldName . ') as ' . $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw('SUM(' . $fieldName . ')as ' . $fieldName);
+            }
+        }
+        array_unshift($arrayCalculate, 'account_id');
+        return self::select($arrayCalculate)
+                ->where(
+                    function ($query) use ($startDay, $endDay) {
+                            if ($startDay === $endDay) {
+                                $query->whereDate('day', '=', $endDay);
+                            } else {
+                                $query->whereDate('day', '>=', $startDay)
+                                    ->whereDate('day', '<', $endDay);
+                            }
+                        })
+                ->whereHas('repoYssAccounts', function($query) use ($accountStatus) {
+                    $query->where('accountStatus', 'like', '%'.$accountStatus);
+                })
+                ->with('repoYssAccounts')
+                ->groupBy($tableName.'.account_id')
+                ->paginate($pagination);
+    }
 }
