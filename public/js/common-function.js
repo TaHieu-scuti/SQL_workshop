@@ -81,6 +81,9 @@ function getFilterDate(option)
             endDay = moment().subtract(1, 'years').endOf('year').format("YYYY-MM-DD");
             startDay = moment().subtract(1, 'years').startOf('year').format("YYYY-MM-DD");
             break;
+        case 'custom' :
+            timePeriodTitle = 'Custom';
+            break;
     }
     if (!milestoneArray['endDay']) {
         milestoneArray['endDay'] = endDay;

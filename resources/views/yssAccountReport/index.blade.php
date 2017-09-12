@@ -271,7 +271,7 @@
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
-                            <li class="custom-li">
+                            <li class="custom-li" data-date="custom">
                                 <a href="#">
                                     <div class="desc">Custom</div>
                                 </a>
@@ -284,7 +284,7 @@
                                         <input type="text" class="form-control dpd1" name="from">
                                         <span class="input-group-addon">To</span>
                                         <input type="text" class="form-control dpd2" name="to">
-                                        <button type="button" class="btn btn-primary">Apply</button>
+                                        <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
                                         <button type="button" class="btn btn-danger">Cancel</button>
                                     </div>
                                 </div>
