@@ -102,7 +102,7 @@ filterColumnChecked();
 * onclicking date button
 * update table with selected time period
 */
-$('.date-option li').click(function () {
+$('.date-option li:not(.custom-li, .custom-date)').click(function () {
     var option = $(this).data('date');
     var milestone = getFilterDate(option);
     $.ajax({
@@ -114,6 +114,30 @@ $('.date-option li').click(function () {
         data : {
             'startDay' : milestone['startDay'],
             'endDay' : milestone['endDay'],
+            'timePeriodTitle' : milestone['timePeriodTitle'],
+        },
+        success : function (response) {
+            $('table').html(response);
+            history.pushState("", "", link);
+        }
+    });
+});
+
+$('.apply-period').click(function() {
+    var option = $('.custom-li').data('date');
+    var startDay = $('.dpd1').val();
+    var endDay = $('.dpd2').val();
+    var milestone = getFilterDate(option);
+    console.log(milestone);
+    $.ajax({
+        url : "/update-table",
+        type : "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            'startDay' : startDay,
+            'endDay' : endDay,
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
         success : function (response) {

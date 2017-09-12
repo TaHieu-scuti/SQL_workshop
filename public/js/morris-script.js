@@ -15,7 +15,7 @@ var Script = function () {
             updateMorris(columnName);
         });
 
-        $('.date-option li').click(function() {
+        $('.date-option li:not(.custom-li, .custom-date)').click(function() {
             var option = $(this).data('date');
             var milestone = getFilterDate(option);
             $('.selected-time').removeClass('open');
@@ -28,6 +28,39 @@ var Script = function () {
                 data : {
                     'startDay' : milestone['startDay'],
                     'endDay' : milestone['endDay'],
+                    'timePeriodTitle' : milestone['timePeriodTitle'],
+                },
+                beforeSend : function () {
+                    sendingRequest();
+                },
+                success : function (response) {
+                    processData(response);
+                    $('#time-period').html(response.timePeriodLayout);
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+                complete : function () {
+                    completeRequest();
+                },
+            });
+        });
+
+        $('.apply-period').click(function() {
+            var option = $('.custom-li').data('date');
+            var startDay = $('.dpd1').val();
+            var endDay = $('.dpd2').val();
+            var milestone = getFilterDate(option);
+            $('.selected-time').removeClass('open');
+            $.ajax({
+                url : "/display-graph",
+                type : "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : {
+                    'startDay' : startDay,
+                    'endDay' : endDay,
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 beforeSend : function () {
