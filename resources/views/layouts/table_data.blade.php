@@ -47,7 +47,7 @@
             <tr>
                 <td>Total - all networks</td>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === 'account_id')
+                    @if($fieldName === \App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController::ACCOUNT_NAME)
                         <?php continue; ?>
                     @endif
                     @if(isset($totalDataArray[$fieldName]))
