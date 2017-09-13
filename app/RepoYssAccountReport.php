@@ -248,9 +248,9 @@ class RepoYssAccountReport extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName);
+                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
             } else {
-                $arrayCalculate[] = DB::raw('ROUND('.'SUM(' . $fieldName . '),2'.') AS ' . $fieldName);
+                $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
             }
         }
         array_unshift($arrayCalculate, 'account_id');
