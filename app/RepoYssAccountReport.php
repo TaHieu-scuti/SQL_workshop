@@ -198,9 +198,9 @@ class RepoYssAccountReport extends AbstractReportModel
         foreach ($fieldNames as $fieldName) {
             if ($fieldName !== 'account_id') {
                 if (in_array($fieldName, $this->averageFieldArray)) {
-                    $arrayCalculate[] = DB::raw('AVG(' . $fieldName . ') as ' . $fieldName);
+                    $arrayCalculate[] = DB::raw('ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName);
                 } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                    $arrayCalculate[] = DB::raw('SUM(' . $fieldName . ')as ' . $fieldName);
+                    $arrayCalculate[] = DB::raw('ROUND('.'SUM(' . $fieldName . '),2'.') AS ' . $fieldName);
                 }
             }
         }
@@ -248,9 +248,9 @@ class RepoYssAccountReport extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('AVG(' . $fieldName . ') as ' . $fieldName);
+                $arrayCalculate[] = DB::raw('ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName);
             } else {
-                $arrayCalculate[] = DB::raw('SUM(' . $fieldName . ')as ' . $fieldName);
+                $arrayCalculate[] = DB::raw('ROUND('.'SUM(' . $fieldName . '),2'.') AS ' . $fieldName);
             }
         }
         array_unshift($arrayCalculate, 'account_id');
