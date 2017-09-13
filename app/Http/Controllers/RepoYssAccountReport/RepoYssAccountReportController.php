@@ -101,7 +101,6 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     private function getDataForTable()
     {
-        // dd(session(self::SESSION_KEY_COLUMN_SORT));
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
