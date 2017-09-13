@@ -61,7 +61,7 @@ $(".apply-button").click(function () {
     $.each($("input[name='fieldName']:checked"), function () {
         array['fieldName'].push($(this).val());
     });
-    var th = $("th").eq($(this).index());
+    var th = $("th").eq($(this).index() + 1);
     $.ajax({
         url: "/update-table",
         type: "POST",

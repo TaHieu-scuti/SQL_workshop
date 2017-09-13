@@ -101,6 +101,7 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     private function getDataForTable()
     {
+        // dd(session(self::SESSION_KEY_COLUMN_SORT));
         return $this->model->testDataForTable(
             session(self::SESSION_KEY_FIELD_NAME),
             session(self::SESSION_KEY_ACCOUNT_STATUS),
@@ -178,7 +179,6 @@ class RepoYssAccountReportController extends AbstractReportController
 
         //get column sort and sort by if available
         if ($request->columnSort !== null) {
-            dd($request->columnSort);
             if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort
                 || session(self::SESSION_KEY_SORT) !== 'desc') {
                 session()->put([

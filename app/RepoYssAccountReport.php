@@ -268,8 +268,8 @@ class RepoYssAccountReport extends AbstractReportModel
                     $query->where('accountStatus', 'like', '%'.$accountStatus);
                 })
                 ->with('repoYssAccounts')
-                ->orderBy($columnSort, $sort)
                 ->groupBy($tableName.'.account_id')
+                ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
     }
 }
