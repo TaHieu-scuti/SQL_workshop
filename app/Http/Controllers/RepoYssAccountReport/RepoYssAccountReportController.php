@@ -155,7 +155,6 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         if ($request->fieldName !== null) {
             $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::ACCOUNT_NAME);
             session()->put([
                 self::SESSION_KEY_FIELD_NAME => $fieldName,
             ]);
@@ -179,6 +178,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
         //get column sort and sort by if available
         if ($request->columnSort !== null) {
+            dd($request->columnSort);
             if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort
                 || session(self::SESSION_KEY_SORT) !== 'desc') {
                 session()->put([
@@ -323,12 +323,9 @@ class RepoYssAccountReportController extends AbstractReportController
         $allColumns = $this->model->getColumnNames();
         $unpossibleColumnsDisplay = ['account_id', 'ctr', 'averagePosition', 'trackingURL', 'network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
-        // if (!session('accountReport')) {
-        //     $this->initializeSession($availableColumns);
-        // }
-        // dd(session('accountReport'));
-        $this->initializeSession($availableColumns);
-        // $dataReports = RepoYssAccountReport::select('clicks', 'account_id')->paginate(15);
+        if (!session('accountReport')) {
+            $this->initializeSession($availableColumns);
+        }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         return $this->responseFactory->view(
