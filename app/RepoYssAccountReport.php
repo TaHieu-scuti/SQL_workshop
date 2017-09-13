@@ -253,8 +253,16 @@ class RepoYssAccountReport extends AbstractReportModel
                 $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
             }
         }
-        array_unshift($arrayCalculate, 'account_id');
+        array_unshift($arrayCalculate, $tableName.'.account_id');
+        array_unshift($arrayCalculate, $joinTableName.'.accountName');
+        // dd($arrayCalculate);
         return self::select($arrayCalculate)
+                ->join(
+                        $joinTableName,
+                        $tableName . '.account_id',
+                        '=',
+                        $joinTableName . '.account_id'
+                    )
                 ->where(
                     function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
@@ -268,7 +276,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     $query->where('accountStatus', 'like', '%'.$accountStatus);
                 })
                 ->with('repoYssAccounts')
-                ->groupBy($tableName.'.account_id')
+                ->groupBy($tableName.'account_id')
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
     }
