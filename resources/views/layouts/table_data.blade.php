@@ -16,7 +16,21 @@
                         </th>
                     @endforeach
                 @else
-                    <th>accountName</th>
+                    @if ($columnSort === 'accountName' && $sort === "desc")
+                            <th>
+                                <a href="javascript:void(0)">
+                                <i class="fa fa-arrow-down"></i>accountName</a>
+                            </th>
+                        @elseif ($columnSort === 'accountName' && $sort === "asc")
+                            <th>
+                                <a href="javascript:void(0)">
+                                <i class="fa fa-arrow-up"></i>accountName</a>
+                            </th>
+                        @else 
+                            <th>
+                                <a href="javascript:void(0)"></i>accountName</a>
+                            </th>
+                        @endif
                     @foreach($fieldNames as $fieldName)
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th>

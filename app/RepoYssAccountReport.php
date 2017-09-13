@@ -90,29 +90,43 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        //unset column 'account_id' ( need to be more specific about table name )
-        $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
+        $arrayCalculate = [];
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        $query = self::select($fieldNames)
-                    ->join(
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
+            }
+        }
+        array_unshift($arrayCalculate, $tableName.'.account_id');
+        array_unshift($arrayCalculate, $joinTableName.'.accountName');
+        // dd($arrayCalculate);
+        return self::select($arrayCalculate)
+                ->join(
                         $joinTableName,
                         $tableName . '.account_id',
                         '=',
                         $joinTableName . '.account_id'
-                    )->where(
-                        function ($query) use ($startDay, $endDay) {
+                    )
+                ->where(
+                    function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
                                 $query->whereDate('day', '=', $endDay);
                             } else {
                                 $query->whereDate('day', '>=', $startDay)
                                     ->whereDate('day', '<', $endDay);
                             }
-                        }
-                    )
-                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
-                    ->orderBy($columnSort, $sort);
-        return $query->addSelect($tableName . '.account_id')->paginate($pagination);
+                        })
+                ->whereHas('repoYssAccounts', function($query) use ($accountStatus) {
+                    $query->where('accountStatus', 'like', '%'.$accountStatus);
+                })
+                ->with('repoYssAccounts')
+                ->groupBy($tableName.'.account_id')
+                ->groupBy($joinTableName.'.accountName')
+                ->orderBy($columnSort, $sort)
+                ->paginate($pagination);
     }
 
     /**
@@ -233,51 +247,5 @@ class RepoYssAccountReport extends AbstractReportModel
     public function repoYssAccounts()
     {
         return $this->hasOne('App\RepoYssAccount', 'account_id', 'account_id');
-    }
-
-    public function testDataForTable(array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort)
-    {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        $joinTableName = (new RepoYssAccount)->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
-            } else {
-                $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
-            }
-        }
-        array_unshift($arrayCalculate, $tableName.'.account_id');
-        array_unshift($arrayCalculate, $joinTableName.'.accountName');
-        // dd($arrayCalculate);
-        return self::select($arrayCalculate)
-                ->join(
-                        $joinTableName,
-                        $tableName . '.account_id',
-                        '=',
-                        $joinTableName . '.account_id'
-                    )
-                ->where(
-                    function ($query) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
-                            } else {
-                                $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<', $endDay);
-                            }
-                        })
-                ->whereHas('repoYssAccounts', function($query) use ($accountStatus) {
-                    $query->where('accountStatus', 'like', '%'.$accountStatus);
-                })
-                ->with('repoYssAccounts')
-                ->groupBy($tableName.'account_id')
-                ->orderBy($columnSort, $sort)
-                ->paginate($pagination);
     }
 }
