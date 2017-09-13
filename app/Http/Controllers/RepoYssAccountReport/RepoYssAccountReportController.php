@@ -199,7 +199,19 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $allColumns = $this->model->getColumnNames();
-        $unpossibleColumnsDisplay = ['account_id', 'ctr', 'averagePosition', 'trackingURL', 'network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
+        $unpossibleColumnsDisplay = [
+            'account_id',
+            'ctr',
+            'averagePosition',
+            'trackingURL',
+            'network',
+            'device',
+            'day',
+            'dayOfWeek',
+            'week',
+            'month',
+            'quarter'
+        ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         if (!session('accountReport')) {
             $this->initializeSession($availableColumns);
