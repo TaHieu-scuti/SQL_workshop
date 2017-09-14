@@ -199,22 +199,27 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function index()
     {
-        $columns = $this->model->getColumnNames();
-        $columnsInModal = $this->model->unsetColumns($columns, ['account_id']);
-        //get data column live search
-        // unset day, day of week....
-        $unsetColumns = ['network', 'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
-        $columnsLiveSearch = $this->model->unsetColumns($columns, $unsetColumns);
-
-        // initialize session for table with fieldName,
-        // status, start and end date, pagination
+        $allColumns = $this->model->getColumnNames();
+        $unpossibleColumnsDisplay = [
+            'account_id',
+            'ctr',
+            'averagePosition',
+            'trackingURL',
+            'network',
+            'device',
+            'day',
+            'dayOfWeek',
+            'week',
+            'month',
+            'quarter'
+        ];
+        $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
+        $modalAndSearchColumnsArray = $availableColumns;
+        array_unshift($availableColumns, 'accountName');
         if (!session('accountReport')) {
-            $this->initializeSession($columns);
+            $this->initializeSession($availableColumns);
         }
-
-        // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
-
         $totalDataArray = $this->getCalculatedData();
         return $this->responseFactory->view(
             'yssAccountReport.index',
@@ -222,15 +227,16 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
-                self::COLUMNS => $columns, // all columns that show up in modal
+                self::COLUMNS => $availableColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
-                self::COLUMNS_FOR_LIVE_SEARCH => $columnsLiveSearch, // all columns that show columns live search
+                // all columns that show columns live search
+                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $columnsInModal,
+                self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
             ]
         );
     }

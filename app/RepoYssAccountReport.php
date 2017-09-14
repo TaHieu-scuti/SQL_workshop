@@ -71,6 +71,9 @@ class RepoYssAccountReport extends AbstractReportModel
         'account_id',
     ];
 
+    // constant
+    const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -90,29 +93,44 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        //unset column 'account_id' ( need to be more specific about table name )
-        $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
+        $arrayCalculate = [];
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        $query = self::select($fieldNames)
-                    ->join(
-                        $joinTableName,
-                        $tableName . '.account_id',
-                        '=',
-                        $joinTableName . '.account_id'
-                    )->where(
-                        function ($query) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
-                            } else {
-                                $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<', $endDay);
-                            }
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'accountName') {
+                $arrayCalculate[] = 'accountName';
+                continue;
+            }
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
+            }
+        }
+        array_unshift($arrayCalculate, $tableName.'.account_id');
+        return self::select($arrayCalculate)
+                ->join(
+                    $joinTableName,
+                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                    '=',
+                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                )->where(
+                    function ($query) use ($startDay, $endDay) {
+                        if ($startDay === $endDay) {
+                            $query->whereDate('day', '=', $endDay);
+                        } else {
+                            $query->whereDate('day', '>=', $startDay)
+                                ->whereDate('day', '<', $endDay);
                         }
-                    )
-                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
-                    ->orderBy($columnSort, $sort);
-        return $query->addSelect($tableName . '.account_id')->paginate($pagination);
+                    }
+                )->whereHas('repoYssAccounts', function ($query) use ($accountStatus) {
+                    $query->where('accountStatus', 'like', '%'.$accountStatus);
+                })
+                ->with('repoYssAccounts')
+                ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
+                ->groupBy($joinTableName.'.accountName')
+                ->orderBy($columnSort, $sort)
+                ->paginate($pagination);
     }
 
     /**
@@ -197,10 +215,13 @@ class RepoYssAccountReport extends AbstractReportModel
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
             if ($fieldName !== 'account_id') {
+                if ($fieldName === 'accountName') {
+                    continue;
+                }
                 if (in_array($fieldName, $this->averageFieldArray)) {
-                    $arrayCalculate[] = DB::raw('AVG(' . $fieldName . ') as ' . $fieldName);
+                    $arrayCalculate[] = DB::raw('ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName);
                 } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                    $arrayCalculate[] = DB::raw('SUM(' . $fieldName . ')as ' . $fieldName);
+                    $arrayCalculate[] = DB::raw('ROUND('.'SUM(' . $fieldName . '),2'.') AS ' . $fieldName);
                 }
             }
         }
@@ -213,9 +234,9 @@ class RepoYssAccountReport extends AbstractReportModel
         return self::select($arrayCalculate)
                     ->join(
                         $joinTableName,
-                        $tableName . '.account_id',
+                        $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                         '=',
-                        $joinTableName . '.account_id'
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                     )->where( // TODO: this where condition is repeated 3 times throughout this file
                         function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
