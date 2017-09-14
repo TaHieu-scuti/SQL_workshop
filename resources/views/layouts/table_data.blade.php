@@ -47,6 +47,9 @@
             <tr>
                 <td>Total - all networks</td>
                 @foreach($fieldNames as $fieldName)
+                    @if($fieldName === 'accountName')
+                        <?php continue; ?>
+                    @endif
                     @if(isset($totalDataArray[$fieldName]))
                     <td>{{ $totalDataArray[$fieldName] }}</td>
                     @else

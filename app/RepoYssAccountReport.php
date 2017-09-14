@@ -212,6 +212,9 @@ class RepoYssAccountReport extends AbstractReportModel
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
             if ($fieldName !== 'account_id') {
+                if ($fieldName === 'accountName') {
+                    continue;
+                }
                 if (in_array($fieldName, $this->averageFieldArray)) {
                     $arrayCalculate[] = DB::raw('ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName);
                 } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
