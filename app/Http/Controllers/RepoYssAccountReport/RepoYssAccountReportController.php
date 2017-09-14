@@ -155,6 +155,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         if ($request->fieldName !== null) {
             $fieldName = $request->fieldName;
+            array_unshift($fieldName, self::ACCOUNT_NAME);
             session()->put([
                 self::SESSION_KEY_FIELD_NAME => $fieldName,
             ]);

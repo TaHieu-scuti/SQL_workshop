@@ -39,7 +39,6 @@
         <tbody>
            @foreach($reports as $report)
             <tr>
-                <td>{{ $report->repoYssAccounts->accountName }}</td>
                 @foreach($fieldNames as $fieldName)
                     <td>{{ $report->$fieldName }}</td>
                 @endforeach
