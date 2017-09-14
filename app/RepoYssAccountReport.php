@@ -94,6 +94,10 @@ class RepoYssAccountReport extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'accountName') {
+                $arrayCalculate[] = 'accountName';
+                continue;
+            }
             if (in_array($fieldName, $this->averageFieldArray)) {
                 $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
             } else {
@@ -101,8 +105,6 @@ class RepoYssAccountReport extends AbstractReportModel
             }
         }
         array_unshift($arrayCalculate, $tableName.'.account_id');
-        array_unshift($arrayCalculate, $joinTableName.'.accountName');
-        // dd($arrayCalculate);
         return self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
