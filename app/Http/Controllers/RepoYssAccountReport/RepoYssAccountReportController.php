@@ -215,13 +215,11 @@ class RepoYssAccountReportController extends AbstractReportController
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
-        // dd($availableColumns);
         array_unshift($availableColumns, 'accountName');
         if (!session('accountReport')) {
             $this->initializeSession($availableColumns);
         }
         $dataReports = $this->getDataForTable();
-        // dd($availableColumns);
         $totalDataArray = $this->getCalculatedData();
         return $this->responseFactory->view(
             'yssAccountReport.index',
