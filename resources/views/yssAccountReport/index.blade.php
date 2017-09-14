@@ -413,8 +413,9 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Clicks<br></span>
-                                    <span class="content"><i class="fa fa-circle"></i>5,341<br> </span>
-                                    <span class="explication">Adv: 30,858(17.3%)</span>
+                                    <span class="content">
+                                        <i class="fa fa-circle"></i>{{ number_format($totalDataArray['clicks'], 2, '.', ',') }}<br>
+                                    </span>
                                 </div>
                             </section>
                         </a>
@@ -424,8 +425,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Impr<br></span>
-                                    <span class="content">28,400<br> </span>
-                                    <span class="explication">Adv: 1,409,701(2.01%)</span>
+                                    <span class="content">{{ number_format($totalDataArray['impressions'], 2, '.', ',') }}<br> </span>
                                 </div>
                             </section>
                         </a>
@@ -435,19 +435,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Cost<br></span>
-                                    <span class="content"><i class="fa fa-rmb"></i>272,061<br> </span>
-                                    <span class="explication">Adv: <i class="fa fa-rmb"></i>2,337,088(11,6%)</span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="ctr">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">CTR<br></span>
-                                    <span class="content">18.8%<br> </span>
-                                    <span class="explication">Adv: 2.19%(859%)</span>
+                                    <span class="content"><i class="fa fa-rmb"></i>{{ number_format($totalDataArray['cost'], 2, '.', ',') }}<br> </span>
                                 </div>
                             </section>
                         </a>
@@ -457,8 +445,9 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">AvgCPC<br></span>
-                                    <span class="content"><i class="fa fa-rmb"></i>51<br> </span>
-                                    <span class="explication">Adv: <i class="fa fa-rmb"></i>76(67.3%)</span>
+                                    <span class="content">
+                                        <i class="fa fa-rmb"></i>{{ number_format($totalDataArray['averageCpc'], 2, '.', ',') }}<br>
+                                    </span>
                                 </div>
                             </section>
                         </a>
@@ -468,12 +457,25 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Avg pos<br></span>
-                                    <span class="content">1.0<br> </span>
-                                    <span class="explication">Adv: 2.8(35.6%)</span>
+                                    <span class="content">
+                                        {{ number_format($totalDataArray['averageCpc'], 2, '.', ',') }}<br>
+                                    </span>
                                 </div>
                             </section>
                         </a>
-                    </div>    
+                    </div>
+                    <div class="col-md-2" data-name="invalidClicks">
+                        <a href="javascript:void(0)">
+                            <section class="panel">
+                                <div class="panel-body">
+                                    <span class="title">InvalidClicks<br></span>
+                                    <span class="content">
+                                        {{ number_format($totalDataArray['invalidClicks'], 2, '.', ',') }}<br>
+                                    </span>
+                                </div>
+                            </section>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="row csv-file">
