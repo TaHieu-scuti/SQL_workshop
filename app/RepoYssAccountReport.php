@@ -72,7 +72,7 @@ class RepoYssAccountReport extends AbstractReportModel
     ];
 
     // constant
-    const MODEL_FOREIGN_KEY = 'account_id';
+    const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
     /**
      * @param string[] $fieldNames
@@ -111,9 +111,9 @@ class RepoYssAccountReport extends AbstractReportModel
         return self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
-                    $tableName . '.'.self::MODEL_FOREIGN_KEY,
+                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
-                    $joinTableName . '.'.self::MODEL_FOREIGN_KEY
+                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
                     function ($query) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
@@ -127,7 +127,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     $query->where('accountStatus', 'like', '%'.$accountStatus);
                 })
                 ->with('repoYssAccounts')
-                ->groupBy($tableName.'.'.self::MODEL_FOREIGN_KEY)
+                ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
                 ->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
@@ -234,9 +234,9 @@ class RepoYssAccountReport extends AbstractReportModel
         return self::select($arrayCalculate)
                     ->join(
                         $joinTableName,
-                        $tableName . '.'.self::MODEL_FOREIGN_KEY,
+                        $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                         '=',
-                        $joinTableName . '.'.self::MODEL_FOREIGN_KEY
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                     )->where( // TODO: this where condition is repeated 3 times throughout this file
                         function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
