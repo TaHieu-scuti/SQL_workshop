@@ -154,13 +154,16 @@ $('.status-option li').click(function () {
     var option = $(this).data('status');
     var status;
     switch(option) {
-        case 'all' : 
-            status = '';
+        case 'all' :
+            statusTitle = "all";
+            status = "all";
             break;
         case 'disabled' : 
+            statusTitle = 'disabled';
             status = 'disabled';
             break;
         case 'enabled' :
+            statusTitle = 'enabled';
             status = 'enabled';
             break;
     }
@@ -172,6 +175,7 @@ $('.status-option li').click(function () {
         },
         data : {
             'status' : status,
+            'statusTitle' : statusTitle,
         },
         success : function (response) {
             $('table').html(response);

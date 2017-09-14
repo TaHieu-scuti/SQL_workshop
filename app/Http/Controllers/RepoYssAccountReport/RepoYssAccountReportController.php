@@ -15,6 +15,7 @@ use StdClass;
 class RepoYssAccountReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const STATUS_TITLE = 'statusTitle';
     const START_DAY = 'startDay';
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
@@ -25,7 +26,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
-    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . 'statusTitle';
+    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
@@ -39,7 +40,6 @@ class RepoYssAccountReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
-    const DEFAULT_ACCOUNT_STATUS = 'enabled';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
@@ -134,12 +134,17 @@ class RepoYssAccountReportController extends AbstractReportController
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
+        $accountStatus = "enabled";
+        $statusTitle = "enabled";
+        $graphColumnName = "clicks";
         session([self::SESSION_KEY_FIELD_NAME => $columns]);
-        session([self::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS]);
+        session([self::SESSION_KEY_ACCOUNT_STATUS => $accountStatus]);
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+        session([self::SESSION_KEY_STATUS_TITLE => $statusTitle]);
         session([self::SESSION_KEY_START_DAY => $startDay]);
         session([self::SESSION_KEY_END_DAY => $endDay]);
         session([self::SESSION_KEY_PAGINATION => 20]);
+        session([self::SESSION_KEY_GRAPH_COLUMN_NAME => $graphColumnName]);
         session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([self::SESSION_KEY_SORT => 'desc']);
     }
@@ -149,6 +154,11 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     private function updateSessionData(Request $request)
     {
+        // update session.graphColumnName
+        if ($request->graphColumnName !== null) {
+            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
+        }
+
         // get fieldName and pagination if available
         if ($request->pagination !== null) {
             session()->put(self::SESSION_KEY_PAGINATION, $request->pagination);
@@ -171,10 +181,16 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         // get status if available
-        if ($request->status !== null) {
+        if ($request->status === "all") {
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => ""]);
+        } elseif ($request->status !== null) {
             session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
-        } else {
-            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS]);
+        }
+
+        if ($request->statusTitle === "all") {
+            session()->put([self::SESSION_KEY_STATUS_TITLE => "all"]);
+        } elseif ($request->statusTitle !== null) {
+            session()->put([self::SESSION_KEY_STATUS_TITLE => $request->statusTitle]);
         }
 
         //get column sort and sort by if available
@@ -219,6 +235,7 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($availableColumns);
         }
+        // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         return $this->responseFactory->view(
@@ -231,6 +248,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
+                self::STATUS_TITLE => session(self::SESSION_KEY_STATUS_TITLE),
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
@@ -270,28 +288,7 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function displayGraph(Request $request)
     {
-        // update session.graphColumnName
-        if ($request->graphColumnName !== null) {
-            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
-        } elseif (!session(self::SESSION_KEY_GRAPH_COLUMN_NAME)) {
-            // if get no column name, set selected column click
-            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, 'clicks');
-        }
-
-        // get startDay and endDay if available
-        if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
-            session()->put([
-                    self::SESSION_KEY_START_DAY => $request->startDay,
-                    self::SESSION_KEY_END_DAY => $request->endDay,
-                    self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle,
-            ]);
-        }
-
-        // get status if available
-        if ($request->status !== null) {
-            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
-        }
-
+        $this->updateSessionData($request);
         try {
             $data = $this->getDataForGraph();
         } catch (Exception $exception) {
@@ -302,11 +299,14 @@ class RepoYssAccountReportController extends AbstractReportController
                         ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
                         ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
                         ->render();
-
+        $statusLayout = view('layouts.status-title')
+                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
+                        ->render();
         return $this->responseFactory->json([
                         'data' => $data,
                         'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                        'timePeriodLayout' => $timePeriodLayout
+                        'timePeriodLayout' => $timePeriodLayout,
+                        'statusLayout' => $statusLayout,
         ]);
     }
 

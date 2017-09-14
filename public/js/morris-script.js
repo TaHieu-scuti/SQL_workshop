@@ -87,13 +87,16 @@ var Script = function () {
             var option = $(this).data('status');
             var status;
             switch(option) {
-                case 'all' : 
-                    status = '';
+                case 'all' :
+                    statusTitle = "all";
+                    status = "all";
                     break;
-                case 'disabled' : 
+                case 'disabled' :
+                    statusTitle = 'disabled';
                     status = 'disabled';
                     break;
                 case 'enabled' :
+                    statusTitle = 'enabled';
                     status = 'enabled';
                     break;
             }
@@ -105,6 +108,7 @@ var Script = function () {
                 },
                 data : {
                     'status' : status,
+                    'statusTitle' : statusTitle,
                 },
                 beforeSend : function () {
                     sendingRequest();
@@ -112,6 +116,7 @@ var Script = function () {
                 success : function (response) {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
+                    $('#status-label').html(response.statusLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');

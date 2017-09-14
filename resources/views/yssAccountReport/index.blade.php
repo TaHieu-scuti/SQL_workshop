@@ -371,10 +371,8 @@
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
-                            <div class="panel-body">
-                                    <span>Show all
-                                    <strong class="caret selection"></strong>
-                                    </span>
+                            <div class="panel-body" id= "status-label">
+                                    @include('layouts.status-title')
                             </div>
                         </section>
                         </a>

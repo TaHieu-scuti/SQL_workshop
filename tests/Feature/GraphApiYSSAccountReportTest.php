@@ -58,9 +58,13 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"523383","day":"2017-03-27"},{"data":"723413","day":"2017-03-28"},'
         . '{"data":"501060","day":"2017-03-29"},{"data":"674264","day":"2017-03-30"},'
         . '{"data":"532990","day":"2017-03-31"}],"field":"clicks","timePeriodLayout":'
-        . '"<span class=\"title\"><br><\/span>\n'
+        . '"<span class=\"title\">Last 90 days<br><\/span>\n'
         . '<span>2017-01-01 - 2017-04-01<\/span>\n'
-        . '<strong class=\"caret\"><\/strong>\n"}';
+        . '<strong class=\"caret\"><\/strong>\n",'
+        .'"statusLayout":'
+        .'"<span>Show enabled\n'
+        .'<strong class=\"caret selection\"><\/strong>\n'
+        .'<\/span>"}';
 
     const DEFAULT_FIELD_NAMES = [
         3 => "cost",
@@ -96,6 +100,7 @@ class GraphApiYSSAccountReportTest extends TestCase
     ];
 
     const DEFAULT_ACCOUNT_STATUS = 'enabled';
+    const DEFAULT_STATUS_TITLE = 'enabled';
     const DEFAULT_PAGINATION = 20;
     const DEFAULT_SORT = 'desc';
     const DATE_FIRST_DAY_2016 = '2016-01-01';
@@ -116,7 +121,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS,
             RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
             RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_IMPRESSIONS,
-            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT
+            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE
         ];
     }
 
@@ -128,6 +134,12 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertRedirect(self::ROUTE_LOGIN);
     }
 
+    public function getUserAndAccessToAccountReport()
+    {
+        $user = $this->getUser();
+        $this->actingAs($user)->get('/account_report');
+    }
+
     public function testDisplayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn()
     {
         $this->displayGraphRouteRedirectsToLoginRouteWhenNotLoggedIn('get');
@@ -136,6 +148,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function returns200StatusWhenLoggedIn($method)
     {
+        $this->getUserAndAccessToAccountReport();
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->$method(self::ROUTE_DISPLAY_GRAPH);
@@ -151,7 +164,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function graphColumnNameInSessionIsSetToClicksAsDefaultValue($method)
     {
-        $this->flushSession();
+        $this->getUserAndAccessToAccountReport();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
@@ -169,6 +182,28 @@ class GraphApiYSSAccountReportTest extends TestCase
     {
         $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('get');
         $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('post');
+    }
+
+    private function statusTitleInSessionIsSetToEnabledAsDefaultValue($method)
+    {
+        $this->getUserAndAccessToAccountReport();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->$method(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertSuccessful();
+
+        $response->assertSessionHas(
+            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE,
+            'enabled'
+        );
+    }
+    
+    public function teststatusTitleInSessionIsSetToEnabledAsDefaultValue()
+    {
+        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('get');
+        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('post');
     }
 
     private function doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet($method)
@@ -206,6 +241,22 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertSessionHas(
             RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             'someColumnName'
+        );
+    }
+
+    public function testUpdatesStatusTitleInSessionWhenPosted()
+    {
+        $this->flushSession();
+
+        $response = $this->actingAs($this->getUser())
+            ->post(
+                self::ROUTE_DISPLAY_GRAPH,
+                ['statusTitle' => 'someStatusTitle']
+            );
+
+        $response->assertSessionHas(
+            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE,
+            'someStatusTitle'
         );
     }
 
@@ -281,7 +332,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function returnsCorrectDataFor90Days($method)
     {
-        $this->flushSession();
+        $this->getUserAndAccessToAccountReport();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
@@ -304,7 +355,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame($method)
     {
-        $this->flushSession();
+        $this->getUserAndAccessToAccountReport();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
@@ -312,7 +363,7 @@ class GraphApiYSSAccountReportTest extends TestCase
                 $this->getDefaultSessionValues() +
                 [
                     RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016
+                    RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
@@ -320,8 +371,11 @@ class GraphApiYSSAccountReportTest extends TestCase
                 ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
             ],
             'field' => 'clicks',
-            'timePeriodLayout' => "<span class=\"title\"><br></span>\n"
-                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
+            'statusLayout' => "<span>Show enabled\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
         ];
 
         $response->assertExactJson($object);
@@ -335,7 +389,7 @@ class GraphApiYSSAccountReportTest extends TestCase
 
     private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame($method)
     {
-        $this->flushSession();
+        $this->getUserAndAccessToAccountReport();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
@@ -352,8 +406,11 @@ class GraphApiYSSAccountReportTest extends TestCase
                 ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
             ],
             'field' => 'clicks',
-            'timePeriodLayout' => "<span class=\"title\"><br></span>\n"
-                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n"
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n",
+            'statusLayout' => "<span>Show enabled\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
         ];
 
         $response->assertExactJson($object);

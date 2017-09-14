@@ -131,6 +131,7 @@ class TableApiYssAccountReportTest extends TestCase
     const DEFAULT_STATUS = 'enabled';
     const CUSTOM_STATUS = 'someStatus';
     const DEFAULT_TIME_PERIOD_TITLE = 'Last 90 days';
+    const DEFAULT_STATUS_TITLE = 'enabled';
     const CUSTOM_TIME_PERIOD_TITLE = '10 days';
     const CUSTOM_START_DAY = '2017-01-01';
     const CUSTOM_END_DAY = '2017-02-03';
@@ -574,6 +575,28 @@ class TableApiYssAccountReportTest extends TestCase
         $response->assertViewHas(
             RepoYssAccountReportController::COLUMNS_FOR_FILTER,
             self::COLUMNS_FOR_FILTER
+        );
+    }
+
+    public function testViewHasStatusTitle()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+            ])
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAccountReportController::STATUS_TITLE,
+            self::DEFAULT_STATUS_TITLE
         );
     }
 
