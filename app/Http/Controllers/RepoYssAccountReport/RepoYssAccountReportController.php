@@ -235,7 +235,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
-                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray, // all columns that show columns live search
+                // all columns that show columns live search
+                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
             ]
