@@ -74,7 +74,7 @@ $(".apply-button").click(function () {
             'columnSort' : th.text(),
         },
         success: function(result) {
-            $('table').html(result);
+            $('.table_data_report').html(result);
             $('#columnsModal').modal('hide');
             history.pushState("", "", link);
         }
@@ -117,7 +117,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
         success : function (response) {
-            $('table').html(response);
+            $('.table_data_report').html(response);
             history.pushState("", "", link);
         }
     });
@@ -140,7 +140,7 @@ $('.apply-custom-period').click(function() {
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
         success : function (response) {
-            $('table').html(response);
+            $('.table_data_report').html(response);
             history.pushState("", "", link);
         }
     });
@@ -178,7 +178,7 @@ $('.status-option li').click(function () {
             'statusTitle' : statusTitle,
         },
         success : function (response) {
-            $('table').html(response);
+            $('.table_data_report').html(response);
             history.pushState("", "", link);
         }
     });
@@ -220,7 +220,7 @@ $('.table_data_report').delegate('th', 'click', function() {
             'columnSort' : th.text(),
         },
         success : function (response) {
-            $('table').html(response);
+            $('.table_data_report').html(response);
         }
     });
 })

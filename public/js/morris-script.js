@@ -18,7 +18,6 @@ var Script = function () {
         $('.date-option li:not(.custom-li, .custom-date)').click(function() {
             var option = $(this).data('date');
             var milestone = getFilterDate(option);
-            $('.selected-time').removeClass('open');
             $.ajax({
                 url : "/display-graph",
                 type : "POST",
@@ -34,6 +33,8 @@ var Script = function () {
                     sendingRequest();
                 },
                 success : function (response) {
+                    $('.selected-time').removeClass('open');
+                    $('.date-option').removeClass('activeBlock');
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
@@ -51,7 +52,6 @@ var Script = function () {
             var startDay = $('.dpd1').val();
             var endDay = $('.dpd2').val();
             var milestone = getFilterDate(option);
-            $('.selected-time').removeClass('open');
             $.ajax({
                 url : "/display-graph",
                 type : "POST",
@@ -67,6 +67,8 @@ var Script = function () {
                     sendingRequest();
                 },
                 success : function (response) {
+                    $('.selected-time').removeClass('open');
+                    $('.date-option').removeClass('activeBlock');
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
