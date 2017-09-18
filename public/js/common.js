@@ -3,8 +3,14 @@ var link = window.location.pathname;
 =======
 * stop drop-down menu form disappearing on clicking
 */
-$('.dropdown-menu').click(function (e) {
-    e.stopPropagation(); 
+$('.dropdown-menu.tasks-bar input').click(function (event) {
+    event.stopPropagation(); 
+});
+
+$('.dropdown-menu.date-option .custom-li').click(function () {
+    $('.dropdown-menu').click(function (event) {
+        event.stopPropagation(); 
+    });
 });
 /*
 *
