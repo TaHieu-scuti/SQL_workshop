@@ -22,6 +22,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const ACCOUNT_ID = 'account_id';
     const ACCOUNT_NAME = 'accountName';
     const SORT = 'sort';
+    const GRAPH_COLUMN_NAME = "graphColumnName";
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -30,7 +31,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
-    const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . 'graphColumnName';
+    const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
 
@@ -302,10 +303,14 @@ class RepoYssAccountReportController extends AbstractReportController
         $statusLayout = view('layouts.status-title')
                         ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
                         ->render();
+        $graphColumnLayout = view('layouts.graph-column')
+                        ->with('graphColumnName', session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
+                        ->render();
         return $this->responseFactory->json([
                         'data' => $data,
                         'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout,
+                        'graphColumnLayout' => $graphColumnLayout,
                         'statusLayout' => $statusLayout,
         ]);
     }

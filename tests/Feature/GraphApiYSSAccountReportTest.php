@@ -57,14 +57,18 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"528918","day":"2017-03-25"},{"data":"445791","day":"2017-03-26"},'
         . '{"data":"523383","day":"2017-03-27"},{"data":"723413","day":"2017-03-28"},'
         . '{"data":"501060","day":"2017-03-29"},{"data":"674264","day":"2017-03-30"},'
-        . '{"data":"532990","day":"2017-03-31"}],"field":"clicks","timePeriodLayout":'
+        . '{"data":"532990","day":"2017-03-31"}],"field":"clicks",'
+        . '"timePeriodLayout":'
         . '"<span class=\"title\">Last 90 days<br><\/span>\n'
         . '<span>2017-01-01 - 2017-04-01<\/span>\n'
         . '<strong class=\"caret\"><\/strong>\n",'
-        .'"statusLayout":'
-        .'"<span>Show enabled\n'
-        .'<strong class=\"caret selection\"><\/strong>\n'
-        .'<\/span>"}';
+        . '"graphColumnLayout":'
+        . '"<span id=\"txtColumn\">clicks<\/span>\n'
+        . '<strong class=\"caret selection\"><\/strong>",'
+        . '"statusLayout":'
+        . '"<span>Show enabled\n'
+        . '<strong class=\"caret selection\"><\/strong>\n'
+        . '<\/span>"}';
 
     const DEFAULT_FIELD_NAMES = [
         3 => "cost",
@@ -373,6 +377,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                ."<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>Show enabled\n"
                 ."<strong class=\"caret selection\"></strong>\n"
                 ."</span>"
@@ -408,6 +414,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                ."<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>Show enabled\n"
                 ."<strong class=\"caret selection\"></strong>\n"
                 ."</span>"

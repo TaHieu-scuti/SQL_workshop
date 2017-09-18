@@ -344,9 +344,8 @@
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
-                            <div class="panel-body">
-                                    <span id="txtColumn">Columns</span>
-                                    <strong class="caret selection"></strong>        
+                            <div class="panel-body" id="graph-column">
+                                @include('layouts.graph-column')
                             </div>
                         </section>
                         </a>

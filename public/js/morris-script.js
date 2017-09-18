@@ -147,6 +147,7 @@ var Script = function () {
                 success : function (response) {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
+                    $('#graph-column').html(response.graphColumnLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');
@@ -191,6 +192,7 @@ var Script = function () {
                 success: function(response) {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
+                    $('#graph-column').html(response.graphColumnLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');
