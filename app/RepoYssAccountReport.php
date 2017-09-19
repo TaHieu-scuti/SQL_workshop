@@ -255,4 +255,47 @@ class RepoYssAccountReport extends AbstractReportModel
     {
         return $this->hasOne('App\RepoYssAccount', 'account_id', 'account_id');
     }
+
+    public function getDataForExport(
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort)
+    {
+        $arrayCalculate = [];
+        $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'accountName') {
+                $arrayCalculate[] = 'accountName';
+                continue;
+            }
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw('ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName);
+            }
+        }
+        return self::select($arrayCalculate)
+                ->join(
+                    $joinTableName,
+                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                    '=',
+                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                )->where(
+                    function ($query) use ($startDay, $endDay) {
+                        if ($startDay === $endDay) {
+                            $query->whereDate('day', '=', $endDay);
+                        } else {
+                            $query->whereDate('day', '>=', $startDay)
+                                ->whereDate('day', '<', $endDay);
+                        }
+                    }
+                )->where($joinTableName.'.accountStatus', '=', $accountStatus)
+                ->groupBy($joinTableName.'.accountName')
+                ->orderBy($columnSort, $sort)
+                ->get();
+    }
 }
