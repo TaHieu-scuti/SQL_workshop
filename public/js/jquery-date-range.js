@@ -2,9 +2,10 @@ $(function() {
     $('#from').prop('disabled', true);
     $('#to').prop('disabled', true);
     var dates = $( "#from, #to" ).datepicker({
-        showOn: 'both',
+        showOn: 'button',
         buttonImage: '../images/calendar.png',
         buttonImageOnly: true,
+        buttonText: "Show calendar",
         defaultDate: "+1w",
         dateFormat: 'yy-mm-dd', 
         changeMonth: true,

@@ -5872,9 +5872,8 @@ a.guest-on i {
     height: 34px;
 }
 .custom-date .input-group .dpd1, .custom-date .input-group .dpd2 {
-    width: 94%;
+    width: 93%;
     float: right;
-    border-radius: 4px!important;
 }
 
 .input-group-addon {
@@ -5888,6 +5887,9 @@ a.guest-on i {
 #datepicker .input-group img {
     height: 34px;
     padding-right: 2px;
-    width: 6%;
+    width: 7%;
     float: left;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    cursor: pointer;
 }
