@@ -14,29 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `repo_yss_accounts`
---
-
-DROP TABLE IF EXISTS `repo_yss_accounts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `repo_yss_accounts` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `accountid` bigint(20) unsigned DEFAULT NULL COMMENT 'アカウントID',
-  `account_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ADgainerシステムのアカウントID',
-  `accountName` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'アカウント名',
-  `accountType` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '料金の支払い方法 https://github.com/yahoojp-marketing/sponsored-search-api-documents/blob/master/docs/ja/api_reference/data/AccountType.md',
-  `accountStatus` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'アカウントの契約状況 https://github.com/yahoojp-marketing/sponsored-search-api-documents/blob/master/docs/ja/api_reference/data/AccountStatus.md',
-  `deliveryStatus` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '広告の配信状況 https://github.com/yahoojp-marketing/sponsored-search-api-documents/blob/master/docs/ja\n                        /api_reference/data/DeliveryStatus.md',
-  `created_at` timestamp NULL DEFAULT NULL COMMENT '作成日時',
-  `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新日時',
-  PRIMARY KEY (`id`),
-  KEY `repo_yss_accounts_id_index` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Dumping data for table `repo_yss_accounts`
 --
