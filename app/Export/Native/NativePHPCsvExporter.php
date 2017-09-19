@@ -57,7 +57,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
 
     private function getDataToExport()
     {
-        $exportData = $this->model->getDataForExport(
+        return $this->model->getDataForExport(
             session('accountReport.fieldName'),
             session('accountReport.accountStatus'),
             session('accountReport.startDay'),
@@ -65,8 +65,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
             session('accountReport.columnSort'),
             session('accountReport.sort')
         );
-
-        return $exportData;
     }
 
     /**
