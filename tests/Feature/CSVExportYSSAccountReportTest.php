@@ -11,7 +11,6 @@ use DateTime;
 
 class CSVExportYSSAccountReportTest extends TestCase
 {
-
     const COLUMN_NAME_ACCOUNT_NAME = 'accountName';
     const COLUMN_NAME_COST = 'cost';
     const COLUMN_NAME_IMPRESSIONS = 'impressions';
