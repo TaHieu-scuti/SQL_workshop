@@ -121,7 +121,7 @@ class CSVExportYSSAccountReportTest extends TestCase
      */
     public function testReturnsCorrectContent(array $response)
     {
-        $expectedContent = file_get_contents(__DIR__ . '/../resources/2017_09_19 07_07 repo_yss_account_report.csv');
+        $expectedContent = file_get_contents(__DIR__ . '/../resources/2017_09_19 07_54 repo_yss_account_report.csv');
         $this->assertSame($expectedContent, $response['response']->getContent());
     }
 
