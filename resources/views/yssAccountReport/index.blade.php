@@ -292,7 +292,7 @@
                                     <div style="clear: both;">
                                         <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
                                         <button type="button" class="btn btn-danger">Cancel</button>
-                                    </div> 
+                                    </div>
                                 </div>
                             </form>
                             </li>

@@ -7,7 +7,7 @@ $(function() {
         buttonImageOnly: true,
         buttonText: "Show calendar",
         defaultDate: "+1w",
-        dateFormat: 'yy-mm-dd', 
+        dateFormat: 'yy-mm-dd',
         changeMonth: true,
         changeYear: true,
         numberOfMonths: 1,
@@ -15,9 +15,10 @@ $(function() {
             var option = this.id == "from" ? "minDate" : "maxDate",
                 instance = $( this ).data( "datepicker" ),
                 date = $.datepicker.parseDate(
-                    instance.settings.dateFormat ||
-                    $.datepicker._defaults.dateFormat,
-                    selectedDate, instance.settings );
+                        instance.settings.dateFormat ||
+                        $.datepicker._defaults.dateFormat,
+                        selectedDate, instance.settings
+                    );
             dates.not( this ).datepicker( "option", option, date );
         }
     });
