@@ -337,6 +337,7 @@ a, a:hover, a:focus {
 
 .wrapper .row.information .col-md-3.selected-time .custom-date .input-group {
     display: block;
+    float: left;
 }
 
 .wrapper .row.information .col-md-3.selected-time .custom-date .form-group {
@@ -641,12 +642,12 @@ a, a:hover, a:focus {
     color: #797979;
 }
 
-.wrapper .row.csv-file .btn-primary {
+.wrapper .row.csv-file .btn-primary, .apply-custom-period {
     border-color: #569fd4;
     background-color: #569fd4;
 }
 
-.wrapper .row.csv-file .btn-primary:hover {
+.wrapper .row.csv-file .btn-primary:hover, .apply-custom-period:hover {
     border-color: #0d88e0;
     background-color: #0d88e0;
 }
@@ -3544,13 +3545,6 @@ table.sliders tr td {
     top: -0.57em   !important;
 }
 
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-    background: #fff !important;
-    border: 3px solid #22bacf !important;
-    border-radius: 50% !important;
-    -webkit-border-radius: 50% !important;
-}
-
 .ui-slider-vertical {
     width: 8px !important;
 }
@@ -5849,4 +5843,47 @@ a.guest-on i {
 
 .hidden-graph {
     display: none !important;
+}
+
+.table-condensed {
+    width: 100%;
+}
+
+.dpd1, .dpd2 {
+    font-weight: bold;
+    color: black;
+}
+
+.datepicker-years tr td span, .datepicker-months tr td span {
+    padding-right: 4px;
+}
+
+.custom-date .input-group .calander-icon, .custom-date .input-group .calander-icon {
+    float: left;
+    padding-top: 6px;
+    width: 5%;
+    background-color: #f9f9f9;
+    height: 34px;
+}
+.custom-date .input-group .dpd1, .custom-date .input-group .dpd2 {
+    width: 85%;
+    float: right;
+}
+
+.input-group-addon {
+    border-radius: 0;
+}
+
+.activeBlock {
+    display: block;
+}
+
+#datepicker .input-group img {
+    height: 34px;
+    padding-right: 2px;
+    width: 15%;
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    cursor: pointer;
 }

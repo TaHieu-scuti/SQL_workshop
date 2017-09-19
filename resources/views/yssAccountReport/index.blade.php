@@ -20,7 +20,9 @@
     <!-- Custom styles for this template -->
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/style-responsive.css" rel="stylesheet" />
-
+    <link href="/css/jquery-ui.min.css" rel="stylesheet" />
+    <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
+    <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="/js/html5shiv.js"></script>
@@ -184,7 +186,7 @@
                         </section>
                     </div>
 
-                    <div class="col-md-3 col-xs-12 selected-time">
+                    <div class="col-md-3 col-xs-12 selected-time" id="add-time-period">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body" id="time-period">
@@ -278,12 +280,16 @@
                             </li>
                             <li id="datepicker" class="custom-date">
                             <form action="#" class="form-horizontal tasi-form">
-                                <div class="form-group">
-                                    <div class="input-group">
+                                <div class="form-group col-md-12">
+                                    <div class="input-group col-md-6">
                                         <span class="input-group-addon">From</span>
-                                        <input type="text" class="form-control dpd1" name="from">
+                                        <input type="text" class="form-control dpd1 " id ="from" name="from">
+                                    </div>
+                                    <div class="input-group col-md-6">
                                         <span class="input-group-addon">To</span>
-                                        <input type="text" class="form-control dpd2" name="to">
+                                        <input type="text" class="form-control dpd2" id ="to" name="to">
+                                    </div>
+                                    <div style="clear: both;">
                                         <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
                                         <button type="button" class="btn btn-danger">Cancel</button>
                                     </div>
@@ -551,7 +557,7 @@
     <script src="/js/jquery.js"></script>
     <script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/jquery-date-range.js"></script>
     <script src="/js/morris.min.js"></script>
     <script src="/js/raphael-min.js"></script>
