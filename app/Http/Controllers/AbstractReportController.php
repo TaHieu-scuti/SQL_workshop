@@ -58,7 +58,7 @@ abstract class AbstractReportController extends Controller
     {
         $exporter = new NativePHPCsvExporter($this->model);
         $csvData = $exporter->export();
-        
+
         return $this->responseFactory->make($csvData, 200, [
             'Content-Type' => 'application/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
