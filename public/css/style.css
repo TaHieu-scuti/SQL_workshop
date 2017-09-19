@@ -337,6 +337,7 @@ a, a:hover, a:focus {
 
 .wrapper .row.information .col-md-3.selected-time .custom-date .input-group {
     display: block;
+    float: left;
 }
 
 .wrapper .row.information .col-md-3.selected-time .custom-date .form-group {
@@ -5872,7 +5873,7 @@ a.guest-on i {
     height: 34px;
 }
 .custom-date .input-group .dpd1, .custom-date .input-group .dpd2 {
-    width: 93%;
+    width: 85%;
     float: right;
 }
 
@@ -5887,7 +5888,7 @@ a.guest-on i {
 #datepicker .input-group img {
     height: 34px;
     padding-right: 2px;
-    width: 7%;
+    width: 15%;
     float: left;
     border: 1px solid #ccc;
     background-color: #eee;

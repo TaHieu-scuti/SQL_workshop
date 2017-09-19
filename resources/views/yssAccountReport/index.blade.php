@@ -280,17 +280,19 @@
                             </li>
                             <li id="datepicker" class="custom-date">
                             <form action="#" class="form-horizontal tasi-form">
-                                <div class="form-group">
-                                    <div class="input-group">
+                                <div class="form-group col-md-12">
+                                    <div class="input-group col-md-6">
                                         <span class="input-group-addon">From</span>
                                         <input type="text" class="form-control dpd1 " id ="from" name="from">
+                                    </div>
+                                    <div class="input-group col-md-6">
                                         <span class="input-group-addon">To</span>
                                         <input type="text" class="form-control dpd2" id ="to" name="to">
-                                        <div style="clear: both;">
-                                            <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
-                                            <button type="button" class="btn btn-danger">Cancel</button>
-                                        </div>                                        
                                     </div>
+                                    <div style="clear: both;">
+                                        <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
+                                        <button type="button" class="btn btn-danger">Cancel</button>
+                                    </div> 
                                 </div>
                             </form>
                             </li>
