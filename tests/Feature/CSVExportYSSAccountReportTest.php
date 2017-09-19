@@ -59,8 +59,8 @@ class CSVExportYSSAccountReportTest extends TestCase
     ];
 
     const DEFAULT_STATUS = 'enabled';
-    const JANUARY_1ST_2017 = '2017-06-21';
-    const JANUARY_10TH_2017 = '2017-09-19';
+    const CUSTOM_START_DAY = '2017-06-21';
+    const CUSTOM_END_DAY = '2017-09-19';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
 
@@ -74,8 +74,8 @@ class CSVExportYSSAccountReportTest extends TestCase
                         ->withSession([
                             RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
                             RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                            RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                            RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                            RepoYssAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoYssAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
                             RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
                             RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                         ])
