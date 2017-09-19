@@ -556,7 +556,6 @@
     <script src="/js/jquery.js"></script>
     <script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    {{-- <script src="/js/bootstrap-datepicker.js"></script> --}}
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/jquery-date-range.js"></script>
     <script src="/js/morris.min.js"></script>
