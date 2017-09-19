@@ -10,7 +10,6 @@ use Tests\TestCase;
 use DateTime;
 
 class CSVExportYSSAccountReportTest extends TestCase
-
 {
 
     const COLUMN_NAME_ACCOUNT_NAME = 'accountName';

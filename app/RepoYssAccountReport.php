@@ -262,8 +262,8 @@ class RepoYssAccountReport extends AbstractReportModel
         $startDay,
         $endDay,
         $columnSort,
-        $sort)
-    {
+        $sort
+    ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
