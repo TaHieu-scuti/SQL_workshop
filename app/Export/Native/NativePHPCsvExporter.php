@@ -55,6 +55,18 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->fileSize += $bytesWritten;
     }
 
+    private function getDataToExport()
+    {
+        return $this->model->getDataForExport(
+            session('accountReport.fieldName'),
+            session('accountReport.accountStatus'),
+            session('accountReport.startDay'),
+            session('accountReport.endDay'),
+            session('accountReport.columnSort'),
+            session('accountReport.sort')
+        );
+    }
+
     /**
      * @return string
      */
@@ -77,12 +89,11 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         // get fields' names
-        $fieldNames = $this->model->getColumnNames();
-
+        $fieldNames = session('accountReport.fieldName');
         $this->writeLine($fieldNames);
-
-        $this->model->each(
-            function (AbstractReportModel $value) {
+        $data = $this->getDataToExport();
+        $data->each(
+            function ($value) {
                 $this->writeLine($value->toArray());
             }
         );

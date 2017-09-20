@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -10,6 +11,58 @@ use DateTime;
 
 class CSVExportYSSAccountReportTest extends TestCase
 {
+    const COLUMN_NAME_ACCOUNT_NAME = 'accountName';
+    const COLUMN_NAME_COST = 'cost';
+    const COLUMN_NAME_IMPRESSIONS = 'impressions';
+    const COLUMN_NAME_CLICKS = 'clicks';
+    const COLUMN_NAME_AVERAGE_CPC = 'averageCpc';
+    const COLUMN_NAME_INVALID_CLICKS = 'invalidClicks';
+    const COLUMN_NAME_INVALID_CLICK_RATE = 'invalidClickRate';
+    const COLUMN_NAME_IMPRESSION_SHARE = 'impressionShare';
+    const COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE = 'exactMatchImpressionShare';
+    const COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE = 'budgetLostImpressionShare';
+    const COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE = 'qualityLostImpressionShare';
+    const COLUMN_NAME_CONVERSIONS = 'conversions';
+    const COLUMN_NAME_CONV_RATE = 'convRate';
+    const COLUMN_NAME_CONV_VALUE = 'convValue';
+    const COLUMN_NAME_COST_PER_CONV = 'costPerConv';
+    const COLUMN_NAME_VALUE_PER_CONV = 'valuePerConv';
+    const COLUMN_NAME_ALL_CONV = 'allConv';
+    const COLUMN_NAME_ALL_CONV_RATE = 'allConvRate';
+    const COLUMN_NAME_ALL_CONV_VALUE = 'allConvValue';
+    const COLUMN_NAME_COST_PER_ALL_CONV = 'costPerAllConv';
+    const COLUMN_NAME_VALUE_PER_ALL_CONV = 'valuePerAllConv';
+
+    const DEFAULT_FIELDS = [
+        0  => self::COLUMN_NAME_ACCOUNT_NAME,
+        1  => self::COLUMN_NAME_COST,
+        2  => self::COLUMN_NAME_IMPRESSIONS,
+        3  => self::COLUMN_NAME_CLICKS,
+        4  => self::COLUMN_NAME_AVERAGE_CPC,
+        5  => self::COLUMN_NAME_INVALID_CLICKS,
+        6 => self::COLUMN_NAME_INVALID_CLICK_RATE,
+        7 => self::COLUMN_NAME_IMPRESSION_SHARE,
+        8 => self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE,
+        9 => self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE,
+        10 => self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE,
+        11 => self::COLUMN_NAME_CONVERSIONS,
+        12 => self::COLUMN_NAME_CONV_RATE,
+        13 => self::COLUMN_NAME_CONV_VALUE,
+        14 => self::COLUMN_NAME_COST_PER_CONV,
+        15 => self::COLUMN_NAME_VALUE_PER_CONV,
+        16 => self::COLUMN_NAME_ALL_CONV,
+        17 => self::COLUMN_NAME_ALL_CONV_RATE,
+        18 => self::COLUMN_NAME_ALL_CONV_VALUE,
+        19 => self::COLUMN_NAME_COST_PER_ALL_CONV,
+        20 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+    ];
+
+    const DEFAULT_STATUS = 'enabled';
+    const CUSTOM_START_DAY = '2017-06-21';
+    const CUSTOM_END_DAY = '2017-09-19';
+    const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
+    const DEFAULT_SORT = 'desc';
+
     public function testReturnsStatus200()
     {
         $now = new DateTime;
@@ -17,7 +70,15 @@ class CSVExportYSSAccountReportTest extends TestCase
         $user = (new User)->find(1)->first();
 
         $response = $this->actingAs($user)
-                         ->get('/account_report/export_csv');
+                        ->withSession([
+                            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                            RepoYssAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoYssAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
+                            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                        ])
+                        ->get('/account_report/export_csv');
 
         $response->assertStatus(200);
 
@@ -59,7 +120,7 @@ class CSVExportYSSAccountReportTest extends TestCase
      */
     public function testReturnsCorrectContent(array $response)
     {
-        $expectedContent = file_get_contents(__DIR__ . '/../resources/repo_yss_account_report.csv');
+        $expectedContent = file_get_contents(__DIR__ . '/../resources/2017_09_19 07_54 repo_yss_account_report.csv');
         $this->assertSame($expectedContent, $response['response']->getContent());
     }
 
