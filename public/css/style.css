@@ -5836,12 +5836,25 @@ a.guest-on i {
     position: relative;
 }
 
-.loading-gif-on-table, .loading-gif-on-graph {
+.loading-gif-on-table {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 320px;
+    background-color: #fff;
+    background-image:url('/images/Loading_icon.gif');
+    background-repeat:no-repeat;
+    background-position:center;
+    z-index:1050;
+}
+
+.loading-gif-on-graph {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 279px;
     background-color: #fff;
     background-image:url('/images/Loading_icon.gif');
     background-repeat:no-repeat;

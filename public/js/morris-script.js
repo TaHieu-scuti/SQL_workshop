@@ -42,7 +42,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         });
 
@@ -76,7 +76,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         });
         /*
@@ -124,7 +124,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         });
         /*
@@ -155,7 +155,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         });
         // initialise graph
@@ -204,7 +204,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         }
         function processData(response)
@@ -240,7 +240,7 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
-                },
+                }
             });
         }
     });

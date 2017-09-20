@@ -66,7 +66,12 @@ function completeRequestTable()
 {
     $('.loading-gif-on-table').addClass('hidden-table');
 }
-
+/*
+*
+* onclicking apply button
+* display selected columns
+* update table with selected columns
+*/
 $(".apply-button").click(function () {
     var array = [];
     if (!array['fieldName']) {
@@ -109,7 +114,7 @@ $(".apply-button").click(function () {
         },
         complete : function () {
             completeRequestTable();
-        },
+        }
     });
 });
 
@@ -160,7 +165,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
         },
         complete : function () {
             completeRequestTable();
-        },
+        }
     });
 });
 
@@ -180,9 +185,18 @@ $('.apply-custom-period').click(function() {
             'endDay' : endDay,
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });
@@ -218,9 +232,18 @@ $('.status-option li').click(function () {
             'status' : status,
             'statusTitle' : statusTitle,
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });

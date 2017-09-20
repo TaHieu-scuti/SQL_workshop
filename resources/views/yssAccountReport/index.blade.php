@@ -548,7 +548,6 @@
                     </div>
                 </div>
                 <div class="table_data_report" style="position: relative;">
-                <div class="loading-gif-on-table hidden-table"></div>
                     @include('layouts.table_data')
                 </div>
         </section>
