@@ -402,7 +402,7 @@
                 </div>
 
                 <div class="row line-chart">
-                    <div class="loading-gif hidden-graph"></div>
+                    <div class="loading-gif-on-graph hidden-graph"></div>
                     <section class="panel">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>
@@ -547,7 +547,8 @@
                         </div><!-- /.modal -->
                     </div>
                 </div>
-                <div class="table_data_report">
+                <div class="table_data_report" style="position: relative;">
+                <div class="loading-gif-on-table hidden-table"></div>
                     @include('layouts.table_data')
                 </div>
         </section>

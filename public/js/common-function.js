@@ -99,13 +99,13 @@ function getFilterDate(option)
 
 function sendingRequest()
 {
-    $('.loading-gif').removeClass('hidden-graph');
+    $('.loading-gif-on-graph').removeClass('hidden-graph');
     setTimeout(function() {
-        $('.loading-gif').show();
+        $('.loading-gif-on-graph').show();
     }, 500);
 }
 
 function completeRequest()
 {
-    $('.loading-gif').addClass('hidden-graph');
+    $('.loading-gif-on-graph').addClass('hidden-graph');
 }

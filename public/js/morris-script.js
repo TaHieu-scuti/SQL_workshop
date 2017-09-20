@@ -1,7 +1,6 @@
 var Script = function () {
 
     //morris chart
-
     $(function () {
         var lineChart;
         initMorris();
@@ -175,7 +174,11 @@ var Script = function () {
                 smooth: false,
                 redraw: true,
             });
-            }
+        }
+
+        $(window).on('resize', function() { 
+            lineChart.redraw();
+        });
 
         function setMorris(data, fieldName)
         {
