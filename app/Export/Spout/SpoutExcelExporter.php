@@ -40,6 +40,18 @@ class SpoutExcelExporter implements ExcelExporterInterface
             . '.xlsx';
     }
 
+    private function getDataToExport()
+    {
+        return $this->model->getDataForExport(
+            session('accountReport.fieldName'),
+            session('accountReport.accountStatus'),
+            session('accountReport.startDay'),
+            session('accountReport.endDay'),
+            session('accountReport.columnSort'),
+            session('accountReport.sort')
+        );
+    }
+
     /**
      * @return string
      */
@@ -65,14 +77,15 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $this->model->chunk(
-                1000,
-                function (Collection $collection) use ($writer) {
-                    foreach ($collection as $model) {
-                        $writer->addRow($model->toArray());
-                    }
+            $fieldNames = session('accountReport.fieldName');
+            $writer->addRow($fieldNames);
+            $exportData = $this->getDataToExport();
+            $collections = $exportData->chunk(1000);
+            foreach ($collections as $collection) {
+                foreach ($collection as $value) {
+                    $writer->addRow($value->toArray());
                 }
-            );
+            }
 
             $writer->close();
 

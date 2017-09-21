@@ -107,7 +107,6 @@ class CSVExportYSSAccountReportTest extends TestCase
             $lastModifiedDateTime = $response['now']->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
-
         $this->assertSame($lastModifiedDateTime, $lastModifiedHeader);
 
         $response['response']->assertHeader('Cache-Control', 'cache, must-revalidate, private');
@@ -120,7 +119,7 @@ class CSVExportYSSAccountReportTest extends TestCase
      */
     public function testReturnsCorrectContent(array $response)
     {
-        $expectedContent = file_get_contents(__DIR__ . '/../resources/2017_09_19 07_54 repo_yss_account_report.csv');
+        $expectedContent = file_get_contents(__DIR__ . '/../resources/repo_yss_account_report.csv');
         $this->assertSame($expectedContent, $response['response']->getContent());
     }
 
