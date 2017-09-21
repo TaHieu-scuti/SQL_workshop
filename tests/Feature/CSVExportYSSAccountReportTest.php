@@ -107,7 +107,6 @@ class CSVExportYSSAccountReportTest extends TestCase
             $lastModifiedDateTime = $response['now']->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
-
         $this->assertSame($lastModifiedDateTime, $lastModifiedHeader);
 
         $response['response']->assertHeader('Cache-Control', 'cache, must-revalidate, private');
