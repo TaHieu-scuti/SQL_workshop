@@ -125,7 +125,7 @@ class ExcelExportYSSAccountReportTest extends TestCase
     public function testReturnsCorrectContent(array $response)
     {
         $resourceZipArchive = new ZipArchive;
-        $resourceZipArchive->open(__DIR__ . '/../resources/2017_09_21 03_43 repo_yss_account_report.xlsx');
+        $resourceZipArchive->open(__DIR__ . '/../resources/repo_yss_account_report.xlsx');
         $expectedSheet = $resourceZipArchive->getFromName('xl/worksheets/sheet1.xml');
 
         $fileName = tempnam('/tmp', 'repo_yss_account_report');
