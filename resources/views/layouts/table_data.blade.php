@@ -4,6 +4,7 @@
     }
 ?>
 
+<div class="loading-gif-on-table hidden-table"></div>
 <div class="row report-table">
     <div class="col-md-12">
     <table class="table table-striped" id="reportTable">

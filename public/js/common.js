@@ -54,6 +54,24 @@ $(window).on('hashchange', function() {
         }
     }
 });
+
+function sendingRequestTable() {
+    $('.loading-gif-on-table').removeClass('hidden-table');
+    setTimeout(function() {
+        $('.loading-gif-on-table').show();
+    }, 10);
+}
+
+function completeRequestTable()
+{
+    $('.loading-gif-on-table').addClass('hidden-table');
+}
+/*
+*
+* onclicking apply button
+* display selected columns
+* update table with selected columns
+*/
 $(".apply-button").click(function () {
     var array = [];
     if (!array['fieldName']) {
@@ -79,10 +97,23 @@ $(".apply-button").click(function () {
             'fieldName' : array['fieldName'],
             'columnSort' : th.text(),
         },
+        beforeSend : function () {
+            setTimeout(function() {
+                $('#columnsModal').modal('hide');
+            }, 1);
+            setTimeout(function() {
+                sendingRequestTable();
+            }, 200);
+        },
         success: function(result) {
-            $('.table_data_report').html(result);
-            $('#columnsModal').modal('hide');
+            $('table').html(result);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });
@@ -122,9 +153,18 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             'endDay' : milestone['endDay'],
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });
@@ -145,9 +185,18 @@ $('.apply-custom-period').click(function() {
             'endDay' : endDay,
             'timePeriodTitle' : milestone['timePeriodTitle'],
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });
@@ -183,9 +232,18 @@ $('.status-option li').click(function () {
             'status' : status,
             'statusTitle' : statusTitle,
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response);
             history.pushState("", "", link);
+        },
+        error : function (response) {
+            alert('Something went wrong!');
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });

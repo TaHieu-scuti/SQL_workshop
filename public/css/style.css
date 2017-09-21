@@ -215,10 +215,15 @@ a, a:hover, a:focus {
     color: #000000;
     display: inline-block;
     margin-top: 60px;
-    padding: 15px 15px 0px 15px;
+    padding: 15px 0 0 0;
     width: 100%;
 }
 /*customized css start*/
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .wrapper .row {
     border-bottom: 1px solid #ecedf1;
 }
@@ -736,6 +741,9 @@ a, a:hover, a:focus {
 
 .wrapper .row.report-table .paginator a {
     color: #797979;
+}
+.modal.fade.in {
+    z-index: 20000;
 }
 /*customized css end*/
 a.logo {
@@ -5828,17 +5836,30 @@ a.guest-on i {
     position: relative;
 }
 
-.loading-gif {
+.loading-gif-on-table {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: white;
+    height: 320px;
+    background-color: #fff;
     background-image:url('/images/Loading_icon.gif');
     background-repeat:no-repeat;
     background-position:center;
-    z-index:10000000;
+    z-index:1050;
+}
+
+.loading-gif-on-graph {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 279px;
+    background-color: #fff;
+    background-image:url('/images/Loading_icon.gif');
+    background-repeat:no-repeat;
+    background-position:center;
+    z-index:1050;
 }
 
 .hidden-graph {
@@ -5847,6 +5868,10 @@ a.guest-on i {
 
 .table-condensed {
     width: 100%;
+}
+
+.hidden-table {
+    display: none !important;
 }
 
 .dpd1, .dpd2 {
@@ -5887,3 +5912,4 @@ a.guest-on i {
     background-color: #eee;
     cursor: pointer;
 }
+
