@@ -58,8 +58,8 @@ class CSVExportYSSAccountReportTest extends TestCase
     ];
 
     const DEFAULT_STATUS = 'enabled';
-    const CUSTOM_START_DAY = '2017-06-21';
-    const CUSTOM_END_DAY = '2017-09-19';
+    const CUSTOM_START_DAY = '2017-06-23';
+    const CUSTOM_END_DAY = '2017-09-21';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
 
@@ -107,6 +107,7 @@ class CSVExportYSSAccountReportTest extends TestCase
             $lastModifiedDateTime = $response['now']->modify('+1 second')->format('D, d M Y H:i:s');
             $i++;
         }
+
         $this->assertSame($lastModifiedDateTime, $lastModifiedHeader);
 
         $response['response']->assertHeader('Cache-Control', 'cache, must-revalidate, private');

@@ -417,7 +417,7 @@
                                 <div class="panel-body">
                                     <span class="title">Clicks<br></span>
                                     <span class="content">
-                                        <i class="fa fa-circle"></i>{{ number_format($totalDataArray['clicks'], 2, '.', ',') }}<br>
+                                        <i class="fa fa-circle"></i>{{$totalDataArray['clicks']}}<br>
                                     </span>
                                 </div>
                             </section>
@@ -428,7 +428,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Impr<br></span>
-                                    <span class="content">{{ number_format($totalDataArray['impressions'], 2, '.', ',') }}<br> </span>
+                                    <span class="content">{{ $totalDataArray['impressions'] }}<br> </span>
                                 </div>
                             </section>
                         </a>
@@ -438,7 +438,7 @@
                             <section class="panel">
                                 <div class="panel-body">
                                     <span class="title">Cost<br></span>
-                                    <span class="content"><i class="fa fa-rmb"></i>{{ number_format($totalDataArray['cost'], 2, '.', ',') }}<br> </span>
+                                    <span class="content"><i class="fa fa-rmb"></i>{{ $totalDataArray['cost'] }}<br> </span>
                                 </div>
                             </section>
                         </a>
@@ -449,7 +449,7 @@
                                 <div class="panel-body">
                                     <span class="title">AvgCPC<br></span>
                                     <span class="content">
-                                        <i class="fa fa-rmb"></i>{{ number_format($totalDataArray['averageCpc'], 2, '.', ',') }}<br>
+                                        <i class="fa fa-rmb"></i>{{ $totalDataArray['averageCpc'] }}<br>
                                     </span>
                                 </div>
                             </section>
@@ -461,7 +461,7 @@
                                 <div class="panel-body">
                                     <span class="title">Avg pos<br></span>
                                     <span class="content">
-                                        {{ number_format($totalDataArray['averageCpc'], 2, '.', ',') }}<br>
+                                        {{ $totalDataArray['averageCpc'] }}<br>
                                     </span>
                                 </div>
                             </section>
@@ -473,7 +473,7 @@
                                 <div class="panel-body">
                                     <span class="title">InvalidClicks<br></span>
                                     <span class="content">
-                                        {{ number_format($totalDataArray['invalidClicks'], 2, '.', ',') }}<br>
+                                        {{ $totalDataArray['invalidClicks'] }}<br>
                                     </span>
                                 </div>
                             </section>
