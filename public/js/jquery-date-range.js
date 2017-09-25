@@ -2,9 +2,6 @@ $(function() {
     $('#from').prop('disabled', true);
     $('#to').prop('disabled', true);
     var dates = $( "#from, #to" ).datepicker({
-        showOn: 'button',
-        buttonImage: '../images/calendar.png',
-        buttonImageOnly: true,
         buttonText: "Show calendar",
         defaultDate: "+1w",
         dateFormat: 'yy-mm-dd',
@@ -24,5 +21,12 @@ $(function() {
     });
     $('#ui-datepicker-div').click(function() {
         $('.date-option').addClass('activeBlock');
+    });
+
+    $('.dpd1-from').click(function() {
+        $('#from').datepicker('show');
+    });
+    $('.dpd2-to').click(function() {
+        $('#to').datepicker('show');
     });
 });

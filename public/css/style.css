@@ -855,6 +855,8 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 .dropdown-menu.extended li a {
     font-size: 12px;
     list-style: none;
+    background-color: #fff;
+    color: #2E2E2E;
 }
 
 .dropdown-menu.extended li a {
@@ -864,7 +866,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 }
 
 .dropdown-menu.extended li a:hover {
-    background-color: #F7F8F9 !important;
+    background-color: #ecedf1 !important;
     color: #2E2E2E;
 }
 
@@ -5891,25 +5893,38 @@ a.guest-on i {
     height: 34px;
 }
 .custom-date .input-group .dpd1, .custom-date .input-group .dpd2 {
-    width: 85%;
-    float: right;
+    width: 82%;
 }
 
-.input-group-addon {
-    border-radius: 0;
+#datetimepicker1 .input-group-addon {
+    float: right;
+    position: absolute;
+    width: 18%;
+    right: 0;
+    line-height: 1.458571;
+    padding: 6px 2px;
 }
 
 .activeBlock {
     display: block;
 }
 
-#datepicker .input-group img {
-    height: 34px;
-    padding-right: 2px;
-    width: 15%;
-    float: left;
-    border: 1px solid #ccc;
-    background-color: #eee;
+.hasDatepicker[disabled] {
+    background-color: #fff;
+}
+
+#datetimepicker1 {
+    width: 100%;
+}
+.custom-li a div {
+    text-align: center;
+}
+
+#datetimepicker1 .input-group-addon:hover{
     cursor: pointer;
 }
 
+.ui-corner-all {
+    border-top-left-radius: 3px!important;
+    border-top-right-radius: 3px!important;
+}
