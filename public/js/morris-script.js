@@ -173,6 +173,7 @@ var Script = function () {
                 pointSize: 0,
                 smooth: false,
                 redraw: true,
+                hideHover: 'auto',
             });
         }
 
