@@ -280,14 +280,28 @@
                             </li>
                             <li id="datepicker" class="custom-date">
                             <form action="#" class="form-horizontal tasi-form">
-                                <div class="form-group col-md-12">
-                                    <div class="input-group col-md-6">
-                                        <span class="input-group-addon">From</span>
-                                        <input type="text" class="form-control dpd1 " id ="from" name="from">
+                                <div class="form-group row">
+                                    <div class='col-sm-6'>
+                                        <div class="form-group">
+                                            <span style="width: 100%; float: right;">From</span>
+                                            <div class='input-group date' id='datetimepicker1'>
+                                                <input type='text' class="form-control dpd1" id ="from" name="from" />
+                                                <span class="input-group-addon dpd1-from">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="input-group col-md-6">
-                                        <span class="input-group-addon">To</span>
-                                        <input type="text" class="form-control dpd2" id ="to" name="to">
+                                    <div class='col-sm-6'>
+                                        <div class="form-group">
+                                            <span style="width: 100%; float: right;">To</span>
+                                            <div class='input-group date' id='datetimepicker1'>
+                                                <input type='text' class="form-control dpd2" id ="to" name="to" />
+                                                <span class="input-group-addon dpd2-to">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div style="clear: both;">
                                         <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
