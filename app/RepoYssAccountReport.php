@@ -361,7 +361,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )->where(
+                )->where( // TODO: this where condition is repeated 3 times throughout this file
                     function ($query) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
                             $query->whereDate('day', '=', $endDay);
@@ -370,10 +370,9 @@ class RepoYssAccountReport extends AbstractReportModel
                                 ->whereDate('day', '<', $endDay);
                         }
                     }
-                )->where($joinTableName.'.accountStatus', '=', $accountStatus)
-                ->groupBy($joinTableName.'.accountName')
-                ->orderBy($columnSort, $sort)
-                ->get();
+                )
+                ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+                ->first()->toArray();
         foreach ($data as $key => $value) {
             if ($value === null) {
                 $data[$key] = 0;
