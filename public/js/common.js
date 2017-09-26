@@ -105,8 +105,9 @@ $(".apply-button").click(function () {
                 sendingRequestTable();
             }, 200);
         },
-        success: function(result) {
-            $('table').html(result);
+        success: function(response) {
+            $('.table_data_report').html(response.tableDataLayout);
+            $('.summary_report').html(response.summaryReportLayout);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -157,7 +158,8 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             sendingRequestTable();
         },
         success : function (response) {
-            $('.table_data_report').html(response);
+            $('.table_data_report').html(response.tableDataLayout);
+            $('.summary_report').html(response.summaryReportLayout);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -189,7 +191,8 @@ $('.apply-custom-period').click(function() {
             sendingRequestTable();
         },
         success : function (response) {
-            $('.table_data_report').html(response);
+            $('.table_data_report').html(response.tableDataLayout);
+            $('.summary_report').html(response.summaryReportLayout);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -236,7 +239,8 @@ $('.status-option li').click(function () {
             sendingRequestTable();
         },
         success : function (response) {
-            $('.table_data_report').html(response);
+            $('.table_data_report').html(response.tableDataLayout);
+            $('.summary_report').html(response.summaryReportLayout);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -284,7 +288,7 @@ $('.table_data_report').delegate('th', 'click', function() {
             'columnSort' : th.text(),
         },
         success : function (response) {
-            $('.table_data_report').html(response);
+            $('.table_data_report').html(response.tableDataLayout);
         }
     });
 })
