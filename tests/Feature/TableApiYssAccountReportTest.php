@@ -742,6 +742,7 @@ class TableApiYssAccountReportTest extends TestCase
                 self::COLUMN_NAME_AVERAGE_CPC => "20,351.20",
                 self::COLUMN_NAME_AVERAGE_POSITION => "21,115.18",
                 self::COLUMN_NAME_INVALID_CLICKS => "48,061,154"
-            ]);
+            ]
+        );
     }
 }
