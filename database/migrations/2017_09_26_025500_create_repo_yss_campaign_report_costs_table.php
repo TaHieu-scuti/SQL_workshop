@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class CreateRepoYssCampaignReportCostsTable extends Migration
 {
     /**
@@ -58,7 +59,7 @@ class CreateRepoYssCampaignReportCostsTable extends Migration
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->bigInteger('hourofday')->nullable()->comment('時間');
             $table->string('campaignType', 50)->nullable()->comment('キャンペーンタイプ');
-            
+
             $table->timestamps();
         });
     }
