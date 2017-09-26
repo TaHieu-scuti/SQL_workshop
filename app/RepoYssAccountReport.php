@@ -361,7 +361,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )->where( // TODO: this where condition is repeated 3 times throughout this file
+                )->where(
                     function ($query) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
                             $query->whereDate('day', '=', $endDay);
