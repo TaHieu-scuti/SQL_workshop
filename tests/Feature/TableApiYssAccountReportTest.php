@@ -394,7 +394,7 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->get(self::ROUTE_ACCOUNT_REPORT);
-        // dd($response);
+
         $response->assertViewIs(self::VIEW_PATH);
     }
 
