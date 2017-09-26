@@ -716,7 +716,7 @@ class TableApiYssAccountReportTest extends TestCase
         );
     }
 
-    public function testViewHasSummaryReportFromSession()
+    public function testViewHasSummaryReportData()
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
