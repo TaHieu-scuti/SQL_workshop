@@ -53,8 +53,6 @@ class CreateRepoYssCampaignReportConvsTable extends Migration
             $table->string('objectiveOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
             $table->text('conversionName')->nullbale()->comment('コンバージョン名');
             $table->string('campaignType')->nullable()->comment('キャンペーンタイプ');
-
-            $table->timestamps();
         });
     }
 
