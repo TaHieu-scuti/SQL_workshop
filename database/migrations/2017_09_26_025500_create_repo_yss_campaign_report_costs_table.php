@@ -59,8 +59,6 @@ class CreateRepoYssCampaignReportCostsTable extends Migration
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->bigInteger('hourofday')->nullable()->comment('時間');
             $table->string('campaignType', 50)->nullable()->comment('キャンペーンタイプ');
-
-            $table->timestamps();
         });
     }
 
