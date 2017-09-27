@@ -6,7 +6,7 @@ use App\AbstractReportModel;
 
 class RepoYssAccountReportConv extends AbstractReportModel
 {
-	/**
+    /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
@@ -24,8 +24,7 @@ class RepoYssAccountReportConv extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort
-    ){
-
+    ) {
     }
 
     /**
@@ -40,7 +39,6 @@ class RepoYssAccountReportConv extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay
-    ){
-    	
+    ) {
     }
 }

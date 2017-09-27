@@ -24,8 +24,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort
-    ){
-
+    ) {
     }
 
     /**
@@ -40,7 +39,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay
-    ){
-    	
+    ) {
     }
 }
