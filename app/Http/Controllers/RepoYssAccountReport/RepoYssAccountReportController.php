@@ -23,6 +23,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const ACCOUNT_NAME = 'accountName';
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
+    const SUMMARY_REPORT = "summaryReport";
     const SESSION_KEY_PREFIX = 'accountReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -34,6 +35,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
+    const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -126,6 +128,16 @@ class RepoYssAccountReportController extends AbstractReportController
         );
     }
 
+    private function getCalculatedSummaryReport()
+    {
+        return $this->model->calculateSummaryData(
+            session(self::SESSION_KEY_SUMMARY_REPORT),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+    }
+
     /**
      * @param string[] $columns
      */
@@ -138,6 +150,14 @@ class RepoYssAccountReportController extends AbstractReportController
         $accountStatus = "enabled";
         $statusTitle = "enabled";
         $graphColumnName = "clicks";
+        $summaryReport = [
+            'clicks',
+            'impressions',
+            'cost',
+            'averageCpc',
+            'averagePosition',
+            'invalidClicks'
+        ];
         session([self::SESSION_KEY_FIELD_NAME => $columns]);
         session([self::SESSION_KEY_ACCOUNT_STATUS => $accountStatus]);
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
@@ -148,6 +168,7 @@ class RepoYssAccountReportController extends AbstractReportController
         session([self::SESSION_KEY_GRAPH_COLUMN_NAME => $graphColumnName]);
         session([self::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([self::SESSION_KEY_SORT => 'desc']);
+        session([self::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
     }
 
     /**
@@ -239,6 +260,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
@@ -256,6 +278,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
+                self::SUMMARY_REPORT => $summaryReportData,
             ]
         );
     }
@@ -274,13 +297,19 @@ class RepoYssAccountReportController extends AbstractReportController
         $reports = $this->getDataForTable();
 
         $totalDataArray = $this->getCalculatedData();
-        return $this->responseFactory->json(view('layouts.table_data', [
+        $summaryReportData = $this->getCalculatedSummaryReport();
+        $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $tableDataLayout = view('layouts.table_data', [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray
-        ])->render());
+        ])->render();
+        return $this->responseFactory->json([
+            'summaryReportLayout' => $summaryReportLayout,
+            'tableDataLayout' => $tableDataLayout,
+        ]);
     }
 
     /**

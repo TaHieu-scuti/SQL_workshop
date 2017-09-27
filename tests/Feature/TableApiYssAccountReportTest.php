@@ -17,6 +17,7 @@ class TableApiYssAccountReportTest extends TestCase
     const COLUMN_NAME_IMPRESSIONS = 'impressions';
     const COLUMN_NAME_CLICKS = 'clicks';
     const COLUMN_NAME_AVERAGE_CPC = 'averageCpc';
+    const COLUMN_NAME_AVERAGE_POSITION = 'averagePosition';
     const COLUMN_NAME_INVALID_CLICKS = 'invalidClicks';
     const COLUMN_NAME_INVALID_CLICK_RATE = 'invalidClickRate';
     const COLUMN_NAME_IMPRESSION_SHARE = 'impressionShare';
@@ -126,6 +127,15 @@ class TableApiYssAccountReportTest extends TestCase
         23 => self::COLUMN_NAME_ALL_CONV_VALUE,
         24 => self::COLUMN_NAME_COST_PER_ALL_CONV,
         25 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+    ];
+
+    const SUMMARY_REPORT = [
+        0 => self::COLUMN_NAME_CLICKS,
+        1 => self::COLUMN_NAME_IMPRESSIONS,
+        2 => self::COLUMN_NAME_COST,
+        3 => self::COLUMN_NAME_AVERAGE_CPC,
+        4 => self::COLUMN_NAME_AVERAGE_POSITION,
+        5 => self::COLUMN_NAME_INVALID_CLICKS,
     ];
 
     const DEFAULT_STATUS = 'enabled';
@@ -392,7 +402,17 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -415,7 +435,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -448,7 +469,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -471,7 +493,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -494,7 +517,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -517,7 +541,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -540,7 +565,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -563,7 +589,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -585,7 +612,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -608,7 +636,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -631,7 +660,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -675,13 +705,44 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
                 RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
             RepoYssAccountReportController::KEY_PAGINATION,
             self::CUSTOM_PAGINATION
+        );
+    }
+
+    public function testViewHasSummaryReportData()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT
+            ])
+            ->get(self::ROUTE_ACCOUNT_REPORT);
+        $response->assertViewHas(
+            RepoYssAccountReportController::SUMMARY_REPORT,
+            [
+                self::COLUMN_NAME_CLICKS => "4,851,795",
+                self::COLUMN_NAME_IMPRESSIONS => "2,171,860",
+                self::COLUMN_NAME_COST => "541,933",
+                self::COLUMN_NAME_AVERAGE_CPC => "20,351.20",
+                self::COLUMN_NAME_AVERAGE_POSITION => "21,115.18",
+                self::COLUMN_NAME_INVALID_CLICKS => "48,061,154"
+            ]
         );
     }
 }

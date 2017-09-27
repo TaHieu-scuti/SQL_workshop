@@ -424,75 +424,8 @@
                     </section>
                 </div>
 
-                <div class="row statistic">
-                    <div class="col-md-2 active" data-name="clicks">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">Clicks<br></span>
-                                    <span class="content">
-                                        <i class="fa fa-circle"></i>{{$totalDataArray['clicks']}}<br>
-                                    </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="impressions">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">Impr<br></span>
-                                    <span class="content">{{ $totalDataArray['impressions'] }}<br> </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="cost">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">Cost<br></span>
-                                    <span class="content"><i class="fa fa-rmb"></i>{{ $totalDataArray['cost'] }}<br> </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="averageCpc">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">AvgCPC<br></span>
-                                    <span class="content">
-                                        <i class="fa fa-rmb"></i>{{ $totalDataArray['averageCpc'] }}<br>
-                                    </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="averagePosition">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">Avg pos<br></span>
-                                    <span class="content">
-                                        {{ $totalDataArray['averageCpc'] }}<br>
-                                    </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
-                    <div class="col-md-2" data-name="invalidClicks">
-                        <a href="javascript:void(0)">
-                            <section class="panel">
-                                <div class="panel-body">
-                                    <span class="title">InvalidClicks<br></span>
-                                    <span class="content">
-                                        {{ $totalDataArray['invalidClicks'] }}<br>
-                                    </span>
-                                </div>
-                            </section>
-                        </a>
-                    </div>
+                <div class="row statistic summary_report">
+                    @include('layouts.summary_report')
                 </div>
 
                 <div class="row csv-file">

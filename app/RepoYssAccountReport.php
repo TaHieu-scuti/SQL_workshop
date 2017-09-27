@@ -331,4 +331,54 @@ class RepoYssAccountReport extends AbstractReportModel
                 ->orderBy($columnSort, $sort)
                 ->get();
     }
+
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    {
+        $arrayCalculate = [];
+        $tableName = $this->getTable();
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw(
+                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
+                );
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                    ->getType()
+                    ->getName()
+                    === self::FIELD_TYPE) {
+                    $arrayCalculate[] = DB::raw(
+                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
+                    );
+                } else {
+                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
+                }
+            }
+        }
+        $joinTableName = (new RepoYssAccount)->getTable();
+        $data = self::select($arrayCalculate)
+                ->join(
+                    $joinTableName,
+                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                    '=',
+                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                )->where(
+                    function ($query) use ($startDay, $endDay) {
+                        if ($startDay === $endDay) {
+                            $query->whereDate('day', '=', $endDay);
+                        } else {
+                            $query->whereDate('day', '>=', $startDay)
+                                ->whereDate('day', '<', $endDay);
+                        }
+                    }
+                )
+                ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+                ->first()->toArray();
+        foreach ($data as $key => $value) {
+            if ($value === null) {
+                $data[$key] = 0;
+            }
+        }
+
+        return $data;
+    }
 }
