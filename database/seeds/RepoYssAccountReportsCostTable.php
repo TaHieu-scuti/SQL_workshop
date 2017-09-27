@@ -4,6 +4,10 @@ use Illuminate\Database\Seeder;
 
 class RepoYssAccountReportsCostTable extends Seeder
 {
+    const OBJECTIVE_OF_CONVERSION_TRACKING = 'Conversion Tracking';
+    const CONVERSION_NAME = 'Conversion Name';
+    const START_DATE = '2017-01-01 00:00:00';
+    const END_DATE = '2018-02-03 00:00:00';
     /**
      * Run the database seeds.
      *
@@ -12,12 +16,14 @@ class RepoYssAccountReportsCostTable extends Seeder
     public function run()
     {
         $yssAccountReports = App\RepoYssAccountReport::query()->get();
+        $startDate = new DateTime(self::START_DATE);
+        $endDate = new DateTime(self::END_DATE);
 
         foreach ($yssAccountReports as $yssAccountReport) {
             DB::table('repo_yss_campaign_report_costs')->insert([
-                'exeDate' => ,
-                'startDate' => ,
-                'endDate' => ,
+                'exeDate' => $endDate,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
                 'account_id' => $yssAccountReport->account_id,
                 'campaign_id' => $yssAccountReport->campaign_id,
                 'cost' => $yssAccountReport->cost,
