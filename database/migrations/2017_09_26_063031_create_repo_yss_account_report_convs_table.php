@@ -40,7 +40,6 @@ class CreateRepoYssAccountReportConvsTable extends Migration
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->string('objectiveOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
             $table->string('conversionName', 50)->nullable()->comment('コンバージョン名');
-            $table->timestamps();
         });
     }
 

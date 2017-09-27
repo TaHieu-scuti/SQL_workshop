@@ -47,7 +47,6 @@ class CreateRepoYssAccountReportCostsTable extends Migration
             $table->string('month', 50)->nullable()->comment('毎月');
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->bigInteger('hourofday')->nullable()->comment('時間');
-            $table->timestamps();
         });
     }
 
