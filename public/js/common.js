@@ -8,7 +8,7 @@ $('.dropdown-menu.tasks-bar input').click(function (event) {
 });
 
 $('.dropdown-menu.date-option .custom-li').click(function () {
-    $('.dropdown-menu').click(function (event) {
+    $('.dropdown-menu.date-option').click(function (event) {
         event.stopPropagation(); 
     });
 });
