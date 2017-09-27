@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-class RepoYssCampaignReportConv extends \App\AbstractReportModel
+class RepoYssCampaignReportConv extends AbstractReportModel
 {
     //
 }
