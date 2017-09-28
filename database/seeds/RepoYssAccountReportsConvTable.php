@@ -21,7 +21,7 @@ class RepoYssAccountReportsConvTable extends Seeder
         $endDate = new DateTime(self::END_DATE);
         
         foreach ($yssAccountReports as $yssAccountReport) {
-            DB::table('repo_yss_campaign_report_convs')->insert([
+            DB::table('repo_yss_account_report_convs')->insert([
                 'exeDate' => $endDate,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
