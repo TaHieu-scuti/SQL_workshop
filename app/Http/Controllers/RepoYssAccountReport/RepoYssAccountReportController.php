@@ -185,16 +185,14 @@ class RepoYssAccountReportController extends AbstractReportController
         if ($request->fieldName !== null && $request->pagination !== null) {
             $fieldName = $request->fieldName;
             array_unshift($fieldName, self::ACCOUNT_NAME);
+            if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
+                $positionOfFirstFieldName = 1;
+                session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
+            }
             session()->put([
                 self::SESSION_KEY_FIELD_NAME => $fieldName,
                 self::SESSION_KEY_PAGINATION => $request->pagination,
             ]);
-            if ($request->columnSort === null) {
-                if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
-                    $positionOfFirstFieldName = 1;
-                    session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
-                }
-            }
         }
 
         // get startDay and endDay if available
