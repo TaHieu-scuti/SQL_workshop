@@ -6,6 +6,8 @@ use App\AbstractReportModel;
 
 class RepoYssCampaignReportConv extends AbstractReportModel
 {
+    /** @var bool */
+    public $timestamps = false;
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
