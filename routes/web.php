@@ -71,3 +71,8 @@ Route::post(
     '/account_report/live_search',
     'RepoYssAccountReport\RepoYssAccountReportController@liveSearch'
 );
+
+Route::prefix('campaign-report')->group(function () {
+    Route::get('/', 'RepoYssCampaignReport\RepoYssCampaignReportController@index');
+    Route::get('/display-graph', 'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph');
+});
