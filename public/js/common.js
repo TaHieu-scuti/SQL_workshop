@@ -210,17 +210,13 @@ $('.status-option li').click(function () {
     var option = $(this).data('status');
     var status;
     switch(option) {
-        case 'all' :
-            statusTitle = "all";
-            status = "all";
+        case 'showZero' :
+            statusTitle = 'Show 0';
+            status = 'showZero';
             break;
-        case 'disabled' : 
-            statusTitle = 'disabled';
-            status = 'disabled';
-            break;
-        case 'enabled' :
-            statusTitle = 'enabled';
-            status = 'enabled';
+        case 'hideZero' :
+            statusTitle = 'Hide 0';
+            status = 'hideZero';
             break;
     }
     $.ajax({

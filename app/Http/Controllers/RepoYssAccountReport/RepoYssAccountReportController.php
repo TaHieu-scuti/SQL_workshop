@@ -147,8 +147,8 @@ class RepoYssAccountReportController extends AbstractReportController
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        $accountStatus = "enabled";
-        $statusTitle = "enabled";
+        $accountStatus = "hideZero";
+        $statusTitle = "Hide 0";
         $graphColumnName = "clicks";
         $summaryReport = [
             'clicks',
@@ -205,15 +205,11 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         // get status if available
-        if ($request->status === "all") {
-            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => ""]);
-        } elseif ($request->status !== null) {
+        if ($request->status !== null) {
             session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
         }
 
-        if ($request->statusTitle === "all") {
-            session()->put([self::SESSION_KEY_STATUS_TITLE => "all"]);
-        } elseif ($request->statusTitle !== null) {
+        if ($request->statusTitle !== null) {
             session()->put([self::SESSION_KEY_STATUS_TITLE => $request->statusTitle]);
         }
 
@@ -297,7 +293,6 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
-
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();

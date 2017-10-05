@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\DB;
+use App\Model\RepoYssAccount;
 
 use DateTime;
 use Exception;
@@ -88,7 +89,6 @@ class RepoYssAccountReport extends AbstractReportModel
     // constant
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
     const FIELD_TYPE = 'float';
-
     private function getAggregated(array $fieldNames, $tableName)
     {
         $arrayCalculate = [];
@@ -147,18 +147,26 @@ class RepoYssAccountReport extends AbstractReportModel
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )->where(
-                    function ($query) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
-                        } else {
-                            $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                )
+                // ->where(
+                //     function ($query) use ($startDay, $endDay) {
+                //         if ($startDay === $endDay) {
+                //             $query->whereDate('day', '=', $endDay);
+                //         } else {
+                //             $query->whereDate('day', '>=', $startDay)
+                //                 ->whereDate('day', '<', $endDay);
+                //         }
+                //     }
+                // )
+                ->where(
+                    function ($query) use ($accountStatus, $startDay, $endDay) {
+                        if ($accountStatus === 'hideZero') {
+                            $query->where('impressions', '!=', 0);
+                        } elseif ($accountStatus === 'showZero') {
+                            $query->where('impressions', '=', 0);
                         }
                     }
-                )->whereHas('repoYssAccounts', function ($query) use ($accountStatus) {
-                    $query->where('accountStatus', 'like', '%'.$accountStatus);
-                })
+                )
                 ->with('repoYssAccounts')
                 ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
                 ->groupBy($joinTableName.'.accountName')
@@ -194,7 +202,7 @@ class RepoYssAccountReport extends AbstractReportModel
                 '=',
                 'repo_yss_accounts.account_id'
             )
-            ->where(
+            ->where( 
                 function ($query) use ($startDay, $endDay) {
                     if ($startDay === $endDay) {
                         $query->whereDate('day', '=', $endDay);
@@ -204,7 +212,14 @@ class RepoYssAccountReport extends AbstractReportModel
                     }
                 }
             )
-            ->where('repo_yss_accounts.accountStatus', 'like', '%'.$accountStatus)
+            ->where(
+                function ($query) use ($accountStatus) {
+                    if ($accountStatus === 'showZero') {
+                        $query->where('impressions', '=', '0');
+                    } elseif ($accountStatus === 'hideZero') {
+                        $query->where('impressions', '<>', '0');
+                    }
+            })
             ->groupBy('day')
             ->get();
     }
@@ -232,7 +247,6 @@ class RepoYssAccountReport extends AbstractReportModel
         // remove column id, campaign_id ....
         $unsetColumns = ['id', 'campaign_id', 'account_id', 'network',
                              'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
-        
         return $this->unsetColumns($result, $unsetColumns);
     }
 
@@ -280,7 +294,7 @@ class RepoYssAccountReport extends AbstractReportModel
                         $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                         '=',
                         $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                    )->where( // TODO: this where condition is repeated 3 times throughout this file
+                    )->where(
                         function ($query) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
                                 $query->whereDate('day', '=', $endDay);
@@ -290,13 +304,20 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     )
-                    ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+                    ->where(
+                        function ($query) use ($accountStatus) {
+                            if ($accountStatus === 'showZero') {
+                                $query->where('impressions', '=', '0');
+                            } elseif ($accountStatus === 'hideZero') {
+                                $query->where('impressions', '<>', '0');
+                            }
+                        })
                     ->first()->toArray();
     }
 
     public function repoYssAccounts()
     {
-        return $this->hasOne('App\RepoYssAccount', 'account_id', 'account_id');
+        return $this->hasOne('App\Model\RepoYssAccount', 'account_id', 'account_id');
     }
 
     public function getDataForExport(
@@ -371,7 +392,14 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     }
                 )
-                ->where($joinTableName . '.accountStatus', 'like', '%'.$accountStatus)
+                ->where(
+                    function ($query) use ($accountStatus) {
+                        if ($accountStatus === 'showZero') {
+                            $query->where('impressions', '=', '0');
+                        } elseif($accountStatus === 'hideZero') {
+                            $query->where('impressions', '<>', '0');
+                        }
+                })
                 ->first()->toArray();
         foreach ($data as $key => $value) {
             if ($value === null) {
