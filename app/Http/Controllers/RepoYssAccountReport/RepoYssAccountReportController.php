@@ -367,4 +367,9 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         return $this->exportToCsv(self::SESSION_KEY_PREFIX);
     }
+
+    public function exportExcelFile()
+    {
+        return $this->exportToExcel(self::SESSION_KEY_PREFIX);
+    }
 }

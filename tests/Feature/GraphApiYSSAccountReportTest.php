@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class GraphApiYSSAccountReportTest extends TestCase
 {
-    const ROUTE_DISPLAY_GRAPH = '/display-graph';
+    const ROUTE_DISPLAY_GRAPH = 'account_report/display-graph';
     const ROUTE_LOGIN = '/login';
     const CORRECT_DATA_90_DAYS = '{"data":[{"data":"553148","day":"2017-01-01"},'
         . '{"data":"707527","day":"2017-01-02"},{"data":"582703","day":"2017-01-03"},'
