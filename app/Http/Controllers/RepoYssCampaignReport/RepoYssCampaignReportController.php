@@ -8,19 +8,22 @@ use App\Model\RepoYssCampaignReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
+use DateTime;
+
 class RepoYssCampaignReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const STATUS_TITLE = 'statusTitle';
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const START_DAY = 'startDay';
     const END_DAY = 'endDay';
-    const STATUS_TITLE = 'statusTitle';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
+    const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
     const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
     const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
@@ -36,6 +39,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
+    const GROUPED_BY_FIELD = 'campaignName';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
@@ -69,16 +73,20 @@ class RepoYssCampaignReportController extends AbstractReportController
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        $graphColumnName = 'clicks';
+        $accountStatus = "enabled";
+        $statusTitle = "enabled";
+        $graphColumnName = "clicks";
         $summaryReport = [
             'clicks',
             'impressions',
             'cost',
             'averageCpc',
-            'averagePosition',
+            'averagePosition'
         ];
         session([self::SESSION_KEY_FIELD_NAME => $columns]);
+        session([self::SESSION_KEY_ACCOUNT_STATUS => $accountStatus]);
         session([self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+        session([self::SESSION_KEY_STATUS_TITLE => $statusTitle]);
         session([self::SESSION_KEY_START_DAY => $startDay]);
         session([self::SESSION_KEY_END_DAY => $endDay]);
         session([self::SESSION_KEY_PAGINATION => 20]);
@@ -88,10 +96,108 @@ class RepoYssCampaignReportController extends AbstractReportController
         session([self::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
     }
 
+    private function updateSessionData(Request $request)
+    {
+        // update session.graphColumnName
+        if ($request->graphColumnName !== null) {
+            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
+        }
+
+        // get fieldName and pagination if available
+        if ($request->fieldName !== null && $request->pagination !== null) {
+            $fieldName = $request->fieldName;
+            array_unshift($fieldName, self::GROUPED_BY_FIELD);
+            if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
+                $positionOfFirstFieldName = 1;
+                session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
+            }
+            session()->put([
+                self::SESSION_KEY_FIELD_NAME => $fieldName,
+                self::SESSION_KEY_PAGINATION => $request->pagination,
+            ]);
+        }
+
+        // get startDay and endDay if available
+        if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
+            session()->put([
+                self::SESSION_KEY_START_DAY => $request->startDay,
+                self::SESSION_KEY_END_DAY => $request->endDay,
+                self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle
+            ]);
+        }
+
+        // get status if available
+        if ($request->status === "all") {
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => ""]);
+        } elseif ($request->status !== null) {
+            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
+        }
+
+        if ($request->statusTitle === "all") {
+            session()->put([self::SESSION_KEY_STATUS_TITLE => "all"]);
+        } elseif ($request->statusTitle !== null) {
+            session()->put([self::SESSION_KEY_STATUS_TITLE => $request->statusTitle]);
+        }
+
+        //get column sort and sort by if available
+        if ($request->columnSort !== null) {
+            if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort
+                || session(self::SESSION_KEY_SORT) !== 'desc') {
+                session()->put([
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'desc'
+                ]);
+            } elseif (session(self::SESSION_KEY_SORT) !== 'asc') {
+                session()->put([
+                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
+                    self::SESSION_KEY_SORT => 'asc'
+                ]);
+            }
+        }
+    }
+
     private function getDataForGraph()
     {
-        $data = $this->model->newGetDataForGraph($graphColumnName, $startDay, $endDay);
+        $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
         return $data;
+    }
+
+    private function getDataForTable()
+    {
+        return $this->model->getDataForTable(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY),
+            session(self::SESSION_KEY_PAGINATION),
+            session(self::SESSION_KEY_COLUMN_SORT),
+            session(self::SESSION_KEY_SORT)
+        );
+    }
+
+    private function getCalculatedSummaryReport()
+    {
+        return $this->model->calculateSummaryData(
+            session(self::SESSION_KEY_SUMMARY_REPORT),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
+    }
+
+    private function getCalculatedData()
+    {
+        return $this->model->calculateData(
+            session(self::SESSION_KEY_FIELD_NAME),
+            session(self::SESSION_KEY_ACCOUNT_STATUS),
+            session(self::SESSION_KEY_START_DAY),
+            session(self::SESSION_KEY_END_DAY)
+        );
     }
 
     public function index()
@@ -123,19 +229,109 @@ class RepoYssCampaignReportController extends AbstractReportController
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
-        array_unshift($availableColumns, 'accountName');
+        array_unshift($availableColumns, 'campaignName');
         if (!session('campaignReport')) {
             $this->initializeSession($availableColumns);
         }
+        $dataReports = $this->getDataForTable();
+        $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
         $prefixRoute = request()->route()->getPrefix();
         return view('yssCampaignReport.index', [
-            'prefixRoute' => $prefixRoute
+                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::REPORTS => $dataReports, // data that returned from query
+                self::COLUMNS => $availableColumns, // all columns that show up in modal
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
+                self::STATUS_TITLE => session(self::SESSION_KEY_STATUS_TITLE),
+                self::START_DAY => session(self::SESSION_KEY_START_DAY),
+                self::END_DAY => session(self::SESSION_KEY_END_DAY),
+                // all columns that show columns live search
+                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
+                self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
+                self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
+                self::SUMMARY_REPORT => $summaryReportData,
+                'prefixRoute' => $prefixRoute,
+                'groupedByField' => self::GROUPED_BY_FIELD,
         ]);
     }
 
     public function displayGraph(Request $request)
     {
-        $page_prefix = $request->route()->getPrefix();
-        $data = $this->getDataForGraph();
+        $this->updateSessionData($request);
+        try {
+            $data = $this->getDataForGraph();
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
+        }
+        $timePeriodLayout = view('layouts.time-period')
+                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                        ->render();
+        $statusLayout = view('layouts.status-title')
+                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
+                        ->render();
+        $graphColumnLayout = view('layouts.graph-column')
+                        ->with('graphColumnName', session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
+                        ->render();
+        return $this->responseFactory->json([
+                        'data' => $data,
+                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                        'timePeriodLayout' => $timePeriodLayout,
+                        'graphColumnLayout' => $graphColumnLayout,
+                        'statusLayout' => $statusLayout,
+        ]);
+    }
+
+    public function updateTable(Request $request)
+    {
+        $columns = $this->model->getColumnNames();
+        if (!session('accountReport')) {
+            $this->initializeSession($columns);
+        }
+        $this->updateSessionData($request);
+        $reports = $this->getDataForTable();
+
+        $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
+        $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $tableDataLayout = view('layouts.table_data', [
+            self::REPORTS => $reports,
+            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+            self::SORT => session(self::SESSION_KEY_SORT),
+            self::TOTAL_DATA_ARRAY => $totalDataArray
+        ])->render();
+        return $this->responseFactory->json([
+            'summaryReportLayout' => $summaryReportLayout,
+            'tableDataLayout' => $tableDataLayout,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function liveSearch(Request $request)
+    {
+        $result = $this->model->getColumnLiveSearch($request["keywords"]);
+
+        return $this->responseFactory->view(
+            'layouts.dropdown_search',
+            [self::COLUMNS_FOR_LIVE_SEARCH => $result]
+        );
+    }
+
+    public function exportCsvFile()
+    {
+        return $this->exportToCsv(self::SESSION_KEY_PREFIX);
+    }
+
+    public function exportExcelFile()
+    {
+        return $this->exportToExcel(self::SESSION_KEY_PREFIX);
     }
 }

@@ -20,7 +20,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
-    const ACCOUNT_NAME = 'accountName';
+    const GROUPED_BY_FIELD = 'accountName';
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
     const SUMMARY_REPORT = "summaryReport";
@@ -184,7 +184,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // get fieldName and pagination if available
         if ($request->fieldName !== null && $request->pagination !== null) {
             $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::ACCOUNT_NAME);
+            array_unshift($fieldName, self::GROUPED_BY_FIELD);
             if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
                 $positionOfFirstFieldName = 1;
                 session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
@@ -263,6 +263,7 @@ class RepoYssAccountReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        $prefixRoute = request()->route()->getPrefix();
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
@@ -281,6 +282,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
                 self::SUMMARY_REPORT => $summaryReportData,
+                'prefixRoute' => $prefixRoute,
+                'groupedByField' => self::GROUPED_BY_FIELD,
             ]
         );
     }
@@ -358,5 +361,10 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.dropdown_search',
             [self::COLUMNS_FOR_LIVE_SEARCH => $result]
         );
+    }
+
+    public function exportCsvFile()
+    {
+        return $this->exportToCsv(self::SESSION_KEY_PREFIX);
     }
 }

@@ -1,5 +1,5 @@
+var prefixRoute = getVariable();
 var Script = function () {
-
     //morris chart
     $(function () {
         var lineChart;
@@ -18,7 +18,7 @@ var Script = function () {
             var option = $(this).data('date');
             var milestone = getFilterDate(option);
             $.ajax({
-                url : "/display-graph",
+                url : prefixRoute + "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -52,7 +52,7 @@ var Script = function () {
             var endDay = $('.dpd2').val();
             var milestone = getFilterDate(option);
             $.ajax({
-                url : "/display-graph",
+                url : prefixRoute + "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -102,7 +102,7 @@ var Script = function () {
                     break;
             }
             $.ajax({
-                url : "/display-graph",
+                url : prefixRoute + "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -134,7 +134,7 @@ var Script = function () {
         */
         $('#listSearch').delegate('li', 'click', function() {
             $.ajax({
-                url : "/display-graph",
+                url : prefixRoute + "/display-graph",
                 type : "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -190,7 +190,7 @@ var Script = function () {
         function getMorris()
         {
             $.ajax({
-                url : '/display-graph',
+                url : prefixRoute + '/display-graph',
                 type : 'GET',
                 beforeSend : function () {
                     sendingRequest();
@@ -220,7 +220,7 @@ var Script = function () {
         function updateMorris(columnName)
         {
             $.ajax({
-                url : '/display-graph',
+                url : prefixRoute + '/display-graph',
                 type : 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

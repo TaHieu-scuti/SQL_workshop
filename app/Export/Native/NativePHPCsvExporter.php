@@ -55,15 +55,15 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->fileSize += $bytesWritten;
     }
 
-    private function getDataToExport()
+    private function getDataToExport($sessionKey)
     {
         return $this->model->getDataForExport(
-            session('accountReport.fieldName'),
-            session('accountReport.accountStatus'),
-            session('accountReport.startDay'),
-            session('accountReport.endDay'),
-            session('accountReport.columnSort'),
-            session('accountReport.sort')
+            session($sessionKey.'fieldName'),
+            session($sessionKey.'accountStatus'),
+            session($sessionKey.'startDay'),
+            session($sessionKey.'endDay'),
+            session($sessionKey.'columnSort'),
+            session($sessionKey.'sort')
         );
     }
 
@@ -79,7 +79,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
      * @return bool|string
      * @throws CsvException
      */
-    public function export()
+    public function export($sessionKey)
     {
         $this->generateFilename();
 
@@ -89,9 +89,9 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         // get fields' names
-        $fieldNames = session('accountReport.fieldName');
+        $fieldNames = session($sessionKey.'fieldName');
         $this->writeLine($fieldNames);
-        $data = $this->getDataToExport();
+        $data = $this->getDataToExport($sessionKey);
         $data->each(
             function ($value) {
                 $this->writeLine($value->toArray());
@@ -110,7 +110,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         if (fclose($this->fileHandle) === false) {
             throw new CsvException('Unable to close file handle!');
         }
-
         return $csvData;
     }
 }
