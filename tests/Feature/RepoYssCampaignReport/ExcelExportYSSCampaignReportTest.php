@@ -57,8 +57,8 @@ class ExcelExportYSSCampaignReportTest extends TestCase
     ];
 
     const DEFAULT_STATUS = 'enabled';
-    const CUSTOM_START_DAY = '2017-07-08';
-    const CUSTOM_END_DAY = '2017-10-06';
+    const CUSTOM_START_DAY = '2017-07-10';
+    const CUSTOM_END_DAY = '2017-10-08';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
 
@@ -123,7 +123,7 @@ class ExcelExportYSSCampaignReportTest extends TestCase
     public function testReturnsCorrectContent(array $response)
     {
         $resourceZipArchive = new ZipArchive;
-        $resourceZipArchive->open(__DIR__ . '/../resources/repo_yss_campaign_report_costs.xlsx');
+        $resourceZipArchive->open(__DIR__ . '/../../resources/repo_yss_campaign_report_costs.xlsx');
         $expectedSheet = $resourceZipArchive->getFromName('xl/worksheets/sheet1.xml');
 
         $fileName = tempnam('/tmp', 'repo_yss_campaign_report_costs');
