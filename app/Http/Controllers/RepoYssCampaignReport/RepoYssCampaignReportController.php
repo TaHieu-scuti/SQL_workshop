@@ -241,7 +241,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
-        array_unshift($availableColumns, 'campaignName');
+        array_unshift($availableColumns, self::GROUPED_BY_FIELD);
         if (!session('campaignReport')) {
             $this->initializeSession($availableColumns);
         }
