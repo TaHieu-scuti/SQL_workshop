@@ -9,6 +9,8 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
 use DateTime;
+use Exception;
+use StdClass;
 
 class RepoYssCampaignReportController extends AbstractReportController
 {
@@ -164,6 +166,16 @@ class RepoYssCampaignReportController extends AbstractReportController
             session(self::SESSION_KEY_START_DAY),
             session(self::SESSION_KEY_END_DAY)
         );
+
+        if ($data->isEmpty()) {
+           if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
+               $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+           } else {
+               $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
+               $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+           }
+        }
+
         return $data;
     }
 

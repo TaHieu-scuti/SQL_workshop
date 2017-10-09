@@ -355,4 +355,169 @@ class GraphApiYssCampaignReportTest extends TestCase
         $this->returnsCorrectDataFor90Days('get');
         $this->returnsCorrectDataFor90Days('post');
     }
+
+    private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame($method)
+    {
+        $this->getUserAndAccessToCampaignReport();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+        $object = [
+            'data' => [
+                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+            ],
+            'field' => 'clicks',
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                ."<strong class=\"caret selection\"></strong>",
+            'statusLayout' => "<span>Show enabled\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
+        ];
+
+        $response->assertExactJson($object);
+    }
+
+    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame()
+    {
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame('get');
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreTheSame('post');
+    }
+
+    private function returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame($method)
+    {
+        $this->getUserAndAccessToCampaignReport();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2016-02-01'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+
+        $object = [
+            'data' => [
+                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+            ],
+            'field' => 'clicks',
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                ."<strong class=\"caret selection\"></strong>",
+            'statusLayout' => "<span>Show enabled\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
+        ];
+
+        $response->assertExactJson($object);
+    }
+
+    public function testReturnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame()
+    {
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame('get');
+        $this->returnsCorrectResponseWhenNoDataIsAvailableAndStartDayAndEndDayAreNotTheSame('post');
+    }
+
+    private function errorHandlingIncorrectFieldName($method)
+    {
+        $this->flushSession();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2017-04-01',
+                    RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+        $response->assertStatus(500);
+
+        $errorObject = [
+            self::JSON_STATUS_CODE_FIELD_NAME => 500,
+            self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: 1054 Unknown column \'someNonExistingColumnName\' in \'field list\' (SQL: select SUM(someNonExistingColumnName) as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= 2017-01-01 and date(`day`) < 2017-04-01) group by `day`)'
+        ];
+
+        $response->assertExactJson($errorObject);
+    }
+
+    public function testErrorHandlingIncorrectFieldName()
+    {
+        $this->errorHandlingIncorrectFieldName('get');
+        $this->errorHandlingIncorrectFieldName('post');
+    }
+
+    private function errorHandlingIncorrectStartDay($method)
+    {
+        $this->flushSession();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => 'testing',
+                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2017-01-05'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertStatus(500);
+
+        $errorObject = [
+            self::JSON_STATUS_CODE_FIELD_NAME => 500,
+            self::JSON_ERROR_FIELD_NAME => 'DateTime::__construct(): Failed to parse time string (testing) '
+                . 'at position 0 (t): The timezone could not be found in the database'
+        ];
+
+        $response->assertExactJson($errorObject);
+    }
+
+    public function testErrorHandlingIncorrectStartDay()
+    {
+        $this->errorHandlingIncorrectStartDay('get');
+        $this->errorHandlingIncorrectStartDay('post');
+    }
+
+    private function errorHandlingIncorrectEndDay($method)
+    {
+        $this->flushSession();
+
+        /** @var TestResponse $response */
+        $response = $this->actingAs($this->getUser())
+            ->withSession(
+                $this->getDefaultSessionValues() +
+                [
+                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2017-01-05',
+                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => 'testing'
+                ]
+            )->$method(self::ROUTE_DISPLAY_GRAPH);
+
+        $response->assertStatus(500);
+
+        $errorObject = [
+            self::JSON_STATUS_CODE_FIELD_NAME => 500,
+            self::JSON_ERROR_FIELD_NAME => 'DateTime::__construct(): Failed to parse time string (testing) '
+                . 'at position 0 (t): The timezone could not be found in the database'
+        ];
+
+        $response->assertExactJson($errorObject);
+    }
+
+    public function testErrorHandlingIncorrectEndDay()
+    {
+        $this->errorHandlingIncorrectEndDay('get');
+        $this->errorHandlingIncorrectEndDay('post');
+    }
 }
