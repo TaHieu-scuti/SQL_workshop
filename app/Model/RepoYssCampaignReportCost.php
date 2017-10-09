@@ -62,14 +62,14 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName);
+                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
             } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
                     ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
+                        'format(trim(ROUND(SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
