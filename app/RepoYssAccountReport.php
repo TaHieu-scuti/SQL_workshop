@@ -141,37 +141,35 @@ class RepoYssAccountReport extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
         array_unshift($arrayCalculate, $tableName.'.account_id');
-        return self::select($arrayCalculate)
+        $query  = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )
-                // ->where(
-                //     function ($query) use ($startDay, $endDay) {
-                //         if ($startDay === $endDay) {
-                //             $query->whereDate('day', '=', $endDay);
-                //         } else {
-                //             $query->whereDate('day', '>=', $startDay)
-                //                 ->whereDate('day', '<', $endDay);
-                //         }
-                //     }
-                // )
                 ->where(
-                    function ($query) use ($accountStatus, $startDay, $endDay) {
-                        if ($accountStatus === 'hideZero') {
-                            $query->where('impressions', '!=', 0);
-                        } elseif ($accountStatus === 'showZero') {
-                            $query->where('impressions', '=', 0);
+                    function ($query) use ($startDay, $endDay) {
+                        if ($startDay === $endDay) {
+                            $query->whereDate('day', '=', $endDay);
+                        } else {
+                            $query->whereDate('day', '>=', $startDay)
+                                ->whereDate('day', '<', $endDay);
                         }
                     }
                 )
                 ->with('repoYssAccounts')
                 ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
                 ->groupBy($joinTableName.'.accountName')
-                ->orderBy($columnSort, $sort)
-                ->paginate($pagination);
+                ->orderBy($columnSort, $sort);
+        if ($accountStatus == 'hideZero') {
+            $query = $query->havingRaw('SUM(impressions) != 0')
+                            ->paginate($pagination);
+        } elseif ($accountStatus == 'showZero') {
+            $query = $query->havingRaw('SUM(impressions) = 0')
+                            ->paginate($pagination);
+        }
+        return $query;
     }
 
     /**
@@ -288,7 +286,7 @@ class RepoYssAccountReport extends AbstractReportModel
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        return self::select($arrayCalculate)
+        $query = self::select($arrayCalculate)
                     ->join(
                         $joinTableName,
                         $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
@@ -303,16 +301,15 @@ class RepoYssAccountReport extends AbstractReportModel
                                     ->whereDate('day', '<', $endDay);
                             }
                         }
-                    )
-                    ->where(
-                        function ($query) use ($accountStatus) {
-                            if ($accountStatus === 'showZero') {
-                                $query->where('impressions', '=', '0');
-                            } elseif ($accountStatus === 'hideZero') {
-                                $query->where('impressions', '<>', '0');
-                            }
-                        })
-                    ->first()->toArray();
+                    );
+        if ($accountStatus == 'hideZero') {
+            $query = $query->havingRaw('SUM(impressions) != 0')
+                            ->first()->toArray();
+        } elseif ($accountStatus == 'showZero') {
+            $query = $query->havingRaw('SUM(impressions) = 0')
+                            ->get()->toArray();
+        }
+        return $query;
     }
 
     public function repoYssAccounts()
