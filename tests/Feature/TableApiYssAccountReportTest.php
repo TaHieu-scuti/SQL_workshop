@@ -685,8 +685,6 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
                 'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
                 'groupedByField' => self::GROUPED_BY_FIELD,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
