@@ -60,7 +60,10 @@ class GraphApiYssCampaignReportTest extends TestCase
         . '{"data":"689352","day":"2017-03-28"},{"data":"526854","day":"2017-03-29"},'
         . '{"data":"799330","day":"2017-03-30"},{"data":"801419","day":"2017-03-31"}],'
         . '"field":"clicks",'
-        . '"timePeriodLayout":"<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - 2017-04-01<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"<span id=\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\"><\/strong>","statusLayout":"<span>Show enabled\n<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
+        . '"timePeriodLayout":"<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - '
+        . '2017-04-01<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"<span id='
+        . '\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\"><\/strong>","statusLayout":'
+        . '"<span>Show enabled\n<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'campaignName';
     const COLUMN_NAME_DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
     const COLUMN_NAME_COST = 'cost';
@@ -447,7 +450,10 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $errorObject = [
             self::JSON_STATUS_CODE_FIELD_NAME => 500,
-            self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: 1054 Unknown column \'someNonExistingColumnName\' in \'field list\' (SQL: select SUM(someNonExistingColumnName) as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= 2017-01-01 and date(`day`) < 2017-04-01) group by `day`)'
+            self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: 1054 Unknown column \''
+            . 'someNonExistingColumnName\' in \'field list\' (SQL: select SUM(someNonExistingColumnName)'
+            . ' as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= '
+            . '2017-01-01 and date(`day`) < 2017-04-01) group by `day`)'
         ];
 
         $response->assertExactJson($errorObject);

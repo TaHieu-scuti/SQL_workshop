@@ -168,12 +168,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         );
 
         if ($data->isEmpty()) {
-           if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
-               $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-           } else {
-               $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
-               $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
-           }
+            if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            } else {
+                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+            }
         }
 
         return $data;
