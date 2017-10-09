@@ -69,7 +69,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
+                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
