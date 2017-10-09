@@ -50,14 +50,15 @@ class RepoYssCampaignReportCost extends AbstractReportModel
 
     // constant
     const FIELD_TYPE = 'float';
+    const GROUPED_BY_FIELD_NAME = 'campaignName';
 
     private function getAggregated(array $fieldNames, $tableName)
     {
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'campaignName') {
-                $arrayCalculate[] = 'campaignName';
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
+                $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
@@ -111,7 +112,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         }
                     }
                 )
-                ->groupBy('campaignName')
+                ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
     }
@@ -162,7 +163,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
             if ($fieldName !== 'account_id') {
-                if ($fieldName === 'campaignName') {
+                if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
                     continue;
                 }
                 if (in_array($fieldName, $this->averageFieldArray)) {
@@ -266,7 +267,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         }
                     }
                 )
-                ->groupBy('campaignName')
+                ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort)
                 ->get();
     }
