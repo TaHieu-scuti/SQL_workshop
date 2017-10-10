@@ -364,14 +364,4 @@ class RepoYssAccountReportController extends AbstractReportController
             [self::COLUMNS_FOR_LIVE_SEARCH => $result]
         );
     }
-
-    public function exportCsvFile()
-    {
-        return $this->exportToCsv(self::SESSION_KEY_PREFIX);
-    }
-
-    public function exportExcelFile()
-    {
-        return $this->exportToExcel(self::SESSION_KEY_PREFIX);
-    }
 }

@@ -60,12 +60,12 @@ Route::prefix('account_report')->group(function () {
     );
     Route::get(
         '/export_excel',
-        'RepoYssAccountReport\RepoYssAccountReportController@exportExcelFile'
+        'RepoYssAccountReport\RepoYssAccountReportController@exportToExcel'
     );
 
     Route::get(
         '/export_csv',
-        'RepoYssAccountReport\RepoYssAccountReportController@exportCsvFile'
+        'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
     );
 });
 
@@ -92,10 +92,10 @@ Route::prefix('campaign-report')->group(function () {
     );
     Route::get(
         '/export_excel',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportExcelFile'
+        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportCsvFile'
+        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
     );
 });
