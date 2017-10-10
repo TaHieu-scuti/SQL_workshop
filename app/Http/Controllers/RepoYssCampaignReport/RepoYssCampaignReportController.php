@@ -250,7 +250,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function index()
     {
         $allColumns = $this->model->getColumnNames();
-        $unpossibleColumnsDisplay = [
+        $impossibleColumnsDisplay = [
             'exeDate',
             'startDate',
             'endDate',
@@ -274,7 +274,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'hourofday',
             'campaignType'
         ];
-        $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
+        $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, self::GROUPED_BY_FIELD);
         if (!session('campaignReport')) {
