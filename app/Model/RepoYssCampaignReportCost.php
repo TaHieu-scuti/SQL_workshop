@@ -131,8 +131,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $endDay
     ) {
         try {
-            new DateTime($startDay);
-            new DateTime($endDay);
+            new DateTime($startDay); //NOSONAR
+            new DateTime($endDay); //NOSONAR
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
