@@ -414,8 +414,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -440,8 +440,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -476,8 +476,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -502,8 +502,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -528,8 +528,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -554,8 +554,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -580,8 +580,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -606,8 +606,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -631,8 +631,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -657,8 +657,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -683,8 +683,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -730,8 +730,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
@@ -756,8 +756,8 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
         $response->assertViewHas(
@@ -788,12 +788,12 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_ACCOUNT_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
         $response->assertViewHas(
-            'groupedByField',
+            RepoYssAccountReportController::GROUPED_BY_FIELD,
             self::GROUPED_BY_FIELD
         );
     }

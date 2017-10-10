@@ -1,5 +1,5 @@
 var link = window.location.pathname;
-var prefixRoute = getVariable();
+var prefixRoute = getRoutePrefix();
 /*
 =======
 * stop drop-down menu form disappearing on clicking

@@ -407,8 +407,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -433,8 +433,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -469,8 +469,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -495,8 +495,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -521,8 +521,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -547,8 +547,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -573,8 +573,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -599,8 +599,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -625,8 +625,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -651,8 +651,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -677,8 +677,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -723,8 +723,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
@@ -749,8 +749,8 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
         $response->assertViewHas(
@@ -780,12 +780,12 @@ class TableApiYssCampaignReportTest extends TestCase
                 RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
                 RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
                 RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                'prefixRoute' => self::ROUTE_CAMPAIGN_REPORT,
-                'groupedByField' => self::GROUPED_BY_FIELD
+                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
         $response->assertViewHas(
-            'groupedByField',
+            RepoYssCampaignReportController::GROUPED_BY_FIELD,
             self::GROUPED_BY_FIELD
         );
     }

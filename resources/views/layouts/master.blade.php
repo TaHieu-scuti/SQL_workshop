@@ -521,7 +521,6 @@
             }
         });
         $(document).ready(function() {
-            getVariable();
             $(document).on('click', '.pagination a', function (e) {
                 getAccountReports($(this).attr('href').split('page=')[1]);
                 e.preventDefault();
@@ -536,7 +535,7 @@
 
             $.ajax({
                 type : 'POST',
-                url : getVariable() + '/update-table?page=' + page,
+                url : getRoutePrefix() + '/update-table?page=' + page,
                 dataType: 'json',
                 success: function (data) {
                     console.log(data);
@@ -552,7 +551,7 @@
             });
         }
 
-        function getVariable()
+        function getRoutePrefix()
         {
             return '{{ $prefixRoute }}';
         }

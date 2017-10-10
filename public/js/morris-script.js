@@ -1,4 +1,4 @@
-var prefixRoute = getVariable();
+var prefixRoute = getRoutePrefix();
 var Script = function () {
     //morris chart
     $(function () {

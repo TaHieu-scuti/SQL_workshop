@@ -34,6 +34,8 @@ class RepoYssCampaignReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
+    const SESSION_KEY_PREFIX_ROUTE = '/campaign-report';
+    const SESSION_KEY_GROUPED_BY_FIELD = 'campaignName';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -41,8 +43,8 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
-    const GROUPED_BY_FIELD = 'campaignName';
-    const PREFIX_ROUTE = '/campaign-report';
+    const GROUPED_BY_FIELD = 'groupedByField';
+    const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
@@ -106,7 +108,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     private function updateSessionFieldNameAndPagination($fieldName, $pagination)
     {
-        array_unshift($fieldName, self::GROUPED_BY_FIELD);
+        array_unshift($fieldName, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
             $positionOfFirstFieldName = 1;
             session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
@@ -276,7 +278,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
-        array_unshift($availableColumns, self::GROUPED_BY_FIELD);
+        array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!session('campaignReport')) {
             $this->initializeSession($availableColumns);
         }
@@ -299,8 +301,8 @@ class RepoYssCampaignReportController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
                 self::SUMMARY_REPORT => $summaryReportData,
-                'prefixRoute' => self::PREFIX_ROUTE,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
         ]);
     }
 
@@ -350,8 +352,8 @@ class RepoYssCampaignReportController extends AbstractReportController
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
-            'prefixRoute' => self::PREFIX_ROUTE,
-            'groupedByField' => self::GROUPED_BY_FIELD,
+            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+            self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
         ])->render();
         return $this->responseFactory->json([
             'summaryReportLayout' => $summaryReportLayout,

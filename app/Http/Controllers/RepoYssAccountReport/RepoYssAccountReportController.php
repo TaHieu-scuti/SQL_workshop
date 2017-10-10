@@ -20,7 +20,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
-    const GROUPED_BY_FIELD = 'accountName';
+    const GROUPED_BY_FIELD = 'groupedByField';
+    const PREFIX_ROUTE = 'prefixRoute';
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
     const SUMMARY_REPORT = "summaryReport";
@@ -36,6 +37,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
+    const SESSION_KEY_PREFIX_ROUTE = '/account_report';
+    const SESSION_KEY_GROUPED_BY_FIELD = 'accountName';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -43,7 +46,6 @@ class RepoYssAccountReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
-    const PREFIX_ROUTE = '/account_report';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
@@ -185,7 +187,7 @@ class RepoYssAccountReportController extends AbstractReportController
         // get fieldName and pagination if available
         if ($request->fieldName !== null && $request->pagination !== null) {
             $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::GROUPED_BY_FIELD);
+            array_unshift($fieldName, self::SESSION_KEY_GROUPED_BY_FIELD);
             if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
                 $positionOfFirstFieldName = 1;
                 session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
@@ -282,8 +284,8 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
                 self::SUMMARY_REPORT => $summaryReportData,
-                'prefixRoute' => self::PREFIX_ROUTE,
-                'groupedByField' => self::GROUPED_BY_FIELD,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
             ]
         );
     }
@@ -310,8 +312,8 @@ class RepoYssAccountReportController extends AbstractReportController
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
-            'prefixRoute' => self::PREFIX_ROUTE,
-            'groupedByField' => self::GROUPED_BY_FIELD,
+            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+            self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
         ])->render();
         return $this->responseFactory->json([
             'summaryReportLayout' => $summaryReportLayout,

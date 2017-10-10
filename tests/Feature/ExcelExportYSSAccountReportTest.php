@@ -63,7 +63,6 @@ class ExcelExportYSSAccountReportTest extends TestCase
     const CUSTOM_END_DAY = '2017-09-21';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
-    const PREFIX_ROUTE = '/account_report';
     const GROUPED_BY_FIELD = 'accountName';
 
     public function testReturnsStatus200()
