@@ -188,7 +188,7 @@ class RepoYssAccountReport extends AbstractReportModel
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
 
-        return self::select(
+        $query = self::select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
                 'DATE(day) as day'
@@ -210,16 +210,15 @@ class RepoYssAccountReport extends AbstractReportModel
                     }
                 }
             )
-            ->where(
-                function ($query) use ($accountStatus) {
-                    if ($accountStatus === 'showZero') {
-                        $query->where('impressions', '=', '0');
-                    } elseif ($accountStatus === 'hideZero') {
-                        $query->where('impressions', '<>', '0');
-                    }
-            })
-            ->groupBy('day')
-            ->get();
+            ->groupBy('day');
+        if ($accountStatus == 'hideZero') {
+            $query = $query->havingRaw('SUM(impressions) != 0')
+                            ->get();
+        } elseif ($accountStatus == 'showZero') {
+            $query = $query->havingRaw('SUM(impressions) = 0')
+                            ->get();
+        }
+        return $query;
     }
 
     /**
@@ -329,7 +328,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
-        return self::select($arrayCalculate)
+        $query = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
@@ -344,10 +343,16 @@ class RepoYssAccountReport extends AbstractReportModel
                                 ->whereDate('day', '<', $endDay);
                         }
                     }
-                )->where($joinTableName.'.accountStatus', '=', $accountStatus)
-                ->groupBy($joinTableName.'.accountName')
-                ->orderBy($columnSort, $sort)
-                ->get();
+                )->groupBy($joinTableName.'.accountName')
+                ->orderBy($columnSort, $sort);
+        if ($accountStatus == 'hideZero') {
+            $query = $query->havingRaw('SUM(impressions) != 0')
+                            ->get();
+        } elseif ($accountStatus == 'showZero') {
+            $query = $query->havingRaw('SUM(impressions) = 0')
+                            ->get();
+        }
+        return $query;
     }
 
     public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
