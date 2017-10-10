@@ -42,6 +42,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'campaignName';
+    const PREFIX_ROUTE = '/campaign-report';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
@@ -282,7 +283,6 @@ class RepoYssCampaignReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        $prefixRoute = request()->route()->getPrefix();
         return view('yssCampaignReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
@@ -299,7 +299,7 @@ class RepoYssCampaignReportController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
                 self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
                 self::SUMMARY_REPORT => $summaryReportData,
-                'prefixRoute' => $prefixRoute,
+                'prefixRoute' => self::PREFIX_ROUTE,
                 'groupedByField' => self::GROUPED_BY_FIELD,
         ]);
     }
@@ -349,7 +349,9 @@ class RepoYssCampaignReportController extends AbstractReportController
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray
+            self::TOTAL_DATA_ARRAY => $totalDataArray,
+            'prefixRoute' => self::PREFIX_ROUTE,
+            'groupedByField' => self::GROUPED_BY_FIELD,
         ])->render();
         return $this->responseFactory->json([
             'summaryReportLayout' => $summaryReportLayout,
