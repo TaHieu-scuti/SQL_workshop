@@ -98,63 +98,97 @@ class RepoYssCampaignReportController extends AbstractReportController
         session([self::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
     }
 
+    private function updateSessionGraphColumnName($graphColumnName)
+    {
+        session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $graphColumnName);
+    }
+
+    private function updateSessionFieldNameAndPagination($fieldName, $pagination)
+    {
+        array_unshift($fieldName, self::GROUPED_BY_FIELD);
+        if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
+            $positionOfFirstFieldName = 1;
+            session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
+        }
+        session()->put([
+            self::SESSION_KEY_FIELD_NAME => $fieldName,
+            self::SESSION_KEY_PAGINATION => $pagination
+        ]);
+    }
+
+    private function updateSessionStartDayAndEndDayAndTimePeriodTitle($startDay, $endDay, $timePeriodTitle)
+    {
+        session()->put([
+            self::SESSION_KEY_START_DAY => $startDay,
+            self::SESSION_KEY_END_DAY => $endDay,
+            self::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle
+        ]);
+    }
+
+    private function updateSessionStatus($status)
+    {
+        session()->put([self::SESSION_KEY_STATUS_TITLE => $status]);
+    }
+
+    private function updateSessionStatusTitle($statusTitle)
+    {
+        session()->put([self::SESSION_KEY_STATUS_TITLE => $statusTitle]);
+    }
+
+    private function updateSessionColumnSortAndSort($columnSort)
+    {
+        if (session(self::SESSION_KEY_COLUMN_SORT) !== $columnSort
+            || session(self::SESSION_KEY_SORT) !== 'desc') {
+            session()->put([
+                self::SESSION_KEY_COLUMN_SORT => $columnSort,
+                self::SESSION_KEY_SORT => 'desc'
+            ]);
+        } elseif (session(self::SESSION_KEY_SORT) !== 'asc') {
+            session()->put([
+                self::SESSION_KEY_COLUMN_SORT => $columnSort,
+                self::SESSION_KEY_SORT => 'asc'
+            ]);
+        }
+    }
+
     private function updateSessionData(Request $request)
     {
         // update session.graphColumnName
         if ($request->graphColumnName !== null) {
-            session()->put(self::SESSION_KEY_GRAPH_COLUMN_NAME, $request->graphColumnName);
+            $this->updateSessionGraphColumnName($request->graphColumnName);
         }
 
         // get fieldName and pagination if available
         if ($request->fieldName !== null && $request->pagination !== null) {
-            $fieldName = $request->fieldName;
-            array_unshift($fieldName, self::GROUPED_BY_FIELD);
-            if (!in_array(session(self::SESSION_KEY_COLUMN_SORT), $fieldName)) {
-                $positionOfFirstFieldName = 1;
-                session()->put(self::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
-            }
-            session()->put([
-                self::SESSION_KEY_FIELD_NAME => $fieldName,
-                self::SESSION_KEY_PAGINATION => $request->pagination,
-            ]);
+            $this->updateSessionFieldNameAndPagination($request->fieldName, $request->pagination);
         }
 
         // get startDay and endDay if available
         if ($request->startDay !== null && $request->endDay !== null && $request->timePeriodTitle !== null) {
-            session()->put([
-                self::SESSION_KEY_START_DAY => $request->startDay,
-                self::SESSION_KEY_END_DAY => $request->endDay,
-                self::SESSION_KEY_TIME_PERIOD_TITLE => $request->timePeriodTitle
-            ]);
+            $this->updateSessionStartDayAndEndDayAndTimePeriodTitle(
+                $request->startDay,
+                $request->endDay,
+                $request->timePeriodTitle
+            );
         }
 
         // get status if available
         if ($request->status === "all") {
-            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => ""]);
+            $this->updateSessionStatus('all');
         } elseif ($request->status !== null) {
-            session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $request->status]);
+            $this->updateSessionStatus($request->status);
         }
 
+        // get statusTitle if available
         if ($request->statusTitle === "all") {
-            session()->put([self::SESSION_KEY_STATUS_TITLE => "all"]);
+            $this->updateSessionStatusTitle('all');
         } elseif ($request->statusTitle !== null) {
-            session()->put([self::SESSION_KEY_STATUS_TITLE => $request->statusTitle]);
+            $this->updateSessionStatusTitle($request->statusTitle);
         }
 
         //get column sort and sort by if available
         if ($request->columnSort !== null) {
-            if (session(self::SESSION_KEY_COLUMN_SORT) !== $request->columnSort
-                || session(self::SESSION_KEY_SORT) !== 'desc') {
-                session()->put([
-                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                    self::SESSION_KEY_SORT => 'desc'
-                ]);
-            } elseif (session(self::SESSION_KEY_SORT) !== 'asc') {
-                session()->put([
-                    self::SESSION_KEY_COLUMN_SORT => $request->columnSort,
-                    self::SESSION_KEY_SORT => 'asc'
-                ]);
-            }
+            $this->updateSessionColumnSortAndSort($request->columnSort);
         }
     }
 
