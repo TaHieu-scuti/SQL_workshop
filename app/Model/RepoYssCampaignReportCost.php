@@ -11,6 +11,10 @@ use Exception;
 
 class RepoYssCampaignReportCost extends AbstractReportModel
 {
+    // constant
+    const FIELD_TYPE = 'float';
+    const GROUPED_BY_FIELD_NAME = 'campaignName';
+
     /** @var bool */
     public $timestamps = false;
 
@@ -47,10 +51,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         'trackingURL',
         'campaignType',
     ];
-
-    // constant
-    const FIELD_TYPE = 'float';
-    const GROUPED_BY_FIELD_NAME = 'campaignName';
 
     private function getAggregated(array $fieldNames, $tableName)
     {
