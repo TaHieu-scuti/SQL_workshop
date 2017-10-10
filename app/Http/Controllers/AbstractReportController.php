@@ -36,10 +36,10 @@ abstract class AbstractReportController extends Controller
     /**
      * @return \Illuminate\Http\Response
      */
-    protected function exportToExcel($sessionKey)
+    public function exportToExcel()
     {
         $exporter = new SpoutExcelExporter($this->model);
-        $excelData = $exporter->export($sessionKey);
+        $excelData = $exporter->export(static::SESSION_KEY_PREFIX);
 
         return $this->responseFactory->make($excelData, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
@@ -54,10 +54,10 @@ abstract class AbstractReportController extends Controller
     /**
      * @return \Illuminate\Http\Response
      */
-    protected function exportToCsv($sessionKey)
+    public function exportToCsv()
     {
         $exporter = new NativePHPCsvExporter($this->model);
-        $csvData = $exporter->export($sessionKey);
+        $csvData = $exporter->export(static::SESSION_KEY_PREFIX);
 
         return $this->responseFactory->make($csvData, 200, [
             'Content-Type' => 'application/csv; charset=UTF-8',

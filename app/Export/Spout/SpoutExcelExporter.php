@@ -40,15 +40,15 @@ class SpoutExcelExporter implements ExcelExporterInterface
             . '.xlsx';
     }
 
-    private function getDataToExport($sessionKey)
+    private function getDataToExport($sessionKeyPrefix)
     {
         return $this->model->getDataForExport(
-            session($sessionKey.'fieldName'),
-            session($sessionKey.'accountStatus'),
-            session($sessionKey.'startDay'),
-            session($sessionKey.'endDay'),
-            session($sessionKey.'columnSort'),
-            session($sessionKey.'sort')
+            session($sessionKeyPrefix.'fieldName'),
+            session($sessionKeyPrefix.'accountStatus'),
+            session($sessionKeyPrefix.'startDay'),
+            session($sessionKeyPrefix.'endDay'),
+            session($sessionKeyPrefix.'columnSort'),
+            session($sessionKeyPrefix.'sort')
         );
     }
 
@@ -64,7 +64,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
      * @return string
      * @throws SpoutException
      */
-    public function export($sessionKey)
+    public function export($sessionKeyPrefix)
     {
         try {
             $this->generateFilename();
@@ -77,9 +77,9 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $fieldNames = session($sessionKey.'fieldName');
+            $fieldNames = session($sessionKeyPrefix.'fieldName');
             $writer->addRow($fieldNames);
-            $exportData = $this->getDataToExport($sessionKey);
+            $exportData = $this->getDataToExport($sessionKeyPrefix);
             $collections = $exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
