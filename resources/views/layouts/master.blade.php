@@ -509,9 +509,6 @@
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <!-- Custom js-->
-    <script src="/js/common-function.js"></script>
-    <script src="/js/common.js"></script>
-    <script src="/js/morris-script.js"></script>
     <script>
         $(window).on('hashchange', function() {
             if (window.location.hash) {
@@ -538,18 +535,29 @@
 
             $.ajax({
                 type : 'POST',
-                url : 'update-table?page=' + page,
+                url : getRoutePrefix() + '/update-table?page=' + page,
                 dataType: 'json',
                 success: function (data) {
+                    console.log(data);
                     $('.table_data_report').html('');
-                    $('.table_data_report').html(data);
+                    $('.table_data_report').html(data.tableDataLayout);
+                    $('.summary_report').html(data.summaryReportLayout);
                     history.pushState("", "", '?page=' + page);
                 },
                 error: function (data) {
+
                     alert('Reports could not be loaded.');
                 }
             });
         }
+
+        function getRoutePrefix()
+        {
+            return '{{ $prefixRoute }}';
+        }
     </script>
+    <script src="/js/common-function.js"></script>
+    <script src="/js/morris-script.js"></script>
+    <script src="/js/common.js"></script>
 </body>
 </html>

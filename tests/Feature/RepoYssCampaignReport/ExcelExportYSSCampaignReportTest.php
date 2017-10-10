@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\RepoYssCampaignReport;
 
-use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
+use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -10,15 +10,16 @@ use Tests\TestCase;
 use DateTime;
 use ZipArchive;
 
-class ExcelExportYSSAccountReportTest extends TestCase
+class ExcelExportYSSCampaignReportTest extends TestCase
 {
-    const COLUMN_NAME_ACCOUNT_NAME = 'accountName';
+    const COLUMN_NAME_CAMPAIGN_NAME = 'campaignName';
+    const COLUMN_NAME_DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
     const COLUMN_NAME_COST = 'cost';
     const COLUMN_NAME_IMPRESSIONS = 'impressions';
     const COLUMN_NAME_CLICKS = 'clicks';
+    const COLUMN_NAME_CTR = 'ctr';
     const COLUMN_NAME_AVERAGE_CPC = 'averageCpc';
-    const COLUMN_NAME_INVALID_CLICKS = 'invalidClicks';
-    const COLUMN_NAME_INVALID_CLICK_RATE = 'invalidClickRate';
+    const COLUMN_NAME_AVERAGE_POSITION = 'averagePosition';
     const COLUMN_NAME_IMPRESSION_SHARE = 'impressionShare';
     const COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE = 'exactMatchImpressionShare';
     const COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE = 'budgetLostImpressionShare';
@@ -28,59 +29,55 @@ class ExcelExportYSSAccountReportTest extends TestCase
     const COLUMN_NAME_CONV_VALUE = 'convValue';
     const COLUMN_NAME_COST_PER_CONV = 'costPerConv';
     const COLUMN_NAME_VALUE_PER_CONV = 'valuePerConv';
-    const COLUMN_NAME_ALL_CONV = 'allConv';
-    const COLUMN_NAME_ALL_CONV_RATE = 'allConvRate';
-    const COLUMN_NAME_ALL_CONV_VALUE = 'allConvValue';
-    const COLUMN_NAME_COST_PER_ALL_CONV = 'costPerAllConv';
-    const COLUMN_NAME_VALUE_PER_ALL_CONV = 'valuePerAllConv';
+    const COLUMN_NAME_MOBILE_BID_ADJ = 'mobileBidAdj';
+    const COLUMN_NAME_DESKTOP_BID_ADJ = 'desktopBidAdj';
+    const COLUMN_NAME_TABLET_BID_ADJ = 'tabletBidAdj';
 
     const DEFAULT_FIELDS = [
-        0  => self::COLUMN_NAME_ACCOUNT_NAME,
-        1  => self::COLUMN_NAME_COST,
-        2  => self::COLUMN_NAME_IMPRESSIONS,
-        3  => self::COLUMN_NAME_CLICKS,
-        4  => self::COLUMN_NAME_AVERAGE_CPC,
-        5  => self::COLUMN_NAME_INVALID_CLICKS,
-        6 => self::COLUMN_NAME_INVALID_CLICK_RATE,
-        7 => self::COLUMN_NAME_IMPRESSION_SHARE,
-        8 => self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE,
-        9 => self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE,
-        10 => self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE,
-        11 => self::COLUMN_NAME_CONVERSIONS,
-        12 => self::COLUMN_NAME_CONV_RATE,
-        13 => self::COLUMN_NAME_CONV_VALUE,
-        14 => self::COLUMN_NAME_COST_PER_CONV,
-        15 => self::COLUMN_NAME_VALUE_PER_CONV,
-        16 => self::COLUMN_NAME_ALL_CONV,
-        17 => self::COLUMN_NAME_ALL_CONV_RATE,
-        18 => self::COLUMN_NAME_ALL_CONV_VALUE,
-        19 => self::COLUMN_NAME_COST_PER_ALL_CONV,
-        20 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+        0 => self::COLUMN_NAME_CAMPAIGN_NAME,
+        1 => self::COLUMN_NAME_DAILY_SPENDING_LIMIT,
+        2 => self::COLUMN_NAME_COST,
+        3 => self::COLUMN_NAME_IMPRESSIONS,
+        4 => self::COLUMN_NAME_CLICKS,
+        5 => self::COLUMN_NAME_CTR,
+        6 => self::COLUMN_NAME_AVERAGE_CPC,
+        7 => self::COLUMN_NAME_AVERAGE_POSITION,
+        8 => self::COLUMN_NAME_IMPRESSION_SHARE,
+        9 => self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE,
+        10 => self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE,
+        11 => self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE,
+        12 => self::COLUMN_NAME_CONVERSIONS,
+        13 => self::COLUMN_NAME_CONV_RATE,
+        14 => self::COLUMN_NAME_CONV_VALUE,
+        15 => self::COLUMN_NAME_COST_PER_CONV,
+        16 => self::COLUMN_NAME_VALUE_PER_CONV,
+        17 => self::COLUMN_NAME_MOBILE_BID_ADJ,
+        18 => self::COLUMN_NAME_DESKTOP_BID_ADJ,
+        19 => self::COLUMN_NAME_TABLET_BID_ADJ
     ];
 
     const DEFAULT_STATUS = 'enabled';
-    const CUSTOM_START_DAY = '2017-06-23';
-    const CUSTOM_END_DAY = '2017-09-21';
+    const CUSTOM_START_DAY = '2017-07-10';
+    const CUSTOM_END_DAY = '2017-10-08';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
-    const GROUPED_BY_FIELD = 'accountName';
 
     public function testReturnsStatus200()
     {
-        $now = new DateTime;
+        $now = new DateTime();
 
         $user = (new User)->find(1)->first();
 
         $response = $this->actingAs($user)
                         ->withSession([
-                            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                            RepoYssAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
-                            RepoYssAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
-                            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                            RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                            RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
+                            RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                            RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                         ])
-                         ->get('/account_report/export_excel');
+                        ->get('/campaign-report/export_excel');
 
         $response->assertStatus(200);
 
@@ -98,7 +95,7 @@ class ExcelExportYSSAccountReportTest extends TestCase
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
         );
 
-        $fileName = $response['now']->format("Y_m_d h_i ") . 'repo_yss_account_report.xlsx';
+        $fileName = $response['now']->format("Y_m_d h_i ") . 'repo_yss_campaign_report_costs.xlsx';
         $response['response']->assertHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
         $response['response']->assertHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 
@@ -126,10 +123,10 @@ class ExcelExportYSSAccountReportTest extends TestCase
     public function testReturnsCorrectContent(array $response)
     {
         $resourceZipArchive = new ZipArchive;
-        $resourceZipArchive->open(__DIR__ . '/../resources/repo_yss_account_report.xlsx');
+        $resourceZipArchive->open(__DIR__ . '/../../resources/repo_yss_campaign_report_costs.xlsx');
         $expectedSheet = $resourceZipArchive->getFromName('xl/worksheets/sheet1.xml');
 
-        $fileName = tempnam('/tmp', 'repo_yss_account_report');
+        $fileName = tempnam('/tmp', 'repo_yss_campaign_report_costs');
         file_put_contents($fileName, $response['response']->getContent());
 
         $actualZipArchive = new ZipArchive;
