@@ -162,25 +162,23 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName !== 'account_id') {
-                if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                    continue;
-                }
-                if (in_array($fieldName, $this->averageFieldArray)) {
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
+                continue;
+            }
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw(
+                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
+                );
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                    ->getType()
+                    ->getName()
+                    === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
+                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
                     );
-                } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                        ->getType()
-                        ->getName()
-                        === self::FIELD_TYPE) {
-                        $arrayCalculate[] = DB::raw(
-                            'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                        );
-                    } else {
-                        $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                    }
+                } else {
+                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
                 }
             }
         }
@@ -236,7 +234,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         }
                     )
                     ->first()->toArray();
-        foreach ($data as $value) {
+        foreach ($data as $key => $value) {
             if ($value === null) {
                 $data[$key] = 0;
             }
