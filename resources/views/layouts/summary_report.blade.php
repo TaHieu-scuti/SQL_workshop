@@ -54,15 +54,3 @@
         </section>
     </a>
 </div>
-<div class="col-md-2" data-name="invalidClicks">
-    <a href="javascript:void(0)">
-        <section class="panel">
-            <div class="panel-body">
-                <span class="title">InvalidClicks<br></span>
-                <span class="content">
-                    {{ $summaryReport['invalidClicks'] }}<br>
-                </span>
-            </div>
-        </section>
-    </a>
-</div>

@@ -37,37 +37,65 @@ Route::get(
     }
 );
 
-Route::get(
-    '/account_report',
-    'RepoYssAccountReport\RepoYssAccountReportController@index'
-)->name('account_report');
+Route::prefix('account_report')->group(function () {
+    Route::get(
+        '/',
+        'RepoYssAccountReport\RepoYssAccountReportController@index'
+    )->name('account_report');
+    Route::post(
+        '/update-table',
+        'RepoYssAccountReport\RepoYssAccountReportController@updateTable'
+    );
+    Route::get(
+        '/display-graph',
+        'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
+    );
+    Route::post(
+        '/display-graph',
+        'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
+    );
+    Route::post(
+        '/live_search',
+        'RepoYssAccountReport\RepoYssAccountReportController@liveSearch'
+    );
+    Route::get(
+        '/export_excel',
+        'RepoYssAccountReport\RepoYssAccountReportController@exportToExcel'
+    );
 
-Route::post(
-    '/update-table',
-    'RepoYssAccountReport\RepoYssAccountReportController@updateTable'
-);
+    Route::get(
+        '/export_csv',
+        'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
+    );
+});
 
-Route::get(
-    '/account_report/export_excel',
-    'RepoYssAccountReport\RepoYssAccountReportController@exportToExcel'
-)->name('export_excel');
-
-Route::get(
-    '/account_report/export_csv',
-    'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
-)->name('export_csv');
-
-Route::get(
-    '/display-graph',
-    'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
-);
-
-Route::post(
-    '/display-graph',
-    'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
-);
-
-Route::post(
-    '/account_report/live_search',
-    'RepoYssAccountReport\RepoYssAccountReportController@liveSearch'
-);
+Route::prefix('campaign-report')->group(function () {
+    Route::get(
+        '/',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@index'
+    );
+    Route::get(
+        '/display-graph',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
+    );
+    Route::post(
+        '/display-graph',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@updateTable'
+    );
+    Route::post(
+        '/live_search',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@liveSearch'
+    );
+    Route::get(
+        '/export_excel',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
+    );
+});

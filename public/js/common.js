@@ -1,4 +1,5 @@
 var link = window.location.pathname;
+var prefixRoute = getRoutePrefix();
 /*
 =======
 * stop drop-down menu form disappearing on clicking
@@ -86,7 +87,7 @@ $(".apply-button").click(function () {
         array['fieldName'].push($(this).val());
     });
     $.ajax({
-        url: "/update-table",
+        url: prefixRoute + "/update-table",
         type: "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -142,7 +143,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
     var option = $(this).data('date');
     var milestone = getFilterDate(option);
     $.ajax({
-        url : "/update-table",
+        url : prefixRoute + "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -175,7 +176,7 @@ $('.apply-custom-period').click(function() {
     var endDay = $('.dpd2').val();
     var milestone = getFilterDate(option);
     $.ajax({
-        url : "/update-table",
+        url : prefixRoute + "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -220,7 +221,7 @@ $('.status-option li').click(function () {
             break;
     }
     $.ajax({
-        url : "/update-table",
+        url : prefixRoute + "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -273,7 +274,7 @@ $("#selectAll").click(function () {
 $('.table_data_report').delegate('th', 'click', function() {
     var th = $("th").eq($(this).index());
     $.ajax({
-        url : "/update-table",
+        url : prefixRoute + "/update-table",
         type : "POST",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -294,7 +295,7 @@ function searchUp() {
         var keywords = $('#txtLiveSearch').val();
         if (keywords.length >= 0) {
             $.ajax({
-                url: "account_report/live_search",
+                url: prefixRoute + "/live_search",
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
