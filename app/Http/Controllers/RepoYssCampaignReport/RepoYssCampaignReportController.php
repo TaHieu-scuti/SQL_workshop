@@ -127,7 +127,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     private function updateSessionStatus($status)
     {
-        session()->put([self::SESSION_KEY_STATUS_TITLE => $status]);
+        session()->put([self::SESSION_KEY_ACCOUNT_STATUS => $status]);
     }
 
     private function updateSessionStatusTitle($statusTitle)
