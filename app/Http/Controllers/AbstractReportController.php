@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 use DateTime;
+use Exception;
+use StdClass;
 
 abstract class AbstractReportController extends Controller
 {
