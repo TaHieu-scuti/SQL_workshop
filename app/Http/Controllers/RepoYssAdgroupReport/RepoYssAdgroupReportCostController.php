@@ -60,19 +60,6 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
         $this->model = $model;
     }
 
-    /**
-     * @param Exception $exception
-     * @return \Illuminate\Http\JsonResponse
-     */
-    private function generateJSONErrorResponse(Exception $exception)
-    {
-        $errorObject = new StdClass;
-        $errorObject->code = 500;
-        $errorObject->error = $exception->getMessage();
-
-        return $this->responseFactory->json($errorObject, 500);
-    }
-
     public function index()
     {
         $allColumns = $this->model->getColumnNames();

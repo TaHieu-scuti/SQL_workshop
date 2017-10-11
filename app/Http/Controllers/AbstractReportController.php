@@ -70,6 +70,19 @@ abstract class AbstractReportController extends Controller
         ]);
     }
 
+    /**
+     * @param Exception $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function generateJSONErrorResponse(Exception $exception)
+    {
+        $errorObject = new StdClass;
+        $errorObject->code = 500;
+        $errorObject->error = $exception->getMessage();
+
+        return $this->responseFactory->json($errorObject, 500);
+    }
+
     public function initializeSession(array $columns)
     {
         $today = new DateTime;

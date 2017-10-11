@@ -66,19 +66,6 @@ class RepoYssAccountReportController extends AbstractReportController
     }
 
     /**
-     * @param Exception $exception
-     * @return \Illuminate\Http\JsonResponse
-     */
-    private function generateJSONErrorResponse(Exception $exception)
-    {
-        $errorObject = new StdClass;
-        $errorObject->code = 500;
-        $errorObject->error = $exception->getMessage();
-
-        return $this->responseFactory->json($errorObject, 500);
-    }
-
-    /**
      * @return \Illuminate\Http\Response
      */
     public function index()
