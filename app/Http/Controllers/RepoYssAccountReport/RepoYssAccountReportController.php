@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 use DateTime;
 use Exception;
-use StdClass;
 
 class RepoYssAccountReportController extends AbstractReportController
 {

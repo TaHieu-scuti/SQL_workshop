@@ -11,7 +11,6 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 
 use DateTime;
 use Exception;
-use StdClass;
 
 class RepoYssAdgroupReportCostController extends AbstractReportController
 {
