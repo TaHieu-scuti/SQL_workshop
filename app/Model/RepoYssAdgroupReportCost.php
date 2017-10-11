@@ -3,7 +3,10 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\AbstractReportModel;
+use DateTime;
+use Exception;
 
 class RepoYssAdgroupReportCost extends AbstractReportModel
 {
@@ -49,7 +52,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     private function getAggregated(array $fieldNames, $tableName)
     {
         $arrayCalculate = [];
-
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
                 $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
