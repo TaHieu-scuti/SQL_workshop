@@ -195,11 +195,11 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->tabletBidAdj = mt_rand(
                     self::MIN_TABLET_BID_ADJ,
                     self::MAX_TABLET_BID_ADJ
-                ) / mt_getrandmax();;
+                ) / mt_getrandmax();
                 $adgroupReportConv->tabletBidAdj = $adgroupReportCost->tabletBidAdj;
                 $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                 $adgroupReportConv->network = $adgroupReportCost->network;
-                $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];;
+                $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                 $adgroupReportConv->device = $adgroupReportCost->device;
                 $adgroupReportCost->day = $campaignReport->day;
                 $adgroupReportConv->day = $campaignReport->day;
@@ -231,7 +231,9 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 ) / mt_getrandmax();
                 $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                 $adgroupReportConv->objectOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-                $adgroupReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+                $adgroupReportConv->conversionName = self::CONVERSION_NAME[
+                    mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                ];
 
                 $adgroupReportCost->saveOrFail();
                 $adgroupReportConv->saveOrFail();
