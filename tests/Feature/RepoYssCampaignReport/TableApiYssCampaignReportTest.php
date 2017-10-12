@@ -685,25 +685,25 @@ class TableApiYssCampaignReportTest extends TestCase
         $response->assertViewHas(
             RepoYssCampaignReportController::TOTAL_DATA_ARRAY,
             [
-                self::COLUMN_NAME_COST => '570,913',
-                self::COLUMN_NAME_IMPRESSIONS => '2,350,273',
-                self::COLUMN_NAME_CLICKS => '5,158,046',
-                self::COLUMN_NAME_AVERAGE_CPC => '20,600.53',
-                self::COLUMN_NAME_DAILY_SPENDING_LIMIT => '0',
-                self::COLUMN_NAME_CTR => '1,913,212.53',
-                self::COLUMN_NAME_AVERAGE_POSITION => '20,230.86',
-                self::COLUMN_NAME_IMPRESSION_SHARE => '20,565.50',
-                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,668.52',
-                self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE => '20,782.92',
-                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,664.57',
-                self::COLUMN_NAME_CONVERSIONS => '20,686.32',
-                self::COLUMN_NAME_CONV_RATE => '20,677.01',
-                self::COLUMN_NAME_CONV_VALUE => '20,658.08',
-                self::COLUMN_NAME_COST_PER_CONV => '20,609.02',
-                self::COLUMN_NAME_VALUE_PER_CONV => '21,134.87',
-                self::COLUMN_NAME_MOBILE_BID_ADJ => '0.00',
-                self::COLUMN_NAME_DESKTOP_BID_ADJ => '0.00',
-                self::COLUMN_NAME_TABLET_BID_ADJ => '0.00',
+                self::COLUMN_NAME_COST => '525,701',
+                self::COLUMN_NAME_IMPRESSIONS => '2,173,782',
+                self::COLUMN_NAME_CLICKS => '4,818,399',
+                self::COLUMN_NAME_AVERAGE_CPC => '20,663.64',
+                self::COLUMN_NAME_DAILY_SPENDING_LIMIT => '532,416',
+                self::COLUMN_NAME_CTR => '1,804,688.92',
+                self::COLUMN_NAME_AVERAGE_POSITION => '21,022.47',
+                self::COLUMN_NAME_IMPRESSION_SHARE => '20,599.85',
+                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,892.67',
+                self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE => '20,932.98',
+                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '19,965.07',
+                self::COLUMN_NAME_CONVERSIONS => '21,202.32',
+                self::COLUMN_NAME_CONV_RATE => '20,523.53',
+                self::COLUMN_NAME_CONV_VALUE => '21,112.55',
+                self::COLUMN_NAME_COST_PER_CONV => '20,745.64',
+                self::COLUMN_NAME_VALUE_PER_CONV => '21,015.08',
+                self::COLUMN_NAME_MOBILE_BID_ADJ => '21,350.25',
+                self::COLUMN_NAME_DESKTOP_BID_ADJ => '20,614.79',
+                self::COLUMN_NAME_TABLET_BID_ADJ => '20,555.81',
             ]
         );
     }
@@ -756,11 +756,11 @@ class TableApiYssCampaignReportTest extends TestCase
         $response->assertViewHas(
             RepoYssCampaignReportController::SUMMARY_REPORT,
             [
-                self::COLUMN_NAME_CLICKS => "5,158,046",
-                self::COLUMN_NAME_IMPRESSIONS => "2,350,273",
-                self::COLUMN_NAME_COST => "570,913",
-                self::COLUMN_NAME_AVERAGE_CPC => "20,600.53",
-                self::COLUMN_NAME_AVERAGE_POSITION => "20,230.86",
+                self::COLUMN_NAME_CLICKS => "4,818,399",
+                self::COLUMN_NAME_IMPRESSIONS => "2,173,782",
+                self::COLUMN_NAME_COST => "525,701",
+                self::COLUMN_NAME_AVERAGE_CPC => "20,663.64",
+                self::COLUMN_NAME_AVERAGE_POSITION => "21,022.47",
             ]
         );
     }
