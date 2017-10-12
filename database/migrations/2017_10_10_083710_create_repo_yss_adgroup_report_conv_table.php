@@ -23,7 +23,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->string('campaign_id', 50)
                     ->nullable()
                     ->comment('ADgainerシステムのキャンペーンID destinationURLのクエリパラメータを分解して取得');
-            $table->bigInteger('campaingID')->nullable()->comment('キャンペーンID');
+            $table->bigInteger('campaignID')->nullable()->comment('キャンペーンID');
             $table->bigInteger('adgroupID')->nullable()->comment('広告グループID');
             $table->text('campaignName')->nullable()->comment('キャンペーン名');
             $table->text('adgroupName')->nullable()->comment('広告グループ名');
