@@ -30,7 +30,7 @@ class CreateRepoYssAdgroupReportCostTable extends Migration
             $table->string('adgroupDistributionSettings', 50)->nullable()->comment('配信設定');
             $table->bigInteger('adGroupBid')->nullable()->comment('広告グループの入札価格');
             $table->bigInteger('cost')->nullable()->comment('コスト');
-            $table->bigInteger('impression')->nullable()->comment('インプレッション数');
+            $table->bigInteger('impressions')->nullable()->comment('インプレッション数');
             $table->bigInteger('clicks')->nullable()->comment('クリック数');
             $table->double('ctr')->nullable()->comment('クリック率');
             $table->double('averageCpc')->comment('平均CPC');
