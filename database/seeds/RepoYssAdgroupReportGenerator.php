@@ -205,8 +205,8 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportConv->day = $campaignReport->day;
                 $adgroupReportCost->dayOfWeek = $campaignReport->dayOfWeek;
                 $adgroupReportConv->dayOfWeek = $campaignReport->dayOfWeek;
-                $adgroupReportCost->quater = $campaignReport->quater;
-                $adgroupReportConv->quater = $campaignReport->quater;
+                $adgroupReportCost->quarter = $campaignReport->quarter;
+                $adgroupReportConv->quarter = $campaignReport->quarter;
                 $adgroupReportCost->month = $campaignReport->month;
                 $adgroupReportConv->month = $campaignReport->month;
                 $adgroupReportCost->week = $campaignReport->week;
@@ -220,6 +220,10 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportConv->allConvValue = mt_rand(
                     self::MIN_ALL_CONV_VALUE,
                     self::MAX_ALL_CONV_VALUE
+                ) / mt_getrandmax();
+                $adgroupReportConv->convValue = mt_rand(
+                    self::MIN_CONV_VALUE,
+                    self::MAX_CONV_VALUE
                 ) / mt_getrandmax();
                 $adgroupReportConv->valuePerAllConv = mt_rand(
                     self::MIN_VALUE_PER_ALL_CONV,
