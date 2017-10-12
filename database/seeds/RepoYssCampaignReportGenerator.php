@@ -6,6 +6,7 @@ use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoYssCampaignReportConv;
 use App\Model\RepoYssCampaignReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoYssCampaignReportGenerator extends Seeder
 {
     const MIN_DAILY_SPENDING_LIMIT = 1;
