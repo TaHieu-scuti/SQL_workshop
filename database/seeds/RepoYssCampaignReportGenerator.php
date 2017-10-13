@@ -218,11 +218,11 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportCost->week = $accountReport->week;
             $campaignReportConv->week = $campaignReportCost->week;
             $campaignReportCost->hourofday = $accountReport->hourofday;
-            $campaignReportCost->campaignType = self::CAMPAIGN_TYPE[mt_rand(0, count(self::NETWORKS) - 1)];
+            $campaignReportCost->campaignType = self::CAMPAIGN_TYPE[mt_rand(0, count(self::CAMPAIGN_TYPE) - 1)];
             $campaignReportConv->campaignType = $campaignReportCost->campaignType;
-            $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::NETWORKS) - 1)];
+            $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
             $campaignReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-            $campaignReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::NETWORKS) - 1)];
+            $campaignReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
 
             $campaignReportCost->saveOrFail();
             $campaignReportConv->saveOrFail();

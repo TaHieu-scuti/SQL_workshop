@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
 class RepoYssAdgroupReportConv extends AbstractReportModel
 {
@@ -12,7 +13,7 @@ class RepoYssAdgroupReportConv extends AbstractReportModel
     /** @var string */
     protected $table = 'repo_yss_adgroup_report_conv';
 
-        /**
+    /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
