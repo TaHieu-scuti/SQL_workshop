@@ -103,30 +103,30 @@ Route::prefix('campaign-report')->group(function () {
 Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@index'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
     );
     Route::get(
         '/display-graph',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@displayGraph'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
     );
     Route::post(
         '/display-graph',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@displayGraph'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@updateTable'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateTable'
     );
     Route::post(
         '/live_search',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@liveSearch'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@liveSearch'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportCostController@exportToExcel'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssCampaignReport\RepoYssAdgroupReportCostController@exportToCsv'
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
     );
 });

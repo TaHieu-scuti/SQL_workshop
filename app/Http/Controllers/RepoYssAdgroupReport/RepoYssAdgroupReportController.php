@@ -12,7 +12,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
 use Exception;
 
-class RepoYssAdgroupReportCostController extends AbstractReportController
+class RepoYssAdgroupReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
