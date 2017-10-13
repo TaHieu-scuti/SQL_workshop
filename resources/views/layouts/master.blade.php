@@ -412,6 +412,9 @@
 
                 <div class="row line-chart">
                     <div class="loading-gif-on-graph hidden-graph"></div>
+                    <div class="no-data-found-graph hidden-no-data-found-message-graph">
+                        <span class="no-data-found-message-graph">No data found for graph</span>
+                    </div>
                     <section class="panel">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>

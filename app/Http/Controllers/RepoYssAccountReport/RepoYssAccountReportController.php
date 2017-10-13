@@ -92,10 +92,10 @@ class RepoYssAccountReportController extends AbstractReportController
 
         if ($data->isEmpty()) {
             if (session(self::SESSION_KEY_END_DAY) === session(self::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => null];
             } else {
-                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => 0];
-                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => 0];
+                $data[] = ['day' => session(self::SESSION_KEY_END_DAY), 'data' => null];
+                $data[] = ['day' => session(self::SESSION_KEY_START_DAY), 'data' => null];
             }
         }
 
@@ -296,6 +296,7 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($columns);
         }
+        $displayNoDataFoundMessageOnTable = true;
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -310,10 +311,22 @@ class RepoYssAccountReportController extends AbstractReportController
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
         ])->render();
-        return $this->responseFactory->json([
-            'summaryReportLayout' => $summaryReportLayout,
-            'tableDataLayout' => $tableDataLayout,
-        ]);
+        // if no data found
+        // display no data found message on table
+        if ($reports->total() !== 0 ) {
+            $displayNoDataFoundMessageOnTable = false;
+            return $this->responseFactory->json([
+                                'summaryReportLayout' => $summaryReportLayout,
+                                'tableDataLayout' => $tableDataLayout,
+                                'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
+            ]);
+        } else {
+            return $this->responseFactory->json([
+                                'summaryReportLayout' => $summaryReportLayout,
+                                'tableDataLayout' => $tableDataLayout,
+                                'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
+            ]);
+        }
     }
 
     /**
@@ -322,30 +335,48 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function displayGraph(Request $request)
     {
+        $displayNoDataFoundMessageOnGraph = true;
         $this->updateSessionData($request);
-        try {
-            $data = $this->getDataForGraph();
-        } catch (Exception $exception) {
-            return $this->generateJSONErrorResponse($exception);
-        }
         $timePeriodLayout = view('layouts.time-period')
-                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                        ->render();
+                    ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+                    ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+                    ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                    ->render();
         $statusLayout = view('layouts.status-title')
                         ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
                         ->render();
         $graphColumnLayout = view('layouts.graph-column')
                         ->with('graphColumnName', session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
                         ->render();
-        return $this->responseFactory->json([
-                        'data' => $data,
-                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                        'timePeriodLayout' => $timePeriodLayout,
-                        'graphColumnLayout' => $graphColumnLayout,
-                        'statusLayout' => $statusLayout,
-        ]);
+        try {
+            $data = $this->getDataForGraph();
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
+        }
+        foreach ($data as $value) {
+            // if data !== null, display on graph
+            // else, display "no data found" image
+            if ($value['data'] !== null) {
+                $displayNoDataFoundMessageOnGraph = false;
+                return $this->responseFactory->json([
+                                'data' => $data,
+                                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                                'timePeriodLayout' => $timePeriodLayout,
+                                'graphColumnLayout' => $graphColumnLayout,
+                                'statusLayout' => $statusLayout,
+                                'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph,
+                ]);
+            } else {
+                return $this->responseFactory->json([
+                                'data' => $data,
+                                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                                'timePeriodLayout' => $timePeriodLayout,
+                                'graphColumnLayout' => $graphColumnLayout,
+                                'statusLayout' => $statusLayout,
+                                'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
+                ]);
+            }
+        }
     }
 
     /**

@@ -301,12 +301,18 @@ class RepoYssAccountReport extends AbstractReportModel
                             }
                         }
                     );
+        // get aggregated value
         if ($accountStatus == 'hideZero') {
             $query = $query->havingRaw('SUM(impressions) != 0')
-                            ->first()->toArray();
+                            ->first();
         } elseif ($accountStatus == 'showZero') {
             $query = $query->havingRaw('SUM(impressions) = 0')
-                            ->get()->toArray();
+                            ->first();
+        }
+        if($query === null) {
+            $query = [];
+        } else {
+            $quey = $query->toArray();
         }
         return $query;
     }
@@ -393,21 +399,31 @@ class RepoYssAccountReport extends AbstractReportModel
                                 ->whereDate('day', '<', $endDay);
                         }
                     }
-                )
-                ->where(
-                    function ($query) use ($accountStatus) {
-                        if ($accountStatus === 'showZero') {
-                            $query->where('impressions', '=', '0');
-                        } elseif($accountStatus === 'hideZero') {
-                            $query->where('impressions', '<>', '0');
-                        }
-                })
-                ->first()->toArray();
-        foreach ($data as $key => $value) {
-            if ($value === null) {
-                $data[$key] = 0;
-            }
-        }
+                );
+                if ($accountStatus == 'hideZero') {
+                    $data = $data->havingRaw('SUM(impressions) != 0')
+                                    ->first();
+                } elseif ($accountStatus == 'showZero') {
+                    $data = $data->havingRaw('SUM(impressions) = 0')
+                                    ->first();
+                }
+                if($data === null) {
+                    $data = [
+                        'clicks' => 0,
+                        'impressions' => 0,
+                        'cost' => 0,
+                        'averageCpc' => 0,
+                        'averagePosition' => 0
+                    ];
+                } else {
+                    $data = $data->toArray();
+                }
+
+        // foreach ($data as $key => $value) {
+        //     if ($value === null) {
+        //         $data[$key] = 0;
+        //     }
+        // }
 
         return $data;
     }
