@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-// @codingStandardsIgnoreLine
 class RepoYssAdgroupReportConvTable extends Seeder
 {
     /**
