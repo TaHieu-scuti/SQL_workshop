@@ -30,7 +30,7 @@ class CreateRepoYssAdgroupReportCostTable extends Migration
             $table->string('adgroupDistributionSettings', 50)->nullable()->comment('配信設定');
             $table->bigInteger('adGroupBid')->nullable()->comment('広告グループの入札価格');
             $table->bigInteger('cost')->nullable()->comment('コスト');
-            $table->bigInteger('impression')->nullable()->comment('インプレッション数');
+            $table->bigInteger('impressions')->nullable()->comment('インプレッション数');
             $table->bigInteger('clicks')->nullable()->comment('クリック数');
             $table->double('ctr')->nullable()->comment('クリック率');
             $table->double('averageCpc')->comment('平均CPC');
@@ -52,7 +52,7 @@ class CreateRepoYssAdgroupReportCostTable extends Migration
             $table->string('device', 50)->nullable()->comment('デバイス');
             $table->date('day')->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
             $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
-            $table->string('quater', 50)->nullable()->comment('四半期');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
             $table->string('month', 50)->nullable()->comment('毎月');
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->bigInteger('hourofday')->nullable()->comment('時間');
