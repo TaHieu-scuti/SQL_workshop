@@ -9,6 +9,10 @@ class RepoYssAdgroupReportConv extends AbstractReportModel
 {
     /** @var bool */
     public $timestamps = false;
+
+    /** @var string */
+    protected $table = 'repo_yss_adgroup_report_conv';
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus

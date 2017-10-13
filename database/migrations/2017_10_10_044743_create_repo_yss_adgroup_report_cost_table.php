@@ -26,7 +26,7 @@ class CreateRepoYssAdgroupReportCostTable extends Migration
             $table->bigInteger('campaignID')->nullable()->comment('キャンペーンID');
             $table->bigInteger('adgroupID')->nullable()->comment('広告グループID');
             $table->text('campaignName')->nullable()->comment('キャンペーン名');
-            $table->string('adgroupName')->nullable()->comment('広告グループ名');
+            $table->text('adgroupName')->nullable()->comment('広告グループ名');
             $table->string('adgroupDistributionSettings', 50)->nullable()->comment('配信設定');
             $table->bigInteger('adGroupBid')->nullable()->comment('広告グループの入札価格');
             $table->bigInteger('cost')->nullable()->comment('コスト');

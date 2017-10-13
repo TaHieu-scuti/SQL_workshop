@@ -31,7 +31,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->bigInteger('adGroupBid')->nullable()->comment('広告グループの入札価格');
             $table->text('trackingURL')->nullable()->comment('トラッキングURL');
             $table->text('customParameters')->nullable()->comment('カスタムパラメータ');
-            $table->double('conversion')->nullable()->comment('コンバージョン数');
+            $table->double('conversions')->nullable()->comment('コンバージョン数');
             $table->double('convValue')->nullable()->comment('コンバージョンの価値');
             $table->double('valuePerConv')->nullable()->comment('価値/コンバージョン数');
             $table->double('allConv')->nullable()->comment('すべてのコンバージョン数');
