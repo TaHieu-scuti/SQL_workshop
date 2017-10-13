@@ -21,7 +21,6 @@ class CSVExportYssAdgroupReportTest extends TestCase
     const COLUMN_NAME_AVERAGE_POSITION = 'averagePosition';
     const COLUMN_NAME_IMPRESSION_SHARE = 'impressionShare';
     const COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE = 'exactMatchImpressionShare';
-    const COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE = 'budgetLostImpressionShare';
     const COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE = 'qualityLostImpressionShare';
     const COLUMN_NAME_CONVERSIONS = 'conversions';
     const COLUMN_NAME_CONV_RATE = 'convRate';
