@@ -206,7 +206,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             'enabled'
         );
     }
-    
+
     public function teststatusTitleInSessionIsSetToEnabledAsDefaultValue()
     {
         $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('get');
