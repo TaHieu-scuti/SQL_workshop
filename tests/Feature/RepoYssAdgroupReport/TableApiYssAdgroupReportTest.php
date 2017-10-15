@@ -474,4 +474,287 @@ class TableApiYssAdgroupReportTest extends TestCase
             self::COLUMN_NAME_CLICKS
         );
     }
+
+    public function testViewHasTimePeriodTitleFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::TIME_PERIOD_TITLE,
+            self::CUSTOM_TIME_PERIOD_TITLE
+        );
+    }
+
+    public function testViewHasStartDayFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::START_DAY,
+            self::JANUARY_1ST_2017
+        );
+    }
+
+    public function testViewHasEndDayFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::END_DAY,
+            self::JANUARY_10TH_2017
+        );
+    }
+
+    public function testViewHasColumnsForLiveSearch()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::COLUMNS_FOR_LIVE_SEARCH,
+            self::LIVE_SEARCH_FIELDS
+        );
+    }
+
+    public function testViewHasColumnsForFilter()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::COLUMNS_FOR_FILTER,
+            self::COLUMNS_FOR_FILTER
+        );
+    }
+
+    public function testViewHasStatusTitle()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::STATUS_TITLE,
+            self::DEFAULT_STATUS_TITLE
+        );
+    }
+
+    public function testViewHasTotalDataArray()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::TOTAL_DATA_ARRAY,
+            [
+                self::COLUMN_NAME_ADGROUP_BID => '1,563,890',
+                self::COLUMN_NAME_COST => '1,579,168',
+                self::COLUMN_NAME_IMPRESSIONS => '6,449,720',
+                self::COLUMN_NAME_CLICKS => '14,312,994',
+                self::COLUMN_NAME_CTR => '5,294,601.28',
+                self::COLUMN_NAME_AVERAGE_CPC => '20,879.86',
+                self::COLUMN_NAME_AVERAGE_POSITION => '21,444.26',
+                self::COLUMN_NAME_IMPRESSION_SHARE => '20,977.67',
+                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,706.14',
+                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,796.44',
+                self::COLUMN_NAME_CONVERSIONS => '21,078.86',
+                self::COLUMN_NAME_CONV_RATE => '20,905.58',
+                self::COLUMN_NAME_CONV_VALUE => '20,873.15',
+                self::COLUMN_NAME_COST_PER_CONV => '20,336.88',
+                self::COLUMN_NAME_VALUE_PER_CONV => '20,657.27',
+                self::COLUMN_NAME_MOBILE_BID_ADJ => '20,805.57',
+                self::COLUMN_NAME_DESKTOP_BID_ADJ => '20,459.48',
+                self::COLUMN_NAME_TABLET_BID_ADJ => '21,031.88',
+            ]
+        );
+    }
+
+    public function testViewHasPaginationFromSession()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::KEY_PAGINATION,
+            self::CUSTOM_PAGINATION
+        );
+    }
+
+    public function testViewHasSummaryReportData()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::SUMMARY_REPORT,
+            [
+                self::COLUMN_NAME_CLICKS => "14,312,994",
+                self::COLUMN_NAME_IMPRESSIONS => "6,449,720",
+                self::COLUMN_NAME_COST => "1,579,168",
+                self::COLUMN_NAME_AVERAGE_CPC => "20,879.86",
+                self::COLUMN_NAME_AVERAGE_POSITION => "21,444.26",
+            ]
+        );
+    }
+
+    public function testViewHasGroupedByFieldVariable()
+    {
+        $response = $this->actingAs($this->getUser())
+            ->withSession([
+                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+            ])
+            ->get(self::ROUTE_ADGROUP_REPORT);
+        $response->assertViewHas(
+            RepoYssAdgroupReportController::GROUPED_BY_FIELD,
+            self::GROUPED_BY_FIELD
+        );
+    }
 }
