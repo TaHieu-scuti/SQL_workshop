@@ -46,14 +46,14 @@ class CreateRepoYssPrefectureReportCostsTable extends Migration
             $table->string('device', 50)->nullable()->comment('デバイス');
             $table->dateTime('day')->nullable()
                 ->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
-            $table->sting('dayOfWeek', 50)->nullable()->comment('曜日');
-            $table->sting('quarter', 50)->nullable()->comment('四半期');
-            $table->sting('month', 50)->nullable()->comment('毎月');
-            $table->sting('week', 50)->nullable()->comment('毎週');
-            $table->sting('countryTerritory', 50)->nullable()->comment('国/地域');
-            $table->sting('prefecture', 50)->nullable()->comment('都道府県');
-            $table->sting('city', 50)->nullable()->comment('都市');
-            $table->sting('cityWardDistrict', 50)->nullable()->comment('市・区・郡');
+            $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
+            $table->string('month', 50)->nullable()->comment('毎月');
+            $table->string('week', 50)->nullable()->comment('毎週');
+            $table->string('countryTerritory', 50)->nullable()->comment('国/地域');
+            $table->string('prefecture', 50)->nullable()->comment('都道府県');
+            $table->string('city', 50)->nullable()->comment('都市');
+            $table->string('cityWardDistrict', 50)->nullable()->comment('市・区・郡');
         });
     }
 

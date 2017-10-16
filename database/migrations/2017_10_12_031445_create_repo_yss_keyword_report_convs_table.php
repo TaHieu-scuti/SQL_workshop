@@ -54,11 +54,11 @@ class CreateRepoYssKeywordReportConvsTable extends Migration
             $table->string('device', 50)->nullable()->comment('デバイス');
             $table->dateTime('day')->nullable()
                 ->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
-            $table->sting('dayOfWeek', 50)->nullable()->comment('曜日');
-            $table->sting('quarter', 50)->nullable()->comment('四半期');
-            $table->sting('month', 50)->nullable()->comment('毎月');
-            $table->sting('week', 50)->nullable()->comment('毎週');
-            $table->sting('objectiveOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
+            $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
+            $table->string('month', 50)->nullable()->comment('毎月');
+            $table->string('week', 50)->nullable()->comment('毎週');
+            $table->string('objectiveOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
             $table->text('conversionName', 50)->nullable()->comment('コンバージョン名');
         });
     }

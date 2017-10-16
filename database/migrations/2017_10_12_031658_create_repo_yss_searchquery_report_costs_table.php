@@ -58,9 +58,9 @@ class CreateRepoYssSearchqueryReportCostsTable extends Migration
             $table->dateTime('day')->nullable()
                 ->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
             $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
-            $table->sting('quarter', 50)->nullable()->comment('四半期');
-            $table->sting('month', 50)->nullable()->comment('毎月');
-            $table->sting('week', 50)->nullable()->comment('毎週');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
+            $table->string('month', 50)->nullable()->comment('毎月');
+            $table->string('week', 50)->nullable()->comment('毎週');
 
         });
     }

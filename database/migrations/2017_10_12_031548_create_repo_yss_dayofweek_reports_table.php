@@ -15,7 +15,7 @@ class CreateRepoYssDayofweekReportsTable extends Migration
     public function up()
     {
         Schema::create('repo_yss_dayofweek_reports', function (Blueprint $table) {
-            $table->increments('id')
+            $table->increments('id');
             $table->string('account_id', 50)->nullable()->comment('ADgainerシステムのアカウントID');
             $table->string('campaign_id', 50)
                     ->nullable()
@@ -43,9 +43,9 @@ class CreateRepoYssDayofweekReportsTable extends Migration
             $table->double('valuePerAllConv')->nullable()->commnet('価値/すべてのコンバージョン数');
             $table->dateTime('day')->nullable()
                 ->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
-            $table->sting('quarter', 50)->nullable()->comment('四半期');
-            $table->sting('month', 50)->nullable()->comment('毎月');
-            $table->sting('week', 50)->nullable()->comment('毎週');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
+            $table->string('month', 50)->nullable()->comment('毎月');
+            $table->string('week', 50)->nullable()->comment('毎週');
         });
     }
 
