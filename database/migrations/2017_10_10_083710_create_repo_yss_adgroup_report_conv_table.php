@@ -23,7 +23,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->string('campaign_id', 50)
                     ->nullable()
                     ->comment('ADgainerシステムのキャンペーンID destinationURLのクエリパラメータを分解して取得');
-            $table->bigInteger('campaingID')->nullable()->comment('キャンペーンID');
+            $table->bigInteger('campaignID')->nullable()->comment('キャンペーンID');
             $table->bigInteger('adgroupID')->nullable()->comment('広告グループID');
             $table->text('campaignName')->nullable()->comment('キャンペーン名');
             $table->text('adgroupName')->nullable()->comment('広告グループ名');
@@ -31,7 +31,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->bigInteger('adGroupBid')->nullable()->comment('広告グループの入札価格');
             $table->text('trackingURL')->nullable()->comment('トラッキングURL');
             $table->text('customParameters')->nullable()->comment('カスタムパラメータ');
-            $table->double('conversion')->nullable()->comment('コンバージョン数');
+            $table->double('conversions')->nullable()->comment('コンバージョン数');
             $table->double('convValue')->nullable()->comment('コンバージョンの価値');
             $table->double('valuePerConv')->nullable()->comment('価値/コンバージョン数');
             $table->double('allConv')->nullable()->comment('すべてのコンバージョン数');
@@ -45,7 +45,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->string('device')->nullable()->comment('デバイス');
             $table->date('day')->nullable()->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
             $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
-            $table->string('quater', 50)->nullable()->comment('四半期');
+            $table->string('quarter', 50)->nullable()->comment('四半期');
             $table->string('month', 50)->nullable()->comment('毎月');
             $table->string('week', 50)->nullable()->comment('毎週');
             $table->string('objectOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');

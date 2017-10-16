@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssCampaignReport;
+namespace App\Http\Controllers\RepoYssAdgroupReport;
 
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\AbstractReportController;
-use App\Model\RepoYssCampaignReportCost;
+use App\Model\RepoYssAdgroupReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Request;
 
 use DateTime;
 use Exception;
 
-class RepoYssCampaignReportController extends AbstractReportController
+class RepoYssAdgroupReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
@@ -21,7 +22,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const SUMMARY_REPORT = 'summaryReport';
-    const SESSION_KEY_PREFIX = 'campaignReport.';
+    const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -33,8 +34,8 @@ class RepoYssCampaignReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
-    const SESSION_KEY_PREFIX_ROUTE = '/campaign-report';
-    const SESSION_KEY_GROUPED_BY_FIELD = 'campaignName';
+    const SESSION_KEY_PREFIX_ROUTE = '/adgroup-report';
+    const SESSION_KEY_GROUPED_BY_FIELD = 'adgroupName';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -47,12 +48,12 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
-    /** @var \App\Model\RepoYssCampaignReportCost */
+    /** @var \App\Model\RepoYssAdgroupReportCost */
     protected $model;
 
     public function __construct(
         ResponseFactory $responseFactory,
-        RepoYssCampaignReportCost $model
+        RepoYssAdgroupReportCost $model
     ) {
         parent::__construct($responseFactory, $model);
         $this->model = $model;
@@ -66,15 +67,14 @@ class RepoYssCampaignReportController extends AbstractReportController
             'startDate',
             'endDate',
             'account_id',
+            'campaign_id',
             'campaignID',
+            'adgroupID',
             'campaignName',
-            'campaignDistributionSettings',
-            'campaignDistributionStatus',
-            'campaignStartDate',
-            'campaignEndDate',
+            'adgroupName',
+            'adgroupDistributionSettings',
             'trackingURL',
             'customParameters',
-            'campaignTrackingID',
             'network',
             'device',
             'day',
@@ -83,18 +83,17 @@ class RepoYssCampaignReportController extends AbstractReportController
             'month',
             'week',
             'hourofday',
-            'campaignType'
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
-        if (!session('campaignReport')) {
+        if (!session('adgroupReport')) {
             $this->initializeSession($availableColumns);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        return view('yssCampaignReport.index', [
+        return view('yssAdgroupReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -146,7 +145,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        if (!session('accountReport')) {
+        if (!session('adgroupReport')) {
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);

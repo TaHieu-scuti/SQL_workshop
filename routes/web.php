@@ -99,3 +99,34 @@ Route::prefix('campaign-report')->group(function () {
         'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
     );
 });
+
+Route::prefix('adgroup-report')->group(function () {
+    Route::get(
+        '/',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
+    );
+    Route::get(
+        '/display-graph',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
+    );
+    Route::post(
+        '/display-graph',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateTable'
+    );
+    Route::post(
+        '/live_search',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@liveSearch'
+    );
+    Route::get(
+        '/export_excel',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
+    );
+});
