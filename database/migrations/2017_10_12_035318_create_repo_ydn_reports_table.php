@@ -32,7 +32,11 @@ class CreateRepoYdnReportsTable extends Migration
             $table->bigInteger('adID')->nullable()->comment('広告ID');
             $table->text('adName')->nullable()->comment('広告名');
             $table->text('adType')->nullable()
-                ->comment('広告タイプ\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#ad_typeレスポンス');
+                    ->comment(
+                        '広告タイプ\nhttps://github.com/yahoojp-marketing
+                        /ydn-api-documents/blob/master/docs/ja/api_reference
+                        /appendix/reports.md#ad_typeレスポンス'
+                    );
             $table->bigInteger('destinationURLID')->nullable()->comment('リンク先URLID');
             $table->text('destinationURL')->nullable()->comment('リンク先URL');
             $table->string('prefectureID', 100)->nullable()->comment('都道府県ID');
@@ -42,17 +46,33 @@ class CreateRepoYdnReportsTable extends Migration
             $table->string('wardID', 100)->nullable()->comment('行政区ID');
             $table->string('ward', 100)->nullable()->comment('行政区');
             $table->string('gender', 20)->nullable()
-                ->comment('性別\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#genderレスポンス');
+                ->comment(
+                    '性別\nhttps://github.com/yahoojp-marketing
+                    /ydn-api-documents/blob/master/docs/ja
+                    /api_reference/appendix/reports.md#genderレスポンス'
+                );
             $table->string('age', 20)->nullable()
-                ->comment('年齢\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#ageレスポンス');
+                ->comment(
+                    '年齢\nhttps://github.com/yahoojp-marketing
+                    /ydn-api-documents/blob/master/docs/ja/api_reference
+                    /appendix/reports.md#ageレスポンス'
+                );
             $table->dateTime('day')->nullable()
                 ->comment('レコードの対象日：年は取得年、月（month）、日（day）。左項目を加工してDATETIMEに変換');
             $table->bigInteger('hourofday')->nullable()->comment('時間');
             $table->text('deliverName')->nullable()->comment('広告掲載方式');
             $table->string('device', 50)->nullable()
-                ->comment('デバイス\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#deviceレスポンス');
+                ->comment(
+                    'デバイス\nhttps://github.com/yahoojp-marketing
+                    /ydn-api-documents/blob/master/docs/ja
+                    /api_reference/appendix/reports.md#deviceレスポンス'
+                );
             $table->string('adStyle', 45)->nullable()
-                ->comment('掲載フォーマット（画像タイプ）\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#ad_styleレスポンス');
+                ->comment(
+                    '掲載フォーマット（画像タイプ）\nhttps://github.com
+                    /yahoojp-marketing/ydn-api-documents/blob/master
+                    /docs/ja/api_reference/appendix/reports.md#ad_styleレスポンス'
+                );
             $table->string('mediaID', 100)->nullable()->comment('メディアID');
             $table->string('mediaName', 100)->nullable()->comment('メディア名');
             $table->string('fileName', 100)->nullable()->comment('ファイル名');
@@ -66,11 +86,21 @@ class CreateRepoYdnReportsTable extends Migration
             $table->text('conversionName')->nullable()->comment('コンバージョンラベル名');
             $table->text('objectiveOfConversionTracking')->nullable()->comment('コンバージョン測定の目的\n');
             $table->string('carrier', 50)->nullable()
-                ->comment('キャリア\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#carrierレスポンス');
+                ->comment(
+                    'キャリア\nhttps://github.com/yahoojp-marketing
+                    /ydn-api-documents/blob/master/docs/ja/api_reference
+                    /appendix/reports.md#carrierレスポンス'
+                );
             $table->string('adLayout', 50)->nullable()
-                ->comment('レイアウト\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#ad_layoutレスポンス');
+                ->comment(
+                    'レイアウト\nhttps://github.com/yahoojp-marketing
+                    /ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#ad_layoutレスポンス'
+                );
             $table->string('imageOption', 20)->nullable()
-                ->comment('画像自動付与\nhttps://github.com/yahoojp-marketing/ydn-api-documents/blob/master/docs/ja/api_reference/appendix/reports.md#image_optionレスポンス');
+                ->comment(
+                    '画像自動付与\nhttps://github.com/yahoojp-marketing/ydn-api-documents
+                    /blob/master/docs/ja/api_reference/appendix/reports.md#image_optionレスポンス'
+                );
             $table->string('os', 100)->nullable()->comment('OS');
             $table->text('appli')->nullable()->comment('ウェブ/アプリ');
             $table->bigInteger('impressions')->nullable()->comment('インプレッション数');

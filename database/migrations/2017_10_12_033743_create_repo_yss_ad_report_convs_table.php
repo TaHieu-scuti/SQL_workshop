@@ -66,7 +66,6 @@ class CreateRepoYssAdReportConvsTable extends Migration
             $table->text('description')->nullable()->comment('説明文');
             $table->text('directory1')->nullable()->comment('ディレクトリ1');
             $table->text('directory2')->nullable()->comment('ディレクトリ2');
-
         });
     }
 

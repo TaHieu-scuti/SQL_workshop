@@ -61,7 +61,6 @@ class CreateRepoYssSearchqueryReportCostsTable extends Migration
             $table->string('quarter', 50)->nullable()->comment('四半期');
             $table->string('month', 50)->nullable()->comment('毎月');
             $table->string('week', 50)->nullable()->comment('毎週');
-
         });
     }
 
