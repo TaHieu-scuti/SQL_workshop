@@ -19,7 +19,7 @@ class CreateRepoYdnAccountsTable extends Migration
             $table->bigInteger('accountId')->nullable()->comment('アカウントID');
             $table->string('account_id', 50)->nullable()->comment('ADgainerシステムのアカウントID');
             $table->string('accountName')->nullable()->comment('アカウント名');
-            $table->string('accountType', 50)->nullable()\
+            $table->string('accountType', 50)->nullable()
                     ->comment(
                         'アカウントの種別\nhttps://github.com/yahoojp-marketing
                         /ydn-api-documents/blob/master/docs/ja/api_reference/data/AccountType.md'
