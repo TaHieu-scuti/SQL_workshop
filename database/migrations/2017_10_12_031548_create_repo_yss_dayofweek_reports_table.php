@@ -14,7 +14,7 @@ class CreateRepoYssDayofweekReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('repo_yss_dayofweek_reports', function (Blueprint $table) {
+        Schema::create('repo_yss_dayofweek_report', function (Blueprint $table) {
             $table->increments('id');
             $table->string('account_id', 50)->nullable()->comment('ADgainerシステムのアカウントID');
             $table->string('campaign_id', 50)
@@ -56,6 +56,6 @@ class CreateRepoYssDayofweekReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('repo_yss_dayofweek_reports');
+        Schema::dropIfExists('repo_yss_dayofweek_report');
     }
 }

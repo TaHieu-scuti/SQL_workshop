@@ -14,7 +14,7 @@ class CreateRepoYssKeywordReportCostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('repo_yss_keyword_report_costs', function (Blueprint $table) {
+        Schema::create('repo_yss_keyword_report_cost', function (Blueprint $table) {
             $table->increments('id');
             $table->date('exeDate')->comment('YSSレポートAPI実行日');
             $table->date('startDate')->comment('YSSレポートAPIで指定したレポートの開始日');
@@ -80,6 +80,6 @@ class CreateRepoYssKeywordReportCostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('repo_yss_keyword_report_costs');
+        Schema::dropIfExists('repo_yss_keyword_report_cost');
     }
 }

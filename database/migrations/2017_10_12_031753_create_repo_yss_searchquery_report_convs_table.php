@@ -14,7 +14,7 @@ class CreateRepoYssSearchqueryReportConvsTable extends Migration
      */
     public function up()
     {
-        Schema::create('repo_yss_searchquery_report_convs', function (Blueprint $table) {
+        Schema::create('repo_yss_searchquery_report_conv', function (Blueprint $table) {
             $table->increments('id');
             $table->date('exeDate')->comment('YSSレポートAPI実行日');
             $table->date('startDate')->comment('YSSレポートAPIで指定したレポートの開始日');
@@ -63,6 +63,6 @@ class CreateRepoYssSearchqueryReportConvsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('repo_yss_searchquery_report_convs');
+        Schema::dropIfExists('repo_yss_searchquery_report_conv');
     }
 }
