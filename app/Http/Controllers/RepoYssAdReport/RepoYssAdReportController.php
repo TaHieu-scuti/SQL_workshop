@@ -12,7 +12,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
 use Exception;
 
-class RepoYssAdReportController extends Controller
+class RepoYssAdReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
@@ -70,7 +70,7 @@ class RepoYssAdReportController extends Controller
             'campaign_id',
             'campaignID',
             'adgroupID',
-            'adID'
+            'adID',
             'campaignName',
             'adgroupName',
             'adName',
@@ -100,6 +100,8 @@ class RepoYssAdReportController extends Controller
             'description',
             'directory1',
             'directory2',
+            'adKeywordID',
+            'adTrackingID',
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
@@ -110,7 +112,7 @@ class RepoYssAdReportController extends Controller
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        return view('yssAdgroupReport.index', [
+        return view('yssAdReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
