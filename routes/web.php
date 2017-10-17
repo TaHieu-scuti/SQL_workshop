@@ -130,3 +130,34 @@ Route::prefix('adgroup-report')->group(function () {
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
     );
 });
+
+Route::prefix('ad-report')->group(function () {
+    Route::get(
+        '/',
+        'RepoYssAdReport\RepoYssAdReportController@index'
+    );
+    Route::get(
+        '/display-graph',
+        'RepoYssAdReport\RepoYssAdReportController@displayGraph'
+    );
+    Route::post(
+        '/display-graph',
+        'RepoYssAdReport\RepoYssAdReportController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'RepoYssAdReport\RepoYssAdReportController@updateTable'
+    );
+    Route::post(
+        '/live_search',
+        'RepoYssAdReport\RepoYssAdReportController@liveSearch'
+    );
+    Route::get(
+        '/export_excel',
+        'RepoYssAdReport\RepoYssAdReportController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
+    );
+});
