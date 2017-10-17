@@ -312,7 +312,7 @@ class RepoYssAccountReport extends AbstractReportModel
         if ($query === null) {
             $query = [];
         } else {
-            $quey = $query->toArray();
+            $query = $query->toArray();
         }
         return $query;
     }
