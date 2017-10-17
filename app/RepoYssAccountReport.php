@@ -200,7 +200,7 @@ class RepoYssAccountReport extends AbstractReportModel
                 '=',
                 'repo_yss_accounts.account_id'
             )
-            ->where( 
+            ->where(
                 function ($query) use ($startDay, $endDay) {
                     if ($startDay === $endDay) {
                         $query->whereDate('day', '=', $endDay);
@@ -309,7 +309,7 @@ class RepoYssAccountReport extends AbstractReportModel
             $query = $query->havingRaw('SUM(impressions) = 0')
                             ->first();
         }
-        if($query === null) {
+        if ($query === null) {
             $query = [];
         } else {
             $quey = $query->toArray();
@@ -400,31 +400,24 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     }
                 );
-                if ($accountStatus == 'hideZero') {
-                    $data = $data->havingRaw('SUM(impressions) != 0')
-                                    ->first();
-                } elseif ($accountStatus == 'showZero') {
-                    $data = $data->havingRaw('SUM(impressions) = 0')
-                                    ->first();
-                }
-                if($data === null) {
-                    $data = [
-                        'clicks' => 0,
-                        'impressions' => 0,
-                        'cost' => 0,
-                        'averageCpc' => 0,
-                        'averagePosition' => 0
-                    ];
-                } else {
-                    $data = $data->toArray();
-                }
-
-        // foreach ($data as $key => $value) {
-        //     if ($value === null) {
-        //         $data[$key] = 0;
-        //     }
-        // }
-
+        if ($accountStatus == 'hideZero') {
+            $data = $data->havingRaw('SUM(impressions) != 0')
+                            ->first();
+        } elseif ($accountStatus == 'showZero') {
+            $data = $data->havingRaw('SUM(impressions) = 0')
+                            ->first();
+        }
+        if ($data === null) {
+            $data = [
+                'clicks' => 0,
+                'impressions' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
+        } else {
+            $data = $data->toArray();
+        }
         return $data;
     }
 }

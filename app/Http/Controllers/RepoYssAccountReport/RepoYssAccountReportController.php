@@ -144,7 +144,7 @@ class RepoYssAccountReportController extends AbstractReportController
         ])->render();
         // if no data found
         // display no data found message on table
-        if ($reports->total() !== 0 ) {
+        if ($reports->total() !== 0) {
             $displayNoDataFoundMessageOnTable = false;
             return $this->responseFactory->json([
                                 'summaryReportLayout' => $summaryReportLayout,
