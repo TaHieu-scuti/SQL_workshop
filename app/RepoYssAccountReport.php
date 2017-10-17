@@ -92,7 +92,7 @@ class RepoYssAccountReport extends AbstractReportModel
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
     const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
-    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impression) != 0';
+    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
     private function getAggregated(array $fieldNames, $tableName)
     {
         $arrayCalculate = [];
@@ -166,11 +166,11 @@ class RepoYssAccountReport extends AbstractReportModel
                 ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
                 ->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
-        if ($accountStatus == HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
-        } elseif ($accountStatus == SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_EQUAL_ZERO)
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->paginate($pagination);
         }
         return $query;
@@ -215,11 +215,11 @@ class RepoYssAccountReport extends AbstractReportModel
                 }
             )
             ->groupBy('day');
-        if ($accountStatus == HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
-        } elseif ($accountStatus == SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_EQUAL_ZERO)
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->get();
         }
         return $query;
@@ -306,11 +306,11 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     );
         // get aggregated value
-        if ($accountStatus == HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
-        } elseif ($accountStatus == SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_EQUAL_ZERO)
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->first();
         }
         if ($query === null) {
@@ -355,11 +355,11 @@ class RepoYssAccountReport extends AbstractReportModel
                     }
                 )->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
-        if ($accountStatus == HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
-        } elseif ($accountStatus == SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(SUM_IMPRESSIONS_EQUAL_ZERO)
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->get();
         }
         return $query;
@@ -404,11 +404,11 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     }
                 );
-        if ($accountStatus == HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
-        } elseif ($accountStatus == SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(SUM_IMPRESSIONS_EQUAL_ZERO)
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->first();
         }
         if ($data === null) {
