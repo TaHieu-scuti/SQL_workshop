@@ -285,13 +285,16 @@ class RepoYssAdReportCost extends AbstractReportModel
         }
         // remove column id, campaign_id ....
         $unsetColumns = [
-            'id', 'campaign_id', 'account_id', 'network',
-            'device', 'day', 'dayOfWeek', 'week',
-            'month', 'quarter', 'hourofday', 'campaignTrackingID',
-            'campaignStartDate', 'campaignEndDate', 'campaignDistributionStatus', 'campaignDistributionSettings',
-            'mobileBidAdj', 'tabletBidAdj', 'desktopBidAdj', 'exeDate',
-            'startDate', 'endDate', 'campaignID', 'campaignName',
-            'trackingURL', 'customParameters', 'ctr', 'campaignType'
+            'exeDate', 'startDate', 'endDate', 'account_id',
+            'campaign_id', 'campaignID', 'adgroupID', 'adID',
+            'campaignName', 'adgroupName', 'adName', 'title',
+            'description1', 'displayURL', 'destinationURL', 'adType',
+            'adDistributionSettings', 'adEditorialStatus', 'description2',
+            'focusDevice', 'trackingURL', 'customParameters', 'landingPageURL',
+            'landingPageURLSmartphone', 'network', 'clickType', 'device',
+            'day', 'dayOfWeek', 'quarter', 'month',
+            'week', 'title1', 'title2', 'description',
+            'directory1', 'directory2', 'adKeywordID', 'adTrackingID',
         ];
         
         return $this->unsetColumns($result, $unsetColumns);
