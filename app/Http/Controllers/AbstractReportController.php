@@ -87,12 +87,13 @@ abstract class AbstractReportController extends Controller
 
     public function initializeSession(array $columns)
     {
+        // dd('hello');
         $today = new DateTime;
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        $accountStatus = "enabled";
-        $statusTitle = "enabled";
+        $accountStatus = "hideZero";
+        $statusTitle = "Hide 0";
         $graphColumnName = "clicks";
         $summaryReport = [
             'clicks',
