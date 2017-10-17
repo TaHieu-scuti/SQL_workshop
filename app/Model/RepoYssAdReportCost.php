@@ -7,6 +7,10 @@ use App\AbstractReportModel;
 
 class RepoYssAdReportCost extends AbstractReportModel
 {
+    /** @var bool */
+    public $timestamps = false;
+    
+    protected $table = 'repo_yss_ad_report_cost';
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus

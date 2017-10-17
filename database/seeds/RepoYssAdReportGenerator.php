@@ -16,37 +16,37 @@ class RepoYssAdReportGenerator extends Seeder
     const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
     const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_CTR = 1000;
+    const MAX_CTR = 1032456345;
+    const MIN_CONV_RATE = 1000;
+    const MAX_CONV_RATE = 1437437880;
+    const MIN_AVERAGE_CPC = 1000;
+    const MAX_AVERAGE_CPC = 1437437880;
+    const MIN_AVERAGE_POSITION = 1000;
+    const MAX_AVERAGE_POSITION = 1437437880;
     const TRACKING_URL = 'http://we.track.people/';
     const DISPLAY_URL = 'http://we.track.displayURL/';
     const DESTINATION_URL = 'http://we.track.destinationURL/';
     const LOADING_PAGE_URL = 'http://we.track.landingPageURL/';
     const LOADING_PAGE_URL_SMART_PHONE = 'http://we.track.landingPageURLSmartphone/';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
-    const MIN_CONV_VALUE = 1000000;
-    const MAX_CONV_VALUE = 89489437437880;
-    const MIN_COST_PER_CONV = 1000000;
-    const MAX_COST_PER_CONV = 89489437437880;
-    const MIN_VALUE_PER_CONV = 1000000;
-    const MAX_VALUE_PER_CONV = 89489437437880;
-    const MIN_COST_PER_ALL_CONV = 1000000;
-    const MAX_COST_PER_ALL_CONV = 89489437437880;
-    const MIN_VALUE_PER_ALL_CONV = 1000000;
-    const MAX_VALUE_PER_ALL_CONV = 89489437437880;
-    const MIN_ALL_CONV = 1000000;
-    const MAX_ALL_CONV = 89489437437880;
-    const MIN_ALL_CONV_VALUE = 1000000;
-    const MAX_ALL_CONV_VALUE = 89489437437880;
-    const MIN_ALL_CONV_RATE = 1000000;
-    const MAX_ALL_CONV_RATE = 89489437437880;
+    const MIN_CONVERSIONS = 1000;
+    const MAX_CONVERSIONS = 1437437880;
+    const MIN_CONV_VALUE = 1000;
+    const MAX_CONV_VALUE = 1437437880;
+    const MIN_COST_PER_CONV = 1000;
+    const MAX_COST_PER_CONV = 1437437880;
+    const MIN_VALUE_PER_CONV = 1000;
+    const MAX_VALUE_PER_CONV = 1437437880;
+    const MIN_COST_PER_ALL_CONV = 1000;
+    const MAX_COST_PER_ALL_CONV = 1437437880;
+    const MIN_VALUE_PER_ALL_CONV = 1000;
+    const MAX_VALUE_PER_ALL_CONV = 1437437880;
+    const MIN_ALL_CONV = 1000;
+    const MAX_ALL_CONV = 1437437880;
+    const MIN_ALL_CONV_VALUE = 1000;
+    const MAX_ALL_CONV_VALUE = 1437437880;
+    const MIN_ALL_CONV_RATE = 1000;
+    const MAX_ALL_CONV_RATE = 1437437880;
     const AD_TYPE = [
         'Ad Report Type 1', 'Ad Report Type 2',
         'Ad Report Type 3', 'Ad Report Type 4'
@@ -229,6 +229,8 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportCost->description = $adReportConv->description;
                 $adReportCost->directory1 = $adReportConv->directory1;
                 $adReportCost->directory2 = $adReportConv->directory2;
+                $adReportCost->saveOrFail();
+            	$adReportConv->saveOrFail();
         	}
         }
     }
