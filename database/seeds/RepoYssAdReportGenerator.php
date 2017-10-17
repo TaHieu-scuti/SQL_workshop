@@ -6,9 +6,10 @@ use App\Model\RepoYssAdgroupReportCost;
 use App\Model\RepoYssAdReportCost;
 use App\Model\RepoYssAdReportConv;
 
+// @codingStandardsIgnoreLine
 class RepoYssAdReportGenerator extends Seeder
 {
-	const MIN_NUMBER_OF_AD = 1;
+    const MIN_NUMBER_OF_AD = 1;
     const MAX_NUMBER_OF_AD = 2;
     const MIN_COST = 1;
     const MAX_COST = 1004;
@@ -69,14 +70,14 @@ class RepoYssAdReportGenerator extends Seeder
     {
         $adGroupReports = RepoYssAdgroupReportCost::all();
         foreach ($adGroupReports as $key => $adGroupReport) {
-        	$ammountOfAdReport = rand(
-        		self::MIN_NUMBER_OF_AD,
-        		self::MAX_NUMBER_OF_AD
-        	);
-        	for ($i=0; $i < $ammountOfAdReport; $i++) { 
-        		$adReportCost = new RepoYssAdReportCost;
-        		$adReportConv = new RepoYssAdReportConv;
-        		$adReportCost->exeDate = $adGroupReport->exeDate;
+            $ammountOfAdReport = rand(
+                self::MIN_NUMBER_OF_AD,
+                self::MAX_NUMBER_OF_AD
+            );
+            for ($i=0; $i < $ammountOfAdReport; $i++) {
+                $adReportCost = new RepoYssAdReportCost;
+                $adReportConv = new RepoYssAdReportConv;
+                $adReportCost->exeDate = $adGroupReport->exeDate;
                 $adReportConv->exeDate = $adGroupReport->exeDate;
                 $adReportCost->startDate = $adGroupReport->startDate;
                 $adReportConv->startDate = $adGroupReport->startDate;
@@ -106,30 +107,30 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportConv->displayURL = $adReportCost->displayURL;
                 $adReportCost->destinationURL = self::DESTINATION_URL;
                 $adReportConv->destinationURL = $adReportCost->destinationURL;
-                $adReportCost->adType = self::AD_TYPE[mt_rand(0, count(self::AD_TYPE) -1 )];
+                $adReportCost->adType = self::AD_TYPE[mt_rand(0, count(self::AD_TYPE) -1)];
                 $adReportConv->adType = $adReportCost->adType;
                 $adReportCost->adDistributionSettings = str_random(10);
                 $adReportConv->adDistributionSettings = $adReportCost->adDistributionSettings;
                 $adReportCost->adEditorialStatus = str_random(10);
                 $adReportConv->adEditorialStatus = $adReportCost->adEditorialStatus;
                 $adReportCost->cost = mt_rand(
-                	self::MIN_COST,
-                	self::MAX_COST
+                    self::MIN_COST,
+                    self::MAX_COST
                 );
                 $adReportConv->description2 = str_random(10);
                 $adReportCost->impressions = mt_rand(
-                	self::MIN_IMPRESSIONS,
-                	self::MAX_IMPRESSIONS
+                    self::MIN_IMPRESSIONS,
+                    self::MAX_IMPRESSIONS
                 );
                 $adReportConv->focusDevice = str_random(10);
                 $adReportCost->clicks = mt_rand(
-                	self::MIN_CLICKS,
-                	self::MAX_CLICKS
+                    self::MIN_CLICKS,
+                    self::MAX_CLICKS
                 );
                 $adReportConv->trackingURL = self::TRACKING_URL;
                 $adReportCost->ctr = mt_rand(
-                	self::MIN_CTR,
-                	self::MAX_CTR
+                    self::MIN_CTR,
+                    self::MAX_CTR
                 ) / mt_getrandmax();
                 $adReportConv->customParameters = str_random(10);
                 $adReportCost->averageCpc = mt_rand(
@@ -194,15 +195,15 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportCost->allConv = $adReportConv->allConv;
                 $adReportConv->quarter = $adGroupReport->quarter;
                 $adReportCost->allConvRate = mt_rand(
-                	self::MIN_ALL_CONV_RATE,
-                	self::MAX_ALL_CONV_RATE
+                    self::MIN_ALL_CONV_RATE,
+                    self::MAX_ALL_CONV_RATE
                 ) / mt_getrandmax();
                 $adReportConv->month = $adGroupReport->month;
                 $adReportCost->allConvValue = $adReportConv->allConvValue;
                 $adReportConv->week = $adGroupReport->week;
                 $adReportCost->costPerAllConv = mt_rand(
-                	self::MIN_COST_PER_ALL_CONV,
-                	self::MAX_COST_PER_ALL_CONV
+                    self::MIN_COST_PER_ALL_CONV,
+                    self::MAX_COST_PER_ALL_CONV
                 ) / mt_getrandmax();
                 $adReportConv->objectiveOfConversionTracking = str_random(10);
                 $adReportCost->valuePerAllConv = $adReportConv->valuePerAllConv;
@@ -230,8 +231,8 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportCost->directory1 = $adReportConv->directory1;
                 $adReportCost->directory2 = $adReportConv->directory2;
                 $adReportCost->saveOrFail();
-            	$adReportConv->saveOrFail();
-        	}
+                $adReportConv->saveOrFail();
+            }
         }
     }
 }

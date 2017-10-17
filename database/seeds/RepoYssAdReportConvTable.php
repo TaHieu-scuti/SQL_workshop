@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
+// @codingStandardsIgnoreLine
 class RepoYssAdReportConvTable extends Seeder
 {
     /**
