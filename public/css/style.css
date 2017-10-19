@@ -58,7 +58,7 @@ a, a:hover, a:focus {
     margin: 0;
     padding:20px 15px;
     text-align: center;
-    background: #41cac0;
+    background: #389DE5;
     border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
     color: #fff;
@@ -5927,4 +5927,16 @@ a.guest-on i {
 .ui-corner-all {
     border-top-left-radius: 3px!important;
     border-top-right-radius: 3px!important;
+}
+
+.styleColor {
+    color: #fff;
+    background-color: #389DE5;
+    border-color: #357ebd;
+}
+
+.styleColor:hover {
+    color: #fff;
+    background-color: #0d88e0;
+    border-color: #357ebd;
 }
