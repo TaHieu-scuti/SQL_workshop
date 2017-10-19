@@ -5934,3 +5934,9 @@ a.guest-on i {
     background-color: #389DE5;
     border-color: #357ebd;
 }
+
+.styleColor:hover {
+    color: #fff;
+    background-color: #0d88e0;
+    border-color: #357ebd;
+}
