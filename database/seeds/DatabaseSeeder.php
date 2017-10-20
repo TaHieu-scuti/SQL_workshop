@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYssCampaignReportCostsTable::class);
         $this->call(RepoYssAdgroupReportCostTable::class);
         $this->call(RepoYssAdgroupReportConvTable::class);
+        $this->call(RepoYssAdReportConvTable::class);
+        $this->call(RepoYssAdReportCostTable::class);
     }
 }
