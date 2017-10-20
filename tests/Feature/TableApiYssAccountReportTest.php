@@ -138,10 +138,10 @@ class TableApiYssAccountReportTest extends TestCase
         5 => self::COLUMN_NAME_INVALID_CLICKS,
     ];
 
-    const DEFAULT_STATUS = 'enabled';
+    const DEFAULT_STATUS = 'hideZero';
     const CUSTOM_STATUS = 'someStatus';
     const DEFAULT_TIME_PERIOD_TITLE = 'Last 90 days';
-    const DEFAULT_STATUS_TITLE = 'enabled';
+    const DEFAULT_STATUS_TITLE = 'Hide 0';
     const DEFAULT_GRAPH_COLUMN_NAME = 'clicks';
     const CUSTOM_TIME_PERIOD_TITLE = '10 days';
     const CUSTOM_START_DAY = '2017-01-01';
@@ -687,7 +687,6 @@ class TableApiYssAccountReportTest extends TestCase
                 RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
-
         $response->assertViewHas(
             RepoYssAccountReportController::TOTAL_DATA_ARRAY,
             [

@@ -498,7 +498,7 @@ a, a:hover, a:focus {
     line-height: 1.1;
 }
 
-.wrapper .row.statistic .col-md-2 {
+.wrapper .row.statistic .col-md-3 {
     border-radius: 0;
     border-right: solid 1px #ecedf1;
     word-break: break-all;
@@ -5927,6 +5927,46 @@ a.guest-on i {
 .ui-corner-all {
     border-top-left-radius: 3px!important;
     border-top-right-radius: 3px!important;
+}
+.no-data-found-graph {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 279px;
+    background-color: #fff;
+    z-index:550;
+    text-align: center;
+    font-size: 3em;
+    color: #ccc;
+}
+.no-data-found-table {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background-color: #fff;
+    z-index:550;
+    text-align: center;
+    font-size: 3em;
+    color: #ccc;
+}
+.no-data-found-message-graph {
+    top: 35%;
+    margin: 0 auto;
+    position: relative;
+}
+.no-data-found-message-table {
+    top: 35%;
+    margin: 0 auto;
+    position: relative;
+}
+.hidden-no-data-found-message-graph {
+    display: none !important;
+}
+.hidden-no-data-found-message-table {
+    display: none !important;
 }
 
 .styleColor {

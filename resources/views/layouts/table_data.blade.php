@@ -5,6 +5,15 @@
 ?>
 
 <div class="loading-gif-on-table hidden-table"></div>
+@if($reports->total() !== 0)
+    <div class="no-data-found-table hidden-no-data-found-message-table">
+        <span class="no-data-found-message-table">No data found for table</span>
+    </div>
+@else 
+    <div class="no-data-found-table">
+        <span class="no-data-found-message-table">No data found for table</span>
+    </div>
+@endif
 <div class="row report-table">
     <div class="col-md-12">
     <table class="table table-striped" id="reportTable">

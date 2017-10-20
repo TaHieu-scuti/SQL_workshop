@@ -1,4 +1,4 @@
-<div class="col-md-2 active" data-name="clicks">
+<div class="col-md-3 active" data-name="clicks">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
@@ -10,7 +10,7 @@
         </section>
     </a>
 </div>
-<div class="col-md-2" data-name="impressions">
+<div class="col-md-3" data-name="impressions">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
@@ -20,7 +20,7 @@
         </section>
     </a>
 </div>
-<div class="col-md-2" data-name="cost">
+<div class="col-md-3" data-name="cost">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
@@ -30,7 +30,7 @@
         </section>
     </a>
 </div>
-<div class="col-md-2" data-name="averageCpc">
+<div class="col-md-3" data-name="averageCpc">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
@@ -42,13 +42,13 @@
         </section>
     </a>
 </div>
-<div class="col-md-2" data-name="averagePosition">
+<div class="col-md-3" data-name="averagePosition">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
                 <span class="title">Avg pos<br></span>
                 <span class="content">
-                    {{ $summaryReport['averageCpc'] }}<br>
+                    {{ $summaryReport['averagePosition'] }}<br>
                 </span>
             </div>
         </section>
