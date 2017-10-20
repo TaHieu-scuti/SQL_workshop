@@ -153,7 +153,7 @@ class RepoYssAccountReport extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )->whereHas('repoYssAccounts', function ($query) use ($accountStatus) {
@@ -200,7 +200,7 @@ class RepoYssAccountReport extends AbstractReportModel
                         $query->whereDate('day', '=', $endDay);
                     } else {
                         $query->whereDate('day', '>=', $startDay)
-                            ->whereDate('day', '<', $endDay);
+                            ->whereDate('day', '<=', $endDay);
                     }
                 }
             )
@@ -286,7 +286,7 @@ class RepoYssAccountReport extends AbstractReportModel
                                 $query->whereDate('day', '=', $endDay);
                             } else {
                                 $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<', $endDay);
+                                    ->whereDate('day', '<=', $endDay);
                             }
                         }
                     )
@@ -323,7 +323,7 @@ class RepoYssAccountReport extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )->where($joinTableName.'.accountStatus', '=', $accountStatus)
@@ -367,7 +367,7 @@ class RepoYssAccountReport extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )

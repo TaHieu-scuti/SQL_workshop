@@ -157,6 +157,7 @@ class RepoYssAccountReportController extends AbstractReportController
         $this->updateSessionData($request);
         try {
             $data = $this->getDataForGraph();
+            dd($data);
         } catch (Exception $exception) {
             return $this->generateJSONErrorResponse($exception);
         }

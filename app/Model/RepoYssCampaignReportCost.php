@@ -108,7 +108,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )
@@ -149,7 +149,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     $query->whereDate('day', '=', $endDay);
                 } else {
                     $query->whereDate('day', '>=', $startDay)
-                        ->whereDate('day', '<', $endDay);
+                        ->whereDate('day', '<=', $endDay);
                 }
             }
         )
@@ -193,7 +193,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )
@@ -229,7 +229,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                                 $query->whereDate('day', '=', $endDay);
                             } else {
                                 $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<', $endDay);
+                                    ->whereDate('day', '<=', $endDay);
                             }
                         }
                     )
@@ -261,7 +261,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                             $query->whereDate('day', '=', $endDay);
                         } else {
                             $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<', $endDay);
+                                ->whereDate('day', '<=', $endDay);
                         }
                     }
                 )
