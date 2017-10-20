@@ -155,6 +155,7 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->json([
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
+                            'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
         ]);
     }
 
