@@ -145,7 +145,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
         array_unshift($arrayCalculate, $tableName.'.account_id');
-        $query  = self::select($arrayCalculate)
+        $paginatedData  = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
@@ -153,11 +153,11 @@ class RepoYssAccountReport extends AbstractReportModel
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )
                 ->where(
-                    function ($query) use ($startDay, $endDay) {
+                    function ($paginatedData) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
+                            $paginatedData->whereDate('day', '=', $endDay);
                         } else {
-                            $query->whereDate('day', '>=', $startDay)
+                            $paginatedData->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<', $endDay);
                         }
                     }
@@ -167,13 +167,13 @@ class RepoYssAccountReport extends AbstractReportModel
                 ->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->paginate($pagination);
         }
-        return $query;
+        return $paginatedData;
     }
 
     /**
@@ -192,7 +192,7 @@ class RepoYssAccountReport extends AbstractReportModel
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
 
-        $query = self::select(
+        $data = self::select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
                 'DATE(day) as day'
@@ -205,24 +205,24 @@ class RepoYssAccountReport extends AbstractReportModel
                 'repo_yss_accounts.account_id'
             )
             ->where(
-                function ($query) use ($startDay, $endDay) {
+                function ($data) use ($startDay, $endDay) {
                     if ($startDay === $endDay) {
-                        $query->whereDate('day', '=', $endDay);
+                        $data->whereDate('day', '=', $endDay);
                     } else {
-                        $query->whereDate('day', '>=', $startDay)
+                        $data->whereDate('day', '>=', $startDay)
                             ->whereDate('day', '<', $endDay);
                     }
                 }
             )
             ->groupBy('day');
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->get();
         }
-        return $query;
+        return $data;
     }
 
     /**
@@ -289,36 +289,36 @@ class RepoYssAccountReport extends AbstractReportModel
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        $query = self::select($arrayCalculate)
+        $data = self::select($arrayCalculate)
                     ->join(
                         $joinTableName,
                         $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                         '=',
                         $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                     )->where(
-                        function ($query) use ($startDay, $endDay) {
+                        function ($data) use ($startDay, $endDay) {
                             if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
+                                $data->whereDate('day', '=', $endDay);
                             } else {
-                                $query->whereDate('day', '>=', $startDay)
+                                $data->whereDate('day', '>=', $startDay)
                                     ->whereDate('day', '<', $endDay);
                             }
                         }
                     );
         // get aggregated value
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->first();
         }
-        if ($query === null) {
-            $query = [];
+        if ($data === null) {
+            $data = [];
         } else {
-            $query = $query->toArray();
+            $data = $data->toArray();
         }
-        return $query;
+        return $data;
     }
 
     public function repoYssAccounts()
@@ -338,31 +338,31 @@ class RepoYssAccountReport extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
-        $query = self::select($arrayCalculate)
+        $data = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function ($query) use ($startDay, $endDay) {
+                    function ($data) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
+                            $data->whereDate('day', '=', $endDay);
                         } else {
-                            $query->whereDate('day', '>=', $startDay)
+                            $data->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<', $endDay);
                         }
                     }
                 )->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
                             ->get();
         }
-        return $query;
+        return $data;
     }
 
     public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
@@ -395,11 +395,11 @@ class RepoYssAccountReport extends AbstractReportModel
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function ($query) use ($startDay, $endDay) {
+                    function ($data) use ($startDay, $endDay) {
                         if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
+                            $data->whereDate('day', '=', $endDay);
                         } else {
-                            $query->whereDate('day', '>=', $startDay)
+                            $data->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<', $endDay);
                         }
                     }

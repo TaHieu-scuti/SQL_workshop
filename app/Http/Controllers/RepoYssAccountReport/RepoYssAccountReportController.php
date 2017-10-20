@@ -151,13 +151,11 @@ class RepoYssAccountReportController extends AbstractReportController
                                 'tableDataLayout' => $tableDataLayout,
                                 'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
             ]);
-        } else {
-            return $this->responseFactory->json([
-                                'summaryReportLayout' => $summaryReportLayout,
-                                'tableDataLayout' => $tableDataLayout,
-                                'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
-            ]);
         }
+        return $this->responseFactory->json([
+                            'summaryReportLayout' => $summaryReportLayout,
+                            'tableDataLayout' => $tableDataLayout,
+        ]);
     }
 
     /**
@@ -197,16 +195,15 @@ class RepoYssAccountReportController extends AbstractReportController
                                 'statusLayout' => $statusLayout,
                                 'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph,
                 ]);
-            } else {
-                return $this->responseFactory->json([
-                                'data' => $data,
-                                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                                'timePeriodLayout' => $timePeriodLayout,
-                                'graphColumnLayout' => $graphColumnLayout,
-                                'statusLayout' => $statusLayout,
-                                'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
-                ]);
             }
+            return $this->responseFactory->json([
+                            'data' => $data,
+                            'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                            'timePeriodLayout' => $timePeriodLayout,
+                            'graphColumnLayout' => $graphColumnLayout,
+                            'statusLayout' => $statusLayout,
+                            'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
+            ]);
         }
     }
 
