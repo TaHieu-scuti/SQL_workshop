@@ -13,8 +13,17 @@ class RepoYssAccountReportTable extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../../database/resources/repo_yss_account_report.sql')
-        );
+        $command = 'mysql -h'
+            . Config::get('database.connections.mysql.host')
+            . ' -u'
+            . Config::get('database.connections.mysql.username')
+            . ' -p'
+            . Config::get('database.connections.mysql.password')
+            . ' '
+            . Config::get('database.connections.mysql.database')
+            . ' < '
+            . __DIR__ . '/../../database/resources/repo_yss_account_report.sql';
+
+        exec($command);
     }
 }

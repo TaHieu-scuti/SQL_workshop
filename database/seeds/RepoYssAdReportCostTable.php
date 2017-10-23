@@ -12,8 +12,17 @@ class RepoYssAdReportCostTable extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../../database/resources/repo_yss_ad_report_cost.sql')
-        );
+        $command = 'mysql -h'
+            . Config::get('database.connections.mysql.host')
+            . ' -u'
+            . Config::get('database.connections.mysql.username')
+            . ' -p'
+            . Config::get('database.connections.mysql.password')
+            . ' '
+            . Config::get('database.connections.mysql.database')
+            . ' < '
+            . __DIR__ . '/../../database/resources/repo_yss_ad_report_cost.sql';
+
+        exec($command);
     }
 }

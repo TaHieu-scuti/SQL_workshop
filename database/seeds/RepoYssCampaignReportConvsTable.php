@@ -13,8 +13,17 @@ class RepoYssCampaignReportConvsTable extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../../database/resources/repo_yss_campaign_report_convs.sql')
-        );
+        $command = 'mysql -h'
+            . Config::get('database.connections.mysql.host')
+            . ' -u'
+            . Config::get('database.connections.mysql.username')
+            . ' -p'
+            . Config::get('database.connections.mysql.password')
+            . ' '
+            . Config::get('database.connections.mysql.database')
+            . ' < '
+            . __DIR__ . '/../../database/resources/repo_yss_campaign_report_convs.sql';
+
+        exec($command);
     }
 }
