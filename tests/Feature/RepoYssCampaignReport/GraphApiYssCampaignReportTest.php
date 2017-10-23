@@ -451,7 +451,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             self::JSON_STATUS_CODE_FIELD_NAME => 500,
             self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: 1054 Unknown column \''
             . 'someNonExistingColumnName\' in \'field list\' (SQL: select SUM(someNonExistingColumnName)'
-            . 'as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= '
+            . ' as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= '
             . '2017-01-01 and date(`day`) <= 2017-04-01) group by `day`)'
         ];
 
