@@ -58,12 +58,13 @@ class GraphApiYssCampaignReportTest extends TestCase
         . '{"data":"562925","day":"2017-03-24"},{"data":"598775","day":"2017-03-25"},'
         . '{"data":"428837","day":"2017-03-26"},{"data":"559411","day":"2017-03-27"},'
         . '{"data":"709522","day":"2017-03-28"},{"data":"556188","day":"2017-03-29"},'
-        . '{"data":"598717","day":"2017-03-30"},{"data":"538698","day":"2017-03-31"}],'
-        . '"field":"clicks",'
-        . '"timePeriodLayout":"<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - '
-        . '2017-04-01<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"<span id='
-        . '\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\"><\/strong>","statusLayout":'
-        . '"<span>Show enabled\n<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
+        . '{"data":"598717","day":"2017-03-30"},{"data":"538698","day":"2017-03-31"},'
+        . '{"data":"477767","day":"2017-04-01"}],'
+        . '"field":"clicks","timePeriodLayout":"<span class=\"title\">Last 90 days<br>'
+        . '<\/span>\r\n<span>2017-01-01 - 2017-04-01<\/span>\r\n<strong class=\"caret\">'
+        . '<\/strong>\r\n","graphColumnLayout":"<span id=\"txtColumn\">clicks<\/span>\r\n'
+        . '<strong class=\"caret selection\"><\/strong>","statusLayout":"<span>Show enabled\r\n'
+        . '<strong class=\"caret selection\"><\/strong>\r\n<\/span>"}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'campaignName';
     const COLUMN_NAME_DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
     const COLUMN_NAME_COST = 'cost';
@@ -373,17 +374,15 @@ class GraphApiYssCampaignReportTest extends TestCase
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
-            'data' => [
-                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+            "data" => [
+                ["data" => 0, "day" => self::DATE_FIRST_DAY_2016]
             ],
-            'field' => 'clicks',
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
-            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
-                ."<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n"
-                ."<strong class=\"caret selection\"></strong>\n"
-                ."</span>"
+            "field" => "clicks",
+            "graphColumnLayout" => "<span id=\"txtColumn\">clicks<\/span>\r\n"
+                . "<strong class=\"caret selection\"><\/strong>",
+            "statusLayout" => "<span>Show enabled\r\n<strong class=\"caret selection\"><\/strong>\r\n<\/span>",
+            "timePeriodLayout" => "<span class=\"title\">Last 90 days<br><\/span>\r\n"
+                . "<span>2016-01-01 - 2016-01-01<\/span>\r\n<strong class=\"caret\"><\/strong>\r\n"
         ];
 
         $response->assertExactJson($object);
@@ -410,17 +409,17 @@ class GraphApiYssCampaignReportTest extends TestCase
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $object = [
-            'data' => [
-                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+            "data" => [
+                ["data" => 0, "day" => "2016-01-01"], ["data" => 0,"day" => "2016-02-01"]
             ],
-            'field' => 'clicks',
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n",
-            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
-                ."<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n"
-                ."<strong class=\"caret selection\"></strong>\n"
-                ."</span>"
+            "field" => "clicks",
+            "graphColumnLayout" => "<span id=\"txtColumn\">clicks<\/span>\r\n"
+                . "<strong class=\"caret selection\"><\/strong>",
+            "statusLayout" => "<span>Show enabled\r\n"
+                . "<strong class=\"caret selection\"><\/strong>\r\n<\/span>",
+            "timePeriodLayout" => "<span class=\"title\">Last 90 days<br><\/span>\r\n"
+                . "<span>2016-01-01 - 2016-02-01<\/span>\r\n"
+                . "<strong class=\"caret\"><\/strong>\r\n"
         ];
 
         $response->assertExactJson($object);
@@ -452,8 +451,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             self::JSON_STATUS_CODE_FIELD_NAME => 500,
             self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: 1054 Unknown column \''
             . 'someNonExistingColumnName\' in \'field list\' (SQL: select SUM(someNonExistingColumnName)'
-            . ' as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= '
-            . '2017-01-01 and date(`day`) < 2017-04-01) group by `day`)'
+            . 'as data, DATE(day) as day from `repo_yss_campaign_report_costs` where (date(`day`) >= '
+            . '2017-01-01 and date(`day`) <= 2017-04-01) group by `day`)'
         ];
 
         $response->assertExactJson($errorObject);

@@ -58,8 +58,8 @@ class CSVExportYSSAccountReportTest extends TestCase
     ];
 
     const DEFAULT_STATUS = 'enabled';
-    const CUSTOM_START_DAY = '2017-06-23';
-    const CUSTOM_END_DAY = '2017-09-21';
+    const CUSTOM_START_DAY = '2017-07-22';
+    const CUSTOM_END_DAY = '2017-10-20';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;
     const DEFAULT_SORT = 'desc';
 

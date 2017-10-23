@@ -654,24 +654,24 @@ class TableApiYssAdgroupReportTest extends TestCase
         $response->assertViewHas(
             RepoYssAdgroupReportController::TOTAL_DATA_ARRAY,
             [
-                self::COLUMN_NAME_ADGROUP_BID => '1,563,890',
-                self::COLUMN_NAME_COST => '1,579,168',
-                self::COLUMN_NAME_IMPRESSIONS => '6,449,720',
-                self::COLUMN_NAME_CLICKS => '14,312,994',
-                self::COLUMN_NAME_CTR => '5,294,601.28',
-                self::COLUMN_NAME_AVERAGE_CPC => '20,879.86',
-                self::COLUMN_NAME_AVERAGE_POSITION => '21,444.26',
-                self::COLUMN_NAME_IMPRESSION_SHARE => '20,977.67',
-                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,706.14',
-                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,796.44',
-                self::COLUMN_NAME_CONVERSIONS => '21,078.86',
-                self::COLUMN_NAME_CONV_RATE => '20,905.58',
-                self::COLUMN_NAME_CONV_VALUE => '20,873.15',
-                self::COLUMN_NAME_COST_PER_CONV => '20,336.88',
-                self::COLUMN_NAME_VALUE_PER_CONV => '20,657.27',
-                self::COLUMN_NAME_MOBILE_BID_ADJ => '20,805.57',
-                self::COLUMN_NAME_DESKTOP_BID_ADJ => '20,459.48',
-                self::COLUMN_NAME_TABLET_BID_ADJ => '21,031.88',
+                self::COLUMN_NAME_ADGROUP_BID => '1,755,917',
+                self::COLUMN_NAME_COST => '1,777,557',
+                self::COLUMN_NAME_IMPRESSIONS => '7,230,149',
+                self::COLUMN_NAME_CLICKS => '15,989,958',
+                self::COLUMN_NAME_CTR => '5,944,429.25',
+                self::COLUMN_NAME_AVERAGE_CPC => '20,830.75',
+                self::COLUMN_NAME_AVERAGE_POSITION => '21,367.73',
+                self::COLUMN_NAME_IMPRESSION_SHARE => '20,948.80',
+                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,702.53',
+                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,925.96',
+                self::COLUMN_NAME_CONVERSIONS => '21,036.03',
+                self::COLUMN_NAME_CONV_RATE => '20,968.35',
+                self::COLUMN_NAME_CONV_VALUE => '20,902.89',
+                self::COLUMN_NAME_COST_PER_CONV => '20,281.13',
+                self::COLUMN_NAME_VALUE_PER_CONV => '20,687.82',
+                self::COLUMN_NAME_MOBILE_BID_ADJ => '20,829.29',
+                self::COLUMN_NAME_DESKTOP_BID_ADJ => '20,509.31',
+                self::COLUMN_NAME_TABLET_BID_ADJ => '21,048.52',
             ]
         );
     }
@@ -724,11 +724,11 @@ class TableApiYssAdgroupReportTest extends TestCase
         $response->assertViewHas(
             RepoYssAdgroupReportController::SUMMARY_REPORT,
             [
-                self::COLUMN_NAME_CLICKS => "14,312,994",
-                self::COLUMN_NAME_IMPRESSIONS => "6,449,720",
-                self::COLUMN_NAME_COST => "1,579,168",
-                self::COLUMN_NAME_AVERAGE_CPC => "20,879.86",
-                self::COLUMN_NAME_AVERAGE_POSITION => "21,444.26",
+                self::COLUMN_NAME_CLICKS => "15,989,958",
+                self::COLUMN_NAME_IMPRESSIONS => "7,230,149",
+                self::COLUMN_NAME_COST => "1,777,557",
+                self::COLUMN_NAME_AVERAGE_CPC => "20,830.75",
+                self::COLUMN_NAME_AVERAGE_POSITION => "21,367.73",
             ]
         );
     }

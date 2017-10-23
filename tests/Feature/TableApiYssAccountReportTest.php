@@ -691,26 +691,26 @@ class TableApiYssAccountReportTest extends TestCase
         $response->assertViewHas(
             RepoYssAccountReportController::TOTAL_DATA_ARRAY,
             [
-                self::COLUMN_NAME_INVALID_CLICK_RATE => '21,548.70',
-                self::COLUMN_NAME_IMPRESSION_SHARE => '20,995.14',
-                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,791.59',
-                self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE => '20,915.05',
-                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,852.34',
-                self::COLUMN_NAME_CONVERSIONS => '21,182.04',
-                self::COLUMN_NAME_CONV_VALUE => '20,825.65',
-                self::COLUMN_NAME_COST_PER_CONV => '20,381.03',
-                self::COLUMN_NAME_VALUE_PER_CONV => '20,770.63',
-                self::COLUMN_NAME_ALL_CONV_RATE => '21,004.71',
-                self::COLUMN_NAME_COST_PER_ALL_CONV => '20,813.55',
-                self::COLUMN_NAME_VALUE_PER_ALL_CONV => '21,118.65',
-                self::COLUMN_NAME_COST => '541,933',
-                self::COLUMN_NAME_IMPRESSIONS => '2,171,860',
-                self::COLUMN_NAME_CLICKS => '4,851,795',
-                self::COLUMN_NAME_AVERAGE_CPC => '20,351.20',
-                self::COLUMN_NAME_INVALID_CLICKS => '48,061,154',
-                self::COLUMN_NAME_CONV_RATE => '20,570.00',
-                self::COLUMN_NAME_ALL_CONV => '21,811,215.92',
-                self::COLUMN_NAME_ALL_CONV_VALUE => '22,505,433.75',
+                self::COLUMN_NAME_INVALID_CLICK_RATE => '21,513.75',
+                self::COLUMN_NAME_IMPRESSION_SHARE => '20,888.02',
+                self::COLUMN_NAME_EXACT_MATCH_IMPRESSION_SHARE => '20,620.22',
+                self::COLUMN_NAME_BUDGET_LOST_IMPRESSION_SHARE => '20,845.00',
+                self::COLUMN_NAME_QUALITY_LOST_IMRPESSION_SHARE => '20,761.93',
+                self::COLUMN_NAME_CONVERSIONS => '20,931.56',
+                self::COLUMN_NAME_CONV_VALUE => '20,786.00',
+                self::COLUMN_NAME_COST_PER_CONV => '20,394.64',
+                self::COLUMN_NAME_VALUE_PER_CONV => '20,828.03',
+                self::COLUMN_NAME_ALL_CONV_RATE => '20,919.81',
+                self::COLUMN_NAME_COST_PER_ALL_CONV => '20,904.12',
+                self::COLUMN_NAME_VALUE_PER_ALL_CONV => '21,076.20',
+                self::COLUMN_NAME_COST => '607,845',
+                self::COLUMN_NAME_IMPRESSIONS => '2,464,084',
+                self::COLUMN_NAME_CLICKS => '5,437,708',
+                self::COLUMN_NAME_AVERAGE_CPC => '20,443.75',
+                self::COLUMN_NAME_INVALID_CLICKS => '53,642,266',
+                self::COLUMN_NAME_CONV_RATE => '20,594.76',
+                self::COLUMN_NAME_ALL_CONV => '24,850,081.21',
+                self::COLUMN_NAME_ALL_CONV_VALUE => '25,166,907.03',
             ]
         );
     }
@@ -763,12 +763,12 @@ class TableApiYssAccountReportTest extends TestCase
         $response->assertViewHas(
             RepoYssAccountReportController::SUMMARY_REPORT,
             [
-                self::COLUMN_NAME_CLICKS => "4,851,795",
-                self::COLUMN_NAME_IMPRESSIONS => "2,171,860",
-                self::COLUMN_NAME_COST => "541,933",
-                self::COLUMN_NAME_AVERAGE_CPC => "20,351.20",
-                self::COLUMN_NAME_AVERAGE_POSITION => "21,115.18",
-                self::COLUMN_NAME_INVALID_CLICKS => "48,061,154"
+                self::COLUMN_NAME_CLICKS => "5,437,708",
+                self::COLUMN_NAME_IMPRESSIONS => "2,464,084",
+                self::COLUMN_NAME_COST => "607,845",
+                self::COLUMN_NAME_AVERAGE_CPC => "20,443.75",
+                self::COLUMN_NAME_AVERAGE_POSITION => "20,938.07",
+                self::COLUMN_NAME_INVALID_CLICKS => "53,642,266"
             ]
         );
     }
