@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAdgroupReport;
+namespace App\Http\Controllers\RepoYssAdReport;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\AbstractReportController;
-use App\Model\RepoYssAdgroupReportCost;
+use App\Model\RepoYssAdReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 use DateTime;
 use Exception;
 
-class RepoYssAdgroupReportCostController extends AbstractReportController
+class RepoYssAdReportController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
@@ -22,7 +22,7 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const SUMMARY_REPORT = 'summaryReport';
-    const SESSION_KEY_PREFIX = 'adgroupReport.';
+    const SESSION_KEY_PREFIX = 'adReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
@@ -34,8 +34,8 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
-    const SESSION_KEY_PREFIX_ROUTE = '/adgroup-report';
-    const SESSION_KEY_GROUPED_BY_FIELD = 'adgroupName';
+    const SESSION_KEY_PREFIX_ROUTE = '/ad-report';
+    const SESSION_KEY_GROUPED_BY_FIELD = 'adName';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -48,12 +48,12 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
 
-    /** @var \App\Model\RepoYssAdgroupReportCost */
+    /** @var \App\Model\RepoYssAdReportCost */
     protected $model;
 
     public function __construct(
         ResponseFactory $responseFactory,
-        RepoYssAdgroupReportCost $model
+        RepoYssAdReportCost $model
     ) {
         parent::__construct($responseFactory, $model);
         $this->model = $model;
@@ -70,30 +70,49 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
             'campaign_id',
             'campaignID',
             'adgroupID',
+            'adID',
             'campaignName',
             'adgroupName',
-            'adgroupDistributionSettings',
+            'adName',
+            'title',
+            'description1',
+            'displayURL',
+            'destinationURL',
+            'adType',
+            'adDistributionSettings',
+            'adEditorialStatus',
+            'description2',
+            'focusDevice',
             'trackingURL',
             'customParameters',
+            'landingPageURL',
+            'landingPageURLSmartphone',
             'network',
+            'clickType',
             'device',
             'day',
             'dayOfWeek',
             'quarter',
             'month',
             'week',
-            'hourofday',
+            'title1',
+            'title2',
+            'description',
+            'directory1',
+            'directory2',
+            'adKeywordID',
+            'adTrackingID',
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
-        if (!session('adgroupReport')) {
+        if (!session('adReport')) {
             $this->initializeSession($availableColumns);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        return view('yssAdgroupReport.index', [
+        return view('yssAdReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -145,7 +164,7 @@ class RepoYssAdgroupReportCostController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        if (!session('adgroupReport')) {
+        if (!session('adReport')) {
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);

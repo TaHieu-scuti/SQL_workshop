@@ -396,19 +396,14 @@
                         </section>
                         </a>
                         <ul class="col-md-2 dropdown-menu extended tasks-bar status-option">
-                            <li data-status="all">
+                            <li data-status="showZero">
                                 <a href="#">
-                                    <div class="desc">Show all</div>
+                                    <div class="desc">Show 0</div>
                                 </a>
                             </li>
-                            <li data-status="disabled">
+                            <li data-status="hideZero">
                                 <a href="#">
-                                    <div class="desc">Show disabled</div>
-                                </a>
-                            </li>
-                            <li data-status="enabled">
-                                <a href="#">
-                                    <div class="desc">Show enabled</div>
+                                    <div class="desc">Hide 0</div>
                                 </a>
                             </li>
                         </ul>
@@ -417,6 +412,9 @@
 
                 <div class="row line-chart">
                     <div class="loading-gif-on-graph hidden-graph"></div>
+                    <div class="no-data-found-graph hidden-no-data-found-message-graph">
+                        <span class="no-data-found-message-graph">No data found for graph</span>
+                    </div>
                     <section class="panel">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>

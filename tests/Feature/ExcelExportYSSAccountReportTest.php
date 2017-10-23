@@ -58,7 +58,7 @@ class ExcelExportYSSAccountReportTest extends TestCase
         20 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
     ];
 
-    const DEFAULT_STATUS = 'enabled';
+    const DEFAULT_STATUS = 'hideZero';
     const CUSTOM_START_DAY = '2017-06-23';
     const CUSTOM_END_DAY = '2017-09-21';
     const DEFAULT_COLUMN_SORT = self::COLUMN_NAME_IMPRESSIONS;

@@ -63,7 +63,7 @@ class GraphApiYssCampaignReportTest extends TestCase
         . '"timePeriodLayout":"<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - '
         . '2017-04-01<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"<span id='
         . '\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\"><\/strong>","statusLayout":'
-        . '"<span>Show enabled\n<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
+        . '"<span>enabled\n<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'campaignName';
     const COLUMN_NAME_DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
     const COLUMN_NAME_COST = 'cost';
@@ -203,10 +203,10 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $response->assertSessionHas(
             RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE,
-            'enabled'
+            'Hide 0'
         );
     }
-    
+
     public function teststatusTitleInSessionIsSetToEnabledAsDefaultValue()
     {
         $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('get');
@@ -374,14 +374,14 @@ class GraphApiYssCampaignReportTest extends TestCase
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
             'data' => [
-                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+                ['data' => null, 'day' => self::DATE_FIRST_DAY_2016]
             ],
             'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 ."<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n"
+            'statusLayout' => "<span>enabled\n"
                 ."<strong class=\"caret selection\"></strong>\n"
                 ."</span>"
         ];
@@ -411,14 +411,14 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $object = [
             'data' => [
-                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+                ['data' => null, 'day' => '2016-01-01'], ['data' => null, 'day' => '2016-02-01']
             ],
             'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n",
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 ."<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n"
+            'statusLayout' => "<span>enabled\n"
                 ."<strong class=\"caret selection\"></strong>\n"
                 ."</span>"
         ];
