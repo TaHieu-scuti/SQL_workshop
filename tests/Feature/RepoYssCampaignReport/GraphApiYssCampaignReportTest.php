@@ -204,7 +204,7 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $response->assertSessionHas(
             RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE,
-            'enabled'
+            'Hide 0'
         );
     }
 

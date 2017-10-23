@@ -190,7 +190,7 @@ class GraphApiYssAdgroupReportTest extends TestCase
         $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('post');
     }
 
-    private function statusTitleInSessionIsSetToEnabledAsDefaultValue($method)
+    private function statusTitleInSessionIsSetToHideZeroAsDefaultValue($method)
     {
         $this->getUserAndAccessToCampaignReport();
 
@@ -202,14 +202,14 @@ class GraphApiYssAdgroupReportTest extends TestCase
 
         $response->assertSessionHas(
             RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE,
-            'enabled'
+            'Hide 0'
         );
     }
 
-    public function teststatusTitleInSessionIsSetToEnabledAsDefaultValue()
+    public function teststatusTitleInSessionIsSetToHideZerodAsDefaultValue()
     {
-        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('get');
-        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('post');
+        $this->statusTitleInSessionIsSetToHideZeroAsDefaultValue('get');
+        $this->statusTitleInSessionIsSetToHideZeroAsDefaultValue('post');
     }
 
     private function doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet($method)
@@ -373,7 +373,7 @@ class GraphApiYssAdgroupReportTest extends TestCase
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
             'data' => [
-                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+                ['data' => null, 'day' => self::DATE_FIRST_DAY_2016]
             ],
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
@@ -408,7 +408,7 @@ class GraphApiYssAdgroupReportTest extends TestCase
 
         $object = [
             'data' => [
-                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+                ['data' => null, 'day' => '2016-01-01'], ['data' => null, 'day' => '2016-02-01']
             ],
             'field' => 'clicks',
             'field' => 'clicks',

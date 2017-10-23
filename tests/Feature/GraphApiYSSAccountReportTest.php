@@ -58,13 +58,12 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"445791","day":"2017-03-26"},{"data":"523383","day":"2017-03-27"},'
         . '{"data":"723413","day":"2017-03-28"},{"data":"501060","day":"2017-03-29"},'
         . '{"data":"674264","day":"2017-03-30"},{"data":"532990","day":"2017-03-31"},'
-        . '{"data":"464408","day":"2017-04-01"}],"field":"clicks",'
-        . '"timePeriodLayout":"<span class=\"title\">Last 90 days<br><\/span>\n'
-        . '<span>2017-01-01 - 2017-04-01<\/span>\n<strong class=\"caret\"><\/strong>\n",'
-        . '"graphColumnLayout":"<span id=\"txtColumn\">clicks<\/span>\n'
-        . '<strong class=\"caret selection\"><\/strong>",'
-        . '"statusLayout":"<span>Show enabled\n<strong '
-        . 'class=\"caret selection\"><\/strong>\n<\/span>"}';
+        . '{"data":"464408","day":"2017-04-01"}],"field":"clicks","timePeriodLayout":'
+        . '"<span class=\"title\">Last 90 days<br><\/span>\r\n<span>2017-01-01 - 2017-04-01<\/span>\r\n'
+        . '<strong class=\"caret\"><\/strong>\r\n","graphColumnLayout":"'
+        . '<span id=\"txtColumn\">clicks<\/span>\r\n<strong class=\"caret selection\">'
+        . '<\/strong>","statusLayout":"<span>Hide 0\r\n<strong class=\"caret selection\">'
+        . '<\/strong>\r\n<\/span>","displayNoDataFoundMessageOnGraph":false}';
 
     const DEFAULT_FIELD_NAMES = [
         3 => "cost",
@@ -99,8 +98,8 @@ class GraphApiYSSAccountReportTest extends TestCase
         32 => "week"
     ];
 
-    const DEFAULT_ACCOUNT_STATUS = 'enabled';
-    const DEFAULT_STATUS_TITLE = 'enabled';
+    const DEFAULT_ACCOUNT_STATUS = 'hideZero';
+    const DEFAULT_STATUS_TITLE = 'Hide 0';
     const DEFAULT_PAGINATION = 20;
     const DEFAULT_SORT = 'desc';
     const DATE_FIRST_DAY_2016 = '2016-01-01';
@@ -184,7 +183,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         $this->graphColumnNameInSessionIsSetToClicksAsDefaultValue('post');
     }
 
-    private function statusTitleInSessionIsSetToEnabledAsDefaultValue($method)
+    private function statusTitleInSessionIsSetToHideZeroAsDefaultValue($method)
     {
         $this->getUserAndAccessToAccountReport();
 
@@ -196,14 +195,14 @@ class GraphApiYSSAccountReportTest extends TestCase
 
         $response->assertSessionHas(
             RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE,
-            'enabled'
+            'Hide 0'
         );
     }
     
-    public function teststatusTitleInSessionIsSetToEnabledAsDefaultValue()
+    public function testStatusTitleInSessionIsSetToHideZeroAsDefaultValue()
     {
-        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('get');
-        $this->statusTitleInSessionIsSetToEnabledAsDefaultValue('post');
+        $this->statusTitleInSessionIsSetToHideZeroAsDefaultValue('get');
+        $this->statusTitleInSessionIsSetToHideZeroAsDefaultValue('post');
     }
 
     private function doesNotSetGraphColumnNameToDefaultValueClicksWhenItIsAlreadySet($method)
@@ -368,14 +367,17 @@ class GraphApiYSSAccountReportTest extends TestCase
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
             'data' => [
-                ['data' => 0, 'day' => self::DATE_FIRST_DAY_2016]
+                ['data' => null, 'day' => self::DATE_FIRST_DAY_2016]
             ],
-            'field' => "clicks",
-            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
-                . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n<strong class=\"caret selection\"></strong>\n</span>",
+            'displayNoDataFoundMessageOnGraph'=>true,
+            'field' => 'clicks',
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
+                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                ."<strong class=\"caret selection\"></strong>",
+            'statusLayout' => "<span>Hide 0\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
         ];
 
         $response->assertExactJson($object);
@@ -403,15 +405,15 @@ class GraphApiYSSAccountReportTest extends TestCase
 
         $object = [
             'data' => [
-                ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
+                ['data' => null, 'day' => '2016-01-01'], ['data' => null, 'day' => '2016-02-01']
             ],
+            'displayNoDataFoundMessageOnGraph'=>true,
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
-                . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n<strong class=\"caret selection\">"
-                . "</strong>\n</span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n"
+                ."<strong class=\"caret selection\"></strong>",
+            'statusLayout' => "<span>Hide 0\n"
+                ."<strong class=\"caret selection\"></strong>\n"
+                ."</span>"
         ];
 
         $response->assertExactJson($object);
@@ -442,13 +444,13 @@ class GraphApiYSSAccountReportTest extends TestCase
 
         $errorObject = [
             self::JSON_STATUS_CODE_FIELD_NAME => 500,
-            self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found:'
-                . ' 1054 Unknown column \'someNonExistingColumnName\''
-                . ' in \'field list\' (SQL: select SUM(someNonExistingColumnName) as data,'
-                . ' DATE(day) as day from `repo_yss_account_report` inner join `repo_yss_accounts` '
-                . 'on `repo_yss_account_report`.`account_id` = `repo_yss_accounts`.'
-                . '`account_id` where (date(`day`) >= 2017-01-01 and date(`day`) <='
-                . ' 2017-04-01) and `repo_yss_accounts`.`accountStatus` like %enabled group by `day`)'
+            self::JSON_ERROR_FIELD_NAME => 'SQLSTATE[42S22]: Column not found: '
+                . '1054 Unknown column \'someNonExistingColumnName\' in \'field list\' (SQL'
+                . ': select SUM(someNonExistingColumnName) as data, DATE(day) as day from `'
+                . 'repo_yss_account_report` inner join `repo_yss_accounts` on `repo_yss_acc'
+                . 'ount_report`.`account_id` = `repo_yss_accounts`.`account_id` where (date'
+                . '(`day`) >= 2017-01-01 and date(`day`) <= 2017-04-01) group by `day` '
+                . 'having SUM(impressions) != 0)'
         ];
 
         $response->assertExactJson($errorObject);

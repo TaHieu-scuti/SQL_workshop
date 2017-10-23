@@ -126,10 +126,10 @@ class TableApiYssAdgroupReportTest extends TestCase
         4 => self::COLUMN_NAME_AVERAGE_POSITION,
     ];
 
-    const DEFAULT_STATUS = 'enabled';
+    const DEFAULT_STATUS = 'hideZero';
     const CUSTOM_STATUS = 'someStatus';
     const DEFAULT_TIME_PERIOD_TITLE = 'Last 90 days';
-    const DEFAULT_STATUS_TITLE = 'enabled';
+    const DEFAULT_STATUS_TITLE = 'Hide 0';
     const DEFAULT_GRAPH_COLUMN_NAME = 'clicks';
     const CUSTOM_TIME_PERIOD_TITLE = '10 days';
     const CUSTOM_START_DAY = '2017-01-01';

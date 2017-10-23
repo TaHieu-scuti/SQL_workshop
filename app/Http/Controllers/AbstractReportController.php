@@ -91,8 +91,8 @@ abstract class AbstractReportController extends Controller
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        $accountStatus = "enabled";
-        $statusTitle = "enabled";
+        $accountStatus = "hideZero";
+        $statusTitle = "Hide 0";
         $graphColumnName = "clicks";
         $summaryReport = [
             'clicks',
@@ -219,10 +219,10 @@ abstract class AbstractReportController extends Controller
 
         if ($data->isEmpty()) {
             if (session(static::SESSION_KEY_END_DAY) === session(static::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => 0];
+                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
             } else {
-                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => 0];
-                $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => 0];                
+                $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => null];
+                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
             }
         }
 

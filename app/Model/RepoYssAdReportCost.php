@@ -77,6 +77,7 @@ class RepoYssAdReportCost extends AbstractReportModel
 
         return $arrayCalculate;
     }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus

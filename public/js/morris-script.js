@@ -88,17 +88,13 @@ var Script = function () {
             var option = $(this).data('status');
             var status;
             switch(option) {
-                case 'all' :
-                    statusTitle = "all";
-                    status = "all";
+                case 'showZero' :
+                    statusTitle = 'Show 0';
+                    status = 'showZero';
                     break;
-                case 'disabled' :
-                    statusTitle = 'disabled';
-                    status = 'disabled';
-                    break;
-                case 'enabled' :
-                    statusTitle = 'enabled';
-                    status = 'enabled';
+                case 'hideZero' :
+                    statusTitle = 'Hide 0';
+                    status = 'hideZero';
                     break;
             }
             $.ajax({
@@ -212,6 +208,13 @@ var Script = function () {
         {
             var field = response.field;
             var data = [];
+            if(response.displayNoDataFoundMessageOnGraph) {
+                $('.no-data-found-graph.hidden-no-data-found-message-graph')
+                    .removeClass('hidden-no-data-found-message-graph');
+            } else {
+                $('.no-data-found-graph')
+                    .addClass('hidden-no-data-found-message-graph');
+            }
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
