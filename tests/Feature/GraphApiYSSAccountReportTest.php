@@ -406,12 +406,12 @@ class GraphApiYSSAccountReportTest extends TestCase
                 ['data' => 0, 'day' => '2016-01-01'], ['data' => 0, 'day' => '2016-02-01']
             ],
             'field' => 'clicks',
-            'graphColumnLayout' => "<span id=\"txtColumn\">clicks<\/span>\n"
-                . "<strong class=\"caret selection\"><\/strong>",
+            'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
+                . "<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>Show enabled\n<strong class=\"caret selection\">"
-                . "<\/strong>\n<\/span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br><\/span>\n"
-                . "<span>2016-01-01 - 2016-02-01<\/span>\n<strong class=\"caret\"><\/strong>\n"
+                . "</strong>\n</span>",
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n"
         ];
 
         $response->assertExactJson($object);
