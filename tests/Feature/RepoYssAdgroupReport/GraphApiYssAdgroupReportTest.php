@@ -63,7 +63,7 @@ class GraphApiYssAdgroupReportTest extends TestCase
         . '<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - 2017-04-01'
         . '<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"'
         . '<span id=\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\">'
-        . '<\/strong>","statusLayout":"<span>Show enabled\n'
+        . '<\/strong>","statusLayout":"<span>enabled\n'
         . '<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'adgroupName';
     const COLUMN_NAME_ADGROUP_BID = 'adGroupBid';
@@ -378,9 +378,10 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n<strong class=\"caret selection\"></strong>\n</span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
+            'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
+                . "<\/strong>\n<\/span>",
+            'timePeriodLayout':"<span class=\"title\">Last 90 days<br><\/span>\n"
+                . "<span>2016-01-01 - 2016-01-01<\/span>\n<strong class=\"caret\"><\/strong>\n"
         ];
 
         $response->assertExactJson($object);
@@ -414,9 +415,11 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>Show enabled\n<strong class=\"caret selection\"></strong>\n</span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
-                . "<span>2016-01-01 - 2016-02-01</span>\n<strong class=\"caret\"></strong>\n"
+            'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
+                . "<\/strong>\n<\/span>",
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br><\/span>\n"
+                . "<span>2016-01-01 - 2016-02-01<\/span>\n"
+                . "<strong class=\"caret\"><\/strong>\n"
         ];
 
         $response->assertExactJson($object);

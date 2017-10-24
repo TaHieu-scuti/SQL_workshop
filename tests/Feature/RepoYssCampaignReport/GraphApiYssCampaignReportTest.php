@@ -63,7 +63,7 @@ class GraphApiYssCampaignReportTest extends TestCase
         . '"field":"clicks","timePeriodLayout":"<span class=\"title\">Last 90 days<br>'
         . '<\/span>\n<span>2017-01-01 - 2017-04-01<\/span>\n<strong class=\"caret\">'
         . '<\/strong>\n","graphColumnLayout":"<span id=\"txtColumn\">clicks<\/span>\n'
-        . '<strong class=\"caret selection\"><\/strong>","statusLayout":"<span>Show enabled\n'
+        . '<strong class=\"caret selection\"><\/strong>","statusLayout":"<span>enabled\n'
         . '<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'campaignName';
     const COLUMN_NAME_DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
@@ -380,7 +380,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             "field" => "clicks",
             "graphColumnLayout" => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            "statusLayout" => "<span>Show enabled\n<strong class=\"caret selection\"></strong>\n</span>",
+            "statusLayout" => "<span>enabled\n<strong class=\"caret selection\"></strong>\n</span>",
             "timePeriodLayout" => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
         ];
@@ -410,12 +410,12 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $object = [
             "data" => [
-                ["data" => 0, "day" => "2016-01-01"], ["data" => 0,"day" => "2016-02-01"]
+                ["data" => null, "day" => "2016-01-01"], ["data" => null,"day" => "2016-02-01"]
             ],
             "field" => "clicks",
             "graphColumnLayout" => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            "statusLayout" => "<span>Show enabled\n"
+            "statusLayout" => "<span>enabled\n"
                 . "<strong class=\"caret selection\"></strong>\n</span>",
             "timePeriodLayout" => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-02-01</span>\n"

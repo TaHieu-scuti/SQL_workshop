@@ -59,11 +59,11 @@ class GraphApiYSSAccountReportTest extends TestCase
         . '{"data":"723413","day":"2017-03-28"},{"data":"501060","day":"2017-03-29"},'
         . '{"data":"674264","day":"2017-03-30"},{"data":"532990","day":"2017-03-31"},'
         . '{"data":"464408","day":"2017-04-01"}],"field":"clicks","timePeriodLayout":'
-        . '"<span class=\"title\">Last 90 days<br><\/span>\r\n<span>2017-01-01 - 2017-04-01<\/span>\r\n'
-        . '<strong class=\"caret\"><\/strong>\r\n","graphColumnLayout":"'
-        . '<span id=\"txtColumn\">clicks<\/span>\r\n<strong class=\"caret selection\">'
-        . '<\/strong>","statusLayout":"<span>Hide 0\r\n<strong class=\"caret selection\">'
-        . '<\/strong>\r\n<\/span>","displayNoDataFoundMessageOnGraph":false}';
+        . '"<span class=\"title\">Last 90 days<br><\/span>\r\n<span>2017-01-01 - 2017-04-01<\/span>\n'
+        . '<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"'
+        . '<span id=\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\">'
+        . '<\/strong>","statusLayout":"<span>Hide 0\n<strong class=\"caret selection\">'
+        . '<\/strong>\n<\/span>","displayNoDataFoundMessageOnGraph":false}';
 
     const DEFAULT_FIELD_NAMES = [
         3 => "cost",
@@ -413,7 +413,9 @@ class GraphApiYSSAccountReportTest extends TestCase
                 ."<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>Hide 0\n"
                 ."<strong class=\"caret selection\"></strong>\n"
-                ."</span>"
+                ."</span>",
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br><\/span>\n"
+                . "<span>2016-01-01 - 2016-02-01<\/span>\n<strong class=\"caret\"><\/strong>\n"
         ];
 
         $response->assertExactJson($object);
