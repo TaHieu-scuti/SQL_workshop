@@ -132,7 +132,6 @@ class RepoYssAccountReportController extends AbstractReportController
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        echo "<pre>";dd($summaryReportData);
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view('layouts.table_data', [
             self::REPORTS => $reports,
