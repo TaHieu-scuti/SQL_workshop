@@ -379,9 +379,9 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
-                . "<\/strong>\n<\/span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br><\/span>\n"
-                . "<span>2016-01-01 - 2016-01-01<\/span>\n<strong class=\"caret\"><\/strong>\n"
+                . "</strong>\n</span>",
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
         ];
 
         $response->assertExactJson($object);
@@ -416,10 +416,10 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
             'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
-                . "<\/strong>\n<\/span>",
-            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br><\/span>\n"
-                . "<span>2016-01-01 - 2016-02-01<\/span>\n"
-                . "<strong class=\"caret\"><\/strong>\n"
+                . "</strong>\n</span>",
+            'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
+                . "<span>2016-01-01 - 2016-02-01</span>\n"
+                . "<strong class=\"caret\"></strong>\n"
         ];
 
         $response->assertExactJson($object);

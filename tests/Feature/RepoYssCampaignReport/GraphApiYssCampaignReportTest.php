@@ -375,7 +375,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
             "data" => [
-                ["data" => 0, "day" => self::DATE_FIRST_DAY_2016]
+                ["data" => null, "day" => self::DATE_FIRST_DAY_2016]
             ],
             "field" => "clicks",
             "graphColumnLayout" => "<span id=\"txtColumn\">clicks</span>\n"
