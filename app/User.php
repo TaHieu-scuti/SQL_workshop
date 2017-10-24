@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -40,5 +41,23 @@ class User extends Authenticatable
     {
 
         $this->attributes['password'] = md5($password);
+    }
+
+    public static function getArrayAttribute($title) {
+        $array = [];
+        if ($title === "Account") {
+            $array[] = $title;
+            $array[] = Auth::user()->username;
+        } elseif ($title === "Campaign") {
+            $array[] = $title;
+            $array[] = "All Campaign";
+        } elseif ($title === "AdGroup") {
+            $array[] = $title;
+            $array[] = "All AdGroup";
+        } elseif ($title === "AdReport") {
+            $array[] = $title;
+            $array[] = "All AdReport";
+        }
+        return $array;
     }
 }

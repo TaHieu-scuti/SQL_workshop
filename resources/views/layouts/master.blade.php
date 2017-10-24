@@ -65,7 +65,7 @@
                 <div class="row breadcrumb-list">
                     <div class="col-md-12">
                     <!--breadcrumbs start -->
-                    <ul class="breadcrumb">
+                    {{-- <ul class="breadcrumb">
                         <li class="breadcrumb-item">
                             <div class="breadcrumb-item-detail">
                                 <span class="title">Account<br></span>
@@ -169,7 +169,8 @@
                                 </ul>
                             </div>
                         </li>
-                    </ul>
+                    </ul> --}}
+                    {!! Breadcrumbs::render() !!}
                     <!--breadcrumbs end -->
                     </div>
                 </div>
@@ -318,12 +319,12 @@
                     <div class="col-md-8 col-xs-12 pull-left">
                         <ul class="panel">
                             <li class="panel-body">
-                                <a href="campaign-list.html">
+                                <a href="{{ route('campaign-report') }}">
                                     CAMPAIGNS
                                 </a>
                             </li>
                             <li class="panel-body">
-                                <a href="#">
+                                <a href="{{ route('adgroup-report') }}">
                                     AD GROUPS
                                 </a>
                             </li>
@@ -333,7 +334,7 @@
                                 </a>
                             </li>
                             <li class="panel-body">
-                                <a href="ad-list.html">
+                                <a href="{{ route('ad-report') }}">
                                     ADS
                                 </a>
                             </li>

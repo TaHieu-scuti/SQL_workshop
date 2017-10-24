@@ -73,7 +73,7 @@ Route::prefix('campaign-report')->group(function () {
     Route::get(
         '/',
         'RepoYssCampaignReport\RepoYssCampaignReportController@index'
-    );
+    )->name('campaign-report');
     Route::get(
         '/display-graph',
         'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
@@ -104,7 +104,7 @@ Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
-    );
+    )->name('adgroup-report');
     Route::get(
         '/display-graph',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
@@ -135,7 +135,7 @@ Route::prefix('ad-report')->group(function () {
     Route::get(
         '/',
         'RepoYssAdReport\RepoYssAdReportController@index'
-    );
+    )->name('ad-report');
     Route::get(
         '/display-graph',
         'RepoYssAdReport\RepoYssAdReportController@displayGraph'
