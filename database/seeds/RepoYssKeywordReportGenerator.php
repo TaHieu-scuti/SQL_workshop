@@ -6,6 +6,7 @@ use App\Model\RepoYssAdgroupReportCost;
 use App\Model\RepoYssKeywordReportCost;
 use App\Model\RepoYssKeywordReportConv;
 
+// @codingStandardsIgnoreLine
 class RepoYssKeywordReportGenerator extends Seeder
 {
     const MIN_NUMBER_OF_KEYWORD = 1;
@@ -258,7 +259,9 @@ class RepoYssKeywordReportGenerator extends Seeder
                 $keywordReportCost->week = $adgroupReport->week;
                 $keywordReportConv->week = $adgroupReport->week;
                 $keywordReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-                $keywordReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+                $keywordReportConv->conversionName = self::CONVERSION_NAME[
+                    mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                ];
                 $keywordReportCost->saveOrFail();
                 $keywordReportConv->saveOrFail();
             }
