@@ -16,20 +16,6 @@ class RepoYssKeywordReportCost extends AbstractReportModel
     /** @var bool */
     public $timestamps = false;
 
+    /** @var string */
     protected $table = 'repo_yss_keyword_report_cost';
-
-    /**
-     * @param string $column
-     * @param string $accountStatus
-     * @param string $startDay
-     * @param string $endDay
-     * @return \Illuminate\Support\Collection
-     */
-    public function getDataForGraph(
-        $column,
-        $accountStatus,
-        $startDay,
-        $endDay
-    ) {
-    }
 }
