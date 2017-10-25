@@ -7,6 +7,11 @@ use App\AbstractReportModel;
 
 class RepoYssKeywordReportCost extends AbstractReportModel
 {
+    /** @var bool */
+    public $timestamps = false;
+
+    protected $table = 'repo_yss_keyword_report_cost';
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
