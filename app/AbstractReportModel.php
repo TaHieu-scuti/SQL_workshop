@@ -33,6 +33,13 @@ abstract class AbstractReportModel extends Model
         'ctr'
     ];
 
+    const SUMMARY_FIELDS = [
+        'impressions',
+        'clicks',
+        'ctr',
+        'cost'
+    ];
+
     /**
      * @param string[] $fieldNames
      * @return Expression[]
@@ -40,30 +47,28 @@ abstract class AbstractReportModel extends Model
     protected function getAggregated(array $fieldNames)
     {
         $tableName = $this->getTable();
-        $arrayCalculate = [];
+        $expressions = [];
 
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = static::GROUPED_BY_FIELD_NAME;
+                $expressions[] = static::GROUPED_BY_FIELD_NAME;
                 continue;
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
+                $expressions[] = $this->getAverageExpression($fieldName);
             } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
                     === static::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
-                    );
+                    $expressions[] = $this->getTrimmedSumExpression($fieldName);
                 } else {
-                    $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
+                    $expressions[] = $this->getSumExpression($fieldName);
                 }
             }
         }
 
-        return $arrayCalculate;
+        return $expressions;
     }
 
     /**
@@ -81,6 +86,25 @@ abstract class AbstractReportModel extends Model
         }
     }
 
+    protected function getAverageExpression($fieldName)
+    {
+        return DB::raw(
+            'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
+        );
+    }
+
+    protected function getTrimmedSumExpression($fieldName)
+    {
+        return DB::raw(
+            'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
+        );
+    }
+
+    protected function getSumExpression($fieldName)
+    {
+        return DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
+    }
+
     /**
      * @param string $fieldName
      * @param int    $resultPerPage
@@ -88,7 +112,7 @@ abstract class AbstractReportModel extends Model
      */
     public function getDataByFilter($fieldName, $resultPerPage)
     {
-        return self::paginate($resultPerPage, $fieldName);
+        return $this->paginate($resultPerPage, $fieldName);
     }
 
     /**
@@ -146,7 +170,7 @@ abstract class AbstractReportModel extends Model
         $sort
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
-        return static::select(static::FIELDS + $aggregations)
+        return $this->select(static::FIELDS + $aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -178,7 +202,7 @@ abstract class AbstractReportModel extends Model
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
 
-        return static::select(
+        return $this->select(
             DB::raw('SUM(' . $column . ') as data'),
             DB::raw(
                 'DATE(day) as day'
@@ -191,5 +215,94 @@ abstract class AbstractReportModel extends Model
             )
             ->groupBy('day')
             ->get();
+    }
+
+    /**
+     * @param string $startDay
+     * @param string $endDay
+     * @return array
+     */
+    public function getSummaryData($startDay, $endDay)
+    {
+        $expressions = $this->getAggregated(static::SUMMARY_FIELDS);
+
+        if (empty($expressions)) {
+            return $expressions;
+        }
+
+        return $this->select($expressions)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->first()
+            ->toArray();
+    }
+
+    /**
+     * @param string $startDay
+     * @param string $endDay
+     * @return array
+     */
+    public function getTotalsRow($startDay, $endDay)
+    {
+        $expressions = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
+
+        $fields = $this->unsetColumns(static::FIELDS, [static::GROUPED_BY_FIELD_NAME]);
+
+        return $this->select($fields + $expressions)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->first()
+            ->toArray();
+    }
+
+    /**
+     * @param array $fieldNames
+     * @param $accountStatus
+     * @param $startDay
+     * @param $endDay
+     * @param $columnSort
+     * @param $sort
+     * @return \Illuminate\Support\Collection
+     */
+    public function getDataForExport(
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort
+    ) {
+        $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
+        return $this->select(static::FIELDS + $aggregations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy(static::GROUPED_BY_FIELD_NAME)
+            ->orderBy($columnSort, $sort)
+            ->get();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getColumnNamesForSearch($keyword)
+    {
+        $allFieldNames = static::AVERAGE_FIELDS + static::SUM_FIELDS;
+        $matchingFieldNames = [];
+        foreach ($allFieldNames as $fieldName) {
+            if (strpos($allFieldNames, $keyword) !== false) {
+                $matchingFieldNames[] = $fieldName;
+            }
+        }
+
+        return $matchingFieldNames;
     }
 }
