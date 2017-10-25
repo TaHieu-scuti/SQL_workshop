@@ -14,6 +14,9 @@ abstract class AbstractReportModel extends Model
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
 
+    const FIELDS = [
+    ];
+
     const AVERAGE_FIELDS = [
         'averageCpc',
         'averagePosition'
@@ -124,7 +127,7 @@ abstract class AbstractReportModel extends Model
         $sort
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
-        return self::select($aggregations)
+        return self::select(static::FIELDS + $aggregations)
             ->where(
                 function ($query) use ($startDay, $endDay) {
                     if ($startDay === $endDay) {
