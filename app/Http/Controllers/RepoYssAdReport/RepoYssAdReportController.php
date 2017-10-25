@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\RepoYssAdReport;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
-use DateTime;
 use Exception;
 
 class RepoYssAdReportController extends AbstractReportController
