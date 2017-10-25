@@ -2,11 +2,30 @@
 
 namespace App;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 abstract class AbstractReportModel extends Model
 {
+    // Please override these constants in the derived report models when necessary
+    const FIELD_TYPE = 'float';
+    const GROUPED_BY_FIELD_NAME = 'id';
+
+    const AVERAGE_FIELDS = [
+        'averageCpc',
+        'averagePosition'
+    ];
+
+    const SUM_FIELDS = [
+        'clicks',
+        'impressions',
+        'cost',
+        'ctr'
+    ];
+
     /**
      * @param string $fieldName
      * @param int    $resultPerPage
@@ -54,15 +73,48 @@ abstract class AbstractReportModel extends Model
 
     /**
      * @param string[] $fieldNames
+     * @return Expression[]
+     */
+    protected function getAggregated(array $fieldNames)
+    {
+        $tableName = $this->getTable();
+        $arrayCalculate = [];
+
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+                $arrayCalculate[] = static::GROUPED_BY_FIELD_NAME;
+                continue;
+            }
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
+            } else {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                        ->getType()
+                        ->getName()
+                    === static::FIELD_TYPE) {
+                    $arrayCalculate[] = DB::raw(
+                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
+                    );
+                } else {
+                    $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
+                }
+            }
+        }
+
+        return $arrayCalculate;
+    }
+
+    /**
+     * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
      * @param string   $endDay
      * @param int      $pagination
      * @param string   $columnSort
      * @param string   $sort
-     * @return string[]
+     * @return LengthAwarePaginator
      */
-    abstract public function getDataForTable(
+    public function getDataForTable(
         array $fieldNames,
         $accountStatus,
         $startDay,
@@ -70,7 +122,23 @@ abstract class AbstractReportModel extends Model
         $pagination,
         $columnSort,
         $sort
-    );
+    ) {
+        $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
+        return self::select($aggregations)
+            ->where(
+                function ($query) use ($startDay, $endDay) {
+                    if ($startDay === $endDay) {
+                        $query->whereDate('day', '=', $endDay);
+                    } else {
+                        $query->whereDate('day', '>=', $startDay)
+                            ->whereDate('day', '<=', $endDay);
+                    }
+                }
+            )
+            ->groupBy(static::GROUPED_BY_FIELD_NAME)
+            ->orderBy($columnSort, $sort)
+            ->paginate($pagination);
+    }
 
     /**
      * @param string $column
