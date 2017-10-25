@@ -4,9 +4,13 @@ namespace App;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+
+use DateTime;
+use Exception;
 
 abstract class AbstractReportModel extends Model
 {
@@ -28,6 +32,54 @@ abstract class AbstractReportModel extends Model
         'cost',
         'ctr'
     ];
+
+    /**
+     * @param string[] $fieldNames
+     * @return Expression[]
+     */
+    protected function getAggregated(array $fieldNames)
+    {
+        $tableName = $this->getTable();
+        $arrayCalculate = [];
+
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+                $arrayCalculate[] = static::GROUPED_BY_FIELD_NAME;
+                continue;
+            }
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
+            } else {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                        ->getType()
+                        ->getName()
+                    === static::FIELD_TYPE) {
+                    $arrayCalculate[] = DB::raw(
+                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
+                    );
+                } else {
+                    $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
+                }
+            }
+        }
+
+        return $arrayCalculate;
+    }
+
+    /**
+     * @param string $startDay
+     * @param string $endDay
+     * @param Builder $query
+     */
+    protected function addTimeRangeCondition($startDay, $endDay, Builder $query)
+    {
+        if ($startDay === $endDay) {
+            $query->whereDate('day', '=', $endDay);
+        } else {
+            $query->whereDate('day', '>=', $startDay)
+                ->whereDate('day', '<=', $endDay);
+        }
+    }
 
     /**
      * @param string $fieldName
@@ -76,39 +128,6 @@ abstract class AbstractReportModel extends Model
 
     /**
      * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-        $arrayCalculate = [];
-
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = static::GROUPED_BY_FIELD_NAME;
-                continue;
-            }
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                        ->getType()
-                        ->getName()
-                    === static::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-
-    /**
-     * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
      * @param string   $endDay
@@ -127,15 +146,10 @@ abstract class AbstractReportModel extends Model
         $sort
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
-        return self::select(static::FIELDS + $aggregations)
+        return static::select(static::FIELDS + $aggregations)
             ->where(
-                function ($query) use ($startDay, $endDay) {
-                    if ($startDay === $endDay) {
-                        $query->whereDate('day', '=', $endDay);
-                    } else {
-                        $query->whereDate('day', '>=', $startDay)
-                            ->whereDate('day', '<=', $endDay);
-                    }
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
             ->groupBy(static::GROUPED_BY_FIELD_NAME)
@@ -149,11 +163,33 @@ abstract class AbstractReportModel extends Model
      * @param string $startDay
      * @param string $endDay
      * @return \Illuminate\Support\Collection
+     * @throws \InvalidArgumentException
      */
-    abstract public function getDataForGraph(
+    public function getDataForGraph(
         $column,
         $accountStatus,
         $startDay,
         $endDay
-    );
+    ) {
+        try {
+            new DateTime($startDay); //NOSONAR
+            new DateTime($endDay); //NOSONAR
+        } catch (Exception $exception) {
+            throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
+        }
+
+        return static::select(
+            DB::raw('SUM(' . $column . ') as data'),
+            DB::raw(
+                'DATE(day) as day'
+            )
+        )
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy('day')
+            ->get();
+    }
 }
