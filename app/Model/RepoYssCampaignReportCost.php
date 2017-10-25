@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 
 use App\AbstractReportModel;
@@ -52,8 +53,13 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         'campaignType',
     ];
 
-    private function getAggregated(array $fieldNames, $tableName)
+    /**
+     * @param string[] $fieldNames
+     * @return Expression[]
+     */
+    protected function getAggregated(array $fieldNames)
     {
+        $tableName = $this->getTable();
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
@@ -98,9 +104,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
                 ->where(
                     function ($query) use ($startDay, $endDay) {
@@ -251,9 +255,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
                 ->where(
                     function ($query) use ($startDay, $endDay) {
