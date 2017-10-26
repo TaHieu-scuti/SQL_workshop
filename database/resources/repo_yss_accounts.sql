@@ -15,13 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 --
--- Dumping data for table `repo_yss_accounts`
+-- Dumping data for table `scuti_repo_yss_accounts`
 --
 
-LOCK TABLES `repo_yss_accounts` WRITE;
-/*!40000 ALTER TABLE `repo_yss_accounts` DISABLE KEYS */;
-INSERT INTO `repo_yss_accounts` VALUES (1,650,'1','olbZQGLxK2','lK4OGGZgVu','enabled','enabled','2017-09-19 00:48:15','2017-09-19 00:48:15'),(2,27,'2','n4ZDkajrir','xzDOrYNlRY','enabled','enabled','2017-09-19 00:48:16','2017-09-19 00:48:16'),(3,83,'3','sTaagkkYwn','v6E5q7LLdy','enabled','enabled','2017-09-19 00:48:16','2017-09-19 00:48:16'),(4,794,'4','SAdqHlv98A','j2KwTrtqlL','enabled','enabled','2017-09-19 00:48:17','2017-09-19 00:48:17'),(5,383,'5','DgAVzE2lec','iL9pnY62n9','enabled','enabled','2017-09-19 00:48:17','2017-09-19 00:48:17');
-/*!40000 ALTER TABLE `repo_yss_accounts` ENABLE KEYS */;
+LOCK TABLES `scuti_repo_yss_accounts` WRITE;
+/*!40000 ALTER TABLE `scuti_repo_yss_accounts` DISABLE KEYS */;
+INSERT INTO `scuti_repo_yss_accounts` VALUES (1,650,'1','olbZQGLxK2','lK4OGGZgVu','enabled','enabled','2017-09-19 00:48:15','2017-09-19 00:48:15'),(2,27,'2','n4ZDkajrir','xzDOrYNlRY','enabled','enabled','2017-09-19 00:48:16','2017-09-19 00:48:16'),(3,83,'3','sTaagkkYwn','v6E5q7LLdy','enabled','enabled','2017-09-19 00:48:16','2017-09-19 00:48:16'),(4,794,'4','SAdqHlv98A','j2KwTrtqlL','enabled','enabled','2017-09-19 00:48:17','2017-09-19 00:48:17'),(5,383,'5','DgAVzE2lec','iL9pnY62n9','enabled','enabled','2017-09-19 00:48:17','2017-09-19 00:48:17');
+/*!40000 ALTER TABLE `scuti_repo_yss_accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
