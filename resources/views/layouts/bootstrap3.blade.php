@@ -11,13 +11,13 @@
 	                    <a data-toggle="dropdown" id="dropdownMenu1" class="dropdown-toggle" href="{{ $breadcrumb->url }}">
 	                        <span class="content">{{ $titleBreadCumbs[1]['all'] }}</span>
 	                    </a>
-	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownMenu1">
+	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 		                    	<div class="dropdown-menu scroll-menu">
 		                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-			                    		<li>
+			                    		<li data-breadcumbs="{{$key}}" data-url="{{$breadcrumb->url}}">
 		                                    <a href="#">
-		                                        <div class="desc" data-breadcumbs="{{$key}}" data-url="{{$breadcrumb->url}}">{{$account}}</div>
+		                                        <div class="desc" >{{$account}}</div>
 		                                    </a>
 		                                </li>
 	                                @endforeach
@@ -33,14 +33,14 @@
 	                    <a data-toggle="dropdown" id="dropdownMenu1" class="dropdown-toggle" href="#">
 	                        <span class="content">{{ $titleBreadCumbs[1]['all'] }}</span>
 	                    </a>
-	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownMenu1">
+	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 	                    		
 		                    	<div class="dropdown-menu scroll-menu">
 		                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-		                    		<li>
+		                    		<li data-breadcumbs="{{$key}}" data-url="{{$breadcrumb->url}}" >
 	                                    <a href="#">
-	                                        <div class="desc" data-breadcumbs="{{$key}}" data-url="{{$breadcrumb->url}}" >{{$account}}</div>
+	                                        <div class="desc" >{{$account}}</div>
 	                                    </a>
 	                                </li>
 	                                @endforeach

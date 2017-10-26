@@ -249,7 +249,7 @@ var Script = function () {
             });
         }
 
-        $('#dropdownMenu1 .desc').on('click', function() {
+        $('#dropdownBreadcrumbs li').on('click', function() {
             var id = $(this).data('breadcumbs');
             var url = $(this).data('url');
             sendRequestDataGraph(id, url);
