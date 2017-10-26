@@ -215,7 +215,6 @@ var Script = function () {
                 $('.no-data-found-graph')
                     .addClass('hidden-no-data-found-message-graph');
             }
-            console.log(response);
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
