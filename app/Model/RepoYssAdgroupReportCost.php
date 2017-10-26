@@ -293,4 +293,20 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         
         return $this->unsetColumns($result, $unsetColumns);
     }
+
+    public static function getAllAdgroup()
+    {
+        $arrAdgroups = [];
+
+        array_push($arrAdgroups, 'All Adgroup');
+
+        $adgroups = self::select('adgroupID', 'adgroupName')->get();
+        if ($adgroups) {
+            foreach ($adgroups as $key => $adgroup) {
+                $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
+            }
+        }
+        
+        return $arrAdgroups;
+    }
 }

@@ -15,4 +15,17 @@ class RepoYssAccount extends Model
         'accountStatus',    // Contract status of the account
         'deliveryStatus',    // Delivery status of the ad
     ];
+
+    public static function getAllAccounts()
+    {
+    	$arrayAccouts = [];
+    	$accounts = self::select('accountName', 'id')->get();
+    	array_push($arrayAccouts, 'All Account');
+    	if ($accounts) {
+    		foreach ($accounts as $key => $account) {
+	    		$arrayAccouts[$account->id] = $account->accountName;
+	    	}
+    	}
+    	return $arrayAccouts;
+    }
 }
