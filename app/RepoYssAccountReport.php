@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use App\Model\RepoYssAccount;
 
@@ -93,8 +94,14 @@ class RepoYssAccountReport extends AbstractReportModel
     const SHOW_ZERO_STATUS = 'showZero';
     const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
     const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
-    private function getAggregated(array $fieldNames, $tableName)
+
+    /**
+     * @param string[] $fieldNames
+     * @return Expression[]
+     */
+    protected function getAggregated(array $fieldNames)
     {
+        $tableName = $this->getTable();
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
@@ -143,7 +150,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $arrayCalculate = [];
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         array_unshift($arrayCalculate, $tableName.'.account_id');
         $paginatedData  = self::select($arrayCalculate)
                 ->join(
@@ -334,10 +341,9 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort
     ) {
-        $arrayCalculate = [];
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         $data = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
