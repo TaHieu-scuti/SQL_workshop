@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +14,10 @@ use Exception;
 
 abstract class AbstractReportModel extends Model
 {
+    const HIDE_ZERO_STATUS = 'hideZero';
+    const SHOW_ZERO_STATUS = 'showZero';
+    const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
+    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
     // Please override these constants in the derived report models when necessary
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
