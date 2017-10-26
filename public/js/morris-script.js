@@ -215,6 +215,7 @@ var Script = function () {
                 $('.no-data-found-graph')
                     .addClass('hidden-no-data-found-message-graph');
             }
+            console.log(response);
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
@@ -244,6 +245,70 @@ var Script = function () {
                 },
                 complete : function () {
                     completeRequest();
+                }
+            });
+        }
+
+        $('#dropdownMenu1 .desc').on('click', function() {
+            var id = $(this).data('breadcumbs');
+            var url = $(this).data('url');
+            sendRequestDataGraph(id, url);
+            sendRequestDataTable(id, url);
+        });
+
+        function sendRequestDataGraph(id, url) {
+            $.ajax({
+                url : url + '/display-graph',
+                type : 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : {
+                    'id' : id,
+                },
+                beforeSend : function () {
+                    sendingRequest();
+                },
+                success : function(response)
+                {
+                    processData(response);
+                    $('#time-period').html(response.timePeriodLayout);
+                    $('#graph-column').html(response.graphColumnLayout);
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+                complete : function () {
+                    completeRequest();
+                }
+            });
+        }
+
+        function sendRequestDataTable(id, url) {
+            $.ajax({
+                url : url + '/update-table',
+                type : 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : {
+                    'id' : id,
+                },
+                beforeSend : function () {
+                    sendingRequestTable();
+                },
+                success : function(response)
+                {
+                    processDataTable(response);
+                    $('.table_data_report').html(response.tableDataLayout);
+                    $('.summary_report').html(response.summaryReportLayout);
+                    history.pushState("", "", link);
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+                complete : function () {
+                    completeRequestTable();
                 }
             });
         }

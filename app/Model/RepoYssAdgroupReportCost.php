@@ -300,7 +300,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     {
         $arrAdgroups = [];
 
-        array_push($arrAdgroups, 'All Adgroup');
+        $arrAdgroups['all'] = 'All Adgroup';
 
         $adgroups = self::select('adgroupID', 'adgroupName')->get();
         if ($adgroups) {

@@ -305,7 +305,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     {
         $arrCampaigns = [];
 
-        array_push($arrCampaigns, 'All Campaigns');
+        $arrCampaigns['all'] = 'All Campaigns';
 
         $campaigns = self::select('campaignID', 'campaignName')->get();
 

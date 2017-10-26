@@ -307,7 +307,7 @@ class RepoYssAdReportCost extends AbstractReportModel
     {
         $arrAdReports = [];
 
-        array_push($arrAdReports, 'All Adreports');
+        $arrAdReports['all'] = 'All Adreports';
 
         $adreports = self::select('adID', 'adName')->get();
 
