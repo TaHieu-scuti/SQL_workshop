@@ -18,18 +18,18 @@ class RepoYssAccount extends Model
 
     public static function getAllAccounts()
     {
-    	$arrayAccouts = [];
+    	$arrayAccounts = [];
 
     	$accounts = self::select('accountName', 'account_id')->get();
 
-    	$arrayAccouts['all'] = 'All Account';
+    	$arrayAccounts['all'] = 'All Account';
         
     	if ($accounts) {
     		foreach ($accounts as $key => $account) {
-	    		$arrayAccouts[$account->account_id] = $account->accountName;
+	    		$arrayAccounts[$account->account_id] = $account->accountName;
 	    	}
     	}
 
-    	return $arrayAccouts;
+    	return $arrayAccounts;
     }
 }
