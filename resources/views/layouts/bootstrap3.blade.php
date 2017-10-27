@@ -12,6 +12,12 @@
 	                        <span class="content">{{ $titleBreadCumbs[1]['all'] }}</span>
 	                    </a>
 	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownBreadcrumbs">
+	                    	<li>
+                                <p class="heading">
+                                <span class="glyphicon glyphicon-search"></span> 
+                                <input type="text" placeholder="Search for account">
+                                </p>
+                            </li>
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 		                    	<div class="dropdown-menu scroll-menu">
 		                    		@foreach ($titleBreadCumbs[1] as $key => $account)
@@ -34,6 +40,12 @@
 	                        <span class="content">{{ $titleBreadCumbs[1]['all'] }}</span>
 	                    </a>
 	                    <ul class="dropdown-menu extended tasks-bar id_{{$titleBreadCumbs[0]}}" id="dropdownBreadcrumbs">
+	                    	<li>
+                                <p class="heading">
+                                <span class="glyphicon glyphicon-search"></span> 
+                                <input type="text" placeholder="Search for account">
+                                </p>
+                            </li>
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 	                    		
 		                    	<div class="dropdown-menu scroll-menu">
