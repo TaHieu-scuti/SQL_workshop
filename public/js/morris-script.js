@@ -5,13 +5,19 @@ var Script = function () {
         var lineChart;
         initMorris();
         getMorris();
-        $('.statistic .col-md-2').click(function() {
-            var $active = $('.statistic .col-md-2.active');
+        $('.statistic .fields').click(function() {
+            var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
-            $(this).addClass('active');
-            $active.removeClass('active');
             var columnName = $(this).data('name');
             updateMorris(columnName);
+            //remove and add blue dot in summary boxes
+            if (!$(this).hasClass('active')) {
+                $(this).addClass('active');
+                $active.removeClass('active');
+                $(this).find('.small-blue-stuff').addClass('fa fa-circle');
+                $active.find('.small-blue-stuff').removeClass('fa fa-circle');
+            }
+
         });
 
         $('.date-option li:not(.custom-li, .custom-date)').click(function() {
