@@ -63,8 +63,9 @@ class GraphApiYssAdgroupReportTest extends TestCase
         . '<span class=\"title\">Last 90 days<br><\/span>\n<span>2017-01-01 - 2017-04-01'
         . '<\/span>\n<strong class=\"caret\"><\/strong>\n","graphColumnLayout":"'
         . '<span id=\"txtColumn\">clicks<\/span>\n<strong class=\"caret selection\">'
-        . '<\/strong>","statusLayout":"<span>enabled\n'
-        . '<strong class=\"caret selection\"><\/strong>\n<\/span>"}';
+        . '<\/strong>","statusLayout":"<span>Hide 0\n'
+        . '<strong class=\"caret selection\"><\/strong>\n<\/span>",'
+        . '"displayNoDataFoundMessageOnGraph":false}';
     const COLUMN_NAME_CAMPAIGN_NAME = 'adgroupName';
     const COLUMN_NAME_ADGROUP_BID = 'adGroupBid';
     const COLUMN_NAME_COST = 'cost';
@@ -107,8 +108,8 @@ class GraphApiYssAdgroupReportTest extends TestCase
         18 => self::COLUMN_NAME_TABLET_BID_ADJ
     ];
 
-    const DEFAULT_ACCOUNT_STATUS = 'enabled';
-    const DEFAULT_STATUS_TITLE = 'enabled';
+    const DEFAULT_ACCOUNT_STATUS = 'hideZero';
+    const DEFAULT_STATUS_TITLE = 'Hide 0';
     const DEFAULT_PAGINATION = 20;
     const DEFAULT_SORT = 'desc';
     const DATE_FIRST_DAY_2016 = '2016-01-01';
@@ -375,10 +376,11 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'data' => [
                 ['data' => null, 'day' => self::DATE_FIRST_DAY_2016]
             ],
+            "displayNoDataFoundMessageOnGraph" => true,
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
+            'statusLayout' => "<span>Hide 0\n<strong class=\"caret selection\">"
                 . "</strong>\n</span>",
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-01-01</span>\n<strong class=\"caret\"></strong>\n"
@@ -411,11 +413,11 @@ class GraphApiYssAdgroupReportTest extends TestCase
             'data' => [
                 ['data' => null, 'day' => '2016-01-01'], ['data' => null, 'day' => '2016-02-01']
             ],
-            'field' => 'clicks',
+            "displayNoDataFoundMessageOnGraph" => true,
             'field' => 'clicks',
             'graphColumnLayout' => "<span id=\"txtColumn\">clicks</span>\n"
                 . "<strong class=\"caret selection\"></strong>",
-            'statusLayout' => "<span>enabled\n<strong class=\"caret selection\">"
+            'statusLayout' => "<span>Hide 0\n<strong class=\"caret selection\">"
                 . "</strong>\n</span>",
             'timePeriodLayout' => "<span class=\"title\">Last 90 days<br></span>\n"
                 . "<span>2016-01-01 - 2016-02-01</span>\n"
@@ -453,7 +455,7 @@ class GraphApiYssAdgroupReportTest extends TestCase
                 . ' 1054 Unknown column \'someNonExistingColumnName\' in \'field list\''
                 . ' (SQL: select SUM(someNonExistingColumnName) as data,'
                 . ' DATE(day) as day from `repo_yss_adgroup_report_cost` where (date(`day`) '
-                . '>= 2017-01-01 and date(`day`) <= 2017-04-01) group by `day`)'
+                . '>= 2017-01-01 and date(`day`) <= 2017-04-01) group by `day` having SUM(impressions) != 0)'
         ];
 
         $response->assertExactJson($errorObject);

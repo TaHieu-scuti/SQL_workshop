@@ -116,6 +116,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $displayNoDataFoundMessageOnGraph = true;
         $this->updateSessionData($request);
         try {
             $data = $this->getDataForGraph();
@@ -133,12 +134,20 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $graphColumnLayout = view('layouts.graph-column')
                         ->with('graphColumnName', session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
                         ->render();
+        foreach ($data as $value) {
+            // if data !== null, display on graph
+            // else, display "no data found" message
+            if ($value['data'] !== null) {
+                $displayNoDataFoundMessageOnGraph = false;
+            }
+        }
         return $this->responseFactory->json([
-                        'data' => $data,
-                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                        'timePeriodLayout' => $timePeriodLayout,
-                        'graphColumnLayout' => $graphColumnLayout,
-                        'statusLayout' => $statusLayout,
+                            'data' => $data,
+                            'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                            'timePeriodLayout' => $timePeriodLayout,
+                            'graphColumnLayout' => $graphColumnLayout,
+                            'statusLayout' => $statusLayout,
+                            'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
         ]);
     }
 
@@ -148,6 +157,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($columns);
         }
+        $displayNoDataFoundMessageOnTable = true;
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
 
@@ -163,9 +173,15 @@ class RepoYssAdgroupReportController extends AbstractReportController
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
         ])->render();
+        // if no data found
+        // display no data found message on table
+        if ($reports->total() !== 0) {
+            $displayNoDataFoundMessageOnTable = false;
+        }
         return $this->responseFactory->json([
             'summaryReportLayout' => $summaryReportLayout,
             'tableDataLayout' => $tableDataLayout,
+            'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
         ]);
     }
 
