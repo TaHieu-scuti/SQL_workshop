@@ -46,24 +46,22 @@ class CreateIndexesYssAccountReportConv extends Migration
         Schema::table(
             'repo_yss_account_report_convs',
             function (Blueprint $table) {
-                $table->dropIndex([
-                    'repo_yss_account_report_conv_idx1',
-                    'repo_yss_account_report_conv_idx2',
-                    'repo_yss_account_report_conv_idx3',
-                    'repo_yss_account_report_conv_idx4',
-                    'repo_yss_account_report_conv_idx5',
-                    'repo_yss_account_report_conv_idx6',
-                    'repo_yss_account_report_conv_idx7',
-                    'repo_yss_account_report_conv_idx8',
-                    'repo_yss_account_report_conv_idx9',
-                    'repo_yss_account_report_conv_idx10',
-                    'repo_yss_account_report_conv_idx11',
-                    'repo_yss_account_report_conv_idx12',
-                    'repo_yss_account_report_conv_idx13',
-                    'repo_yss_account_report_conv_idx14',
-                    'repo_yss_account_report_conv_idx15',
-                    'repo_yss_account_report_conv_idx16'
-                ]);
+                $table->dropIndex('repo_yss_account_report_conv_idx1');
+                $table->dropIndex('repo_yss_account_report_conv_idx2');
+                $table->dropIndex('repo_yss_account_report_conv_idx3');
+                $table->dropIndex('repo_yss_account_report_conv_idx4');
+                $table->dropIndex('repo_yss_account_report_conv_idx5');
+                $table->dropIndex('repo_yss_account_report_conv_idx6');
+                $table->dropIndex('repo_yss_account_report_conv_idx7');
+                $table->dropIndex('repo_yss_account_report_conv_idx8');
+                $table->dropIndex('repo_yss_account_report_conv_idx9');
+                $table->dropIndex('repo_yss_account_report_conv_idx10');
+                $table->dropIndex('repo_yss_account_report_conv_idx11');
+                $table->dropIndex('repo_yss_account_report_conv_idx12');
+                $table->dropIndex('repo_yss_account_report_conv_idx13');
+                $table->dropIndex('repo_yss_account_report_conv_idx14');
+                $table->dropIndex('repo_yss_account_report_conv_idx15');
+                $table->dropIndex('repo_yss_account_report_conv_idx16');
             }
         );
     }
