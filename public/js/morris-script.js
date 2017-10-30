@@ -247,9 +247,8 @@ var Script = function () {
                 }
             });
         }
-
-        $('#dropdownBreadcrumbs li').on('click', function() {
-            var id = $(this).data('breadcumbs');
+        $('.selectpicker').on('change', function(){
+            var id = $(this).find("option:selected").data("breadcumbs");
             switch (prefixRoute) {
                 case '/account_report':
                     var obj = new Object();
@@ -286,7 +285,6 @@ var Script = function () {
                     // code...
                     break;
             }
-            
         });
 
         function sendRequestDataGraph(datas) {

@@ -5980,3 +5980,33 @@ a.guest-on i {
     background-color: #0d88e0;
     border-color: #357ebd;
 }
+
+.bootstrap-select .btn-default {
+    background-color: #fff!important;
+    border-color: #fff!important;
+    color: black!important;
+}
+
+.bootstrap-select .btn-default:hover {
+    background-color: #fff;
+    border-color: #fff;
+    color: #2E2E2E;
+}
+
+.bootstrap-select .dropdown-menu>.active>a, .bootstrap-select .dropdown-menu> li >a:hover, .bootstrap-select .dropdown-menu> li >a:focus {
+    color: #2E2E2E;
+    text-decoration: none;
+    outline: 0;
+    background-color: #ecedf1;
+}
+.bs-searchbox input {
+    color:#2E2E2E;
+}
+
+.breadcrumb-item-detail .bootstrap-select {
+    width: 170px!important;
+}
+
+.bootstrap-select .inner {
+    height: 200px!important;
+}

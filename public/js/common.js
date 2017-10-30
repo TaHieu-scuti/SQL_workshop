@@ -1,5 +1,7 @@
 var link = window.location.pathname;
 var prefixRoute = getRoutePrefix();
+
+$('.selectpicker').selectpicker();
 /*
 =======
 * stop drop-down menu form disappearing on clicking

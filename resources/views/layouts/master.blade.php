@@ -23,6 +23,7 @@
     <link href="/css/jquery-ui.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="/js/html5shiv.js"></script>
@@ -402,6 +403,7 @@
     <script src="/js/raphael-min.js"></script>
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
     <!-- Custom js-->
     <script>
         $(window).on('hashchange', function() {
