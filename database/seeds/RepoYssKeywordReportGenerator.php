@@ -262,6 +262,9 @@ class RepoYssKeywordReportGenerator extends Seeder
                 $keywordReportConv->conversionName = self::CONVERSION_NAME[
                     mt_rand(0, count(self::CONVERSION_NAME) - 1)
                 ];
+                $keywordReportConv->accountid = $adgroupReport->accountid;
+                $keywordReportCost->accountid = $adgroupReport->accountid;
+
                 $keywordReportCost->saveOrFail();
                 $keywordReportConv->saveOrFail();
             }

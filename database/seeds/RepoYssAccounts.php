@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\RepoYssAccount;
+use App\Model\RepoYssAccount;
 
 // @codingStandardsIgnoreLine
 class RepoYssAccounts extends Seeder
