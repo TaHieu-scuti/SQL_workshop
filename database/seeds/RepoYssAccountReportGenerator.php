@@ -220,11 +220,6 @@ class RepoYssAccountReportGenerator extends Seeder
      */
     public function run()
     {
-
-
-
-
-
         $start = new DateTime(self::START_DATE);
         $interval = new DateInterval(self::INTERVAL);
         $end = new DateTime(self::END_DATE);
