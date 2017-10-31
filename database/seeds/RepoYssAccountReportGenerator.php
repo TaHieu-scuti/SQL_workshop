@@ -10,7 +10,7 @@ class RepoYssAccountReportGenerator extends Seeder
     const START_DATE = '2017-01-01 00:00:00';
     const INTERVAL = 'P1D';
     const END_DATE = '2018-02-03 00:00:00';
-    const NUMBER_OF_ACCOUNTS = 5;
+    const NUMBER_OF_ACCOUNTS = 2;
     const NUMBER_OF_MEDIA_ACCOUNTS = [
         2,
         4,
