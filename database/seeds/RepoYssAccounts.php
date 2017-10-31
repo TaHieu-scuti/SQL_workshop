@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\RepoYssAccount;
+use App\Model\RepoYssAccount;
 
 // @codingStandardsIgnoreLine
 class RepoYssAccounts extends Seeder
@@ -15,13 +15,13 @@ class RepoYssAccounts extends Seeder
     public function run()
     {
         $yssAccountReports = App\RepoYssAccountReport::query()
-            ->select('account_id')
+            ->select(['account_id', 'accountid'])
             ->distinct()
             ->get();
 
         foreach ($yssAccountReports as $yssAccountReport) {
             $account = new RepoYssAccount;
-            $account->accountid = rand(1, 1000);
+            $account->accountid = $yssAccountReport->accountid;
             $account->account_id = $yssAccountReport->account_id;
             $account->accountName = str_random(10);
             $account->accountType = str_random(10);

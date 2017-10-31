@@ -230,6 +230,9 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportCost->description = $adReportConv->description;
                 $adReportCost->directory1 = $adReportConv->directory1;
                 $adReportCost->directory2 = $adReportConv->directory2;
+                $adReportConv->accountid = $adGroupReport->accountid;
+                $adReportCost->accountid = $adGroupReport->accountid;
+
                 $adReportCost->saveOrFail();
                 $adReportConv->saveOrFail();
             }

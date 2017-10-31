@@ -234,6 +234,8 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportConv->conversionName = self::CONVERSION_NAME[
                     mt_rand(0, count(self::CONVERSION_NAME) - 1)
                 ];
+                $adgroupReportConv->accountid = $campaignReport->accountid;
+                $adgroupReportCost->accountid = $campaignReport->accountid;
 
                 $adgroupReportCost->saveOrFail();
                 $adgroupReportConv->saveOrFail();
