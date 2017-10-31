@@ -2,8 +2,7 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Expression;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\AbstractReportModel;
 use DateTime;
@@ -52,37 +51,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
 
     /**
      * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-        $arrayCalculate = [];
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName);
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-    /**
-     * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
      * @param string   $endDay
@@ -101,20 +69,22 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $sort
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
-        return self::select($arrayCalculate)
+        $paginatedData =  $this->select($arrayCalculate)
                 ->where(
-                    function ($query) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
-                        } else {
-                            $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
-                ->orderBy($columnSort, $sort)
-                ->paginate($pagination);
+                ->orderBy($columnSort, $sort);
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->paginate($pagination);
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+                            ->paginate($pagination);
+        }
+        return $paginatedData;
     }
 
     /**
@@ -137,24 +107,26 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
 
-        return self::select(
+        $data = $this->select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
                 'DATE(day) as day'
             )
         )
         ->where(
-            function ($query) use ($startDay, $endDay) {
-                if ($startDay === $endDay) {
-                    $query->whereDate('day', '=', $endDay);
-                } else {
-                    $query->whereDate('day', '>=', $startDay)
-                        ->whereDate('day', '<=', $endDay);
-                }
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )
-        ->groupBy('day')
-        ->get();
+        ->groupBy('day');
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->get();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+                            ->get();
+        }
+        return $data;
     }
 
     public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
@@ -186,18 +158,55 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
             return $arrayCalculate;
         }
 
-        return self::select($arrayCalculate)
+        $data = $this->select($arrayCalculate)
                 ->where(
-                    function ($query) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
-                        } else {
-                            $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                );
+        // get aggregated value
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+                            ->first();
+        }
+        if ($data === null) {
+            $data = [];
+        } else {
+            $data = $data->toArray();
+        }
+        return $data;
+    }
+
+    public function getDataForExport(
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort
+    ) {
+        $arrayCalculate = [];
+        $tableName = $this->getTable();
+        $arrayCalculate = $this->getAggregated($fieldNames, $tableName);
+        $data = $this->select($arrayCalculate)
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
-                ->first()->toArray();
+                ->groupBy(self::GROUPED_BY_FIELD_NAME)
+                ->orderBy($columnSort, $sort);
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->get();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+                            ->get();
+        }
+        return $data;
     }
 
     public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
@@ -222,50 +231,31 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 }
             }
         }
-        $data = self::select($arrayCalculate)
+        $data = $this->select($arrayCalculate)
                     ->where(
-                        function ($query) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $query->whereDate('day', '=', $endDay);
-                            } else {
-                                $query->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<=', $endDay);
-                            }
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
-                    )
-                    ->first()->toArray();
-        foreach ($data as $key => $value) {
-            if ($value === null) {
-                $data[$key] = 0;
-            }
+                    );
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
+                            ->first();
         }
-
+        if ($data === null) {
+            $data = [
+                'clicks' => 0,
+                'impressions' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
+        } else {
+            $data = $data->toArray();
+        }
         return $data;
-    }
-
-    public function getDataForExport(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        return self::select($arrayCalculate)
-                ->where(
-                    function ($query) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $query->whereDate('day', '=', $endDay);
-                        } else {
-                            $query->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
-                    }
-                )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
-                ->orderBy($columnSort, $sort)
-                ->get();
     }
 
      /**
