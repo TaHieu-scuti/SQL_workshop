@@ -3,3 +3,14 @@
 *.scss linguist-vendored
 *.js linguist-vendored
 CHANGELOG.md export-ignore
+database/resources/repo_yss_account_report.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_account_report_convs.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_account_report_costs.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_ad_report_conv.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_ad_report_cost.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_adgroup_report_conv.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_adgroup_report_cost.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_campaign_report_convs.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_campaign_report_costs.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_keyword_report_conv.sql filter=lfs diff=lfs merge=lfs -text
+database/resources/repo_yss_keyword_report_cost.sql filter=lfs diff=lfs merge=lfs -text
