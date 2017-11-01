@@ -11,7 +11,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         'keyword'
     ];
 
-    const GROUPED_BY_FIELD_NAME = 'keywordID';
+    const GROUPED_BY_FIELD_NAME = 'keyword';
 
     /** @var bool */
     public $timestamps = false;
