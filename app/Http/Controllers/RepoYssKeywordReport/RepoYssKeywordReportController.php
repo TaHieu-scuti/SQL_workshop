@@ -46,6 +46,14 @@ class RepoYssKeywordReportController extends AbstractReportController
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
+    const DEFAULT_COLUMNS = [
+        'clicks',
+        'cost',
+        'impressions',
+        'ctr'
+        'averageCpc',
+        'averagePosition'
+    ];
 
     /** @var \App\Model\RepoYssKeywordReportCost */
     protected $model;
@@ -60,21 +68,14 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
-        $possibleDisplayItems = [
-            'clicks',
-            'cost',
-            'impressions',
-            'averageCpc',
-            'averagePosition'
-        ];
-        array_unshift($possibleDisplayItems, self::SESSION_KEY_GROUPED_BY_FIELD);
+        $defaultColumnsWithGroupedField = array_unshift(self::DEFAULT_COLUMNS, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!session('keywordReport')) {
-            $this->initializeSession($possibleDisplayItems);
+            $this->initializeSession($defaultColumnsWithGroupedField);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        return view('yssCampaignReport.index', [
+        return view('yssKeywordReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -86,9 +87,9 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => $possibleDisplayItems,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $possibleDisplayItems,
+                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
