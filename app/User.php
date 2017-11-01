@@ -51,6 +51,11 @@ class User extends Authenticatable
             case 'Account':
                 $array[] = $title;
                 $array[] = RepoYssAccount::getAllAccounts();
+                if (session('accountReport.accountId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('accountReport.accountId');
+                }
                 break;
             case 'Campaign':
                 $array[] = $title;
@@ -70,5 +75,9 @@ class User extends Authenticatable
                 break;
         }
         return $array;
+    }
+    public static function getIdAdgainer()
+    {
+        return Auth::user()->account_id;
     }
 }

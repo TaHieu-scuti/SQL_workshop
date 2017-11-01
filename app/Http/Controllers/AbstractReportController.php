@@ -12,6 +12,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
 use Exception;
 use StdClass;
+use Auth;
 
 abstract class AbstractReportController extends Controller
 {
@@ -20,6 +21,8 @@ abstract class AbstractReportController extends Controller
 
     /** @var \App\AbstractReportModel */
     protected $model;
+
+    private $adgainerId;
 
     /**
      * AbstractReportController constructor.
@@ -32,8 +35,16 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-
         $this->middleware('auth');
+        $this->middleware(function (Request $request, $next) {
+            if (!\Auth::check()) {
+                return redirect('/login');
+            }
+            $this->adgainerId = \Auth::id(); // you can access user id here
+
+           return $next($request);
+        });
+
     }
 
     /**
@@ -112,6 +123,8 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
+        session([static::SESSION_KEY_ACCOUNT_ID => null]);
+
     }
 
     public function updateSessionGraphColumnName($graphColumnName)
@@ -149,6 +162,13 @@ abstract class AbstractReportController extends Controller
     public function updateSessionStatusTitle($statusTitle)
     {
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
+    }
+
+    public function updateSessionAccountId($accountId)
+    {
+        session()->put([
+                static::SESSION_KEY_ACCOUNT_ID => $accountId
+            ]);
     }
 
     public function updateSessionColumnSortAndSort($columnSort)
@@ -202,6 +222,11 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionStatusTitle($request->statusTitle);
         }
 
+        // get id account media if available
+        if ($request->id_account !== "all" && $request->id_account !== null) {
+            $this->updateSessionAccountId($request->id_account);
+        }
+
         //get column sort and sort by if available
         if ($request->columnSort !== null) {
             $this->updateSessionColumnSortAndSort($request->columnSort);
@@ -214,7 +239,9 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session(static::SESSION_KEY_ACCOUNT_ID),
+            $this->adgainerId
         );
 
         if ($data->isEmpty()) {
@@ -238,7 +265,9 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_PAGINATION),
             session(static::SESSION_KEY_COLUMN_SORT),
-            session(static::SESSION_KEY_SORT)
+            session(static::SESSION_KEY_SORT),
+            session(static::SESSION_KEY_ACCOUNT_ID),
+            $this->adgainerId
         );
     }
 
@@ -248,7 +277,9 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SUMMARY_REPORT),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session(static::SESSION_KEY_ACCOUNT_ID),
+            $this->adgainerId
         );
     }
 
@@ -258,7 +289,9 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session(static::SESSION_KEY_ACCOUNT_ID),
+            $this->adgainerId
         );
     }
 }

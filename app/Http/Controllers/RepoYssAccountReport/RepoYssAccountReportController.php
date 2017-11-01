@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
@@ -38,6 +39,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
     const SESSION_KEY_PREFIX_ROUTE = '/account_report';
     const SESSION_KEY_GROUPED_BY_FIELD = 'accountName';
+    const SESSION_KEY_ACCOUNT_ID = self::SESSION_KEY_PREFIX . 'accountId';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -83,7 +85,8 @@ class RepoYssAccountReportController extends AbstractReportController
             'dayOfWeek',
             'week',
             'month',
-            'quarter'
+            'quarter',
+            'accountid'
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;

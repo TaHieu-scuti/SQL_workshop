@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class RepoYssAccount extends Model
 {
@@ -18,18 +19,18 @@ class RepoYssAccount extends Model
 
     public static function getAllAccounts()
     {
-    	$arrayAccounts = [];
+        $arrayAccounts = [];
 
-    	$accounts = self::select('accountName', 'account_id')->get();
+        $accounts = self::select('accountName', 'accountid')->where('account_id', '=', Auth::user()->account_id)->get();
 
-    	$arrayAccounts['all'] = 'All Account';
+        $arrayAccounts['all'] = 'All Account';
         
-    	if ($accounts) {
-    		foreach ($accounts as $key => $account) {
-	    		$arrayAccounts[$account->account_id] = $account->accountName;
-	    	}
-    	}
-
-    	return $arrayAccounts;
+        if ($accounts) {
+            foreach ($accounts as $key => $account) {
+                $arrayAccounts[$account->accountid] = $account->accountName;
+            }
+        }
+        
+        return $arrayAccounts;
     }
 }

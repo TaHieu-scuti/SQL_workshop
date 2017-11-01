@@ -8,6 +8,8 @@ use App\Model\RepoYssAccount;
 
 use DateTime;
 use Exception;
+use Auth;
+use App\User;
 
 class RepoYssAccountReport extends AbstractReportModel
 {
@@ -85,6 +87,7 @@ class RepoYssAccountReport extends AbstractReportModel
         'month',
         'trackingURL',
         'account_id',
+        'accountid'
     ];
 
     // constant
@@ -145,7 +148,9 @@ class RepoYssAccountReport extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId,
+        $adgainerId
     ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -166,6 +171,15 @@ class RepoYssAccountReport extends AbstractReportModel
                         } else {
                             $paginatedData->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<=', $endDay);
+                        }
+                    }
+                )
+                ->where(
+                    function ($query) use ($accountId,  $adgainerId) {
+                        if ($accountId !== null) {
+                            $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                        } else {
+                            $query->where('repo_yss_account_report.account_id', '=', $adgainerId);
                         }
                     }
                 )
@@ -190,7 +204,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param string $endDay
      * @return \Illuminate\Support\Collection
      */
-    public function getDataForGraph($column, $accountStatus, $startDay, $endDay)
+    public function getDataForGraph($column, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
     {
         try {
             new DateTime($startDay);
@@ -198,7 +212,7 @@ class RepoYssAccountReport extends AbstractReportModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
-
+        // dd($accountId);
         $data = self::select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
@@ -218,6 +232,15 @@ class RepoYssAccountReport extends AbstractReportModel
                     } else {
                         $data->whereDate('day', '>=', $startDay)
                             ->whereDate('day', '<=', $endDay);
+                    }
+                }
+            )
+            ->where(
+                function ($query) use ($accountId,  $adgainerId) {
+                    if ($accountId !== null) {
+                        $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                    } else {
+                        $query->where('repo_yss_account_report.account_id', '=', $adgainerId);
                     }
                 }
             )
@@ -265,7 +288,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param $endDay
      * @return array
      */
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -309,6 +332,15 @@ class RepoYssAccountReport extends AbstractReportModel
                             } else {
                                 $data->whereDate('day', '>=', $startDay)
                                     ->whereDate('day', '<=', $endDay);
+                            }
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($accountId,  $adgainerId) {
+                            if ($accountId !== null) {
+                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                            } else {
+                                $query->where('repo_yss_account_report.account_id', '=', $adgainerId);
                             }
                         }
                     );
@@ -371,7 +403,7 @@ class RepoYssAccountReport extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -407,6 +439,15 @@ class RepoYssAccountReport extends AbstractReportModel
                         } else {
                             $data->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<=', $endDay);
+                        }
+                    }
+                )
+                ->where(
+                    function($query) use ($accountId,  $adgainerId) {
+                        if ($accountId !== null) {
+                            $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                        } else {
+                            $query->where('repo_yss_account_report.account_id', '=', $adgainerId);
                         }
                     }
                 );

@@ -11,7 +11,7 @@
 	                    <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 		                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-	                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" {{ $key === 'all' ? "selected" : ""}} >
+	                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" {{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}} >
 	                                    <a href="#">
 	                                        <div class="desc" >{{$account}}</div>
 	                                    </a>
@@ -28,7 +28,7 @@
 	                    <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 	                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" {{ $key === 'all' ? "selected" : ""}} >
+                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" {{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}} >
                                     <a href="#">
                                         <div class="desc" >{{$account}}</div>
                                     </a>

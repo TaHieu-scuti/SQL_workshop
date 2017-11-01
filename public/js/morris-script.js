@@ -248,24 +248,23 @@ var Script = function () {
             });
         }
         $('.selectpicker').on('change', function(){
-            var id = $(this).find("option:selected").data("breadcumbs");
             switch (prefixRoute) {
                 case '/account_report':
                     var obj = new Object();
-                    obj['id_account'] = $(this).data('breadcumbs');
+                    obj['id_account'] = $(this).find("option:selected").data("breadcumbs");
                     sendRequestDataGraph(obj);
                     sendRequestDataTable(obj);
                     break;
                 case '/campaign-report' :
                     var obj = new Object();
-                    obj['id_campaign'] = $(this).data('breadcumbs');
+                    obj['id_campaign'] = $(this).find("option:selected").data("breadcumbs");
                     obj['id_account'] = $('#id_Account').val();
                     sendRequestDataGraph(obj);
                     sendRequestDataTable(obj);
                     break;
                 case '/adgroup-report' :
                     var obj = new Object();
-                    obj['id_adgroup'] = $(this).data('breadcumbs');
+                    obj['id_adgroup'] = $(this).find("option:selected").data("breadcumbs");
                     obj['id_account'] = $('#id_Account').val();
                     obj['id_campaign'] = $('#id_Campaign').val();
                     sendRequestDataGraph(obj);
@@ -273,7 +272,7 @@ var Script = function () {
                     break;
                 case '/ad-report' :
                     var obj = new Object();
-                    obj['id_adReport'] = $(this).data('breadcumbs');
+                    obj['id_adReport'] = $(this).find("option:selected").data("breadcumbs");
                     obj['id_account'] = $('#id_Account').val();
                     obj['id_campaign'] = $('#id_Campaign').val();
                     obj['id_adgroup'] = $('#id_AdGroup').val();
