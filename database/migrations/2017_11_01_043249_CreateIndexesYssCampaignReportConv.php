@@ -14,7 +14,7 @@ class CreateIndexesYssCampaignReportConv extends Migration
     public function up()
     {
         Schema::table(
-            'repo_yss_campaign_report_conv',
+            'repo_yss_campaign_report_convs',
             function (Blueprint $table) {
                 $table->index('account_id', 'repo_yss_campaign_report_conv_idx1');
                 $table->index('campaign_id', 'repo_yss_campaign_report_conv_idx2');
@@ -46,7 +46,7 @@ class CreateIndexesYssCampaignReportConv extends Migration
     public function down()
     {
         Schema::table(
-            'repo_yss_campaign_report_conv',
+            'repo_yss_campaign_report_convs',
             function (Blueprint $table) {
                 $table->dropIndex('repo_yss_campaign_report_conv_idx1');
                 $table->dropIndex('repo_yss_campaign_report_conv_idx2');
