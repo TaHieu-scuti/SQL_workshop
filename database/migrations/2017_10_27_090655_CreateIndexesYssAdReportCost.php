@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class CreateIndexesYssAdReportCost extends Migration
 {
     /**
@@ -34,7 +35,6 @@ class CreateIndexesYssAdReportCost extends Migration
                 $table->index('startDate', 'repo_yss_ad_report_cost_idx16');
                 $table->index('endDate', 'repo_yss_ad_report_cost_idx17');
                 $table->index('accountid', 'repo_yss_ad_report_cost_idx18');
-
             }
         );
     }
