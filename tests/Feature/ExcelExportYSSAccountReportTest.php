@@ -56,6 +56,7 @@ class ExcelExportYSSAccountReportTest extends TestCase
         18 => self::COLUMN_NAME_ALL_CONV_VALUE,
         19 => self::COLUMN_NAME_COST_PER_ALL_CONV,
         20 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+        21 => 'accountid'
     ];
     const DEFAULT_STATUS = 'hideZero';
     const CUSTOM_START_DAY = '2017-09-01';
