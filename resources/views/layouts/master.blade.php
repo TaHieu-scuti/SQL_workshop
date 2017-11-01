@@ -23,6 +23,7 @@
     <link href="/css/jquery-ui.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="/js/html5shiv.js"></script>
@@ -65,111 +66,7 @@
                 <div class="row breadcrumb-list">
                     <div class="col-md-12">
                     <!--breadcrumbs start -->
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <div class="breadcrumb-item-detail">
-                                <span class="title">Account<br></span>
-                                <a data-toggle="dropdown" id="dropdownMenu1" class="dropdown-toggle" href="#">
-                                    <span class="content">Account name</span>
-                                </a>
-                                <ul class="dropdown-menu extended tasks-bar" id="dropdownMenu1">
-                                    <li>
-                                        <p class="heading">
-                                        <span class="glyphicon glyphicon-search"></span> 
-                                        <input type="text" placeholder="Search for account">
-                                        </p>
-                                    </li>
-                                    <div class="dropdown-menu scroll-menu">
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">All engine accounts</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">
-                                                <img src="/images/yahoo.png">
-                                                All Yahoo Japan accounts
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">
-                                                <img src="/images/yahoo.png">
-                                                Samsung
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">
-                                                <img src="/images/yahoo.png">
-                                                Oppo
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">
-                                                <img src="/images/yahoo.png">
-                                                Nokia
-                                            </div>
-                                        </a>
-                                    </li>
-                                    </div>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <div class="breadcrumb-item-detail">
-                                <span class="title">Campaign<br></span>
-                                <a data-toggle="dropdown" id="dropdownMenu2" class="dropdown-toggle" href="#">
-                                    <span class="content">All campaign (5)</span>
-                                </a>
-                                <ul class="dropdown-menu extended tasks-bar" id="dropdownMenu2">
-                                    <li>
-                                        <p class="heading">
-                                        <span class="glyphicon glyphicon-search"></span>
-                                        <input type="text" placeholder="Search for campaign">
-                                        </p>
-                                    </li>
-                                    <div class="dropdown-menu scroll-menu">
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">All campaigns</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">test 1</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">test 2</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">test 3</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">test 4</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="desc">test 5</div>
-                                        </a>
-                                    </li>
-                                    </div>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
+                    {!! Breadcrumbs::render() !!}
                     <!--breadcrumbs end -->
                     </div>
                 </div>
@@ -318,12 +215,12 @@
                     <div class="col-md-8 col-xs-12 pull-left">
                         <ul class="panel">
                             <li class="panel-body">
-                                <a href="campaign-list.html">
+                                <a href="{{ route('campaign-report') }}">
                                     CAMPAIGNS
                                 </a>
                             </li>
                             <li class="panel-body">
-                                <a href="#">
+                                <a href="{{ route('adgroup-report') }}">
                                     AD GROUPS
                                 </a>
                             </li>
@@ -333,7 +230,7 @@
                                 </a>
                             </li>
                             <li class="panel-body">
-                                <a href="ad-list.html">
+                                <a href="{{ route('ad-report') }}">
                                     ADS
                                 </a>
                             </li>
@@ -506,6 +403,7 @@
     <script src="/js/raphael-min.js"></script>
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
     <!-- Custom js-->
     <script>
         $(window).on('hashchange', function() {
@@ -555,7 +453,7 @@
         }
     </script>
     <script src="/js/common-function.js"></script>
-    <script src="/js/morris-script.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/morris-script.js"></script>
 </body>
 </html>

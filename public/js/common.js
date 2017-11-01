@@ -1,5 +1,7 @@
 var link = window.location.pathname;
 var prefixRoute = getRoutePrefix();
+
+$('.selectpicker').selectpicker();
 /*
 =======
 * stop drop-down menu form disappearing on clicking
@@ -44,7 +46,7 @@ $('.btn-danger').click(function () {
 *
 * display no data found message on table if no data found
 */
-function processData(response) {
+function processDataTable(response) {
     if(response.displayNoDataFoundMessageOnTable) {
         $('.no-data-found-table.hidden-no-data-found-message-table')
             .removeClass('hidden-no-data-found-message-table');
@@ -115,7 +117,7 @@ $(".apply-button").click(function () {
         success: function(response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
-            processData(response);
+            processDataTable(response);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -168,7 +170,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
-            processData(response);
+            processDataTable(response);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -202,7 +204,7 @@ $('.apply-custom-period').click(function() {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
-            processData(response);
+            processDataTable(response);
             history.pushState("", "", link);
         },
         error : function (response) {
@@ -247,7 +249,7 @@ $('.status-option li').click(function () {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
-            processData(response);
+            processDataTable(response);
             history.pushState("", "", link);
         },
         error : function (response) {

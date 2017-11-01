@@ -247,6 +247,98 @@ var Script = function () {
                 }
             });
         }
+        $('.selectpicker').on('change', function(){
+            var id = $(this).find("option:selected").data("breadcumbs");
+            switch (prefixRoute) {
+                case '/account_report':
+                    var obj = new Object();
+                    obj['id_account'] = $(this).data('breadcumbs');
+                    sendRequestDataGraph(obj);
+                    sendRequestDataTable(obj);
+                    break;
+                case '/campaign-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $(this).data('breadcumbs');
+                    obj['id_account'] = $('#id_Account').val();
+                    sendRequestDataGraph(obj);
+                    sendRequestDataTable(obj);
+                    break;
+                case '/adgroup-report' :
+                    var obj = new Object();
+                    obj['id_adgroup'] = $(this).data('breadcumbs');
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    sendRequestDataGraph(obj);
+                    sendRequestDataTable(obj);
+                    break;
+                case '/ad-report' :
+                    var obj = new Object();
+                    obj['id_adReport'] = $(this).data('breadcumbs');
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_adgroup'] = $('#id_AdGroup').val();
+                    sendRequestDataGraph(obj);
+                    sendRequestDataTable(obj);
+                    break;
+
+                default:
+                    // code...
+                    break;
+            }
+        });
+
+        function sendRequestDataGraph(datas) {
+            $.ajax({
+                url : prefixRoute + '/display-graph',
+                type : 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : datas,
+                beforeSend : function () {
+                    sendingRequest();
+                },
+                success : function(response)
+                {
+                    processData(response);
+                    $('#time-period').html(response.timePeriodLayout);
+                    $('#graph-column').html(response.graphColumnLayout);
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+                complete : function () {
+                    completeRequest();
+                }
+            });
+        }
+
+        function sendRequestDataTable(datas) {
+            $.ajax({
+                url : prefixRoute + '/update-table',
+                type : 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : datas,
+                beforeSend : function () {
+                    sendingRequestTable();
+                },
+                success : function(response)
+                {
+                    processDataTable(response);
+                    $('.table_data_report').html(response.tableDataLayout);
+                    $('.summary_report').html(response.summaryReportLayout);
+                    history.pushState("", "", link);
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+                complete : function () {
+                    completeRequestTable();
+                }
+            });
+        }
     });
 
 }();

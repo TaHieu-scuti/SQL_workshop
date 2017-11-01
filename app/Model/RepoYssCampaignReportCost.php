@@ -320,4 +320,21 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         
         return $this->unsetColumns($result, $unsetColumns);
     }
+
+    public static function getAllCampaign()
+    {
+        $arrCampaigns = [];
+
+        $arrCampaigns['all'] = 'All Campaigns';
+
+        $campaigns = self::select('campaignID', 'campaignName')->get();
+
+        if ($campaigns) {
+            foreach ($campaigns as $key => $campaign) {
+                $arrCampaigns[$campaign->campaignID] = $campaign->campaignName;
+            }
+        }
+
+        return $arrCampaigns;
+    }
 }

@@ -302,4 +302,21 @@ class RepoYssAdReportCost extends AbstractReportModel
         
         return $this->unsetColumns($result, $unsetColumns);
     }
+
+    public static function getAllAdReport()
+    {
+        $arrAdReports = [];
+
+        $arrAdReports['all'] = 'All Adreports';
+
+        $adreports = self::select('adID', 'adName')->get();
+
+        if ($adreports) {
+            foreach ($adreports as $key => $adreport) {
+                $arrAdReports[$adreport->adID] = $adreport->adName;
+            }
+        }
+
+        return $arrAdReports;
+    }
 }
