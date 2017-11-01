@@ -292,7 +292,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         return $data;
     }
 
-     /**
+    /**
      * @param string $keywords
      * @return string[]
      */

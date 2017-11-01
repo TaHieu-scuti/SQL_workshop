@@ -498,17 +498,17 @@ a, a:hover, a:focus {
     line-height: 1.1;
 }
 
-.wrapper .row.statistic .col-md-3 {
+.wrapper .row.statistic .fields {
     border-radius: 0;
     border-right: solid 1px #ecedf1;
     word-break: break-all;
 }
 
-.wrapper .row.statistic .col-md-2:hover {
+.wrapper .row.statistic .fields:hover {
     border-bottom: solid 2px #0d88e0;
 }
 
-.wrapper .row.statistic .col-md-2.active {
+.wrapper .row.statistic .fields.active {
     border-bottom: solid 2px #0d88e0;
 }
 

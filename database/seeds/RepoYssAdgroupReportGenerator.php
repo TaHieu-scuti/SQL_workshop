@@ -230,7 +230,7 @@ class RepoYssAdgroupReportGenerator extends Seeder
                     self::MAX_VALUE_PER_ALL_CONV
                 ) / mt_getrandmax();
                 $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
-                $adgroupReportConv->objectOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+                $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
                 $adgroupReportConv->conversionName = self::CONVERSION_NAME[
                     mt_rand(0, count(self::CONVERSION_NAME) - 1)
                 ];
