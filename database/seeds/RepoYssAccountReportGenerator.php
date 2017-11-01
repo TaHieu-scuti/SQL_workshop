@@ -10,7 +10,14 @@ class RepoYssAccountReportGenerator extends Seeder
     const START_DATE = '2017-01-01 00:00:00';
     const INTERVAL = 'P1D';
     const END_DATE = '2018-02-03 00:00:00';
-    const NUMBER_OF_ACCOUNTS = 5;
+    const NUMBER_OF_ACCOUNTS = 2;
+    const NUMBER_OF_MEDIA_ACCOUNTS = [
+        2,
+        4,
+        5,
+        1,
+        3
+    ];
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
     const MAX_NUMBER_OF_CAMPAIGNS = 12;
     const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
@@ -66,11 +73,20 @@ class RepoYssAccountReportGenerator extends Seeder
     private function processDay(DateTime $day)
     {
         for ($i = 0; $i < self::NUMBER_OF_ACCOUNTS; ++$i) {
-            $this->processAccount($day, $i);
+            $this->processAGAccount($day, $i);
         }
     }
 
-    private function processAccount(DateTime $day, $accountNumber)
+    private function processAGAccount(DateTime $day, $agAccountNumber)
+    {
+        $numberOfMediaAccounts = self::NUMBER_OF_MEDIA_ACCOUNTS[$agAccountNumber];
+
+        for ($i = 0; $i < $numberOfMediaAccounts; $i++) {
+            $this->processMediaAccount($day, $agAccountNumber, (($agAccountNumber + 1) * 10) + $i);
+        }
+    }
+
+    private function processMediaAccount(DateTime $day, $agAccountNumber, $mediaAccountNumber)
     {
         $numberOfCampaigns = rand(
             self::MIN_NUMBER_OF_CAMPAIGNS,
@@ -78,11 +94,11 @@ class RepoYssAccountReportGenerator extends Seeder
         );
 
         for ($i = 0; $i < $numberOfCampaigns + 1; ++$i) {
-            $this->processCampaign($day, $accountNumber, $i);
+            $this->processCampaign($day, $agAccountNumber, $mediaAccountNumber, $i);
         }
     }
 
-    private function processCampaign(DateTime $day, $accountNumber, $campaignNumber)
+    private function processCampaign(DateTime $day, $agAccountNumber, $mediaAccountNumber, $campaignNumber)
     {
         $numberOfReports = rand(
             self::MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN,
@@ -90,14 +106,15 @@ class RepoYssAccountReportGenerator extends Seeder
         );
 
         for ($i = 0; $i < $numberOfReports + 1; ++$i) {
-            $this->createReport($day, $accountNumber, $campaignNumber);
+            $this->createReport($day, $agAccountNumber, $mediaAccountNumber, $campaignNumber);
         }
     }
 
-    private function createReport(DateTime $day, $accountNumber, $campaignNumber)
+    private function createReport(DateTime $day, $agAccountNumber, $mediaAccountNumber, $campaignNumber)
     {
         $report = new RepoYssAccountReport;
-        $report->account_id = $accountNumber + 1;
+        $report->account_id = $agAccountNumber + 1;
+        $report->accountid = $mediaAccountNumber + 1;
         $report->campaign_id = $campaignNumber + 1;
         $report->cost = mt_rand(
             self::MIN_COST,

@@ -55,6 +55,7 @@ class CSVExportYSSAccountReportTest extends TestCase
         18 => self::COLUMN_NAME_ALL_CONV_VALUE,
         19 => self::COLUMN_NAME_COST_PER_ALL_CONV,
         20 => self::COLUMN_NAME_VALUE_PER_ALL_CONV,
+        21 => 'accountid'
     ];
 
     const DEFAULT_STATUS = 'hideZero';

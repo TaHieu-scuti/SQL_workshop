@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PhoneTimeUse extends Model
 {
-    protected $timestamps = false;
+    public $timestamps = false;
     protected $table = 'phone_time_use';
 }
