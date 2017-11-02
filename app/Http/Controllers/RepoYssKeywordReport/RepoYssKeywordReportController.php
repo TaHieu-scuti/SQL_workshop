@@ -50,7 +50,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         'clicks',
         'cost',
         'impressions',
-        'ctr'
+        'ctr',
         'averageCpc',
         'averagePosition'
     ];
@@ -68,9 +68,10 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
-        $defaultColumnsWithGroupedField = array_unshift(self::DEFAULT_COLUMNS, self::SESSION_KEY_GROUPED_BY_FIELD);
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!session('keywordReport')) {
-            $this->initializeSession($defaultColumnsWithGroupedField);
+            $this->initializeSession($defaultColumns);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -79,7 +80,7 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
-                self::COLUMNS => $possibleDisplayItems, // all columns that show up in modal
+                self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
@@ -93,6 +94,40 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+        ]);
+    }
+
+    public function updateTable(Request $request)
+    {
+        $displayNoDataFoundMessageOnTable = true;
+        $this->updateSessionData($request);
+        $reports = $this->getDataForTable();
+        $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
+        $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $tableDataLayout = view('layouts.table_data', [
+            self::REPORTS => $reports,
+            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+            self::SORT => session(self::SESSION_KEY_SORT),
+            self::TOTAL_DATA_ARRAY => $totalDataArray,
+            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+            self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+        ])->render();
+        // if no data found
+        // display no data found message on table
+        if ($reports->total() !== 0) {
+            $displayNoDataFoundMessageOnTable = false;
+            return $this->responseFactory->json([
+                                'summaryReportLayout' => $summaryReportLayout,
+                                'tableDataLayout' => $tableDataLayout,
+                                'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
+            ]);
+        }
+        return $this->responseFactory->json([
+                            'summaryReportLayout' => $summaryReportLayout,
+                            'tableDataLayout' => $tableDataLayout,
+                            'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
         ]);
     }
 
