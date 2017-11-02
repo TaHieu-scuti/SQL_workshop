@@ -24,6 +24,7 @@ abstract class AbstractReportController extends Controller
     public $sessionKeyCampaignId = "campainID";
     public $sessionKeyAdgroupId = "adgroupId";
     public $sessionKeyAdReportId = "adReportId";
+    public $sessionKeyAccountId = "adReportId";
     private $adgainerId;
 
     /**
@@ -125,7 +126,7 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        session([static::SESSION_KEY_ACCOUNT_ID => null]);
+        session([$this->sessionKeyAccountId => null]);
         session([$this->sessionKeyCampaignId => null]);
         session([$this->sessionKeyAdgroupId => null]);
         session([$this->sessionKeyAdReportId => null]);
