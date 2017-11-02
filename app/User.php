@@ -60,14 +60,29 @@ class User extends Authenticatable
             case 'Campaign':
                 $array[] = $title;
                 $array[] = RepoYssCampaignReportCost::getAllCampaign();
+                if (session('campainID') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('campainID');
+                }
                 break;
             case 'AdGroup':
                 $array[] = $title;
                 $array[] = \App\Model\RepoYssAdgroupReportCost::getAllAdgroup();
+                if (session('adgroupId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adgroupId');
+                }
                 break;
             case 'AdReport':
                  $array[] = $title;
                 $array[] = \App\Model\RepoYssAdReportCost::getAllAdReport();
+                if (session('adReportId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adReportId');
+                }
                 break;
             
             default:

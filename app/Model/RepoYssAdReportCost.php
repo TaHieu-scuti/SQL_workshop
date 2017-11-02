@@ -88,15 +88,15 @@ class RepoYssAdReportCost extends AbstractReportModel
     public function updateSessionID(Builder $query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         if ($accountId !== null) {
-            # code...
+            $query->where('acountid' , '=', $accountId);
         } elseif ($campaignId !== null) {
-
+            $query->where('campaignID' , '=', $campaignId);
         } elseif ($adGroupId !== null) {
-
+            $query->where('adgroupID' , '=', $adGroupId);
         } elseif ($adReportId !== null) {
-
+            $query->where('adID' , '=', $adReportId);
         } else {
-
+             $query->where('account_id' , '=', $adgainerId);
         }
     }
 
@@ -138,7 +138,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                 )
                 ->where(
                     function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
-                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -185,6 +185,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                     $query->whereDate('day', '>=', $startDay)
                         ->whereDate('day', '<=', $endDay);
                 }
+            }
+        )
+        ->where(
+            function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
+                $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
             }
         )
         ->groupBy('day')
@@ -241,6 +246,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                         }
                     }
                 )
+                ->where(
+                    function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
+                    }
+                )
                 ->first()->toArray();
     }
 
@@ -275,6 +285,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                                 $query->whereDate('day', '>=', $startDay)
                                     ->whereDate('day', '<=', $endDay);
                             }
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
+                            $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
                         }
                     )
                     ->first()->toArray();

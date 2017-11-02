@@ -239,7 +239,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $fieldNames,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
         $accountId,
         $adgainerId,
         $campaignId,
@@ -300,12 +300,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $columnSort,
-        $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId
+        $sort
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $data = $this->select($arrayCalculate)
