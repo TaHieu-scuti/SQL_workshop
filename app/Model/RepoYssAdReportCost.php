@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
 
@@ -84,6 +85,21 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $arrayCalculate;
     }
 
+    public function updateSessionID(Builder $query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    {
+        if ($accountId !== null) {
+            # code...
+        } elseif ($campaignId !== null) {
+
+        } elseif ($adGroupId !== null) {
+
+        } elseif ($adReportId !== null) {
+
+        } else {
+
+        }
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -118,6 +134,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                             $query->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<=', $endDay);
                         }
+                    }
+                )
+                ->where(
+                    function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -170,7 +191,17 @@ class RepoYssAdReportCost extends AbstractReportModel
         ->get();
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();

@@ -66,7 +66,12 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData =  $this->select($arrayCalculate)
@@ -98,7 +103,12 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -129,7 +139,17 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay, 
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -186,7 +206,12 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $columnSort,
-        $sort
+        $sort,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -209,7 +234,17 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
