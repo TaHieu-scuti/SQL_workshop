@@ -10,6 +10,7 @@ use App\AbstractReportModel;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAdReportCost extends AbstractReportModel
 {
@@ -88,14 +89,18 @@ class RepoYssAdReportCost extends AbstractReportModel
     public function updateSessionID(Builder $query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         if ($accountId !== null) {
-            $query->where('acountid' , '=', $accountId);
-        } elseif ($campaignId !== null) {
+            $query->where('accountid' , '=', $accountId);
+        }
+        if ($campaignId !== null) {
             $query->where('campaignID' , '=', $campaignId);
-        } elseif ($adGroupId !== null) {
+        }
+        if ($adGroupId !== null) {
             $query->where('adgroupID' , '=', $adGroupId);
-        } elseif ($adReportId !== null) {
+        }
+        if ($adReportId !== null) {
             $query->where('adID' , '=', $adReportId);
-        } else {
+        }
+        if($accountId !== null && $campaignId !== null && $adGroupId !== null && $adReportId !== null) {
              $query->where('account_id' , '=', $adgainerId);
         }
     }
@@ -137,10 +142,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
-                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
+                ->limit(100000)
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
@@ -188,10 +194,11 @@ class RepoYssAdReportCost extends AbstractReportModel
             }
         )
         ->where(
-            function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
-                $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
+            function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )
+        ->limit(100000)
         ->groupBy('day')
         ->get();
     }
@@ -247,10 +254,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
-                        $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
+                ->limit(100000)
                 ->first()->toArray();
     }
 
@@ -288,10 +296,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                         }
                     )
                     ->where(
-                        function ($query) use ($accountId, $adgainerId, $campaignId, $adGroupId, $adReportId) {
-                            $this->updateSessionID($query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId);
+                        function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                            $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     )
+                    ->limit(100000)
                     ->first()->toArray();
         foreach ($data as $key => $value) {
             if ($value === null) {
@@ -365,7 +374,7 @@ class RepoYssAdReportCost extends AbstractReportModel
 
         $arrAdReports['all'] = 'All Adreports';
 
-        $adreports = self::select('adID', 'adName')->get();
+        $adreports = self::select('adID', 'adName')->where('account_id', '=', Auth::user()->account_id)->get();
 
         if ($adreports) {
             foreach ($adreports as $key => $adreport) {

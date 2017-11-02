@@ -250,7 +250,11 @@ abstract class AbstractReportController extends Controller
         }
 
         // get id account media if available
-        if ($request->id_account !== "all" && $request->id_account !== null) {
+        if ($request->id_account === 'all') {
+            session()->put([
+                $this->sessionKeyAccountId => null
+            ]);
+        } elseif ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
         }
 

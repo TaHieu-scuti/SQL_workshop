@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\AbstractReportModel;
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAdgroupReportCost extends AbstractReportModel
 {
@@ -206,12 +207,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $columnSort,
-        $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId
+        $sort
     ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -327,7 +323,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
 
         $arrAdgroups['all'] = 'All Adgroup';
 
-        $adgroups = self::select('adgroupID', 'adgroupName')->get();
+        $adgroups = self::select('adgroupID', 'adgroupName')->where('account_id', '=', Auth::user()->account_id)->get();
         if ($adgroups) {
             foreach ($adgroups as $key => $adgroup) {
                 $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
