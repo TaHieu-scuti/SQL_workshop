@@ -67,6 +67,11 @@ Route::prefix('account_report')->group(function () {
         '/export_csv',
         'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
     );
+
+    Route::post(
+        '/updateSession',
+        'RepoYssAccountReport\RepoYssAccountReportController@updateSessionID'
+    );
 });
 
 Route::prefix('campaign-report')->group(function () {
