@@ -6008,5 +6008,6 @@ a.guest-on i {
 }
 
 .bootstrap-select .inner {
-    height: 200px!important;
+    max-height: 200px!important;
+    min-height: 100px!important;
 }

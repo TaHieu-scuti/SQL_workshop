@@ -101,7 +101,12 @@ class RepoYssAdReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
@@ -131,7 +136,12 @@ class RepoYssAdReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -160,7 +170,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         ->get();
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -203,7 +213,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                 ->first()->toArray();
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();

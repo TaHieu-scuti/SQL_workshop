@@ -150,7 +150,10 @@ class RepoYssAccountReport extends AbstractReportModel
         $columnSort,
         $sort,
         $accountId,
-        $adgainerId
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -204,7 +207,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param string $endDay
      * @return \Illuminate\Support\Collection
      */
-    public function getDataForGraph($column, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
+    public function getDataForGraph($column, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         try {
             new DateTime($startDay);
@@ -212,7 +215,6 @@ class RepoYssAccountReport extends AbstractReportModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
-        // dd($accountId);
         $data = self::select(
             DB::raw('SUM('.$column.') as data'),
             DB::raw(
@@ -288,7 +290,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param $endDay
      * @return array
      */
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
+    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -403,7 +405,7 @@ class RepoYssAccountReport extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId)
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();

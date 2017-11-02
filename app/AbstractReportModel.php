@@ -173,7 +173,10 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $accountId,
-        $adgainerId
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
         return $this->select(static::FIELDS + $aggregations)
@@ -201,7 +204,10 @@ abstract class AbstractReportModel extends Model
         $startDay,
         $endDay,
         $accountId,
-        $adgainerId
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
