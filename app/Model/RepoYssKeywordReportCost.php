@@ -2,7 +2,13 @@
 
 namespace App\Model;
 
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use App\AbstractReportModel;
+
+use DateTime;
+use Exception;
 
 class RepoYssKeywordReportCost extends AbstractReportModel
 {
@@ -18,6 +24,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
 
     /** @var string */
     protected $table = 'repo_yss_keyword_report_cost';
+
+    /** @var array */
+    private $averageFieldArray = [
+        'averageCpc',
+        'averagePosition'
+    ];
 
     /**
      * @param string[] $fieldNames
@@ -111,7 +123,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                 $arrayCalculate[] = DB::raw(
                     'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
                 );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+            } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
                     ->getName()
@@ -159,7 +171,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                 $arrayCalculate[] = DB::raw(
                     'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
                 );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+            } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
                     ->getName()
