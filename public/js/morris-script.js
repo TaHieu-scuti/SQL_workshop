@@ -308,9 +308,6 @@ var Script = function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data : datas,
-                beforeSend : function () {
-                    sendingRequest();
-                },
                 success : function(response)
                 {
                     window.location.reload();
@@ -318,9 +315,6 @@ var Script = function () {
                 error : function (response) {
                     alert('Something went wrong!');
                 },
-                complete : function () {
-                    completeRequest();
-                }
             });
         }
     });
