@@ -177,6 +177,27 @@ abstract class AbstractReportController extends Controller
             ]);
     }
 
+    public function updateSessionAdReportId($adReportId)
+    {
+        session()->put([
+                $this->sessionKeyAdReportId => $adReportId
+            ]);
+    }
+
+    public function updateSessionCampaignId($campaignId)
+    {
+        session()->put([
+                $this->sessionKeyCampaignId => $campaignId
+            ]);
+    }
+
+    public function updateSessionAdGroupId($adGroupId)
+    {
+        session()->put([
+                $this->sessionKeyAdgroupId => $adGroupId
+            ]);
+    }
+
     public function updateSessionColumnSortAndSort($columnSort)
     {
         if (session(static::SESSION_KEY_COLUMN_SORT) !== $columnSort
@@ -231,6 +252,21 @@ abstract class AbstractReportController extends Controller
         // get id account media if available
         if ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
+        }
+
+        //get id campaign if avaiable
+        if ($request->id_campaign !== "all" && $request->id_campaign !== null) {
+            $this->updateSessionCampaignId($request->id_campaign);
+        }
+
+        //get id adGroup if avaiable
+        if ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
+            $this->updateSessionAdGroupId($request->id_adgroup);
+        }
+
+        //get id adGroup if avaiable
+        if ($request->id_adReport !== "all" && $request->id_adReport !== null) {
+            $this->updateSessionAdReportId($request->id_adReport);
         }
 
         //get column sort and sort by if available
