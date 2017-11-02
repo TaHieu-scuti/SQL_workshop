@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Account Report
+    Ad Report
 @stop
 
 @section('export')

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Account Report
+    Adgroup Report
 @stop
 
 @section('export')
