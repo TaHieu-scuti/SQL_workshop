@@ -254,48 +254,56 @@ var Script = function () {
             });
         }
         $('.selectpicker').on('change', function(){
-            switch (prefixRoute) {
-                case '/account_report':
+            var curent_url = $(this).find("option:selected").data("url");
+            var str = curent_url.lastIndexOf('/');
+            var url = curent_url.substring(str + 1);
+            switch (url) {
+                case 'account_report' :
                     var obj = new Object();
                     obj['id_account'] = $(this).find("option:selected").data("breadcumbs");
-                    sendRequestDataGraph(obj);
-                    sendRequestDataTable(obj);
+                    obj['id_campaign'] = null;
+                    obj['id_adgroup'] = null;
+                    obj['id_adReport'] = null;
+                    obj['url'] = url;
+                    sendRequestData(obj);
                     break;
-                case '/campaign-report' :
+                case 'campaign-report' :
                     var obj = new Object();
                     obj['id_campaign'] = $(this).find("option:selected").data("breadcumbs");
                     obj['id_account'] = $('#id_Account').val();
-                    sendRequestDataGraph(obj);
-                    sendRequestDataTable(obj);
+                    obj['id_adgroup'] = null;
+                    obj['id_adReport'] = null;
+                    obj['url'] = url;
+                    sendRequestData(obj);
                     break;
-                case '/adgroup-report' :
+                case 'adgroup-report' :
                     var obj = new Object();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
                     obj['id_adgroup'] = $(this).find("option:selected").data("breadcumbs");
-                    obj['id_account'] = $('#id_Account').val();
-                    obj['id_campaign'] = $('#id_Campaign').val();
-                    sendRequestDataGraph(obj);
-                    sendRequestDataTable(obj);
+                    obj['id_adReport'] = null;
+                    obj['url'] = url;
+                    sendRequestData(obj);
                     break;
-                case '/ad-report' :
+                case 'adgroup-report' :
                     var obj = new Object();
-                    obj['id_adReport'] = $(this).find("option:selected").data("breadcumbs");
-                    obj['id_account'] = $('#id_Account').val();
                     obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
                     obj['id_adgroup'] = $('#id_AdGroup').val();
-                    sendRequestDataGraph(obj);
-                    sendRequestDataTable(obj);
+                    obj['id_adReport'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['url'] = url;
+                    sendRequestData(obj);
                     break;
-
                 default:
                     // code...
                     break;
             }
         });
 
-        function sendRequestDataGraph(datas) {
+        function sendRequestData(datas) {
             $.ajax({
-                url : prefixRoute + '/display-graph',
-                type : 'GET',
+                url : prefixRoute + '/updateSession',
+                type : 'post',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -305,42 +313,13 @@ var Script = function () {
                 },
                 success : function(response)
                 {
-                    processData(response);
-                    $('#time-period').html(response.timePeriodLayout);
-                    $('#graph-column').html(response.graphColumnLayout);
+                    window.location.reload();
                 },
                 error : function (response) {
                     alert('Something went wrong!');
                 },
                 complete : function () {
                     completeRequest();
-                }
-            });
-        }
-
-        function sendRequestDataTable(datas) {
-            $.ajax({
-                url : prefixRoute + '/update-table',
-                type : 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data : datas,
-                beforeSend : function () {
-                    sendingRequestTable();
-                },
-                success : function(response)
-                {
-                    processDataTable(response);
-                    $('.table_data_report').html(response.tableDataLayout);
-                    $('.summary_report').html(response.summaryReportLayout);
-                    history.pushState("", "", link);
-                },
-                error : function (response) {
-                    alert('Something went wrong!');
-                },
-                complete : function () {
-                    completeRequestTable();
                 }
             });
         }
