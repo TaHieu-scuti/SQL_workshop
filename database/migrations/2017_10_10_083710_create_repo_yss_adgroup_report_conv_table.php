@@ -48,7 +48,7 @@ class CreateRepoYssAdgroupReportConvTable extends Migration
             $table->string('quarter', 50)->nullable()->comment('四半期');
             $table->string('month', 50)->nullable()->comment('毎月');
             $table->string('week', 50)->nullable()->comment('毎週');
-            $table->string('objectOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
+            $table->string('objectiveOfConversionTracking', 50)->nullable()->comment('コンバージョン測定の目的');
             $table->text('conversionName')->nullable()->comment('コンバージョン名');
         });
     }

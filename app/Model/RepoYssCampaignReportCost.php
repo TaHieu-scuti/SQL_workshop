@@ -21,7 +21,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     public $timestamps = false;
 
     /** @var string */
-    protected $table = 'repo_yss_campaign_report_costs';
+    protected $table = 'repo_yss_campaign_report_cost';
 
     /** @var array */
     private $averageFieldArray = [
@@ -322,7 +322,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         return $data;
     }
 
-     /**
+    /**
      * @param string $keywords
      * @return string[]
      */

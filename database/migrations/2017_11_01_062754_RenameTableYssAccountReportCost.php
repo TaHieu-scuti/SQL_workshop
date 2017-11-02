@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-// @codingStandardsIgnoreLine
-class AddAccountidColumnYssCampaignReportCost extends Migration
+class RenameTableYssAccountReportCost extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +14,9 @@ class AddAccountidColumnYssCampaignReportCost extends Migration
     public function up()
     {
         Schema::table(
-            'repo_yss_campaign_report_costs',
+            'repo_yss_account_report_costs',
             function (Blueprint $table) {
-                $table->bigInteger('accountid');
+                $table->rename('repo_yss_account_report_cost');
             }
         );
     }
@@ -30,9 +29,9 @@ class AddAccountidColumnYssCampaignReportCost extends Migration
     public function down()
     {
         Schema::table(
-            'repo_yss_campaign_report_costs',
+            'repo_yss_account_report_cost',
             function (Blueprint $table) {
-                $table->dropColumn('accountid');
+                $table->rename('repo_yss_account_report_costs');
             }
         );
     }

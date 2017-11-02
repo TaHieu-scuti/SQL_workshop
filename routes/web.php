@@ -161,3 +161,34 @@ Route::prefix('ad-report')->group(function () {
         'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
     );
 });
+
+Route::prefix('keyword-report')->group(function () {
+    Route::get(
+        '/',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@index'
+    );
+    Route::get(
+        '/display-graph',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
+    );
+    Route::post(
+        '/display-graph',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@updateTable'
+    );
+    Route::post(
+        '/live_search',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@liveSearch'
+    );
+    Route::get(
+        '/export_excel',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@exportToCsv'
+    );
+});

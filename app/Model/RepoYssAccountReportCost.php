@@ -6,6 +6,8 @@ use App\AbstractReportModel;
 
 class RepoYssAccountReportCost extends AbstractReportModel
 {
+    protected $table = 'repo_yss_account_report_cost';
+
     /** @var bool */
     public $timestamps = false;
 

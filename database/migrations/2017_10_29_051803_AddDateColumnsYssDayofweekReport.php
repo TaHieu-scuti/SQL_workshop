@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 // @codingStandardsIgnoreLine
-class AddAccountidColumnYssCampaignReportCost extends Migration
+class AddDateColumnsYssDayofweekReport extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,11 @@ class AddAccountidColumnYssCampaignReportCost extends Migration
     public function up()
     {
         Schema::table(
-            'repo_yss_campaign_report_costs',
+            'repo_yss_dayofweek_report',
             function (Blueprint $table) {
-                $table->bigInteger('accountid');
+                $table->date('exeDate');
+                $table->date('startDate');
+                $table->date('endDate');
             }
         );
     }
@@ -30,9 +32,11 @@ class AddAccountidColumnYssCampaignReportCost extends Migration
     public function down()
     {
         Schema::table(
-            'repo_yss_campaign_report_costs',
+            'repo_yss_dayofweek_report',
             function (Blueprint $table) {
-                $table->dropColumn('accountid');
+                $table->dropIfExists('exeDate');
+                $table->dropIfExists('startDate');
+                $table->dropIfExists('endDate');
             }
         );
     }

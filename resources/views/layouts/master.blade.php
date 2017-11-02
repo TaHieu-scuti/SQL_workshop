@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="row information">
-                    <div class="col-md-4 col-xs-12">
+                    <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
                                 <span class="title">Account<br></span>

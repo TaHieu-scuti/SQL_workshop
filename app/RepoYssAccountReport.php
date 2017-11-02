@@ -113,7 +113,9 @@ class RepoYssAccountReport extends AbstractReportModel
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('format(trim(ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName);
+                $arrayCalculate[] = DB::raw(
+                    'format(trim(ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
+                );
             } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
@@ -123,7 +125,9 @@ class RepoYssAccountReport extends AbstractReportModel
                         'format(trim(ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
                     );
                 } else {
-                    $arrayCalculate[] = DB::raw('format(SUM( ' . $tableName . '.' . $fieldName . ' ), 0) AS ' . $fieldName);
+                    $arrayCalculate[] = DB::raw(
+                        'format(SUM( ' . $tableName . '.' . $fieldName . ' ), 0) AS ' . $fieldName
+                    );
                 }
             }
         }
@@ -312,7 +316,9 @@ class RepoYssAccountReport extends AbstractReportModel
                             'format(trim(ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
                         );
                     } else {
-                        $arrayCalculate[] = DB::raw('format(SUM(' . $tableName . '.' . $fieldName . '), 0) AS ' . $fieldName);
+                        $arrayCalculate[] = DB::raw(
+                            'format(SUM(' . $tableName . '.' . $fieldName . '), 0) AS ' . $fieldName
+                        );
                     }
                 }
             }
