@@ -51,10 +51,10 @@ class User extends Authenticatable
             case 'Account':
                 $array[] = $title;
                 $array[] = RepoYssAccount::getAllAccounts();
-                if (session('accountReport.accountId') === null) {
+                if (session('accountID') === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('accountReport.accountId');
+                    $array['flag'] = session('accountID');
                 }
                 break;
             case 'Campaign':
