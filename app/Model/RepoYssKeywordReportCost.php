@@ -48,7 +48,13 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
@@ -80,7 +86,13 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -111,7 +123,18 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -162,7 +185,18 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();

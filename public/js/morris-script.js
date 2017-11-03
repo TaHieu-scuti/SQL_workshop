@@ -257,13 +257,15 @@ var Script = function () {
             var curent_url = $(this).find("option:selected").data("url");
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
+            alert(url);
             switch (url) {
                 case 'account_report' :
                     var obj = new Object();
                     obj['id_account'] = $(this).find("option:selected").data("breadcumbs");
-                    obj['id_campaign'] = null;
-                    obj['id_adgroup'] = null;
-                    obj['id_adReport'] = null;
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
                     obj['url'] = url;
                     sendRequestData(obj);
                     break;
@@ -271,8 +273,9 @@ var Script = function () {
                     var obj = new Object();
                     obj['id_campaign'] = $(this).find("option:selected").data("breadcumbs");
                     obj['id_account'] = $('#id_Account').val();
-                    obj['id_adgroup'] = null;
-                    obj['id_adReport'] = null;
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
                     obj['url'] = url;
                     sendRequestData(obj);
                     break;
@@ -281,16 +284,26 @@ var Script = function () {
                     obj['id_campaign'] = $('#id_Campaign').val();
                     obj['id_account'] = $('#id_Account').val();
                     obj['id_adgroup'] = $(this).find("option:selected").data("breadcumbs");
-                    obj['id_adReport'] = null;
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
                     obj['url'] = url;
                     sendRequestData(obj);
                     break;
-                case 'adgroup-report' :
+                case 'ad-report' :
                     var obj = new Object();
                     obj['id_campaign'] = $('#id_Campaign').val();
                     obj['id_account'] = $('#id_Account').val();
                     obj['id_adgroup'] = $('#id_AdGroup').val();
                     obj['id_adReport'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                case 'keyword-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_adgroup'] = $('#id_AdGroup').val();
+                    obj['id_keyword'] = $(this).find("option:selected").data("breadcumbs");
                     obj['url'] = url;
                     sendRequestData(obj);
                     break;

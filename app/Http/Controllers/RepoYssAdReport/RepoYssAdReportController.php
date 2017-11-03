@@ -199,4 +199,10 @@ class RepoYssAdReportController extends AbstractReportController
             [self::COLUMNS_FOR_LIVE_SEARCH => $result]
         );
     }
+
+    public function updateSessionID(Request $request)
+    {
+        $this->updateSessionData($request);
+        return redirect()->back();
+    }
 }

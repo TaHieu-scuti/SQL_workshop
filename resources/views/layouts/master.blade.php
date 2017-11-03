@@ -225,7 +225,7 @@
                                 </a>
                             </li>
                             <li class="panel-body">
-                                <a href="keywords.html">
+                                <a href="{{ route('keyword-report') }}">
                                     KEYWORDS
                                 </a>
                             </li>

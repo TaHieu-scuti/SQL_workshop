@@ -165,13 +165,18 @@ Route::prefix('ad-report')->group(function () {
         '/export_csv',
         'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
     );
+
+    Route::post(
+        '/updateSession',
+        'RepoYssAdReport\RepoYssAdReportController@updateSessionID'
+    );
 });
 
 Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/',
         'RepoYssKeywordReport\RepoYssKeywordReportController@index'
-    );
+    )->name('keyword-report');
     Route::get(
         '/display-graph',
         'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
@@ -195,5 +200,9 @@ Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/export_csv',
         'RepoYssKeywordReport\RepoYssKeywordReportController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@updateSessionID'
     );
 });

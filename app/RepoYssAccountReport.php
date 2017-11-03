@@ -157,7 +157,8 @@ class RepoYssAccountReport extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -211,7 +212,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param string $endDay
      * @return \Illuminate\Support\Collection
      */
-    public function getDataForGraph($column, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function getDataForGraph($column, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId, $keywordId)
     {
         try {
             new DateTime($startDay);
@@ -294,7 +295,7 @@ class RepoYssAccountReport extends AbstractReportModel
      * @param $endDay
      * @return array
      */
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId, $keywordId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -411,7 +412,7 @@ class RepoYssAccountReport extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId, $keywordId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();

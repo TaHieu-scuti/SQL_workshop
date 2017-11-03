@@ -25,6 +25,7 @@ abstract class AbstractReportController extends Controller
     public $sessionKeyAdgroupId = "adgroupId";
     public $sessionKeyAdReportId = "adReportId";
     public $sessionKeyAccountId = "accountID";
+    public $sessionKeywordId = "KeywordID";
     private $adgainerId;
 
     /**
@@ -198,6 +199,13 @@ abstract class AbstractReportController extends Controller
             ]);
     }
 
+    public function updateSessionKeywordId($keywordId)
+    {
+        session()->put([
+                $this->sessionKeywordId => $keywordId
+            ]);
+    }
+
     public function updateSessionColumnSortAndSort($columnSort)
     {
         if (session(static::SESSION_KEY_COLUMN_SORT) !== $columnSort
@@ -259,18 +267,39 @@ abstract class AbstractReportController extends Controller
         }
 
         //get id campaign if avaiable
-        if ($request->id_campaign !== "all" && $request->id_campaign !== null) {
+        if ($request->id_campaign === 'all') {
+            session()->put([
+                $this->sessionKeyCampaignId => null
+            ]);
+        } elseif ($request->id_campaign !== "all" && $request->id_campaign !== null) {
             $this->updateSessionCampaignId($request->id_campaign);
         }
 
         //get id adGroup if avaiable
-        if ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
+        if ($request->id_adgroup === 'all') {
+            session()->put([
+                $this->sessionKeyAdgroupId => null
+            ]);
+        } elseif ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
             $this->updateSessionAdGroupId($request->id_adgroup);
         }
 
-        //get id adGroup if avaiable
-        if ($request->id_adReport !== "all" && $request->id_adReport !== null) {
+        //get id adReport if avaiable
+        if ($request->id_adReport === 'all') {
+            session()->put([
+                $this->sessionKeyAdReportId => null
+            ]);
+        } elseif ($request->id_adReport !== "all" && $request->id_adReport !== null) {
             $this->updateSessionAdReportId($request->id_adReport);
+        }
+
+        //get id keyword if avaiable
+        if ($request->id_keyword === 'all') {
+            session()->put([
+                $this->sessionKeywordId => null
+            ]);
+        } elseif ($request->id_keyword !== "all" && $request->id_keyword !== null) {
+            $this->updateSessionKeywordId($request->id_keyword);
         }
 
         //get column sort and sort by if available
@@ -290,7 +319,8 @@ abstract class AbstractReportController extends Controller
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
             session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId)
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
 
         if ($data->isEmpty()) {
@@ -319,7 +349,8 @@ abstract class AbstractReportController extends Controller
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
             session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId)
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 
@@ -334,7 +365,8 @@ abstract class AbstractReportController extends Controller
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
             session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId)
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 
@@ -349,7 +381,8 @@ abstract class AbstractReportController extends Controller
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
             session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId)
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 }

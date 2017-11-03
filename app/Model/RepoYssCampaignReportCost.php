@@ -108,7 +108,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
@@ -145,7 +146,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -185,7 +187,9 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId)
+        $adReportId,
+        $keywordId
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -245,7 +249,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     )
     {
         $arrayCalculate = [];

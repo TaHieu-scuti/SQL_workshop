@@ -86,21 +86,21 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $arrayCalculate;
     }
 
-    public function updateSessionID(Builder $query, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
     {
-        if ($accountId !== null) {
+        if ($accountId !== null && $campainId === null && $adGroupId === null && $adReportId === null) {
             $query->where('accountid' , '=', $accountId);
         }
-        if ($campaignId !== null) {
+        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
             $query->where('campaignID' , '=', $campaignId);
         }
-        if ($adGroupId !== null) {
+        if ($adGroupId !== null && $adReportId === null) {
             $query->where('adgroupID' , '=', $adGroupId);
         }
         if ($adReportId !== null) {
             $query->where('adID' , '=', $adReportId);
         }
-        if($accountId !== null && $campaignId !== null && $adGroupId !== null && $adReportId !== null) {
+        if($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
              $query->where('account_id' , '=', $adgainerId);
         }
     }
@@ -127,7 +127,8 @@ class RepoYssAdReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
@@ -146,7 +147,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                         $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
-                ->limit(100000)
+                ->limit(500)
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
@@ -168,7 +169,8 @@ class RepoYssAdReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -198,7 +200,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                 $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )
-        ->limit(100000)
+        ->limit(500)
         ->groupBy('day')
         ->get();
     }
@@ -212,7 +214,8 @@ class RepoYssAdReportCost extends AbstractReportModel
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     )
     {
         $arrayCalculate = [];
@@ -258,11 +261,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                         $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
-                ->limit(100000)
+                ->limit(500)
                 ->first()->toArray();
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId)
+    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId, $keywordId)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -300,7 +303,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                             $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     )
-                    ->limit(100000)
+                    ->limit(500)
                     ->first()->toArray();
         foreach ($data as $key => $value) {
             if ($value === null) {

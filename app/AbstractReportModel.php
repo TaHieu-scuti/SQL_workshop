@@ -176,7 +176,8 @@ abstract class AbstractReportModel extends Model
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
         return $this->select(static::FIELDS + $aggregations)
@@ -207,7 +208,8 @@ abstract class AbstractReportModel extends Model
         $adgainerId,
         $campaignId,
         $adGroupId,
-        $adReportId
+        $adReportId,
+        $keywordId
     ) {
         try {
             new DateTime($startDay); //NOSONAR
