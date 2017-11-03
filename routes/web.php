@@ -134,6 +134,10 @@ Route::prefix('adgroup-report')->group(function () {
         '/export_csv',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
     );
+    Route::post(
+        '/updateSession',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateSessionID'
+    );
 });
 
 Route::prefix('ad-report')->group(function () {

@@ -50,6 +50,22 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         'trackingURL',
     ];
 
+    public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
+    {
+        if ($accountId !== null) {
+            $query->where('accountid', '=', $accountId);
+        }
+        if ($campaignId !== null) {
+            $query->where('campaignID', '=', $campaignId);
+        }
+        if ($adGroupId !== null) {
+            $query->where('adgroupID', '=', $adGroupId);
+        }
+        if ($adgainerId !== null && $accountId === null && $campaignId === null) {
+            $query->where('account_id', '=', $adgainerId);
+        }
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -80,6 +96,11 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -129,6 +150,11 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )
+        ->where(
+            function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )
         ->groupBy('day');
@@ -186,6 +212,11 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 );
         // get aggregated value
@@ -270,6 +301,11 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     ->where(
                         function (Builder $query) use ($startDay, $endDay) {
                             $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                            $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
