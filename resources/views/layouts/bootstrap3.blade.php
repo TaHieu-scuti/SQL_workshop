@@ -11,7 +11,7 @@
 	                    <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 		                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-	                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" @if ( $key == 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif  data-url= "{{ $breadcrumb->url }}" >
+	                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" @if ( $titleBreadCumbs['flag'] === 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif  data-url= "{{ $breadcrumb->url }}" >
 	                                    <a href="#">
 	                                        <div class="desc" >{{$account}}</div>
 	                                    </a>
@@ -28,7 +28,7 @@
 	                    <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
 	                    	@if (count($titleBreadCumbs[1]) > 0)
 	                    		@foreach ($titleBreadCumbs[1] as $key => $account)
-                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" data-url= "{{ $breadcrumb->url }}" @if ( $key == 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif >
+                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" data-url= "{{ $breadcrumb->url }}" @if ( $titleBreadCumbs['flag'] === 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif >
                                     <a href="#">
                                         <div class="desc" >{{$account}}</div>
                                     </a>

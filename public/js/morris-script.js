@@ -257,7 +257,6 @@ var Script = function () {
             var curent_url = $(this).find("option:selected").data("url");
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
-            alert(url);
             switch (url) {
                 case 'account_report' :
                     var obj = new Object();

@@ -77,8 +77,17 @@ class User extends Authenticatable
                 break;
             case 'AdReport':
                  $array[] = $title;
-                $array[] = \App\Model\RepoYssAdReportCost::getAllAdReport();
+                $array[] = \App\Model\RepoYssAdReportCost::getAllAdReport(session('accountID'), session('campainID'), session('adgroupId'), session('adReportId'));
                 if (session('adReportId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adReportId');
+                }
+                break;
+            case 'KeyWord':
+                 $array[] = $title;
+                $array[] = \App\Model\RepoYssKeywordReportCost::getAllKeyword(session('accountID'), session('campainID'), session('adgroupId'), session('KeywordID'));
+                if (session('KeywordID') === null) {
                     $array['flag'] = 'all';
                 } else {
                     $array['flag'] = session('adReportId');
