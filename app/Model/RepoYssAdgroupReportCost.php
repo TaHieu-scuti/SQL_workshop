@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\AbstractReportModel;
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAdgroupReportCost extends AbstractReportModel
 {
@@ -66,7 +67,13 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData =  $this->select($arrayCalculate)
@@ -98,7 +105,13 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -129,7 +142,18 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay, 
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -209,7 +233,18 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -284,5 +319,21 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         ];
         
         return $this->unsetColumns($result, $unsetColumns);
+    }
+
+    public static function getAllAdgroup()
+    {
+        $arrAdgroups = [];
+
+        $arrAdgroups['all'] = 'All Adgroup';
+
+        $adgroups = self::select('adgroupID', 'adgroupName')->where('account_id', '=', Auth::user()->account_id)->get();
+        if ($adgroups) {
+            foreach ($adgroups as $key => $adgroup) {
+                $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
+            }
+        }
+        
+        return $arrAdgroups;
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
 use Exception;
 use StdClass;
+use Auth;
 
 abstract class AbstractReportController extends Controller
 {
@@ -20,6 +21,12 @@ abstract class AbstractReportController extends Controller
 
     /** @var \App\AbstractReportModel */
     protected $model;
+    public $sessionKeyCampaignId = "campainID";
+    public $sessionKeyAdgroupId = "adgroupId";
+    public $sessionKeyAdReportId = "adReportId";
+    public $sessionKeyAccountId = "accountID";
+    public $sessionKeywordId = "KeywordID";
+    private $adgainerId;
 
     /**
      * AbstractReportController constructor.
@@ -32,8 +39,16 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-
         $this->middleware('auth');
+        $this->middleware(function (Request $request, $next) {
+            if (!\Auth::check()) {
+                return redirect('/login');
+            }
+            $this->adgainerId = \Auth::id(); // you can access user id here
+
+           return $next($request);
+        });
+
     }
 
     /**
@@ -112,6 +127,11 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
+        session([$this->sessionKeyAccountId => null]);
+        session([$this->sessionKeyCampaignId => null]);
+        session([$this->sessionKeyAdgroupId => null]);
+        session([$this->sessionKeyAdReportId => null]);
+
     }
 
     public function updateSessionGraphColumnName($graphColumnName)
@@ -149,6 +169,41 @@ abstract class AbstractReportController extends Controller
     public function updateSessionStatusTitle($statusTitle)
     {
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
+    }
+
+    public function updateSessionAccountId($accountId)
+    {
+        session()->put([
+                $this->sessionKeyAccountId => $accountId
+            ]);
+    }
+
+    public function updateSessionAdReportId($adReportId)
+    {
+        session()->put([
+                $this->sessionKeyAdReportId => $adReportId
+            ]);
+    }
+
+    public function updateSessionCampaignId($campaignId)
+    {
+        session()->put([
+                $this->sessionKeyCampaignId => $campaignId
+            ]);
+    }
+
+    public function updateSessionAdGroupId($adGroupId)
+    {
+        session()->put([
+                $this->sessionKeyAdgroupId => $adGroupId
+            ]);
+    }
+
+    public function updateSessionKeywordId($keywordId)
+    {
+        session()->put([
+                $this->sessionKeywordId => $keywordId
+            ]);
     }
 
     public function updateSessionColumnSortAndSort($columnSort)
@@ -202,6 +257,51 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionStatusTitle($request->statusTitle);
         }
 
+        // get id account media if available
+        if ($request->id_account === 'all') {
+            session()->put([
+                $this->sessionKeyAccountId => null
+            ]);
+        } elseif ($request->id_account !== "all" && $request->id_account !== null) {
+            $this->updateSessionAccountId($request->id_account);
+        }
+
+        //get id campaign if avaiable
+        if ($request->id_campaign === 'all') {
+            session()->put([
+                $this->sessionKeyCampaignId => null
+            ]);
+        } elseif ($request->id_campaign !== "all" && $request->id_campaign !== null) {
+            $this->updateSessionCampaignId($request->id_campaign);
+        }
+
+        //get id adGroup if avaiable
+        if ($request->id_adgroup === 'all') {
+            session()->put([
+                $this->sessionKeyAdgroupId => null
+            ]);
+        } elseif ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
+            $this->updateSessionAdGroupId($request->id_adgroup);
+        }
+
+        //get id adReport if avaiable
+        if ($request->id_adReport === 'all') {
+            session()->put([
+                $this->sessionKeyAdReportId => null
+            ]);
+        } elseif ($request->id_adReport !== "all" && $request->id_adReport !== null) {
+            $this->updateSessionAdReportId($request->id_adReport);
+        }
+
+        //get id keyword if avaiable
+        if ($request->id_keyword === 'all') {
+            session()->put([
+                $this->sessionKeywordId => null
+            ]);
+        } elseif ($request->id_keyword !== "all" && $request->id_keyword !== null) {
+            $this->updateSessionKeywordId($request->id_keyword);
+        }
+
         //get column sort and sort by if available
         if ($request->columnSort !== null) {
             $this->updateSessionColumnSortAndSort($request->columnSort);
@@ -214,7 +314,13 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session($this->sessionKeyAccountId),
+            $this->adgainerId,
+            session($this->sessionKeyCampaignId),
+            session($this->sessionKeyAdgroupId),
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
 
         if ($data->isEmpty()) {
@@ -238,7 +344,13 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_PAGINATION),
             session(static::SESSION_KEY_COLUMN_SORT),
-            session(static::SESSION_KEY_SORT)
+            session(static::SESSION_KEY_SORT),
+            session($this->sessionKeyAccountId),
+            $this->adgainerId,
+            session($this->sessionKeyCampaignId),
+            session($this->sessionKeyAdgroupId),
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 
@@ -248,7 +360,13 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SUMMARY_REPORT),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session($this->sessionKeyAccountId),
+            $this->adgainerId,
+            session($this->sessionKeyCampaignId),
+            session($this->sessionKeyAdgroupId),
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 
@@ -258,7 +376,13 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
-            session(static::SESSION_KEY_END_DAY)
+            session(static::SESSION_KEY_END_DAY),
+            session($this->sessionKeyAccountId),
+            $this->adgainerId,
+            session($this->sessionKeyCampaignId),
+            session($this->sessionKeyAdgroupId),
+            session($this->sessionKeyAdReportId),
+            session($this->sessionKeywordId)
         );
     }
 }

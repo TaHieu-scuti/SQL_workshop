@@ -9,6 +9,7 @@ use App\AbstractReportModel;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssKeywordReportCost extends AbstractReportModel
 {
@@ -31,6 +32,25 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         'averagePosition'
     ];
 
+    public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId)
+    {
+        if ($accountId !== null && $campainId === null && $adGroupId === null && $keywordId === null) {
+            $query->where('accountid' , '=', $accountId);
+        }
+        if ($campaignId !== null && $adGroupId === null && $keywordId === null) {
+            $query->where('campaignID' , '=', $campaignId);
+        }
+        if ($adGroupId !== null && $keywordId === null) {
+            $query->where('adgroupID' , '=', $adGroupId);
+        }
+        if ($keywordId !== null) {
+            $query->where('adID' , '=', $keywordId);
+        }
+        if($accountId === null && $campaignId === null && $adGroupId === null && $keywordId === null) {
+             $query->where('account_id' , '=', $adgainerId);
+        }
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -48,13 +68,24 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -80,7 +111,13 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -100,6 +137,11 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )
+        ->where(
+            function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
+                $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
+            }
+        )
         ->groupBy('day');
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
@@ -111,7 +153,18 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -145,6 +198,11 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
+                )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
+                    }
                 );
         // get aggregated value
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -162,7 +220,18 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -188,6 +257,11 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                     ->where(
                         function (Builder $query) use ($startDay, $endDay) {
                             $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
+                            $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -268,5 +342,26 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         ];
         
         return $this->unsetColumns($result, $unsetColumns);
+    }
+
+    public static function getAllKeyword($accountId = null, $campaignId = null, $adgroupId = null, $keywordId = null)
+    {
+        $arrKeywords = [];
+
+        $arrKeywords['all'] = 'All Adreports';
+
+        $keywords = self::select('keywordID', 'keyword')->where(
+            function ($query) use ($accountId, $campaignId, $adgroupId, $keywordId) {
+                self::updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adgroupId, $keywordId);
+            }
+        )->get();
+
+        if ($keywords) {
+            foreach ($keywords as $key => $keyword) {
+                $arrKeywords[$keyword->keywordID] = $keyword->keyword;
+            }
+        }
+
+        return $arrKeywords;
     }
 }

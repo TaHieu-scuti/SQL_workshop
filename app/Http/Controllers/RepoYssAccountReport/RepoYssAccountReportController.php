@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAccountReportController extends AbstractReportController
 {
@@ -47,6 +48,8 @@ class RepoYssAccountReportController extends AbstractReportController
     const KEY_PAGINATION = 'keyPagination';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
+    private $displayNoDataFoundMessageOnGraph = true;
+    private $displayNoDataFoundMessageOnTable = true;
 
     /** @var \App\RepoYssAccountReport */
     protected $model;
@@ -81,7 +84,8 @@ class RepoYssAccountReportController extends AbstractReportController
             'dayOfWeek',
             'week',
             'month',
-            'quarter'
+            'quarter',
+            'accountid'
         ];
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
@@ -127,7 +131,6 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($columns);
         }
-        $displayNoDataFoundMessageOnTable = true;
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -145,17 +148,12 @@ class RepoYssAccountReportController extends AbstractReportController
         // if no data found
         // display no data found message on table
         if ($reports->total() !== 0) {
-            $displayNoDataFoundMessageOnTable = false;
-            return $this->responseFactory->json([
-                                'summaryReportLayout' => $summaryReportLayout,
-                                'tableDataLayout' => $tableDataLayout,
-                                'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
-            ]);
+            $this->displayNoDataFoundMessageOnTable = false;
         }
         return $this->responseFactory->json([
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
+                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
         ]);
     }
 
@@ -165,7 +163,6 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function displayGraph(Request $request)
     {
-        $displayNoDataFoundMessageOnGraph = true;
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                     ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -187,25 +184,17 @@ class RepoYssAccountReportController extends AbstractReportController
             // if data !== null, display on graph
             // else, display "no data found" image
             if ($value['data'] !== null) {
-                $displayNoDataFoundMessageOnGraph = false;
-                return $this->responseFactory->json([
-                                'data' => $data,
-                                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                                'timePeriodLayout' => $timePeriodLayout,
-                                'graphColumnLayout' => $graphColumnLayout,
-                                'statusLayout' => $statusLayout,
-                                'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph,
-                ]);
+                $this->displayNoDataFoundMessageOnGraph = false;
             }
-            return $this->responseFactory->json([
+        }
+        return $this->responseFactory->json([
                             'data' => $data,
                             'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                             'timePeriodLayout' => $timePeriodLayout,
                             'graphColumnLayout' => $graphColumnLayout,
                             'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
+                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
             ]);
-        }
     }
 
     /**
@@ -220,5 +209,11 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.dropdown_search',
             [self::COLUMNS_FOR_LIVE_SEARCH => $result]
         );
+    }
+
+    public function updateSessionID(Request $request)
+    {
+        $this->updateSessionData($request);
+        return redirect()->back();
     }
 }

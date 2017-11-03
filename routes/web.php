@@ -67,13 +67,18 @@ Route::prefix('account_report')->group(function () {
         '/export_csv',
         'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
     );
+
+    Route::post(
+        '/updateSession',
+        'RepoYssAccountReport\RepoYssAccountReportController@updateSessionID'
+    );
 });
 
 Route::prefix('campaign-report')->group(function () {
     Route::get(
         '/',
         'RepoYssCampaignReport\RepoYssCampaignReportController@index'
-    );
+    )->name('campaign-report');
     Route::get(
         '/display-graph',
         'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
@@ -104,7 +109,7 @@ Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
-    );
+    )->name('adgroup-report');
     Route::get(
         '/display-graph',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
@@ -135,7 +140,7 @@ Route::prefix('ad-report')->group(function () {
     Route::get(
         '/',
         'RepoYssAdReport\RepoYssAdReportController@index'
-    );
+    )->name('ad-report');
     Route::get(
         '/display-graph',
         'RepoYssAdReport\RepoYssAdReportController@displayGraph'
@@ -160,13 +165,18 @@ Route::prefix('ad-report')->group(function () {
         '/export_csv',
         'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
     );
+
+    Route::post(
+        '/updateSession',
+        'RepoYssAdReport\RepoYssAdReportController@updateSessionID'
+    );
 });
 
 Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/',
         'RepoYssKeywordReport\RepoYssKeywordReportController@index'
-    );
+    )->name('keyword-report');
     Route::get(
         '/display-graph',
         'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
@@ -190,5 +200,9 @@ Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/export_csv',
         'RepoYssKeywordReport\RepoYssKeywordReportController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@updateSessionID'
     );
 });

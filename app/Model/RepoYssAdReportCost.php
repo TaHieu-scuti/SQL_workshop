@@ -4,11 +4,13 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssAdReportCost extends AbstractReportModel
 {
@@ -84,6 +86,25 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $arrayCalculate;
     }
 
+    public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
+    {
+        if ($accountId !== null && $campainId === null && $adGroupId === null && $adReportId === null) {
+            $query->where('accountid' , '=', $accountId);
+        }
+        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
+            $query->where('campaignID' , '=', $campaignId);
+        }
+        if ($adGroupId !== null && $adReportId === null) {
+            $query->where('adgroupID' , '=', $adGroupId);
+        }
+        if ($adReportId !== null) {
+            $query->where('adID' , '=', $adReportId);
+        }
+        if($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+             $query->where('account_id' , '=', $adgainerId);
+        }
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -101,7 +122,13 @@ class RepoYssAdReportCost extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
@@ -113,6 +140,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                             $query->whereDate('day', '>=', $startDay)
                                 ->whereDate('day', '<=', $endDay);
                         }
+                    }
+                )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -131,7 +163,13 @@ class RepoYssAdReportCost extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -156,11 +194,27 @@ class RepoYssAdReportCost extends AbstractReportModel
                 }
             }
         )
+        ->where(
+            function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+            }
+        )
         ->groupBy('day')
         ->get();
     }
 
-    public function calculateData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -200,10 +254,26 @@ class RepoYssAdReportCost extends AbstractReportModel
                         }
                     }
                 )
+                ->where(
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                    }
+                )
                 ->first()->toArray();
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -234,6 +304,11 @@ class RepoYssAdReportCost extends AbstractReportModel
                                 $query->whereDate('day', '>=', $startDay)
                                     ->whereDate('day', '<=', $endDay);
                             }
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                            $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     )
                     ->first()->toArray();
@@ -301,5 +376,26 @@ class RepoYssAdReportCost extends AbstractReportModel
         ];
         
         return $this->unsetColumns($result, $unsetColumns);
+    }
+
+    public static function getAllAdReport($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
+    {
+        $arrAdReports = [];
+
+        $arrAdReports['all'] = 'All Adreports';
+
+        $adreports = self::select('adID', 'adName')->where(
+            function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId) {
+                self::updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
+            }
+        )->get();
+
+        if ($adreports) {
+            foreach ($adreports as $key => $adreport) {
+                $arrAdReports[$adreport->adID] = $adreport->adName;
+            }
+        }
+
+        return $arrAdReports;
     }
 }

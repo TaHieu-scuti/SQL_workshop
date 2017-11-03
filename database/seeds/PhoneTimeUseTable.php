@@ -22,7 +22,7 @@ class PhoneTimeUseTable extends Seeder
             . ' '
             . Config::get('database.connections.mysql.database')
             . ' < '
-            . __DIR__ . '/../../database/resources/phone_time_use.sql';
+            .  __DIR__ . '/../../database/resources/phone_time_use.sql';
 
         exec($command);
     }

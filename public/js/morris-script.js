@@ -253,6 +253,82 @@ var Script = function () {
                 }
             });
         }
+        $('.selectpicker').on('change', function(){
+            var curent_url = $(this).find("option:selected").data("url");
+            var str = curent_url.lastIndexOf('/');
+            var url = curent_url.substring(str + 1);
+            switch (url) {
+                case 'account_report' :
+                    var obj = new Object();
+                    obj['id_account'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                case 'campaign-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                case 'adgroup-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_adgroup'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                case 'ad-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_adgroup'] = $('#id_AdGroup').val();
+                    obj['id_adReport'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                case 'keyword-report' :
+                    var obj = new Object();
+                    obj['id_campaign'] = $('#id_Campaign').val();
+                    obj['id_account'] = $('#id_Account').val();
+                    obj['id_adgroup'] = $('#id_AdGroup').val();
+                    obj['id_keyword'] = $(this).find("option:selected").data("breadcumbs");
+                    obj['url'] = url;
+                    sendRequestData(obj);
+                    break;
+                default:
+                    // code...
+                    break;
+            }
+        });
+
+        function sendRequestData(datas) {
+            $.ajax({
+                url : prefixRoute + '/updateSession',
+                type : 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data : datas,
+                success : function(response)
+                {
+                    window.location.reload();
+                },
+                error : function (response) {
+                    alert('Something went wrong!');
+                },
+            });
+        }
     });
 
 }();
