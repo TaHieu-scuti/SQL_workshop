@@ -108,8 +108,8 @@ class RepoYssAccountReport extends AbstractReportModel
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'accountName') {
-                $arrayCalculate[] = 'accountName';
+            if ($fieldName === 'accountName' || $fieldName === 'device') {
+                $arrayCalculate[] = $fieldName;
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
@@ -153,6 +153,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -164,7 +165,6 @@ class RepoYssAccountReport extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
-        array_unshift($arrayCalculate, $tableName.'.account_id');
         $paginatedData  = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
@@ -191,9 +191,7 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     }
                 )
-                ->with('repoYssAccounts')
-                ->groupBy($tableName.'.'.self::FOREIGN_KEY_YSS_ACCOUNTS)
-                ->groupBy($joinTableName.'.accountName')
+                ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
