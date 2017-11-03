@@ -213,50 +213,7 @@
 
                 <div class="row group">
                     <div class="col-md-8 col-xs-12 pull-left">
-                        <ul class="panel">
-                            <li class="panel-body">
-                                <a href="{{ route('campaign-report') }}">
-                                    CAMPAIGNS
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('adgroup-report') }}">
-                                    AD GROUPS
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('keyword-report') }}">
-                                    KEYWORDS
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('ad-report') }}">
-                                    ADS
-                                </a>
-                            </li>
-                            <li class="panel-body separator">
-                            </li>
-                            <li class="panel-body">
-                                <a href="prefectures.html">
-                                    PREFECTURES
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="time-zone.html">
-                                    BY TIME ZONE
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="days-of-the-week.html">
-                                    BY DAYS OF THE WEEK
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="./devices.html">
-                                    DEVICES
-                                </a>
-                            </li>
-                        </ul>
+                        @yield('filter-list')
                     </div>
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">

@@ -332,3 +332,20 @@ $('#listSearch').delegate('li', 'click', function() {
         $(".selection-dropdown").removeClass("open");
     }
 })
+
+$('.specific-filter-item').click(function() {
+    alert($(this).data('value'));
+    $.ajax({
+        url : prefixRoute + "/update-table",
+        type : "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            'specificItem' : $(this).data('value'),
+        },
+        success : function (response) {
+            $('.table_data_report').html(response.tableDataLayout);
+        }
+    });
+});

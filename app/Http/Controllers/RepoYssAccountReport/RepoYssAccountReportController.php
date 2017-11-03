@@ -87,11 +87,20 @@ class RepoYssAccountReportController extends AbstractReportController
             'quarter',
             'accountid'
         ];
+        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, 'accountName');
         if (!session('accountReport')) {
             $this->initializeSession($availableColumns);
+        }
+
+        if (session(self::SESSION_KEY_FIELD_NAME)) {
+            if (session(self::SESSION_KEY_FIELD_NAME)[0] === 'device') {
+                $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+                $fieldNames[0] = self::SESSION_KEY_GROUPED_BY_FIELD;
+                session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
+            }
         }
         // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
@@ -143,7 +152,7 @@ class RepoYssAccountReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+            self::GROUPED_BY_FIELD => session(self::GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table

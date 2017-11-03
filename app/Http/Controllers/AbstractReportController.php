@@ -222,6 +222,14 @@ abstract class AbstractReportController extends Controller
         }
     }
 
+    public function updateSessionGroupedByFieldName($specificItem)
+    {
+        $array = session(static::SESSION_KEY_FIELD_NAME);
+        $array[0] = $specificItem;
+        session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
+        session()->put([static::GROUPED_BY_FIELD => $specificItem]);
+    }
+
     public function updateSessionData(Request $request)
     {
         // update session.graphColumnName
@@ -306,6 +314,10 @@ abstract class AbstractReportController extends Controller
         if ($request->columnSort !== null) {
             $this->updateSessionColumnSortAndSort($request->columnSort);
         }
+
+        if ($request->specificItem !== null) {
+            $this->updateSessionGroupedByFieldName($request->specificItem);
+        }
     }
 
     public function getDataForGraph()
@@ -345,6 +357,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_PAGINATION),
             session(static::SESSION_KEY_COLUMN_SORT),
             session(static::SESSION_KEY_SORT),
+            session(static::GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
