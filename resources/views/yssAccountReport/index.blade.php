@@ -5,6 +5,6 @@
 @stop
 
 @section('export')
-    <li><a href="{{ url('/account_report/export_csv') }}">CSV</a></li>
-    <li><a href="{{ url('/account_report/export_excel') }}">Excel</a></li>
+    <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
+    <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop

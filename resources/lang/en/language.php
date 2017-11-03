@@ -1,0 +1,43 @@
+<?php 
+	return [
+
+		'Account' => 'Account',
+		'Search_for_account' => 'Search for account',
+		'CAMPAIGNS' => 'CAMPAIGNS',
+		'AD_GROUPS' => 'AD GROUPS',
+		'KEYWORDS' => 'KEYWORDS',
+		'ADS' => 'ADS',
+		'PREFECTURES' => 'PREFECTURES',
+		'BY_TIME_ZONE' => 'BY TIME ZONE',
+		'BY_DAYS_OF_THE_WEEK' => 'BY DAYS OF THE WEEK',
+		'DEVICES' => 'DEVICES',
+		'Last_90_days' => 'Last 90 days',
+		'February_May' => 'February - May',
+		'Show_0' => 'Show 0',
+		'Hide_0' => 'Hide 0',
+		'Search_by_columns' => 'Search by columns',
+		'Columns' => 'Columns',
+		'CSV' => 'CSV',
+		'Excel' => 'Excel',
+		'Search_query_to_CSV' => 'Search query to CSV',
+		'Search_query_to_Excel' => 'Search query to Excel',
+		'Total_all_networks' => 'Total - all networks',
+		'Clicks' => 'Clicks',
+		'Impr' => 'Impr',
+		'Cost' => 'Cost',
+		'CTR' => 'CTR',
+		'AvgCPC' => 'AvgCPC',
+		'Avg_pos' => 'Avg pos',
+		'impression_Share' => 'impression Share',
+		'Yesterday' => 'Yesterday',
+		'Last_7_days' => 'Last 7 days',
+		'including_today' => 'including today',
+		'excluding_today' => 'excluding today',
+		'Last_30_days' => 'Last 30 days',
+		'This_week' => 'This week',
+		'This_month' => 'This month',
+		'This_quarter' => 'This quarter',
+		'This_year' => 'This year'
+
+	];
+ ?>
