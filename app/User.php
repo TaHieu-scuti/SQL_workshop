@@ -45,7 +45,7 @@ class User extends Authenticatable
         $this->attributes['password'] = md5($password);
     }
 
-    public static function getArrayAttribute($title) 
+    public static function getArrayAttribute($title)
     {
 
         $array = [];
