@@ -334,7 +334,6 @@ $('#listSearch').delegate('li', 'click', function() {
 })
 
 $('.specific-filter-item').click(function() {
-    alert($(this).data('value'));
     $.ajax({
         url : prefixRoute + "/update-table",
         type : "POST",
