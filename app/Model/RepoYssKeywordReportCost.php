@@ -344,11 +344,11 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
-    public static function getAllKeyword($accountId = null, $campaignId = null, $adgroupId = null, $keywordId = null)
+    public function getAllKeyword($accountId = null, $campaignId = null, $adgroupId = null, $keywordId = null)
     {
         $arrKeywords = [];
 
-        $arrKeywords['all'] = 'All Adreports';
+        $arrKeywords['all'] = 'All Keywords';
 
         $keywords = self::select('keywordID', 'keyword')->where(
             function ($query) use ($accountId, $campaignId, $adgroupId, $keywordId) {
