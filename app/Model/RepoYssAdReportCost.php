@@ -378,7 +378,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
-    public static function getAllAdReport($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
+    public function getAllAdReport($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
     {
         $arrAdReports = [];
 

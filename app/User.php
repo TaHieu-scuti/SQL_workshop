@@ -45,12 +45,15 @@ class User extends Authenticatable
         $this->attributes['password'] = md5($password);
     }
 
-    public static function getArrayAttribute($title) {
+    public static function getArrayAttribute($title)
+    {
+
         $array = [];
         switch ($title) {
             case 'Account':
+                $model = new RepoYssAccount;
                 $array[] = $title;
-                $array[] = RepoYssAccount::getAllAccounts();
+                $array[] = $model->getAllAccounts();
                 if (session('accountID') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -58,8 +61,9 @@ class User extends Authenticatable
                 }
                 break;
             case 'Campaign':
+                $model = new RepoYssCampaignReportCost;
                 $array[] = $title;
-                $array[] = RepoYssCampaignReportCost::getAllCampaign();
+                $array[] = $model->getAllCampaign();
                 if (session('campainID') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -67,8 +71,9 @@ class User extends Authenticatable
                 }
                 break;
             case 'AdGroup':
+                $model = new \App\Model\RepoYssAdgroupReportCost;
                 $array[] = $title;
-                $array[] = \App\Model\RepoYssAdgroupReportCost::getAllAdgroup();
+                $array[] = $model->getAllAdgroup();
                 if (session('adgroupId') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -76,8 +81,9 @@ class User extends Authenticatable
                 }
                 break;
             case 'AdReport':
-                 $array[] = $title;
-                $array[] = \App\Model\RepoYssAdReportCost::getAllAdReport(session('accountID'), session('campainID'), session('adgroupId'), session('adReportId'));
+                $model = new \App\Model\RepoYssAdReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllAdReport(session('accountID'), session('campainID'), session('adgroupId'), session('adReportId'));
                 if (session('adReportId') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -85,8 +91,9 @@ class User extends Authenticatable
                 }
                 break;
             case 'KeyWord':
-                 $array[] = $title;
-                $array[] = \App\Model\RepoYssKeywordReportCost::getAllKeyword(session('accountID'), session('campainID'), session('adgroupId'), session('KeywordID'));
+                $model = new \App\Model\RepoYssKeywordReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllKeyword(session('accountID'), session('campainID'), session('adgroupId'), session('KeywordID'));
                 if (session('KeywordID') === null) {
                     $array['flag'] = 'all';
                 } else {
