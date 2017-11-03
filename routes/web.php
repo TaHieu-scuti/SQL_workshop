@@ -103,6 +103,10 @@ Route::prefix('campaign-report')->group(function () {
         '/export_csv',
         'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
     );
+    Route::post(
+        '/updateSession',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@updateSessionID'
+    );
 });
 
 Route::prefix('adgroup-report')->group(function () {

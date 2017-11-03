@@ -118,6 +118,17 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
+                ->where(
+                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                        if ($campaignId !== null) {
+                            $query->where('campaignID', '=', $campaignId);
+                        } elseif ($campaignId === null && $accountId !== null) {
+                            $query->where('accountid', '=', $accountId);
+                        } elseif ($campaignId === null && $accountId === null) {
+                            $query->where('account_id', '=', $adgainerId);
+                        }
+                    }
+                )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -165,6 +176,17 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )
+        ->where(
+            function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                if ($campaignId !== null) {
+                    $query->where('campaignID', '=', $campaignId);
+                } elseif ($campaignId === null && $accountId !== null) {
+                    $query->where('accountid', '=', $accountId);
+                } elseif ($campaignId === null && $accountId === null) {
+                    $query->where('account_id', '=', $adgainerId);
+                }
             }
         )
         ->groupBy('day');
@@ -223,6 +245,16 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
+                )->where(
+                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                        if ($campaignId !== null) {
+                            $query->where('campaignID', '=', $campaignId);
+                        } elseif ($campaignId === null && $accountId !== null) {
+                            $query->where('accountid', '=', $accountId);
+                        } elseif ($campaignId === null && $accountId === null) {
+                            $query->where('account_id', '=', $adgainerId);
+                        }
+                    }
                 );
         // get aggregated value
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -278,7 +310,18 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         function (Builder $query) use ($startDay, $endDay) {
                             $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
-                    );
+                    )
+                    ->where(
+                        function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                            if ($campaignId !== null) {
+                                $query->where('campaignID', '=', $campaignId);
+                            } elseif ($campaignId === null && $accountId !== null) {
+                                $query->where('accountid', '=', $accountId);
+                            } elseif ($campaignId === null && $accountId === null) {
+                                $query->where('account_id', '=', $adgainerId);
+                            }
+                        }
+                    )
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
@@ -313,6 +356,17 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
+                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                        if ($campaignId !== null) {
+                            $query->where('campaignID', '=', $campaignId);
+                        } elseif ($campaignId === null && $accountId !== null) {
+                            $query->where('accountid', '=', $accountId);
+                        } elseif ($campaignId === null && $accountId === null) {
+                            $query->where('account_id', '=', $adgainerId);
+                        }
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
