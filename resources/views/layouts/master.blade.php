@@ -98,85 +98,85 @@
                         <ul class="col-md-2 dropdown-menu extended tasks-bar date-option">
                             <li data-date="today">
                                 <a href="#">
-                                    <div class="desc">Today</div>
+                                    <div class="desc">@lang('language.today')</div>
                                 </a>
                             </li>
                             <li data-date="yesterday">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Yesterday')</div>
+                                    <div class="desc">@lang('language.yesterday')</div>
                                 </a>
                             </li>
                             <li data-date="last7DaysToday">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Last_7_days')(@lang('language.including_today'))</div>
+                                    <div class="desc">@lang('language.last_7_days')(@lang('language.including_today'))</div>
                                 </a>
                             </li>
                             <li data-date="last7days">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Last_7_days')(@lang('language.excluding_today'))</div>
+                                    <div class="desc">@lang('language.last_7_days')(@lang('language.excluding_today'))</div>
                                 </a>
                             </li>
                             <li data-date="last30days">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Last_30_days')</div>
+                                    <div class="desc">@lang('language.last_30_days')</div>
                                 </a>
                             </li>
                             <li data-date="last90days">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Last_90_days')</div>
+                                    <div class="desc">@lang('language.last_90_days')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li data-date="thisWeek">
                                 <a href="#">
-                                    <div class="desc">@lang('language.This_week')</div>
+                                    <div class="desc">@lang('language.this_week')</div>
                                 </a>
                             </li>
                             <li data-date="thisMonth">
                                 <a href="#">
-                                    <div class="desc">@lang('language.This_month')</div>
+                                    <div class="desc">@lang('language.this_month')</div>
                                 </a>
                             </li>
                             <li data-date="thisQuarter">
                                 <a href="#">
-                                    <div class="desc">@lang('language.This_quarter')</div>
+                                    <div class="desc">@lang('language.this_quarter')</div>
                                 </a>
                             </li>
                             <li data-date="thisYear">
                                 <a href="#">
-                                    <div class="desc">@lang('language.This_year')</div>
+                                    <div class="desc">@lang('language.this_year')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li data-date="lastBusinessWeek">
                                 <a href="#">
-                                    <div class="desc">Last business week (Mon – Fri)</div>
+                                    <div class="desc">@lang('language.last_business_week') (@lang('language.Mon_Fri'))</div>
                                 </a>
                             </li>
                             <li data-date="lastFullWeek">
                                 <a href="#">
-                                    <div class="desc">Last full week</div>
+                                    <div class="desc">@lang('language.last_full_week')</div>
                                 </a>
                             </li>
                             <li data-date="lastMonth">
                                 <a href="#">
-                                    <div class="desc">Last month</div>
+                                    <div class="desc">@lang('language.last_month')</div>
                                 </a>
                             </li>
                             <li data-date="lastQuarter">
                                 <a href="#">
-                                    <div class="desc">Last quarter</div>
+                                    <div class="desc">@lang('language.last_quarter')</div>
                                 </a>
                             </li>
                             <li data-date="lastYear">
                                 <a href="#">
-                                    <div class="desc">Last year</div>
+                                    <div class="desc">@lang('language.last_year')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li class="custom-li" data-date="custom">
                                 <a href="#">
-                                    <div class="desc">Custom</div>
+                                    <div class="desc">@lang('language.custom')</div>
                                 </a>
                             </li>
                             <li id="datepicker" class="custom-date">
