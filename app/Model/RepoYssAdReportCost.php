@@ -88,7 +88,7 @@ class RepoYssAdReportCost extends AbstractReportModel
 
     public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
     {
-        if ($accountId !== null && $campainId === null && $adGroupId === null && $adReportId === null) {
+        if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
             $query->where('accountid' , '=', $accountId);
         }
         if ($campaignId !== null && $adGroupId === null && $adReportId === null) {

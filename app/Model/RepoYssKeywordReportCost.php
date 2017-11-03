@@ -34,7 +34,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
 
     public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId)
     {
-        if ($accountId !== null && $campainId === null && $adGroupId === null && $keywordId === null) {
+        if ($accountId !== null && $campaignId === null && $adGroupId === null && $keywordId === null) {
             $query->where('accountid' , '=', $accountId);
         }
         if ($campaignId !== null && $adGroupId === null && $keywordId === null) {
