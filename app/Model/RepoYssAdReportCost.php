@@ -123,12 +123,12 @@ class RepoYssAdReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         return self::select($arrayCalculate)
@@ -147,7 +147,6 @@ class RepoYssAdReportCost extends AbstractReportModel
                         $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
-                ->limit(500)
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
                 ->orderBy($columnSort, $sort)
                 ->paginate($pagination);
@@ -165,12 +164,12 @@ class RepoYssAdReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -200,7 +199,6 @@ class RepoYssAdReportCost extends AbstractReportModel
                 $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )
-        ->limit(500)
         ->groupBy('day')
         ->get();
     }
@@ -210,12 +208,12 @@ class RepoYssAdReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     )
     {
         $arrayCalculate = [];
@@ -261,11 +259,21 @@ class RepoYssAdReportCost extends AbstractReportModel
                         $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
-                ->limit(500)
                 ->first()->toArray();
     }
 
-    public function calculateSummaryData($fieldNames, $accountStatus, $startDay, $endDay, $accountId, $adgainerId, $campaignId, $adGroupId, $adReportId, $keywordId)
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
@@ -303,7 +311,6 @@ class RepoYssAdReportCost extends AbstractReportModel
                             $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     )
-                    ->limit(500)
                     ->first()->toArray();
         foreach ($data as $key => $value) {
             if ($value === null) {
@@ -371,7 +378,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
-    public static function getAllAdReport($accountId, $campaignId, $adGroupId, $adReportId)
+    public static function getAllAdReport($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
     {
         $arrAdReports = [];
 
@@ -379,7 +386,7 @@ class RepoYssAdReportCost extends AbstractReportModel
 
         $adreports = self::select('adID', 'adName')->where(
             function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId) {
-                $this->updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
+                self::updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )->get();
 

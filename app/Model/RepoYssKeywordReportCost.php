@@ -9,6 +9,7 @@ use App\AbstractReportModel;
 
 use DateTime;
 use Exception;
+use Auth;
 
 class RepoYssKeywordReportCost extends AbstractReportModel
 {
@@ -68,12 +69,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
@@ -111,12 +112,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -157,12 +158,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     )
     {
         $arrayCalculate = [];
@@ -224,12 +225,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     )
     {
         $arrayCalculate = [];
@@ -343,15 +344,15 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return $this->unsetColumns($result, $unsetColumns);
     }
 
-    public function getAllKeyword($accountId, $campaignId, $adgroupId, $keywordId)
+    public static function getAllKeyword($accountId = null, $campaignId = null, $adgroupId = null, $keywordId = null)
     {
         $arrKeywords = [];
 
         $arrKeywords['all'] = 'All Adreports';
 
         $keywords = self::select('keywordID', 'keyword')->where(
-            function ($query) use ($accountId, $campaignId, $adGroupId, $keywordId) {
-                $this->updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $keywordId);
+            function ($query) use ($accountId, $campaignId, $adgroupId, $keywordId) {
+                self::updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adgroupId, $keywordId);
             }
         )->get();
 

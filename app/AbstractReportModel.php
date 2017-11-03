@@ -172,12 +172,12 @@ abstract class AbstractReportModel extends Model
         $pagination,
         $columnSort,
         $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
         return $this->select(static::FIELDS + $aggregations)
@@ -204,12 +204,12 @@ abstract class AbstractReportModel extends Model
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR

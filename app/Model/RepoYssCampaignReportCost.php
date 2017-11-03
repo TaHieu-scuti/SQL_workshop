@@ -104,12 +104,12 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
@@ -142,12 +142,12 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
@@ -183,12 +183,12 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     )
     {
         $arrayCalculate = [];
@@ -245,12 +245,12 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $accountId,
-        $adgainerId,
-        $campaignId,
-        $adGroupId,
-        $adReportId,
-        $keywordId
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     )
     {
         $arrayCalculate = [];
