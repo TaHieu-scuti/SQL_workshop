@@ -321,7 +321,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                                 $query->where('account_id', '=', $adgainerId);
                             }
                         }
-                    )
+                    );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
