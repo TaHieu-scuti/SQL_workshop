@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\RepoYssAccountReport;
 
 use App\Http\Controllers\AbstractReportController;
-use App\RepoYssAccountReport;
 use App\Model\RepoYssAccountReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
