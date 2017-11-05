@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RepoYssAccountReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\RepoYssAccountReport;
+use App\Model\RepoYssAccountReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -48,20 +49,28 @@ class RepoYssAccountReportController extends AbstractReportController
     const KEY_PAGINATION = 'keyPagination';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
+    const DEFAULT_COLUMNS = [
+        'clicks',
+        'cost',
+        'impressions',
+        'ctr',
+        'averageCpc',
+        'averagePosition'
+    ];
     private $displayNoDataFoundMessageOnGraph = true;
     private $displayNoDataFoundMessageOnTable = true;
 
-    /** @var \App\RepoYssAccountReport */
+    /** @var \App\Model\RepoYssAccountReportCost */
     protected $model;
 
     /**
      * RepoYssAccountReportController constructor.
      * @param ResponseFactory      $responseFactory
-     * @param RepoYssAccountReport $model
+     * @param RepoYssAccountReportCost $model
      */
     public function __construct(
         ResponseFactory $responseFactory,
-        RepoYssAccountReport $model
+        RepoYssAccountReportCost $model
     ) {
         parent::__construct($responseFactory, $model);
         $this->model = $model;
@@ -72,29 +81,31 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function index()
     {
-        $allColumns = $this->model->getColumnNames();
-        $unpossibleColumnsDisplay = [
-            'account_id',
-            'ctr',
-            'averagePosition',
-            'trackingURL',
-            'network',
-            'device',
-            'day',
-            'dayOfWeek',
-            'week',
-            'month',
-            'quarter',
-            'accountid'
-        ];
+        // $allColumns = $this->model->getColumnNames();
+        // $unpossibleColumnsDisplay = [
+        //     'account_id',
+        //     'ctr',
+        //     'averagePosition',
+        //     'trackingURL',
+        //     'network',
+        //     'device',
+        //     'day',
+        //     'dayOfWeek',
+        //     'week',
+        //     'month',
+        //     'quarter',
+        //     'accountid'
+        // ];
+        // session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
+        // $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
+        // $modalAndSearchColumnsArray = $availableColumns;
+        // array_unshift($availableColumns, 'accountName');
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
-        $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
-        $modalAndSearchColumnsArray = $availableColumns;
-        array_unshift($availableColumns, 'accountName');
         if (!session('accountReport')) {
-            $this->initializeSession($availableColumns);
+            $this->initializeSession($defaultColumns);
         }
-
         if (session(self::SESSION_KEY_FIELD_NAME)) {
             if (session(self::SESSION_KEY_FIELD_NAME)[0] === 'device') {
                 $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
@@ -112,7 +123,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
-                self::COLUMNS => $availableColumns, // all columns that show up in modal
+                self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
@@ -120,9 +131,9 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
+                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
