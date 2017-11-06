@@ -33,8 +33,8 @@
                 PREFECTURES
             </a>
         </li>
-        <li class="panel-body">
-            <a href="time-zone.html">
+        <li class="panel-body specific-filter-item" data-value="hourofday">
+            <a href="javascript:void(0)">
                 BY TIME ZONE
             </a>
         </li>

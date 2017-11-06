@@ -87,7 +87,9 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         if (session(self::SESSION_KEY_FIELD_NAME)) {
-            if (session(self::SESSION_KEY_FIELD_NAME)[0] === 'device') {
+            if (session(self::SESSION_KEY_FIELD_NAME)[0] === 'device'
+                || session(self::SESSION_KEY_FIELD_NAME)[0] === 'hourofday'
+            ) {
                 $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
                 $fieldNames[0] = self::SESSION_KEY_GROUPED_BY_FIELD;
                 session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
