@@ -22,10 +22,10 @@
 		'Search_query_to_CSV' => '検索クエリCSV',
 		'Search_query_to_Excel' => '検索クエリExcel',
 		'Total_all_networks' => '合計',
-		'clicks' => 'Clicks',
+		'clicks' => 'クリック数',
 		'Impr' => 'インプレッション',
-		'Cost' => '費用',
-		'CTR' => 'CTR',
+		'cost' => '費用',
+		'ctr' => 'CTR',
 		'AvgCPC' => '平均CPC',
 		'Avg_pos' => '平均掲載順位',
 		'impression_Share' => 'インプレッション',
@@ -48,6 +48,9 @@
 		'last_business_week_mon_fri' => '直近の営業日 ( 月〜金 )',
 		'last_month' => '先月',
 		'last_quarter' => '前四半期',
-		'last_year' => '昨年'
+		'last_year' => '昨年',
+		'impressions' => 'インプレッション',
+		'averagecpc' => '平均CPC',
+		'averageposition' => '平均掲載順位'
 	];
  ?>

@@ -24,8 +24,8 @@
 		'Total_all_networks' => 'Total - all networks',
 		'clicks' => 'Clicks',
 		'Impr' => 'Impr',
-		'Cost' => 'Cost',
-		'CTR' => 'CTR',
+		'cost' => 'Cost',
+		'ctr' => 'CTR',
 		'AvgCPC' => 'AvgCPC',
 		'Avg_pos' => 'Avg pos',
 		'impression_Share' => 'impression Share',
@@ -48,7 +48,10 @@
 		'last_business_week_mon_fri' => 'Last business week ( Mon - Fri )',
 		'last_month' => 'Last month',
 		'last_quarter' => 'Last quarter',
-		'last_year' => 'Last year'
+		'last_year' => 'Last year',
+		'impressions' => 'impressions',
+		'averagecpc' => 'averagecpc',
+		'averageposition' => 'averageposition'
 
 	];
  ?>
