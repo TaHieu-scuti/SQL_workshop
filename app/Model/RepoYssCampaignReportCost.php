@@ -119,7 +119,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
-<<<<<<< HEAD
                 ->where(
                     function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
                         if ($campaignId !== null) {
@@ -131,10 +130,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                         }
                     }
                 )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
-=======
                 ->groupBy($groupedByField)
->>>>>>> a4e735ac2936a165889f3b9b21bbd7015d88bb21
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
