@@ -80,25 +80,6 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function index()
     {
-        // $allColumns = $this->model->getColumnNames();
-        // $unpossibleColumnsDisplay = [
-        //     'account_id',
-        //     'ctr',
-        //     'averagePosition',
-        //     'trackingURL',
-        //     'network',
-        //     'device',
-        //     'day',
-        //     'dayOfWeek',
-        //     'week',
-        //     'month',
-        //     'quarter',
-        //     'accountid'
-        // ];
-        // session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
-        // $availableColumns = $this->model->unsetColumns($allColumns, $unpossibleColumnsDisplay);
-        // $modalAndSearchColumnsArray = $availableColumns;
-        // array_unshift($availableColumns, 'accountName');
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
