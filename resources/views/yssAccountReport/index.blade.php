@@ -36,8 +36,7 @@
         <li class="panel-body">
             <a href="time-zone.html">
                 @lang('language.BY_TIME_ZONE')
-            </a>
-        </li>
+
         <li class="panel-body">
             <a href="days-of-the-week.html">
                 @lang('language.BY_DAYS_OF_THE_WEEK')
@@ -55,3 +54,4 @@
     <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
     <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop
+
