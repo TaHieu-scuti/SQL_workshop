@@ -73,6 +73,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }
+        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
