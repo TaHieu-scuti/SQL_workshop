@@ -33,12 +33,12 @@
                 @lang('language.PREFECTURES')
             </a>
         </li>
-        <li class="panel-body">
-            <a href="time-zone.html">
+        <li class="panel-body specific-filter-item" data-value="hourofday">
+            <a href="javascript:void(0)">
                 @lang('language.BY_TIME_ZONE')
 
-        <li class="panel-body">
-            <a href="days-of-the-week.html">
+        <li class="panel-body specific-filter-item" data-value="dayOfWeek">
+            <a href="javascript:void(0)">
                 @lang('language.BY_DAYS_OF_THE_WEEK')
             </a>
         </li>
