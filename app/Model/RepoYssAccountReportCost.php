@@ -73,7 +73,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'accountName' || $fieldName === 'device' ||
-                $fieldName === 'hourofday'
+                $fieldName === 'hourofday' || $fieldName === "dayOfWeek"
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
