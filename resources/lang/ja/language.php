@@ -51,6 +51,7 @@
 		'last_year' => '昨年',
 		'impressions' => 'インプレッション',
 		'averagecpc' => '平均CPC',
-		'averageposition' => '平均掲載順位'
+		'averageposition' => '平均掲載順位',
+		'accountname' => 'エンジンアカウント'
 	];
  ?>

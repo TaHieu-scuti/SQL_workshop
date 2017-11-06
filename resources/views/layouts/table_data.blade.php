@@ -30,16 +30,16 @@
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th>
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-down"></i>{{ $fieldName }}</a>
+                                <i class="fa fa-arrow-down"></i>{{ __('language.' .str_slug($fieldName,'_'))}}</a>
                             </th>
                         @elseif ($columnSort === $fieldName && $sort === "asc")
                             <th>
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-up"></i>{{ $fieldName }}</a>
+                                <i class="fa fa-arrow-up"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
                         @else 
                             <th>
-                                <a href="javascript:void(0)"></i>{{ $fieldName }}</a>
+                                <a href="javascript:void(0)"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
                         @endif
                     @endforeach

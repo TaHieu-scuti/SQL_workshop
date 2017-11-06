@@ -51,7 +51,8 @@
 		'last_year' => 'Last year',
 		'impressions' => 'impressions',
 		'averagecpc' => 'averagecpc',
-		'averageposition' => 'averageposition'
+		'averageposition' => 'averageposition',
+		'accountname' => 'accountname'
 
 	];
  ?>
