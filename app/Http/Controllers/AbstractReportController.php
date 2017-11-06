@@ -27,6 +27,8 @@ abstract class AbstractReportController extends Controller
     public $sessionKeyAccountId = "accountID";
     public $sessionKeywordId = "KeywordID";
     private $adgainerId;
+    protected $displayNoDataFoundMessageOnGraph = true;
+    protected $displayNoDataFoundMessageOnTable = true;
 
     /**
      * AbstractReportController constructor.
@@ -40,6 +42,7 @@ abstract class AbstractReportController extends Controller
         $this->responseFactory = $responseFactory;
         $this->model = $model;
         $this->middleware('auth');
+        $this->middleware('language');
         $this->middleware(function (Request $request, $next) {
             if (!\Auth::check()) {
                 return redirect('/login');
@@ -106,8 +109,8 @@ abstract class AbstractReportController extends Controller
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        $accountStatus = "hideZero";
-        $statusTitle = "Hide 0";
+        $accountStatus = "showZero";
+        $statusTitle = "Show 0";
         $graphColumnName = "clicks";
         $summaryReport = [
             'clicks',

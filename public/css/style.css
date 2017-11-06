@@ -733,6 +733,8 @@ a, a:hover, a:focus {
 
 .wrapper .row.report-table td  {
     white-space: nowrap;
+    border-top: 0;
+    border-bottom: 1px solid #ddd;
 }
 
 .wrapper .row.report-table td .ad-title {

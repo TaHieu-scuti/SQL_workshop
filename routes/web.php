@@ -103,6 +103,10 @@ Route::prefix('campaign-report')->group(function () {
         '/export_csv',
         'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
     );
+    Route::post(
+        '/updateSession',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@updateSessionID'
+    );
 });
 
 Route::prefix('adgroup-report')->group(function () {
@@ -133,6 +137,10 @@ Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/export_csv',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateSessionID'
     );
 });
 
@@ -205,4 +213,9 @@ Route::prefix('keyword-report')->group(function () {
         '/updateSession',
         'RepoYssKeywordReport\RepoYssKeywordReportController@updateSessionID'
     );
+});
+
+Route::get('account_report/language/{locale}', function($locale) {
+    Session::put('locale',$locale);
+    return redirect()->back();
 });
