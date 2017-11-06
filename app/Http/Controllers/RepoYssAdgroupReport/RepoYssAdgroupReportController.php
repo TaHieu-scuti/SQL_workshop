@@ -117,7 +117,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
-        $displayNoDataFoundMessageOnGraph = true;
         $this->updateSessionData($request);
         try {
             $data = $this->getDataForGraph();
@@ -158,7 +157,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($columns);
         }
-        $displayNoDataFoundMessageOnTable = true;
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
 
