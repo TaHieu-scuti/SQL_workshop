@@ -7,6 +7,11 @@ use App\AbstractReportModel;
 
 class RepoYssDayofweekReport extends AbstractReportModel
 {
+    /** @var bool */
+    public $timestamps = false;
+
+    /** @var string */
+    protected $table = 'repo_yss_dayofweek_report';
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -24,7 +29,14 @@ class RepoYssDayofweekReport extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
     }
 
@@ -39,7 +51,13 @@ class RepoYssDayofweekReport extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
     }
 }
