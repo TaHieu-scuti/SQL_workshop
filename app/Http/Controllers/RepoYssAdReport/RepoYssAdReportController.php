@@ -204,6 +204,5 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
-        return redirect()->back();
     }
 }
