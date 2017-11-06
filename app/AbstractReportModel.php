@@ -172,6 +172,7 @@ abstract class AbstractReportModel extends Model
         $pagination,
         $columnSort,
         $sort,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -186,7 +187,7 @@ abstract class AbstractReportModel extends Model
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
-            ->groupBy(static::GROUPED_BY_FIELD_NAME)
+            ->groupBy($groupedByField)
             ->orderBy($columnSort, $sort)
             ->paginate($pagination);
     }

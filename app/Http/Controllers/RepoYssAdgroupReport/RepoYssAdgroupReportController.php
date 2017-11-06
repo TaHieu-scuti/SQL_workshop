@@ -84,6 +84,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             'week',
             'hourofday',
         ];
+        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
@@ -202,6 +203,5 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
-        return redirect()->back();
     }
 }

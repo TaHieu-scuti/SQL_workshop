@@ -101,6 +101,7 @@ class RepoYssAdReportController extends AbstractReportController
             'adKeywordID',
             'adTrackingID',
         ];
+        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
         $modalAndSearchColumnsArray = $availableColumns;
         array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);

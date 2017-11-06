@@ -123,6 +123,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -352,8 +353,8 @@ class RepoYssAdReportCost extends AbstractReportModel
      */
     public function getColumnLiveSearch($keywords)
     {
-        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
-            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'" 
+        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'"
             AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
         $result = [];
         foreach ($searchColumns as $searchColumn) {
@@ -374,7 +375,7 @@ class RepoYssAdReportCost extends AbstractReportModel
             'week', 'title1', 'title2', 'description',
             'directory1', 'directory2', 'adKeywordID', 'adTrackingID',
         ];
-        
+
         return $this->unsetColumns($result, $unsetColumns);
     }
 
