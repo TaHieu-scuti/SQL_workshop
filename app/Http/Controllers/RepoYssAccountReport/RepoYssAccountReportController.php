@@ -56,8 +56,6 @@ class RepoYssAccountReportController extends AbstractReportController
         'averageCpc',
         'averagePosition'
     ];
-    private $displayNoDataFoundMessageOnGraph = true;
-    private $displayNoDataFoundMessageOnTable = true;
 
     /** @var \App\Model\RepoYssAccountReportCost */
     protected $model;
