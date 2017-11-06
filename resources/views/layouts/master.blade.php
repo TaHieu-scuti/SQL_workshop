@@ -42,6 +42,8 @@
             <div class="top-nav ">
                 <ul class="nav pull-right top-menu">
                     <!-- user login dropdown start-->
+                    <li><a href="{{URL::asset('')}}account_report/language/en"><img src="/images/english.png"></a></li>
+                    <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="username">
@@ -74,7 +76,7 @@
                     <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                <span class="title">Account<br></span>
+                                <span class="title">@lang('language.Account')<br></span>
                                 <span class="element-name">
                                     <img src="/images/yahoo.png">
                                     Campaign name
@@ -94,85 +96,85 @@
                         <ul class="col-md-2 dropdown-menu extended tasks-bar date-option">
                             <li data-date="today">
                                 <a href="#">
-                                    <div class="desc">Today</div>
+                                    <div class="desc">@lang('language.today')</div>
                                 </a>
                             </li>
                             <li data-date="yesterday">
                                 <a href="#">
-                                    <div class="desc">Yesterday</div>
+                                    <div class="desc">@lang('language.yesterday')</div>
                                 </a>
                             </li>
                             <li data-date="last7DaysToday">
                                 <a href="#">
-                                    <div class="desc">Last 7 days( include today)</div>
+                                    <div class="desc">@lang('language.last_7_days')(@lang('language.including_today'))</div>
                                 </a>
                             </li>
                             <li data-date="last7days">
                                 <a href="#">
-                                    <div class="desc">Last 7 days( exclude today)</div>
+                                    <div class="desc">@lang('language.last_7_days')(@lang('language.excluding_today'))</div>
                                 </a>
                             </li>
                             <li data-date="last30days">
                                 <a href="#">
-                                    <div class="desc">Last 30 days</div>
+                                    <div class="desc">@lang('language.last_30_days')</div>
                                 </a>
                             </li>
                             <li data-date="last90days">
                                 <a href="#">
-                                    <div class="desc">Last 90 days</div>
+                                    <div class="desc">@lang('language.last_90_days')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li data-date="thisWeek">
                                 <a href="#">
-                                    <div class="desc">This week</div>
+                                    <div class="desc">@lang('language.this_week')</div>
                                 </a>
                             </li>
                             <li data-date="thisMonth">
                                 <a href="#">
-                                    <div class="desc">This month</div>
+                                    <div class="desc">@lang('language.this_month')</div>
                                 </a>
                             </li>
                             <li data-date="thisQuarter">
                                 <a href="#">
-                                    <div class="desc">This quarter</div>
+                                    <div class="desc">@lang('language.this_quarter')</div>
                                 </a>
                             </li>
                             <li data-date="thisYear">
                                 <a href="#">
-                                    <div class="desc">This year</div>
+                                    <div class="desc">@lang('language.this_year')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li data-date="lastBusinessWeek">
                                 <a href="#">
-                                    <div class="desc">Last business week (Mon – Fri)</div>
+                                    <div class="desc">@lang('language.last_business_week') (@lang('language.Mon_Fri'))</div>
                                 </a>
                             </li>
                             <li data-date="lastFullWeek">
                                 <a href="#">
-                                    <div class="desc">Last full week</div>
+                                    <div class="desc">@lang('language.last_full_week')</div>
                                 </a>
                             </li>
                             <li data-date="lastMonth">
                                 <a href="#">
-                                    <div class="desc">Last month</div>
+                                    <div class="desc">@lang('language.last_month')</div>
                                 </a>
                             </li>
                             <li data-date="lastQuarter">
                                 <a href="#">
-                                    <div class="desc">Last quarter</div>
+                                    <div class="desc">@lang('language.last_quarter')</div>
                                 </a>
                             </li>
                             <li data-date="lastYear">
                                 <a href="#">
-                                    <div class="desc">Last year</div>
+                                    <div class="desc">@lang('language.last_year')</div>
                                 </a>
                             </li>
                             <div class="dropdown-divider"></div>
                             <li class="custom-li" data-date="custom">
                                 <a href="#">
-                                    <div class="desc">Custom</div>
+                                    <div class="desc">@lang('language.custom')</div>
                                 </a>
                             </li>
                             <li id="datepicker" class="custom-date">
@@ -227,7 +229,7 @@
                             <li>
                                 <p class="heading">
                                 <span class="glyphicon glyphicon-search"></span>
-                                <input type="text" placeholder="Search by columns" onkeyup="searchUp()" id="txtLiveSearch">
+                                <input type="text" placeholder="@lang('language.Search_by_columns')" onkeyup="searchUp()" id="txtLiveSearch">
                                 </p>
                             </li>
                             <div id="listSearch">
@@ -252,12 +254,12 @@
                         <ul class="col-md-2 dropdown-menu extended tasks-bar status-option">
                             <li data-status="showZero">
                                 <a href="#">
-                                    <div class="desc">Show 0</div>
+                                    <div class="desc">@lang('language.show_0')</div>
                                 </a>
                             </li>
                             <li data-status="hideZero">
                                 <a href="#">
-                                    <div class="desc">Hide 0</div>
+                                    <div class="desc">@lang('language.hide_0')</div>
                                 </a>
                             </li>
                         </ul>
@@ -294,7 +296,7 @@
                         <a data-toggle="modal" href="#columnsModal">
                         <section class="panel">
                             <div class="panel-body ">
-                              Columns
+                              @lang('language.Columns')
                             </div>
                         </section>
                         </a>
