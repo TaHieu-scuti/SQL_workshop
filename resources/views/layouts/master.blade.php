@@ -42,10 +42,8 @@
             <div class="top-nav ">
                 <ul class="nav pull-right top-menu">
                     <!-- user login dropdown start-->
-                    <li>
-                        <a href="{{URL::asset('')}}account_report/language/en"><img src="/images/english.png"></a>
-                        <a href="{{URL::asset('')}}account_report/language/ja">japanese</a>
-                    </li>
+                    <li><a href="{{URL::asset('')}}account_report/language/en"><img src="/images/english.png"></a></li>
+                    <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="username">
@@ -217,50 +215,7 @@
 
                 <div class="row group">
                     <div class="col-md-8 col-xs-12 pull-left">
-                        <ul class="panel">
-                            <li class="panel-body">
-                                <a href="{{ route('campaign-report') }}">
-                                    @lang('language.CAMPAIGNS')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('adgroup-report') }}">
-                                    @lang('language.AD_GROUPS')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('keyword-report') }}">
-                                    @lang('language.KEYWORDS')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="{{ route('ad-report') }}">
-                                    @lang('language.ADS')
-                                </a>
-                            </li>
-                            <li class="panel-body separator">
-                            </li>
-                            <li class="panel-body">
-                                <a href="prefectures.html">
-                                    @lang('language.PREFECTURES')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="time-zone.html">
-                                    @lang('language.BY_TIME_ZONE')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="days-of-the-week.html">
-                                    @lang('language.BY_DAYS_OF_THE_WEEK')
-                                </a>
-                            </li>
-                            <li class="panel-body">
-                                <a href="./devices.html">
-                                    @lang('language.DEVICES')
-                                </a>
-                            </li>
-                        </ul>
+                        @yield('filter-list')
                     </div>
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -299,12 +254,12 @@
                         <ul class="col-md-2 dropdown-menu extended tasks-bar status-option">
                             <li data-status="showZero">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Show_0')</div>
+                                    <div class="desc">@lang('language.show_0')</div>
                                 </a>
                             </li>
                             <li data-status="hideZero">
                                 <a href="#">
-                                    <div class="desc">@lang('language.Hide_0')</div>
+                                    <div class="desc">@lang('language.hide_0')</div>
                                 </a>
                             </li>
                         </ul>

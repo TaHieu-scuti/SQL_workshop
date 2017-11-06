@@ -2,7 +2,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">Clicks<br></span>
+                <span class="title">@lang('language.clicks')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
                 </span>
@@ -14,7 +14,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">Impr<br></span>
+                <span class="title">@lang('language.Impr')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>{{ $summaryReport['impressions'] }}<br>
                 </span>
@@ -26,7 +26,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">Cost<br></span>
+                <span class="title">@lang('language.Cost')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>{{ $summaryReport['cost'] }}<br>
@@ -39,7 +39,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">AvgCPC<br></span>
+                <span class="title">@lang('language.AvgCPC')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>{{ $summaryReport['averageCpc'] }}<br>
@@ -52,7 +52,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">Avg pos<br></span>
+                <span class="title">@lang('language.Avg_pos')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     {{ $summaryReport['averagePosition'] }}<br>
