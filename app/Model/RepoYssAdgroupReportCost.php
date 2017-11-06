@@ -68,6 +68,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $pagination,
         $columnSort,
         $sort,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -82,7 +83,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
+                ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
@@ -146,7 +147,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $fieldNames,
         $accountStatus,
         $startDay,
-        $endDay, 
+        $endDay,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -299,8 +300,8 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
      */
     public function getColumnLiveSearch($keywords)
     {
-        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
-            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'" 
+        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'"
             AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
         $result = [];
         foreach ($searchColumns as $searchColumn) {
@@ -317,7 +318,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
             'mobileBidAdj', 'tabletBidAdj', 'desktopBidAdj',
             'trackingURL', 'customParameters', 'ctr'
         ];
-        
+
         return $this->unsetColumns($result, $unsetColumns);
     }
 
@@ -333,7 +334,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
             }
         }
-        
+
         return $arrAdgroups;
     }
 }
