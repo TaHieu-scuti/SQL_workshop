@@ -49,7 +49,13 @@
            @foreach($reports as $report)
             <tr>
                 @foreach($fieldNames as $fieldName)
-                    <td>{{ $report->$fieldName }}</td>
+                    @if (ctype_digit($report->$fieldName))
+                        <td>{{ number_format($report->$fieldName, 0, '', ',') }}</td>
+                    @elseif (is_float($report->$fieldName))
+                        <td>{{ number_format($report->$fieldName, 2, '.', ',') }}</td>
+                    @else
+                        <td>{{ $report->$fieldName }}</td>
+                    @endif
                 @endforeach
             </tr>
             @endforeach
