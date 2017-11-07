@@ -14,15 +14,17 @@ use App\Model\RepoYssAdReportCost;
 use App\Model\RepoYssAdReportConv;
 use App\Model\RepoYssKeywordReportCost;
 use App\Model\RepoYssKeywordReportConv;
+use App\Model\RepoYssPrefectureReportConv;
+use App\Model\RepoYssPrefectureReportCost;
 
 use NlpTools\Random\Distributions\Dirichlet;
 
 // @codingStandardsIgnoreLine
 class DemoSeeder extends Seeder
 {
-    const START_DATE = '2017-11-01';
-    const END_DATE = '2017-12-01';
-    const NUMBER_OF_DAYS = 30;
+    const START_DATE = '2017-10-01';
+    const END_DATE = '2017-11-01';
+    const NUMBER_OF_DAYS = 31;
     const ACCOUNT_ID = 1;
     const ACCOUNTID = 1;
     const CAMPAIGN_ID = 1;
@@ -257,6 +259,19 @@ class DemoSeeder extends Seeder
         ]
     ];
 
+    const PREFECTURES = [
+        '岐阜県',
+        '鹿児島県',
+        '京都府',
+        '東京都',
+        '山口県',
+        '山形県',
+        '大阪府',
+        '北海道',
+        '福岡県',
+        '宮城県'
+    ];
+
     const MIN_DAILY_SPENDING_LIMIT = 1;
     const MAX_DAILY_SPENDING_LIMIT = 1004;
     const MIN_AVERAGE_POSITION = 1000000;
@@ -337,6 +352,14 @@ class DemoSeeder extends Seeder
     const MAX_TOP_OF_PAGE_BID_ESTIMATE = 100;
     const LANDING_PAGE_URL = 'http://lading.page/';
     const LANDING_PAGE_URL_SMART_PHONE = 'http://lading.page.smartphone/';
+    const CITY = [
+        'HO CHI MINH', 'DA NANG',
+        'NHA TRANG', 'KYOTO'
+    ];
+    const CITY_WAR_DISTRICT = [
+        'NGUYEN PHONG SAC STREET', 'CAY GIAY STREET',
+        'NGUYEN TRAI STREET'
+    ];
 
     /*const WEBCV_KEYWORDS = [
         2,
@@ -1024,12 +1047,12 @@ class DemoSeeder extends Seeder
                     foreach (self::KEYWORDS_PER_ADGROUP[$adgroupID] as $keywordID => $keyword) {
                         $adReportCost = new RepoYssAdReportCost;
                         $adReportConv = new RepoYssAdReportConv;
-                        $adReportCost->exeDate = $day->format('Y-m-d H:i:s');
-                        $adReportConv->exeDate = $day->format('Y-m-d H:i:s');
-                        $adReportCost->startDate = $day->format('Y-m-d H:i:s');
-                        $adReportConv->startDate = $day->format('Y-m-d H:i:s');
-                        $adReportCost->endDate = $day->format('Y-m-d H:i:s');
-                        $adReportConv->endDate = $day->format('Y-m-d H:i:s');
+                        $adReportCost->exeDate = $day->format('Y-m-d');
+                        $adReportConv->exeDate = $day->format('Y-m-d');
+                        $adReportCost->startDate = $day->format('Y-m-d');
+                        $adReportConv->startDate = $day->format('Y-m-d');
+                        $adReportCost->endDate = $day->format('Y-m-d');
+                        $adReportConv->endDate = $day->format('Y-m-d');
                         $adReportCost->account_id = self::ACCOUNT_ID;
                         $adReportConv->account_id = self::ACCOUNT_ID;
                         $adReportCost->campaign_id = self::CAMPAIGN_ID;
@@ -1194,12 +1217,12 @@ class DemoSeeder extends Seeder
                     foreach (self::KEYWORDS_PER_ADGROUP[$adgroupID] as $keywordID => $keyword) {
                         $keywordReportCost = new RepoYssKeywordReportCost;
                         $keywordReportConv = new RepoYssKeywordReportConv;
-                        $keywordReportCost->exeDate = $day->format('Y-m-d H:i:s');
-                        $keywordReportConv->exeDate = $day->format('Y-m-d H:i:s');
-                        $keywordReportCost->startDate = $day->format('Y-m-d H:i:s');
-                        $keywordReportConv->startDate = $day->format('Y-m-d H:i:s');
-                        $keywordReportCost->endDate = $day->format('Y-m-d H:i:s');
-                        $keywordReportConv->endDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportCost->exeDate = $day->format('Y-m-d');
+                        $keywordReportConv->exeDate = $day->format('Y-m-d');
+                        $keywordReportCost->startDate = $day->format('Y-m-d');
+                        $keywordReportConv->startDate = $day->format('Y-m-d');
+                        $keywordReportCost->endDate = $day->format('Y-m-d');
+                        $keywordReportConv->endDate = $day->format('Y-m-d');
                         $keywordReportCost->account_id = self::ACCOUNT_ID;
                         $keywordReportConv->account_id = self::ACCOUNT_ID;
                         $keywordReportCost->campaign_id = self::CAMPAIGN_ID;
@@ -1363,6 +1386,171 @@ class DemoSeeder extends Seeder
         }
     }
 
+    private function seedYssPrefectureReports()
+    {
+        $dateRange = $this->getDatePeriod();
+
+        $costSums = $this->getSumsAdgroupCost();
+        $impressionSums = $this->getSumsAdgroupImpression();
+        $clickSums = $this->getSumsAdgroupClick();
+
+        // Get random sums per prefecture
+        $sumsAdgroupPrefectureCost = [];
+        foreach ($costSums as $adgroupID => $cost) {
+            $sumsAdgroupPrefectureCost[$adgroupID] = $this->getRandomValues($cost, count(self::PREFECTURES));
+        }
+
+        $sumsAdgroupPrefectureImpression = [];
+        foreach ($impressionSums as $adgroupID => $impression) {
+            $sumsAdgroupPrefectureImpression[$adgroupID] = $this->getRandomValues($impression, count(self::PREFECTURES));
+        }
+
+        $sumsAdgroupPrefectureClick = [];
+        foreach ($impressionSums as $adgroupID => $click) {
+            $sumsAdgroupPrefectureClick[$adgroupID] = $this->getRandomValues($click, count(self::PREFECTURES));
+        }
+
+        // Get random values
+        $costValuesAdgroupPrefecture = [];
+        foreach ($sumsAdgroupPrefectureCost as $adgroupID => $costs) {
+            $costValuesAdgroupPrefecture[$adgroupID] = [];
+            foreach ($costs as $cost) {
+                $costValuesAdgroupPrefecture[$adgroupID][] = $this->getRandomValues($cost, self::NUMBER_OF_DAYS);
+            }
+        }
+
+        $impressionValuesAdgroupPrefecture = [];
+        foreach ($sumsAdgroupPrefectureImpression as $adgroupID => $impressions) {
+            $impressionValuesAdgroupPrefecture[$adgroupID] = [];
+            foreach ($impressions as $impression) {
+                $impressionValuesAdgroupPrefecture[$adgroupID][] = $this->getRandomValues($impression, self::NUMBER_OF_DAYS);
+            }
+        }
+
+        $clickValuesAdgroupPrefecture = [];
+        foreach ($sumsAdgroupPrefectureClick as $adgroupID => $clicks) {
+            $clickValuesAdgroupPrefecture[$adgroupID] = [];
+            foreach ($clicks as $click) {
+                $clickValuesAdgroupPrefecture[$adgroupID][] = $this->getRandomValues($click, self::NUMBER_OF_DAYS);
+            }
+        }
+
+        foreach ($dateRange as $i => $day) {
+            foreach (self::ADGROUPS_PER_CAMPAIGN as $campaignID => $adGroups) {
+                foreach ($adGroups as $adgroupID => $adgroupName) {
+                    foreach (self::PREFECTURES as $j => $prefectureName) {
+                        // The commented out lines below are there because I wanted to seed that table too,
+                        // but it seems the cost table already has all the info we need.
+                        // I want to keep these lines because I have a feeling that the cost table structure will
+                        // change soon.
+
+                        $prefectureCost = new RepoYssPrefectureReportCost;
+                        //$prefectureConv = new RepoYssPrefectureReportConv;
+
+                        $prefectureCost->exeDate = $day->format('Y-m-d');
+                        //$prefectureConv->exeDate = $day->format('Y-m-d');
+
+                        $prefectureCost->startDate = $day->format('Y-m-d');
+                        //$prefectureConv->startDate = $day->format('Y-m-d');
+
+                        $prefectureCost->endDate = $day->format('Y-m-d');
+                        //$prefectureConv->endDate = $day->format('Y-m-d');
+
+                        $prefectureCost->accountid = self::ACCOUNTID;
+                        //$prefectureConv->accountid = self::ACCOUNTID;
+
+                        $prefectureCost->account_id = self::ACCOUNT_ID;
+                        //$prefectureConv->account_id = self::ACCOUNT_ID;
+
+                        $prefectureCost->campaign_id = self::CAMPAIGN_ID;
+                        //$prefectureConv->campaign_id = self::CAMPAIGN_ID;
+
+                        $prefectureCost->campaignID = $campaignID;
+                        //$prefectureConv->campaignID = $campaignID;
+
+                        $prefectureCost->adgroupID = $adgroupID;
+                        //$prefectureConv->adgroupID = $adgroupID;
+
+                        $prefectureCost->campaignName = self::CAMPAIGNS[$campaignID];
+                        //$prefectureConv->campaignName = self::CAMPAIGNS[$campaignID];
+
+                        $prefectureCost->adgroupName = $adgroupName;
+                        //$prefectureConv->adgroupName = $adgroupName;
+
+                        $prefectureCost->cost = $costValuesAdgroupPrefecture[$adgroupID][$j][$i];
+
+                        $prefectureCost->impressions = $impressionValuesAdgroupPrefecture[$adgroupID][$j][$i];
+
+                        $prefectureCost->clicks = $clickValuesAdgroupPrefecture[$adgroupID][$j][$i];
+
+                        $prefectureCost->ctr = ($prefectureCost->clicks / $prefectureCost->impressions) * 100;
+
+                        $prefectureCost->averageCpc = $prefectureCost->cost / $prefectureCost->clicks;
+
+                        $prefectureCost->averagePosition = mt_rand(
+                                self::MIN_AVERAGE_POSITION,
+                                self::MAX_AVERAGE_POSITION
+                            ) / mt_getrandmax();
+
+                        $prefectureCost->conversions = mt_rand(
+                                self::MIN_CONVERSIONS,
+                                self::MAX_CONVERSIONS
+                            ) / mt_getrandmax();
+
+                        $prefectureCost->convRate = mt_rand(
+                                self::MIN_CONV_RATE,
+                                self::MAX_CONV_RATE
+                            ) / mt_getrandmax();
+                        $prefectureCost->convValue = mt_rand(
+                                self::MIN_CONV_VALUE,
+                                self::MAX_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $prefectureCost->costPerConv = mt_rand(
+                                self::MIN_COST_PER_CONV,
+                                self::MAX_COST_PER_CONV
+                            ) / mt_getrandmax();
+                        $prefectureCost->valuePerConv = mt_rand(
+                                self::MIN_VALUE_PER_CONV,
+                                self::MAX_VALUE_PER_CONV
+                            ) / mt_getrandmax();
+                        $prefectureCost->allConv = mt_rand(
+                                self::MIN_ALL_CONV,
+                                self::MAX_ALL_CONV
+                            ) / mt_getrandmax();
+                        $prefectureCost->allConvRate = mt_rand(
+                                self::MIN_ALL_CONV_RATE,
+                                self::MAX_ALL_CONV_RATE
+                            ) / mt_getrandmax();
+                        $prefectureCost->allConvValue = mt_rand(
+                                self::MIN_ALL_CONV_VALUE,
+                                self::MAX_ALL_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $prefectureCost->costPerAllConv = mt_rand(
+                                self::MIN_COST_PER_ALL_CONV,
+                                self::MAX_COST_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $prefectureCost->valuePerAllConv = mt_rand(
+                                self::MIN_VALUE_PER_ALL_CONV,
+                                self::MAX_VALUE_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $prefectureCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                        $prefectureCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+                        $prefectureCost->day = $day;
+                        $prefectureCost->dayOfWeek = $day->format('l');
+                        $prefectureCost->quarter = (int)ceil((int)$day->format('n') / 3);
+                        $prefectureCost->month = $day->format('F');
+                        $prefectureCost->week = $day->format('W');
+                        $prefectureCost->countryTerritory = 'Japan';
+                        $prefectureCost->prefecture = $prefectureName;
+                        $prefectureCost->city = self::CITY[mt_rand(0, count(self::CITY) - 1)];
+                        $prefectureCost->cityWardDistrict = self::CITY_WAR_DISTRICT[mt_rand(0, count(self::CITY_WAR_DISTRICT) - 1)];
+                        $prefectureCost->saveOrFail();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Run the database seeds.
      *
@@ -1377,5 +1565,6 @@ class DemoSeeder extends Seeder
         $this->seedYssAdGroupReports();
         $this->seedYssAdReports();
         $this->seedYssKeywordReports();
+        $this->seedYssPrefectureReports();
     }
 }
