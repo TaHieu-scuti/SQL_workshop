@@ -64,8 +64,13 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME
+                || $fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                $arrayCalculate[] = $fieldName;
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
