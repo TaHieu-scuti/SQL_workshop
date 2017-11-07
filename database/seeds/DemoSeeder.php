@@ -360,6 +360,7 @@ class DemoSeeder extends Seeder
         'NGUYEN PHONG SAC STREET', 'CAY GIAY STREET',
         'NGUYEN TRAI STREET'
     ];
+    const AVERAGE_POSITION = 1.2;
 
     /*const WEBCV_KEYWORDS = [
         2,
@@ -605,10 +606,7 @@ class DemoSeeder extends Seeder
 
             $costReport->averageCpc = $costReport->cost / $costReport->clicks;
 
-            $costReport->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+            $costReport->averagePosition = self::AVERAGE_POSITION;
 
             $costReport->impressionShare = mt_rand(
                     self::MIN_IMPRESSION_SHARE,
@@ -766,10 +764,7 @@ class DemoSeeder extends Seeder
 
                 $campaignReportCost->ctr = $campaignReportCost->clicks / $campaignReportCost->impressions * 100;
                 $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
-                $campaignReportCost->averagePosition = mt_rand(
-                        self::MIN_AVERAGE_POSITION,
-                        self::MAX_AVERAGE_POSITION
-                    ) / mt_getrandmax();
+                $campaignReportCost->averagePosition = self::AVERAGE_POSITION;
                 $campaignReportCost->impressionShare = mt_rand(
                         self::MIN_IMPRESSION_SHARE,
                         self::MAX_IMPRESSION_SHARE
@@ -926,10 +921,7 @@ class DemoSeeder extends Seeder
 
                     $adgroupReportCost->averageCpc = $adgroupReportCost->cost / $adgroupReportCost->clicks;
 
-                    $adgroupReportCost->averagePosition = mt_rand(
-                            self::MIN_AVERAGE_POSITION,
-                            self::MAX_AVERAGE_POSITION
-                        ) / mt_getrandmax();
+                    $adgroupReportCost->averagePosition = self::AVERAGE_POSITION;
 
                     $adgroupReportCost->impressionShare = mt_rand(
                             self::MIN_IMPRESSION_SHARE,
@@ -1099,11 +1091,7 @@ class DemoSeeder extends Seeder
 
                         $adReportCost->averageCpc = $adReportCost->cost / $adReportCost->clicks;
 
-                        $adReportCost->averagePosition = mt_rand(
-                                self::MIN_AVERAGE_POSITION,
-                                self::MAX_AVERAGE_POSITION
-                        ) / mt_getrandmax();
-
+                        $adReportCost->averagePosition = self::AVERAGE_POSITION;
 
                         $adReportConv->landingPageURL = self::LOADING_PAGE_URL;
                         $adReportConv->landingPageURLSmartphone = self::LOADING_PAGE_URL_SMART_PHONE;
@@ -1280,10 +1268,8 @@ class DemoSeeder extends Seeder
 
                         $keywordReportCost->averageCpc = $keywordReportCost->cost / $keywordReportCost->clicks;
 
-                        $keywordReportCost->averagePosition = mt_rand(
-                                self::MIN_AVERAGE_POSITION,
-                                self::MAX_AVERAGE_POSITION
-                        ) / mt_getrandmax();
+                        $keywordReportCost->averagePosition = self::AVERAGE_POSITION;
+
                         $keywordReportCost->impressionShare = mt_rand(
                                 self::MIN_IMPRESSION_SHARE,
                                 self::MAX_IMPRESSION_SHARE
@@ -1487,10 +1473,7 @@ class DemoSeeder extends Seeder
 
                         $prefectureCost->averageCpc = $prefectureCost->cost / $prefectureCost->clicks;
 
-                        $prefectureCost->averagePosition = mt_rand(
-                                self::MIN_AVERAGE_POSITION,
-                                self::MAX_AVERAGE_POSITION
-                            ) / mt_getrandmax();
+                        $prefectureCost->averagePosition = self::AVERAGE_POSITION;
 
                         $prefectureCost->conversions = mt_rand(
                                 self::MIN_CONVERSIONS,
