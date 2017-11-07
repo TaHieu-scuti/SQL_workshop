@@ -306,7 +306,7 @@ class DemoSeeder extends Seeder
     const MIN_VALUE_PER_ALL_CONV = 1000000;
     const MAX_VALUE_PER_ALL_CONV = 89489437437880;
     const NETWORKS = ['network1', 'network2', 'network3'];
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['パソコン', 'スマートフォン', 'タブレット'];
     const CUSTOM_PARAMETERS = 'Custom Parameters';
     const MIN_MOBILE_BID_ADJ = 1000000;
     const MAX_MOBILE_BID_ADJ = 89489437437880;
@@ -361,6 +361,8 @@ class DemoSeeder extends Seeder
         'NGUYEN TRAI STREET'
     ];
     const AVERAGE_POSITION = 1.2;
+    const MIN_HOUROFDAY = 9;
+    const MAX_HOUROFDAY = 20;
 
     /*const WEBCV_KEYWORDS = [
         2,
@@ -851,7 +853,7 @@ class DemoSeeder extends Seeder
                 $campaignReportConv->month = $campaignReportCost->month;
                 $campaignReportCost->week = $day->format('W');
                 $campaignReportConv->week = $campaignReportCost->week;
-                $campaignReportCost->hourofday = $day->format('H');
+                $campaignReportCost->hourofday = rand(self::MIN_HOUROFDAY, self::MAX_HOUROFDAY);
                 $campaignReportCost->campaignType = self::CAMPAIGN_TYPE[mt_rand(0, count(self::CAMPAIGN_TYPE) - 1)];
                 $campaignReportConv->campaignType = $campaignReportCost->campaignType;
                 $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
@@ -994,7 +996,7 @@ class DemoSeeder extends Seeder
                     $adgroupReportConv->month = $day->format('F');
                     $adgroupReportCost->week = $day->format('W');
                     $adgroupReportConv->week = $day->format('W');
-                    $adgroupReportCost->hourofday = $day->format('H');
+                    $adgroupReportCost->hourofday = rand(self::MIN_HOUROFDAY, self::MAX_HOUROFDAY);
                     $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
                     $adgroupReportConv->allConv = mt_rand(
                             self::MIN_ALL_CONV,
