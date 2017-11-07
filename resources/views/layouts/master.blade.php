@@ -214,9 +214,33 @@
                 </div>
 
                 <div class="row group">
-                    <div class="col-md-8 col-xs-12 pull-left">
+                    <div class="col-md-10 col-xs-12 pull-left">
                         @yield('filter-list')
                     </div>
+                    <div class="col-md-2 col-xs-12 selection-dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <section class="panel">
+                            <div class="panel-body" id= "status-label">
+                                    @include('layouts.status-title')
+                            </div>
+                        </section>
+                        </a>
+                        <ul class="col-md-2 dropdown-menu extended tasks-bar status-option">
+                            <li data-status="showZero">
+                                <a href="#">
+                                    <div class="desc">@lang('language.show_0')</div>
+                                </a>
+                            </li>
+                            <li data-status="hideZero">
+                                <a href="#">
+                                    <div class="desc">@lang('language.hide_0')</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row line-chart">
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
@@ -243,30 +267,7 @@
                             </div>
                         </ul>
                     </div>
-                    <div class="col-md-2 col-xs-12 selection-dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <section class="panel">
-                            <div class="panel-body" id= "status-label">
-                                    @include('layouts.status-title')
-                            </div>
-                        </section>
-                        </a>
-                        <ul class="col-md-2 dropdown-menu extended tasks-bar status-option">
-                            <li data-status="showZero">
-                                <a href="#">
-                                    <div class="desc">@lang('language.show_0')</div>
-                                </a>
-                            </li>
-                            <li data-status="hideZero">
-                                <a href="#">
-                                    <div class="desc">@lang('language.hide_0')</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div class="row line-chart">
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
                         <span class="no-data-found-message-graph">No data found for graph</span>

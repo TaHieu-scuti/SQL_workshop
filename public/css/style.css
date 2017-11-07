@@ -490,7 +490,45 @@ a, a:hover, a:focus {
 .wrapper .row.group .selection-dropdown a {
     color: inherit;
 }
+/*row line-chart*/
+.wrapper .row.line-chart .selection-dropdown {
+    float: none;
+    height: 52px;
+    padding: 0px;
+    text-align: center;
+}
 
+.wrapper .row.line-chart .selection-dropdown .panel:hover {
+    background-color: #ecedf1;
+}
+
+.wrapper .row.line-chart .col-md-2.selection-dropdown .col-md-2>li>a {
+    padding-left: 30px !important;
+    text-align: left;
+
+}
+
+.wrapper .row.line-chart .selection-dropdown ul {
+    border-radius: 0px;
+    margin-top: 9px;
+    max-width: none !important;
+    width: 100% !important;
+    max-height: 294px;
+    overflow: auto;
+}
+
+.wrapper .row.line-chart .selection-dropdown .panel {
+    border-radius: 0px;
+    height: 100%;
+}
+
+.wrapper .row.line-chart .selection-dropdown .panel .panel-body {
+    border-bottom: none;
+}
+
+.wrapper .row.line-chart .selection-dropdown a {
+    color: inherit;
+}
 /*row statistic*/
 .wrapper .row.statistic {
     display: flex;
