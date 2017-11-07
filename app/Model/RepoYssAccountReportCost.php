@@ -137,34 +137,16 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
         if ($groupedByField === 'prefecture') {
-            $paginatedData  = Prefecture::select($arrayCalculate)
-                    ->join(
-                        $joinTableName,
-                        'repo_yss_prefecture_report_cost.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                        '=',
-                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                    )
-                    ->where(
-                        function ($paginatedData) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $paginatedData->whereDate('day', '=', $endDay);
-                            } else {
-                                $paginatedData->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<=', $endDay);
-                            }
-                        }
-                    )
-                    ->where(
-                        function ($query) use ($accountId,  $adgainerId) {
-                            if ($accountId !== null) {
-                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                            } else {
-                                $query->where('repo_yss_prefecture_report_cost.account_id', '=', $adgainerId);
-                            }
-                        }
-                    )
-                    ->groupBy($groupedByField)
-                    ->orderBy($columnSort, $sort);
+            $prefectureData = $this->addPrefectureCondition(
+                $arrayCalculate,
+                $joinTableName,
+                $startDay,
+                $endDay,
+                $accountId,
+                $adgainerId
+            );
+            $paginatedData  = $prefectureData->groupBy($groupedByField)
+                                ->orderBy($columnSort, $sort);
         } else {
             $paginatedData  = self::select($arrayCalculate)
                     ->join(
@@ -355,31 +337,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
             return $arrayCalculate;
         }
         if ($groupedByField === 'prefecture') {
-            $data = Prefecture::select($arrayCalculate)
-                        ->join(
-                            $joinTableName,
-                            'repo_yss_prefecture_report_cost.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                            '=',
-                            $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                        )->where(
-                            function ($data) use ($startDay, $endDay) {
-                                if ($startDay === $endDay) {
-                                    $data->whereDate('day', '=', $endDay);
-                                } else {
-                                    $data->whereDate('day', '>=', $startDay)
-                                        ->whereDate('day', '<=', $endDay);
-                                }
-                            }
-                        )
-                        ->where(
-                            function ($query) use ($accountId,  $adgainerId) {
-                                if ($accountId !== null) {
-                                    $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                                } else {
-                                    $query->where('repo_yss_prefecture_report_cost.account_id', '=', $adgainerId);
-                                }
-                            }
-                        );
+            $data = $this->addPrefectureCondition(
+                $arrayCalculate,
+                $joinTableName,
+                $startDay,
+                $endDay,
+                $accountId,
+                $adgainerId
+            );
         } else {
             $data = self::select($arrayCalculate)
                         ->join(
@@ -545,5 +510,40 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->toArray();
         }
         return $data;
+    }
+
+    private function addPrefectureCondition(
+        $arrayCalculate,
+        $joinTableName,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId
+    ) {
+        return Prefecture::select($arrayCalculate)
+                    ->join(
+                        $joinTableName,
+                        'repo_yss_prefecture_report_cost.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                        '=',
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                    )->where(
+                        function ($data) use ($startDay, $endDay) {
+                            if ($startDay === $endDay) {
+                                $data->whereDate('day', '=', $endDay);
+                            } else {
+                                $data->whereDate('day', '>=', $startDay)
+                                    ->whereDate('day', '<=', $endDay);
+                            }
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($accountId,  $adgainerId) {
+                            if ($accountId !== null) {
+                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                            } else {
+                                $query->where('repo_yss_prefecture_report_cost.account_id', '=', $adgainerId);
+                            }
+                        }
+                    );
     }
 }
