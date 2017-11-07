@@ -54,7 +54,7 @@
             </tr>
             @endforeach
             <tr>
-                <td>Total - all networks</td>
+                <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField)
                         <?php continue; ?>

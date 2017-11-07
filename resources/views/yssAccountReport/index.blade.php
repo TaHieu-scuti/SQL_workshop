@@ -8,7 +8,7 @@
     <ul class="panel">
         <li class="panel-body">
             <a href="campaign-report">
-                @lang('language.CAMPAIGNS')
+                @lang('language.campaign')
             </a>
         </li>
         <li class="panel-body">
@@ -18,7 +18,7 @@
         </li>
         <li class="panel-body">
             <a href="keyword-report">
-                @lang('language.KEYWORDS')
+                @lang('language.keywords')
             </a>
         </li>
         <li class="panel-body">
