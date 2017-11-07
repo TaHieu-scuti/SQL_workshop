@@ -3,7 +3,6 @@
         $export = false;
     }
 ?>
-
 <div class="loading-gif-on-table hidden-table"></div>
 @if($reports->total() !== 0)
     <div class="no-data-found-table hidden-no-data-found-message-table">
@@ -22,24 +21,24 @@
                 @if($export) 
                     @foreach($fieldNames as $fieldName)
                         <th>
-                            {{ $fieldName }}
+                            {{ __('language.' .str_slug($fieldName,'_')) }}
                         </th>
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
                         @if ($columnSort === $fieldName && $sort === "desc")
-                            <th>
+                            <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-down"></i>{{ $fieldName }}</a>
+                                <i class="fa fa-arrow-down"></i>{{ __('language.' .str_slug($fieldName,'_'))}}</a>
                             </th>
                         @elseif ($columnSort === $fieldName && $sort === "asc")
-                            <th>
+                            <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-up"></i>{{ $fieldName }}</a>
+                                <i class="fa fa-arrow-up"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
                         @else 
-                            <th>
-                                <a href="javascript:void(0)"></i>{{ $fieldName }}</a>
+                            <th data-value="{{ $fieldName }}">
+                                <a href="javascript:void(0)"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
                         @endif
                     @endforeach

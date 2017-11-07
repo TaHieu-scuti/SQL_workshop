@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
 use App\Model\RepoYssPrefectureReportCost as Prefecture;
@@ -60,8 +61,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
-    const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
-    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
 
     /**
      * @param string[] $fieldNames
@@ -176,8 +175,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->paginate($pagination);
+            $paginatedData = $paginatedData->paginate($pagination);
         }
         return $paginatedData;
     }
@@ -239,8 +237,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -362,8 +359,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [];
@@ -399,14 +395,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
-                )->groupBy($joinTableName.'.accountName')
+                )
+                ->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -470,8 +466,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [

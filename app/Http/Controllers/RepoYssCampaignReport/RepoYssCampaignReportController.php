@@ -139,12 +139,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         // if no data found
         // display no data found message on table
         if ($reports->total() !== 0) {
-            $displayNoDataFoundMessageOnTable = false;
+            $this->displayNoDataFoundMessageOnTable = false;
         }
         return $this->responseFactory->json([
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $displayNoDataFoundMessageOnTable
+                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
         ]);
     }
 
@@ -171,7 +171,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             // if data !== null, display on graph
             // else, display "no data found" image
             if ($value['data'] !== null) {
-                $displayNoDataFoundMessageOnGraph = false;
+                $this->displayNoDataFoundMessageOnGraph = false;
             }
         }
         return $this->responseFactory->json([
@@ -180,7 +180,7 @@ class RepoYssCampaignReportController extends AbstractReportController
                         'timePeriodLayout' => $timePeriodLayout,
                         'graphColumnLayout' => $graphColumnLayout,
                         'statusLayout' => $statusLayout,
-                        'displayNoDataFoundMessageOnGraph' => $displayNoDataFoundMessageOnGraph
+                        'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
         ]);
     }
 
