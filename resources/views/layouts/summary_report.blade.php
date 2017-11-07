@@ -1,22 +1,22 @@
-<div class="col-md-3 fields active" data-name="clicks">
-    <a href="javascript:void(0)">
-        <section class="panel">
-            <div class="panel-body">
-                <span class="title">@lang('language.clicks')<br></span>
-                <span class="content">
-                    <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
-                </span>
-            </div>
-        </section>
-    </a>
-</div>
-<div class="col-md-3 fields" data-name="impressions">
+<div class="col-md-3 fields active" data-name="impressions">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
                 <span class="title">@lang('language.Impr')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>{{ $summaryReport['impressions'] }}<br>
+                </span>
+            </div>
+        </section>
+    </a>
+</div>
+<div class="col-md-3 fields" data-name="clicks">
+    <a href="javascript:void(0)">
+        <section class="panel">
+            <div class="panel-body">
+                <span class="title">@lang('language.clicks')<br></span>
+                <span class="content">
+                    <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
                 </span>
             </div>
         </section>
