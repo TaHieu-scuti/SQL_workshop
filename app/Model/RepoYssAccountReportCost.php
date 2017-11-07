@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
 use App\Model\RepoYssAccount;
@@ -59,8 +60,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
-    const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
-    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
 
     /**
      * @param string[] $fieldNames
@@ -139,17 +138,12 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )
                 ->where(
-                    function ($paginatedData) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $paginatedData->whereDate('day', '=', $endDay);
-                        } else {
-                            $paginatedData->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
                 ->where(
-                    function ($query) use ($accountId,  $adgainerId) {
+                    function (Builder $query) use ($accountId,  $adgainerId) {
                         if ($accountId !== null) {
                             $query->where('repo_yss_accounts.accountid', '=', $accountId);
                         } else {
@@ -163,8 +157,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->paginate($pagination);
+            $paginatedData = $paginatedData->paginate($pagination);
         }
         return $paginatedData;
     }
@@ -231,8 +224,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -344,8 +336,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [];
@@ -389,8 +380,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -458,8 +448,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [
