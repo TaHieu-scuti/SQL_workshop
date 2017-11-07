@@ -55,15 +55,16 @@ return [
     'averageposition' => 'averageposition',
     'accountname' => 'accountname',
     'all_account' => 'All Account',
-    'campaign_name' => 'Campaign name',
+    'campaignname' => 'Campaign name',
     'all_campaigns' => 'All Campaigns',
     'all_adgroup' => 'All Adgroup',
     'all_keywords' => 'All Keywords',
-    'ad_group_name' => 'Ad group name',
+    'adgroupname' => 'Ad group name',
     'conversions' => 'Conversions',
     'all_ads' => 'All Ads',
     'keyword_name' => 'Keyword name',
-    'ad_name' => 'Ad name',
+    'adname' => 'Ad name',
     'adreport' => 'Ad Report',
-    'all_adreports' => 'All Adreports'
+    'all_adreports' => 'All Adreports',
+    'client' => 'Client'
 ];

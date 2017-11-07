@@ -145,6 +145,21 @@ abstract class AbstractReportController extends Controller
 
     }
 
+    public function checkoutSessionFieldName()
+   {
+        if (session(static::SESSION_KEY_FIELD_NAME)) {
+            if (session(static::SESSION_KEY_FIELD_NAME)[0] === 'device'
+                || session(static::SESSION_KEY_FIELD_NAME)[0] === 'hourofday'
+                || session(static::SESSION_KEY_FIELD_NAME)[0] === 'dayOfWeek'
+                || session(static::SESSION_KEY_FIELD_NAME)[0] === 'prefecture'
+            ) {
+                $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+                $fieldNames[0] = static::SESSION_KEY_GROUPED_BY_FIELD;
+                session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+            }
+        }
+   } 
+
     public function updateSessionGraphColumnName($graphColumnName)
     {
         session()->put(static::SESSION_KEY_GRAPH_COLUMN_NAME, $graphColumnName);
@@ -385,6 +400,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
+            session(static::GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
@@ -401,6 +417,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
+            session(static::GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),

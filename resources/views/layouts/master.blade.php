@@ -79,7 +79,7 @@
                                 <span class="title">@lang('language.account')<br></span>
                                 <span class="element-name">
                                     <img src="/images/yahoo.png">
-                                    @lang('language.campaign_name')
+                                    @lang('language.campaignname')
                                 </span>
                             </div>
                         </section>

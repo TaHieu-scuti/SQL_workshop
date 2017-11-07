@@ -55,15 +55,16 @@ return [
     'averageposition' => '平均掲載順位',
     'accountname' => 'エンジンアカウント',
     'all_account' => 'すべてのアカウント',
-    'campaign_name' => 'キャンペーン名',
+    'campaignname' => 'キャンペーン名',
     'all_campaigns' => 'すべてのキャンペーン',
     'all_adgroup' => 'すべての広告グループ',
     'all_keywords' => 'すべてのキーワード',
-    'ad_group_name' => '広告グループ名',
+    'adgroupname' => '広告グループ名',
     'conversions' => 'コンバージョン',
     'all_ads' => 'すべての広告',
     'keyword_name' => 'キーワード名',
-    'ad_name' => '広告名',
+    'adname' => '広告名',
     'adreport' => '広告レポート',
-    'all_adreports' => 'すべての広告'
+    'all_adreports' => 'すべての広告',
+    'client' => 'クライエント'
 ];
