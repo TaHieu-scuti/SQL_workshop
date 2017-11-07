@@ -236,7 +236,7 @@
                                 @foreach ($columnsLiveSearch as $columnsSearch)
                                 <li>
                                     <a href="#">
-                                        <div class="desc">{{ $columnsSearch }}</div>
+                                        <div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>
                                     </a>
                                 </li>
                                 @endforeach

@@ -26,7 +26,7 @@
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">@lang('language.Cost')<br></span>
+                <span class="title">@lang('language.cost')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>{{ $summaryReport['cost'] }}<br>

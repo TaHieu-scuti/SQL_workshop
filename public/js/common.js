@@ -294,7 +294,7 @@ $('.table_data_report').delegate('th', 'click', function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data : {
-            'columnSort' : th.text(),
+            'columnSort' : th.data('value'),
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
