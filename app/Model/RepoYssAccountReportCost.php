@@ -18,6 +18,7 @@ use App\User;
 class RepoYssAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
+    const GROUPED_BY_FIELD_NAME = 'accountName';
 
     /** @var bool */
     public $timestamps = false;
@@ -75,7 +76,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'accountName' || $fieldName === 'device' ||
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME || $fieldName === 'device' ||
                 $fieldName === 'hourofday' || $fieldName === "dayOfWeek" ||
                 $fieldName === 'prefecture'
             ) {

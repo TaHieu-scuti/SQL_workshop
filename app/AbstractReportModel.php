@@ -54,8 +54,13 @@ abstract class AbstractReportModel extends Model
         $expressions = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                $expressions[] = static::GROUPED_BY_FIELD_NAME;
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME
+                || $fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                $expressions[] = $fieldName;
                 continue;
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
