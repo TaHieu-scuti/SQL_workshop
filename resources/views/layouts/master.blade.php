@@ -76,10 +76,10 @@
                     <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                <span class="title">@lang('language.Account')<br></span>
+                                <span class="title">@lang('language.account')<br></span>
                                 <span class="element-name">
                                     <img src="/images/yahoo.png">
-                                    Campaign name
+                                    @lang('language.campaignname')
                                 </span>
                             </div>
                         </section>

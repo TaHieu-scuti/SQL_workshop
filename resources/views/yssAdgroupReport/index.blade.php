@@ -8,7 +8,7 @@
     <ul class="panel">
         <li class="panel-body">
             <a href="{{ route('keyword-report') }}">
-                @lang('language.KEYWORDS')
+                @lang('language.keywords')
             </a>
         </li>
         <li class="panel-body">

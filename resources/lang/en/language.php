@@ -1,10 +1,12 @@
 <?php 
 return [
-    'Account' => 'Account',
+    'account' => 'Account',
     'Search_for_account' => 'Search for account',
-    'CAMPAIGNS' => 'CAMPAIGNS',
+    'campaign' => 'CAMPAIGNS',
     'AD_GROUPS' => 'AD GROUPS',
-    'KEYWORDS' => 'KEYWORDS',
+    'adgroup' => 'ADGROUP',
+    'keywords' => 'KEYWORDS',
+    'keyword' => 'KEYWORD',
     'ADS' => 'ADS',
     'PREFECTURES' => 'PREFECTURES',
     'BY_TIME_ZONE' => 'BY TIME ZONE',
@@ -51,5 +53,18 @@ return [
     'impressions' => 'impressions',
     'averagecpc' => 'averagecpc',
     'averageposition' => 'averageposition',
-    'accountname' => 'accountname'
+    'accountname' => 'accountname',
+    'all_account' => 'All Account',
+    'campaignname' => 'Campaign name',
+    'all_campaigns' => 'All Campaigns',
+    'all_adgroup' => 'All Adgroup',
+    'all_keywords' => 'All Keywords',
+    'adgroupname' => 'Ad group name',
+    'conversions' => 'Conversions',
+    'all_ads' => 'All Ads',
+    'keyword_name' => 'Keyword name',
+    'adname' => 'Ad name',
+    'adreport' => 'Ad Report',
+    'all_adreports' => 'All Adreports',
+    'client' => 'Client'
 ];
