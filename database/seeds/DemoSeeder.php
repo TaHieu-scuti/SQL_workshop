@@ -8,6 +8,12 @@ use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoYssAccountReportConv;
 use App\Model\RepoYssCampaignReportCost;
 use App\Model\RepoYssCampaignReportConv;
+use App\Model\RepoYssAdgroupReportCost;
+use App\Model\RepoYssAdgroupReportConv;
+use App\Model\RepoYssAdReportCost;
+use App\Model\RepoYssAdReportConv;
+use App\Model\RepoYssKeywordReportCost;
+use App\Model\RepoYssKeywordReportConv;
 
 use NlpTools\Random\Distributions\Dirichlet;
 
@@ -24,6 +30,59 @@ class DemoSeeder extends Seeder
     const CAMPAIGNS = [
         1 => 'コールトラッキング',
         2 => '電話計測'
+    ];
+
+    const ADGROUPS_PER_CAMPAIGN = [
+        1 => [
+            1 => 'コールトラッキング（完全一致）',
+            2 => 'コールトラッキング（部分一致）'
+        ],
+        2 => [
+            3 => '電話計測（完全一致）',
+            4 => '電話計測（部分一致）'
+        ]
+    ];
+
+    const KEYWORDS_PER_ADGROUP = [
+        1 => [
+            1 => 'コールトラッキング',
+            2 => 'calltracking',
+            3 => 'コールトラッキングシステム',
+            4 => 'コールトラッキングツール'
+        ],
+        2 => [
+            5 => 'コールトラッキング',
+            6 => 'calltracking',
+            7 => 'コールトラッキングシステム',
+            8 => 'コールトラッキングツール'
+        ],
+        3 => [
+            9 => '電話計測',
+            10 => '電話計測システム',
+            11 => '電話計測ツール'
+        ],
+        4 => [
+            12 => '電話計測',
+            13 => '電話計測システム',
+            14 => '電話計測ツール'
+        ]
+    ];
+
+    const COST_KEYWORDS = [
+        1 => 29452,
+        2 => 19463,
+        3 => 25081,
+        4 => 38042,
+        5 => 31064,
+        6 => 23431,
+        7 => 38005,
+        8 => 26421,
+        9 => 31212,
+        10 => 48662,
+        11 => 39652,
+        12 => 33998,
+        13 => 29651,
+        14 => 35866
     ];
 
     const COST_KEYWORDS_PER_CAMPAIGN = [
@@ -47,6 +106,48 @@ class DemoSeeder extends Seeder
         ]
     ];
 
+    const COST_KEYWORDS_PER_ADGROUP = [
+        1 => [
+            29452,
+            19463,
+            25081,
+            38042,
+        ],
+        2 => [
+            31064,
+            23431,
+            38005,
+            26421
+        ],
+        3 => [
+            31212,
+            48662,
+            39652,
+        ],
+        4 => [
+            33998,
+            29651,
+            35866
+        ]
+    ];
+
+    const IMPRESSION_KEYWORDS = [
+        1 => 3976,
+        2 => 3501,
+        3 => 4863,
+        4 => 5222,
+        5 => 4173,
+        6 => 2508,
+        7 => 3980,
+        8 => 4338,
+        9 => 4490,
+        10 => 5017,
+        11 => 3935,
+        12 => 4208,
+        13 => 4309,
+        14 => 5321
+    ];
+
     const IMPRESSION_KEYWORDS_PER_CAMPAIGN = [
         1 => [
             3976,
@@ -66,6 +167,48 @@ class DemoSeeder extends Seeder
             4309,
             5321
         ]
+    ];
+
+    const IMPRESSION_KEYWORDS_PER_ADGROUP = [
+        1 => [
+            3976,
+            3501,
+            4863,
+            5222,
+        ],
+        2 => [
+            4173,
+            2508,
+            3980,
+            4338
+        ],
+        3 => [
+            4490,
+            5017,
+            3935,
+        ],
+        4 => [
+            4208,
+            4309,
+            5321
+        ]
+    ];
+
+    const CLICK_KEYWORDS = [
+        1 => 28,
+        2 => 46,
+        3 => 98,
+        4 => 69,
+        5 => 59,
+        6 => 46,
+        7 => 108,
+        8 => 52,
+        9 => 73,
+        10 => 57,
+        11 => 39,
+        12 => 85,
+        13 => 69,
+        14 => 136
     ];
 
     const CLICK_KEYWORDS_PER_CAMPAIGN = [
@@ -88,6 +231,32 @@ class DemoSeeder extends Seeder
             136
         ]
     ];
+
+    const CLICK_KEYWORDS_PER_ADGROUP = [
+        1 => [
+            28,
+            46,
+            98,
+            69,
+        ],
+        2 => [
+            59,
+            46,
+            108,
+            52,
+        ],
+        3 => [
+            73,
+            57,
+            39,
+        ],
+        4 => [
+            85,
+            69,
+            136
+        ]
+    ];
+
     const MIN_DAILY_SPENDING_LIMIT = 1;
     const MAX_DAILY_SPENDING_LIMIT = 1004;
     const MIN_AVERAGE_POSITION = 1000000;
@@ -143,6 +312,31 @@ class DemoSeeder extends Seeder
         'Conversion Name 1', 'Conversion Name 2',
         'Conversion Name 3', 'Conversion Name 4'
     ];
+    const MIN_ADGROUP_BID = 1;
+    const MAX_ADGROUP_BID = 1004;
+    const DISPLAY_URL = 'http://we.track.displayURL/';
+    const DESTINATION_URL = 'http://we.track.destinationURL/';
+    const AD_TYPE = [
+        'Ad Report Type 1', 'Ad Report Type 2',
+        'Ad Report Type 3', 'Ad Report Type 4'
+    ];
+    const LOADING_PAGE_URL = 'http://we.track.landingPageURL/';
+    const LOADING_PAGE_URL_SMART_PHONE = 'http://we.track.landingPageURLSmartphone/';
+    const CUSTOM_URL = 'Custom URL ';
+    const KEYWORD_DISTRIBUTION_SETTINGS = 'Keyword distribution settings';
+    const KEYWORD_EDITORIAL_STATUS = 'Keyword editorial status';
+    const MIN_BID = 1;
+    const MAX_BID = 1004;
+    const NEGATIVE_KEY_WORDS = 'Negative key words';
+    const MIN_QUALITY_INDEX = 1;
+    const MAX_QUALITY_INDEX = 10;
+    const MIN_FIRST_PAGE_BID_ESTIMATE = 1;
+    const MAX_FIRST_PAGE_BID_ESTIMATE = 20;
+    const KEYWORD_MATCH_TYPE = 'Keyword match type';
+    const MIN_TOP_OF_PAGE_BID_ESTIMATE = 1;
+    const MAX_TOP_OF_PAGE_BID_ESTIMATE = 100;
+    const LANDING_PAGE_URL = 'http://lading.page/';
+    const LANDING_PAGE_URL_SMART_PHONE = 'http://lading.page.smartphone/';
 
     /*const WEBCV_KEYWORDS = [
         2,
@@ -324,17 +518,32 @@ class DemoSeeder extends Seeder
         return $this->sumSubArrays(self::CLICK_KEYWORDS_PER_CAMPAIGN);
     }
 
-    private function getRandomValuesPerCampaign($sums)
+    private function getRandomValuesForSums($sums)
     {
-        $costValuesPerCampaign = [];
-        foreach ($sums as $campaignId => $sum) {
-            $costValuesPerCampaign[$campaignId] = $this->getRandomValues(
+        $valueArrays = [];
+        foreach ($sums as $id => $sum) {
+            $valueArrays[$id] = $this->getRandomValues(
                 $sum,
                 self::NUMBER_OF_DAYS
             );
         }
 
-        return $costValuesPerCampaign;
+        return $valueArrays;
+    }
+
+    private function getSumsAdgroupCost()
+    {
+        return $this->sumSubArrays(self::COST_KEYWORDS_PER_ADGROUP);
+    }
+
+    private function getSumsAdgroupImpression()
+    {
+        return $this->sumSubArrays(self::IMPRESSION_KEYWORDS_PER_ADGROUP);
+    }
+
+    private function getSumsAdgroupClick()
+    {
+        return $this->sumSubArrays(self::CLICK_KEYWORDS_PER_ADGROUP);
     }
 
     private function seedYssAccountReports()
@@ -488,13 +697,13 @@ class DemoSeeder extends Seeder
         $dateRange = $this->getDatePeriod();
 
         $sumsCost = $this->getSumsCampaignCost();
-        $costValues = $this->getRandomValuesPerCampaign($sumsCost);
+        $costValues = $this->getRandomValuesForSums($sumsCost);
 
         $sumsImpression = $this->getSumsCampaignImpression();
-        $impressionValues = $this->getRandomValuesPerCampaign($sumsImpression);
+        $impressionValues = $this->getRandomValuesForSums($sumsImpression);
 
         $sumsClick = $this->getSumsCampaignClick();
-        $clickValues = $this->getRandomValuesPerCampaign($sumsClick);
+        $clickValues = $this->getRandomValuesForSums($sumsClick);
 
         foreach ($dateRange as $i => $day) {
             foreach (self::CAMPAIGNS as $campaignID => $campaignName) {
@@ -616,7 +825,7 @@ class DemoSeeder extends Seeder
                 $campaignReportConv->device = $campaignReportCost->device;
                 $campaignReportCost->day = $day;
                 $campaignReportConv->day = $campaignReportCost->day;
-                $campaignReportCost->dayOfWeek = $day->format('l');;
+                $campaignReportCost->dayOfWeek = $day->format('l');
                 $campaignReportConv->dayOfWeek = $campaignReportCost->dayOfWeek;
                 $campaignReportCost->quarter = (int)ceil((int)$day->format('n') / 3);
                 $campaignReportConv->quarter = $campaignReportCost->quarter;
@@ -639,6 +848,521 @@ class DemoSeeder extends Seeder
         }
     }
 
+    private function seedYssAdGroupReports()
+    {
+        $dateRange = $this->getDatePeriod();
+
+        $costSums = $this->getSumsAdgroupCost();
+        $costValues = $this->getRandomValuesForSums($costSums);
+
+        $impressionSums = $this->getSumsAdgroupImpression();
+        $impressionValues = $this->getRandomValuesForSums($impressionSums);
+
+        $clickSums = $this->getSumsAdgroupClick();
+        $clickValues = $this->getRandomValuesForSums($clickSums);
+
+        foreach ($dateRange as $i => $day) {
+            foreach (self::ADGROUPS_PER_CAMPAIGN as $campaignID => $adGroups) {
+                foreach ($adGroups as $adgroupID => $adgroupName) {
+                    $adgroupReportCost = new RepoYssAdgroupReportCost;
+                    $adgroupReportConv = new RepoYssAdgroupReportConv;
+                    $adgroupReportCost->exeDate = $day->format('Y-m-d');
+                    $adgroupReportConv->exeDate = $day->format('Y-m-d');
+                    $adgroupReportCost->startDate = $day->format('Y-m-d');
+                    $adgroupReportConv->startDate = $day->format('Y-m-d');
+                    $adgroupReportCost->endDate = $day->format('Y-m-d');
+                    $adgroupReportConv->endDate = $day->format('Y-m-d');
+                    $adgroupReportCost->account_id = self::ACCOUNT_ID;
+                    $adgroupReportConv->account_id = self::ACCOUNT_ID;
+                    $adgroupReportCost->campaign_id = self::CAMPAIGN_ID;
+                    $adgroupReportConv->campaign_id = self::CAMPAIGN_ID;
+                    $adgroupReportCost->campaignID = $campaignID;
+                    $adgroupReportConv->campaignID = $campaignID;
+                    $adgroupReportCost->adgroupID = $adgroupID;
+                    $adgroupReportConv->adgroupID = $adgroupID;
+                    $adgroupReportCost->campaignName = self::CAMPAIGNS[$campaignID];
+                    $adgroupReportConv->campaignName = self::CAMPAIGNS[$campaignID];
+                    $adgroupReportCost->adgroupName = $adgroupName;
+                    $adgroupReportConv->adgroupName = $adgroupName;
+                    $adgroupReportCost->adgroupDistributionSettings = 'Adgroup Distribution setting';
+                    $adgroupReportConv->adgroupDistributionSettings = $adgroupReportCost->adgroupDistributionSettings;
+                    $adgroupReportCost->adGroupBid = mt_rand(
+                        self::MIN_ADGROUP_BID,
+                        self::MAX_ADGROUP_BID
+                    );
+                    $adgroupReportConv->adGroupBid = $adgroupReportCost->adGroupBid;
+
+                    $adgroupReportCost->cost = $costValues[$adgroupID][$i];
+
+                    $adgroupReportCost->impressions = $impressionValues[$adgroupID][$i];
+
+                    $adgroupReportCost->clicks = $clickValues[$adgroupID][$i];
+
+
+                    $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
+
+                    $adgroupReportCost->averageCpc = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+
+                    $adgroupReportCost->averagePosition = mt_rand(
+                            self::MIN_AVERAGE_POSITION,
+                            self::MAX_AVERAGE_POSITION
+                        ) / mt_getrandmax();
+
+                    $adgroupReportCost->impressionShare = mt_rand(
+                            self::MIN_IMPRESSION_SHARE,
+                            self::MAX_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+
+                    $adgroupReportCost->exactMatchImpressionShare = mt_rand(
+                            self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                            self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+
+                    $adgroupReportCost->qualityLostImpressionShare = mt_rand(
+                            self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                            self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+
+                    $adgroupReportCost->trackingURL = self::TRACKING_URL;
+                    $adgroupReportConv->trackingURL = self::TRACKING_URL;
+                    $adgroupReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
+                    $adgroupReportCost->conversions = mt_rand(
+                            self::MIN_CONVERSIONS,
+                            self::MAX_CONVERSIONS
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->conversions = $adgroupReportCost->conversions;
+                    $adgroupReportCost->convRate = mt_rand(
+                            self::MIN_CONV_RATE,
+                            self::MAX_CONV_RATE
+                        ) / mt_getrandmax();
+                    $adgroupReportCost->convValue = mt_rand(
+                            self::MIN_CONV_VALUE,
+                            self::MAX_CONV_VALUE
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->convValue = $adgroupReportCost->convValue;
+                    $adgroupReportCost->costPerConv = mt_rand(
+                            self::MIN_COST_PER_CONV,
+                            self::MAX_COST_PER_CONV
+                        ) / mt_getrandmax();
+                    $adgroupReportCost->valuePerConv = mt_rand(
+                            self::MIN_VALUE_PER_CONV,
+                            self::MAX_VALUE_PER_CONV
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->valuePerConv = $adgroupReportCost->valuePerConv;
+                    $adgroupReportCost->mobileBidAdj = mt_rand(
+                            self::MIN_MOBILE_BID_ADJ,
+                            self::MAX_MOBILE_BID_ADJ
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->mobileBidAdj = $adgroupReportCost->mobileBidAdj;
+                    $adgroupReportCost->desktopBidAdj = mt_rand(
+                            self::MIN_DESKTOP_BID_ADJ,
+                            self::MAX_DESKTOP_BID_ADJ
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->desktopBidAdj = $adgroupReportCost->desktopBidAdj;
+                    $adgroupReportCost->tabletBidAdj = mt_rand(
+                            self::MIN_TABLET_BID_ADJ,
+                            self::MAX_TABLET_BID_ADJ
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->tabletBidAdj = $adgroupReportCost->tabletBidAdj;
+                    $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                    $adgroupReportConv->network = $adgroupReportCost->network;
+                    $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+                    $adgroupReportConv->device = $adgroupReportCost->device;
+
+                    $adgroupReportCost->day = $day;
+                    $adgroupReportConv->day = $day;
+                    $adgroupReportCost->dayOfWeek = $day->format('l');
+                    $adgroupReportConv->dayOfWeek = $day->format('l');
+                    $adgroupReportCost->quarter = (int)ceil((int)$day->format('n') / 3);
+                    $adgroupReportConv->quarter = $adgroupReportCost->quarter;
+                    $adgroupReportCost->month = $day->format('F');
+                    $adgroupReportConv->month = $day->format('F');
+                    $adgroupReportCost->week = $day->format('W');
+                    $adgroupReportConv->week = $day->format('W');
+                    $adgroupReportCost->hourofday = $day->format('H');
+                    $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
+                    $adgroupReportConv->allConv = mt_rand(
+                            self::MIN_ALL_CONV,
+                            self::MAX_ALL_CONV
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->allConvValue = mt_rand(
+                            self::MIN_ALL_CONV_VALUE,
+                            self::MAX_ALL_CONV_VALUE
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->convValue = mt_rand(
+                            self::MIN_CONV_VALUE,
+                            self::MAX_CONV_VALUE
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->valuePerAllConv = mt_rand(
+                            self::MIN_VALUE_PER_ALL_CONV,
+                            self::MAX_VALUE_PER_ALL_CONV
+                        ) / mt_getrandmax();
+                    $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+                    $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+                    $adgroupReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+                    $adgroupReportConv->accountid = self::ACCOUNTID;
+                    $adgroupReportCost->accountid = self::ACCOUNTID;
+
+                    $adgroupReportCost->saveOrFail();
+                    $adgroupReportConv->saveOrFail();
+                }
+            }
+        }
+    }
+
+    private function seedYssAdReports()
+    {
+        $dateRange = $this->getDatePeriod();
+
+        $costValues = $this->getRandomValuesForSums(self::COST_KEYWORDS);
+        $impressionValues = $this->getRandomValuesForSums(self::IMPRESSION_KEYWORDS);
+        $clickValues = $this->getRandomValuesForSums(self::CLICK_KEYWORDS);
+
+        foreach ($dateRange as $i => $day) {
+            foreach (self::ADGROUPS_PER_CAMPAIGN as $campaignID => $adGroups) {
+                foreach ($adGroups as $adgroupID => $adgroupName) {
+                    foreach (self::KEYWORDS_PER_ADGROUP[$adgroupID] as $keywordID => $keyword) {
+                        $adReportCost = new RepoYssAdReportCost;
+                        $adReportConv = new RepoYssAdReportConv;
+                        $adReportCost->exeDate = $day->format('Y-m-d H:i:s');
+                        $adReportConv->exeDate = $day->format('Y-m-d H:i:s');
+                        $adReportCost->startDate = $day->format('Y-m-d H:i:s');
+                        $adReportConv->startDate = $day->format('Y-m-d H:i:s');
+                        $adReportCost->endDate = $day->format('Y-m-d H:i:s');
+                        $adReportConv->endDate = $day->format('Y-m-d H:i:s');
+                        $adReportCost->account_id = self::ACCOUNT_ID;
+                        $adReportConv->account_id = self::ACCOUNT_ID;
+                        $adReportCost->campaign_id = self::CAMPAIGN_ID;
+                        $adReportConv->campaign_id = self::CAMPAIGN_ID;
+                        $adReportCost->campaignID = $campaignID;
+                        $adReportConv->campaignID = $campaignID;
+                        $adReportCost->adgroupID = $adgroupID;
+                        $adReportConv->adgroupID = $adgroupID;
+                        $adReportCost->adID = $keywordID;
+                        $adReportConv->adID = $keywordID;
+                        $adReportCost->campaignName = self::CAMPAIGNS[$campaignID];
+                        $adReportConv->campaignName = self::CAMPAIGNS[$campaignID];
+                        $adReportCost->adgroupName = $adgroupName;
+                        $adReportConv->adgroupName = $adgroupName;
+                        $adReportCost->adName = $keyword;
+                        $adReportConv->adName = $keyword;
+                        $adReportCost->title = str_random(10);
+                        $adReportConv->title = $adReportCost->title;
+                        $adReportCost->description1 = str_random(10);
+                        $adReportConv->description1 = $adReportCost->description1;
+                        $adReportConv->description2 = str_random(10);
+                        $adReportCost->description2 = $adReportConv->description2;
+                        $adReportCost->displayURL = self::DISPLAY_URL;
+                        $adReportConv->displayURL = $adReportCost->displayURL;
+                        $adReportCost->destinationURL = self::DESTINATION_URL;
+                        $adReportConv->destinationURL = $adReportCost->destinationURL;
+                        $adReportCost->adType = self::AD_TYPE[mt_rand(0, count(self::AD_TYPE) -1)];
+                        $adReportConv->adType = $adReportCost->adType;
+                        $adReportCost->adDistributionSettings = str_random(10);
+                        $adReportConv->adDistributionSettings = $adReportCost->adDistributionSettings;
+                        $adReportCost->adEditorialStatus = str_random(10);
+                        $adReportConv->adEditorialStatus = $adReportCost->adEditorialStatus;
+                        $adReportConv->focusDevice = str_random(10);
+                        $adReportConv->trackingURL = self::TRACKING_URL;
+                        $adReportConv->customParameters = str_random(10);
+
+                        $adReportCost->cost = $costValues[$keywordID][$i];
+
+                        $adReportCost->impressions = $impressionValues[$keywordID][$i];
+
+                        $adReportCost->clicks = $clickValues[$keywordID][$i];
+
+                        $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
+
+                        $adReportCost->averageCpc = $adReportCost->cost / $adReportCost->clicks;
+
+                        $adReportCost->averagePosition = mt_rand(
+                                self::MIN_AVERAGE_POSITION,
+                                self::MAX_AVERAGE_POSITION
+                        ) / mt_getrandmax();
+
+
+                        $adReportConv->landingPageURL = self::LOADING_PAGE_URL;
+                        $adReportConv->landingPageURLSmartphone = self::LOADING_PAGE_URL_SMART_PHONE;
+                        $adReportConv->adTrackingID = $i;
+                        $adReportCost->focusDevice = $adReportConv->focusDevice;
+                        $adReportConv->conversions =  mt_rand(
+                                self::MIN_CONVERSIONS,
+                                self::MAX_CONVERSIONS
+                        ) / mt_getrandmax();
+                        $adReportCost->trackingURL = $adReportConv->trackingURL;
+                        $adReportConv->convValue = mt_rand(
+                                self::MIN_CONV_VALUE,
+                                self::MAX_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $adReportCost->customParameters = $adReportConv->customParameters;
+                        $adReportConv->valuePerConv = mt_rand(
+                                self::MIN_VALUE_PER_CONV,
+                                self::MAX_VALUE_PER_CONV
+                            ) / mt_getrandmax();
+                        $adReportCost->landingPageURL = $adReportConv->landingPageURL;
+                        $adReportConv->allConv = mt_rand(
+                                self::MIN_ALL_CONV,
+                                self::MAX_ALL_CONV
+                            ) / mt_getrandmax();
+                        $adReportCost->landingPageURLSmartphone = $adReportConv->landingPageURLSmartphone;
+                        $adReportConv->allConvValue = mt_rand(
+                                self::MIN_ALL_CONV_VALUE,
+                                self::MAX_ALL_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $adReportCost->adTrackingID = $adReportConv->adTrackingID;
+                        $adReportConv->valuePerAllConv = mt_rand(
+                                self::MIN_VALUE_PER_ALL_CONV,
+                                self::MAX_VALUE_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $adReportCost->conversions = $adReportConv->conversions;
+                        $adReportConv->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                        $adReportCost->convRate = mt_rand(
+                                self::MIN_CONV_RATE,
+                                self::MAX_CONV_RATE
+                            ) / mt_getrandmax();
+                        $adReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+                        $adReportCost->convValue = $adReportConv->convValue;
+                        $adReportConv->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+                        $adReportCost->costPerConv = mt_rand(
+                                self::MIN_COST_PER_CONV,
+                                self::MAX_COST_PER_CONV
+                            ) / mt_getrandmax();
+                        $adReportConv->day = $day;
+                        $adReportCost->valuePerConv = $adReportConv->valuePerConv;
+                        $adReportConv->dayOfWeek = $day->format('l');
+                        $adReportCost->allConv = $adReportConv->allConv;
+                        $adReportConv->quarter = (int)ceil((int)$day->format('n') / 3);
+                        $adReportCost->allConvRate = mt_rand(
+                                self::MIN_ALL_CONV_RATE,
+                                self::MAX_ALL_CONV_RATE
+                            ) / mt_getrandmax();
+                        $adReportConv->month = $day->format('F');
+                        $adReportCost->allConvValue = $adReportConv->allConvValue;
+                        $adReportConv->week = $day->format('W');
+                        $adReportCost->costPerAllConv = mt_rand(
+                                self::MIN_COST_PER_ALL_CONV,
+                                self::MAX_COST_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $adReportConv->objectiveOfConversionTracking = str_random(10);
+                        $adReportCost->valuePerAllConv = $adReportConv->valuePerAllConv;
+                        $adReportConv->conversionName = self::CONVERSION_NAME[
+                        mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                        ];
+                        $adReportCost->network = $adReportConv->network;
+                        $adReportConv->adKeywordID = $i;
+                        $adReportCost->clickType = $adReportConv->clickType;
+                        $adReportConv->title1 = str_random(10);
+                        $adReportCost->device = $adReportConv->device;
+                        $adReportConv->title2 = str_random(10);
+                        $adReportCost->day = $day;
+                        $adReportConv->description = str_random(10);
+                        $adReportCost->dayOfWeek = $adReportConv->dayOfWeek;
+                        $adReportConv->directory1 = str_random(10);
+                        $adReportCost->quarter = $adReportConv->quarter;
+                        $adReportConv->directory2 = str_random(10);
+                        $adReportCost->month = $adReportConv->month;
+                        $adReportCost->week = $adReportConv->week;
+                        $adReportCost->adKeywordID = $keywordID;
+                        $adReportCost->title1 = $adReportConv->title1;
+                        $adReportCost->title2 = $adReportConv->title2;
+                        $adReportCost->description = $adReportConv->description;
+                        $adReportCost->directory1 = $adReportConv->directory1;
+                        $adReportCost->directory2 = $adReportConv->directory2;
+                        $adReportConv->accountid = self::ACCOUNTID;
+                        $adReportCost->accountid = self::ACCOUNTID;
+
+                        $adReportCost->saveOrFail();
+                        $adReportConv->saveOrFail();
+                    }
+                }
+            }
+        }
+    }
+
+    private function seedYssKeywordReports()
+    {
+        $dateRange = $this->getDatePeriod();
+
+        $costValues = $this->getRandomValuesForSums(self::COST_KEYWORDS);
+        $impressionValues = $this->getRandomValuesForSums(self::IMPRESSION_KEYWORDS);
+        $clickValues = $this->getRandomValuesForSums(self::CLICK_KEYWORDS);
+
+        foreach ($dateRange as $i => $day) {
+            foreach (self::ADGROUPS_PER_CAMPAIGN as $campaignID => $adGroups) {
+                foreach ($adGroups as $adgroupID => $adgroupName) {
+                    foreach (self::KEYWORDS_PER_ADGROUP[$adgroupID] as $keywordID => $keyword) {
+                        $keywordReportCost = new RepoYssKeywordReportCost;
+                        $keywordReportConv = new RepoYssKeywordReportConv;
+                        $keywordReportCost->exeDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportConv->exeDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportCost->startDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportConv->startDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportCost->endDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportConv->endDate = $day->format('Y-m-d H:i:s');
+                        $keywordReportCost->account_id = self::ACCOUNT_ID;
+                        $keywordReportConv->account_id = self::ACCOUNT_ID;
+                        $keywordReportCost->campaign_id = self::CAMPAIGN_ID;
+                        $keywordReportConv->campaign_id = self::CAMPAIGN_ID;
+                        $keywordReportCost->campaignID = $campaignID;
+                        $keywordReportConv->campaignID = $campaignID;
+                        $keywordReportCost->adgroupID = $adgroupID;
+                        $keywordReportConv->adgroupID = $adgroupID;
+                        $keywordReportCost->keywordID = $keywordID;
+                        $keywordReportConv->keywordID = $keywordID;
+                        $keywordReportCost->campaignName = self::CAMPAIGNS[$campaignID];
+                        $keywordReportConv->campaignName = self::CAMPAIGNS[$campaignID];
+                        $keywordReportCost->adgroupName = $adgroupName;
+                        $keywordReportConv->adgroupName = $adgroupName;
+                        $keywordReportCost->customURL = self::CUSTOM_URL . $i;
+                        $keywordReportConv->customURL = self::CUSTOM_URL . $i;
+                        $keywordReportCost->keyword = $keyword;
+                        $keywordReportConv->keyword = $keyword;
+                        $keywordReportCost->keywordDistributionSettings = self::KEYWORD_DISTRIBUTION_SETTINGS;
+                        $keywordReportConv->keywordDistributionSettings = self::KEYWORD_DISTRIBUTION_SETTINGS;
+                        $keywordReportCost->kwEditorialStatus = self::KEYWORD_EDITORIAL_STATUS;
+                        $keywordReportConv->kwEditorialStatus = self::KEYWORD_EDITORIAL_STATUS;
+                        $keywordReportCost->adGroupBid = mt_rand(
+                            self::MIN_ADGROUP_BID,
+                            self::MAX_ADGROUP_BID
+                        );
+                        $keywordReportConv->adGroupBid = $keywordReportCost->adGroupBid;
+                        $keywordReportCost->bid = mt_rand(
+                            self::MIN_BID,
+                            self::MAX_BID
+                        );
+                        $keywordReportConv->bid = $keywordReportCost->bid;
+                        $keywordReportCost->negativeKeywords = self::NEGATIVE_KEY_WORDS;
+                        $keywordReportConv->negativeKeywords = self::NEGATIVE_KEY_WORDS;
+                        $keywordReportCost->qualityIndex = mt_rand(
+                            self::MIN_QUALITY_INDEX,
+                            self::MAX_QUALITY_INDEX
+                        );
+                        $keywordReportConv->qualityIndex = $keywordReportCost->qualityIndex;
+                        $keywordReportCost->firstPageBidEstimate = mt_rand(
+                            self::MIN_FIRST_PAGE_BID_ESTIMATE,
+                            self::MAX_FIRST_PAGE_BID_ESTIMATE
+                        );
+                        $keywordReportConv->firstPageBidEstimate = $keywordReportCost->firstPageBidEstimate;
+                        $keywordReportCost->keywordMatchType = self::KEYWORD_MATCH_TYPE;
+                        $keywordReportConv->keywordMatchType = self::KEYWORD_MATCH_TYPE;
+
+                        $keywordReportCost->cost = $costValues[$keywordID][$i];
+
+                        $keywordReportCost->impressions = $impressionValues[$keywordID][$i];
+
+                        $keywordReportCost->clicks = $clickValues[$keywordID][$i];
+
+                        $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
+
+                        $keywordReportCost->averageCpc = $keywordReportCost->cost / $keywordReportCost->clicks;
+
+                        $keywordReportCost->averagePosition = mt_rand(
+                                self::MIN_AVERAGE_POSITION,
+                                self::MAX_AVERAGE_POSITION
+                        ) / mt_getrandmax();
+                        $keywordReportCost->impressionShare = mt_rand(
+                                self::MIN_IMPRESSION_SHARE,
+                                self::MAX_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+                        $keywordReportCost->exactMatchImpressionShare = mt_rand(
+                                self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                                self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+                        $keywordReportCost->qualityLostImpressionShare = mt_rand(
+                                self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                                self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+                        ) / mt_getrandmax();
+                        $keywordReportCost->topOfPageBidEstimate = mt_rand(
+                            self::MIN_TOP_OF_PAGE_BID_ESTIMATE,
+                            self::MAX_TOP_OF_PAGE_BID_ESTIMATE
+                        );
+                        $keywordReportConv->topOfPageBidEstimate = $keywordReportCost->topOfPageBidEstimate;
+                        $keywordReportCost->trackingURL = self::TRACKING_URL;
+                        $keywordReportConv->trackingURL = self::TRACKING_URL;
+                        $keywordReportCost->customParameters = self::CUSTOM_PARAMETERS;
+                        $keywordReportConv->customParameters = self::CUSTOM_PARAMETERS;
+                        $keywordReportCost->landingPageURL = self::LANDING_PAGE_URL;
+                        $keywordReportConv->landingPageURL = self::LANDING_PAGE_URL;
+                        $keywordReportCost->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
+                        $keywordReportConv->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
+                        $keywordReportCost->conversions = mt_rand(
+                                self::MIN_CONVERSIONS,
+                                self::MAX_CONVERSIONS
+                            ) / mt_getrandmax();
+                        $keywordReportConv->conversions = $keywordReportCost->conversions;
+                        $keywordReportCost->convRate = mt_rand(
+                                self::MIN_CONV_RATE,
+                                self::MAX_CONV_RATE
+                            ) / mt_getrandmax();
+                        $keywordReportCost->convValue = mt_rand(
+                                self::MIN_CONV_VALUE,
+                                self::MAX_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $keywordReportConv->convValue = $keywordReportCost->convValue;
+                        $keywordReportCost->costPerConv = mt_rand(
+                                self::MIN_COST_PER_CONV,
+                                self::MAX_COST_PER_CONV
+                            ) / mt_getrandmax();
+
+                        $keywordReportCost->valuePerConv = mt_rand(
+                                self::MIN_VALUE_PER_CONV,
+                                self::MAX_VALUE_PER_CONV
+                            ) / mt_getrandmax();
+                        $keywordReportConv->valuePerConv = $keywordReportCost->valuePerConv;
+                        $keywordReportCost->allConv = mt_rand(
+                                self::MIN_ALL_CONV,
+                                self::MAX_ALL_CONV
+                            ) / mt_getrandmax();
+                        $keywordReportConv->allConv = $keywordReportCost->allConv;
+                        $keywordReportCost->allConvRate = mt_rand(
+                                self::MIN_ALL_CONV_RATE,
+                                self::MAX_ALL_CONV_RATE
+                            ) / mt_getrandmax();
+                        $keywordReportCost->allConvValue = mt_rand(
+                                self::MIN_ALL_CONV_VALUE,
+                                self::MAX_ALL_CONV_VALUE
+                            ) / mt_getrandmax();
+                        $keywordReportConv->allConvValue = $keywordReportCost->allConvValue;
+                        $keywordReportCost->costPerAllConv = mt_rand(
+                                self::MIN_COST_PER_ALL_CONV,
+                                self::MAX_COST_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $keywordReportCost->valuePerAllConv = mt_rand(
+                                self::MIN_VALUE_PER_ALL_CONV,
+                                self::MAX_VALUE_PER_ALL_CONV
+                            ) / mt_getrandmax();
+                        $keywordReportConv->valuePerAllConv = $keywordReportCost->valuePerAllConv;
+                        $keywordReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                        $keywordReportConv->network = $keywordReportCost->network;
+                        $keywordReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+                        $keywordReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+                        $keywordReportConv->device = $keywordReportCost->device;
+                        $keywordReportCost->day = $day;
+                        $keywordReportConv->day = $day;
+                        $keywordReportCost->dayOfWeek = $day->format('l');
+                        $keywordReportConv->dayOfWeek = $day->format('l');
+                        $keywordReportCost->quarter = (int)ceil((int)$day->format('n') / 3);
+                        $keywordReportConv->quarter = (int)ceil((int)$day->format('n') / 3);
+                        $keywordReportCost->month = $day->format('F');
+                        $keywordReportConv->month = $day->format('F');
+                        $keywordReportCost->week = $day->format('W');
+                        $keywordReportConv->week = $day->format('W');
+                        $keywordReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+                        $keywordReportConv->conversionName = self::CONVERSION_NAME[
+                            mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                        ];
+                        $keywordReportConv->accountid = self::ACCOUNTID;
+                        $keywordReportCost->accountid = self::ACCOUNTID;
+
+                        $keywordReportCost->saveOrFail();
+                        $keywordReportConv->saveOrFail();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Run the database seeds.
      *
@@ -650,5 +1374,8 @@ class DemoSeeder extends Seeder
         $this->seedYssAccounts();
         $this->seedYssAccountReports();
         $this->seedYssCampaignReports();
+        $this->seedYssAdGroupReports();
+        $this->seedYssAdReports();
+        $this->seedYssKeywordReports();
     }
 }
