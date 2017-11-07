@@ -241,7 +241,7 @@
                 </div>
 
                 <div class="row line-chart">
-                    <div class="col-md-2 col-xs-12 selection-dropdown">
+                    <div class="selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body" id="graph-column">
@@ -249,10 +249,10 @@
                             </div>
                         </section>
                         </a>
-                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
+                        <ul class="dropdown-menu extended tasks-bar">
                             <li>
                                 <p class="heading">
-                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="line-chart-search glyphicon glyphicon-search"></span>
                                 <input type="text" placeholder="@lang('language.Search_by_columns')" onkeyup="searchUp()" id="txtLiveSearch">
                                 </p>
                             </li>
@@ -272,7 +272,7 @@
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
                         <span class="no-data-found-message-graph">No data found for graph</span>
                     </div>
-                    <section class="panel">
+                    <section class="panel morris-chart">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>
                         </div>

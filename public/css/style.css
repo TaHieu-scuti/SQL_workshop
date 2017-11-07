@@ -493,9 +493,12 @@ a, a:hover, a:focus {
 /*row line-chart*/
 .wrapper .row.line-chart .selection-dropdown {
     float: none;
-    height: 52px;
     padding: 0px;
     text-align: center;
+    position: absolute;
+    margin-left: 15px;
+    left: 90px;
+    top: 7px;
 }
 
 .wrapper .row.line-chart .selection-dropdown .panel:hover {
@@ -510,13 +513,16 @@ a, a:hover, a:focus {
 
 .wrapper .row.line-chart .selection-dropdown ul {
     border-radius: 0px;
-    margin-top: 9px;
-    max-width: none !important;
-    width: 100% !important;
+    margin-top: 6px;
     max-height: 294px;
     overflow: auto;
+    left: 0;
 }
 
+.wrapper .row.line-chart .selection-dropdown ul .line-chart-search {
+    position: absolute;
+    top: 14px;
+}
 .wrapper .row.line-chart .selection-dropdown .panel {
     border-radius: 0px;
     height: 100%;
@@ -528,6 +534,10 @@ a, a:hover, a:focus {
 
 .wrapper .row.line-chart .selection-dropdown a {
     color: inherit;
+}
+
+.wrapper .row.line-chart .morris-chart {
+    margin-top: 16px;
 }
 /*row statistic*/
 .wrapper .row.statistic {
@@ -5873,7 +5883,7 @@ a.guest-on i {
 
 #txtLiveSearch {
     border: 0;
-    padding-left: 10px;
+    padding-left: 22px;
 }
 
 .row .selection-dropdown .tasks-bar .heading {
