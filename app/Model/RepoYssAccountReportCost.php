@@ -76,16 +76,18 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME || $fieldName === 'device' ||
-                $fieldName === 'hourofday' || $fieldName === "dayOfWeek" ||
-                $fieldName === 'prefecture'
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME
+                || $fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
             if (in_array($fieldName, $this->averageFieldArray)) {
                 $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
+                    'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                 );
             } else {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -93,11 +95,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
+                        'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'format(SUM( ' . $tableName . '.' . $fieldName . ' ), 0) AS ' . $fieldName
+                        'SUM( ' . $tableName . '.' . $fieldName . ' ) AS ' . $fieldName
                     );
                 }
             }

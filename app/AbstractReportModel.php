@@ -98,20 +98,20 @@ abstract class AbstractReportModel extends Model
     protected function getAverageExpression($fieldName)
     {
         return DB::raw(
-            'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
+            'ROUND('.'AVG(' . $fieldName . '),2'.') AS ' . $fieldName
         );
     }
 
     protected function getTrimmedSumExpression($fieldName)
     {
         return DB::raw(
-            'format(trim(ROUND( SUM(' . $fieldName . '), 2)) + 0, 2) AS ' . $fieldName
+            'ROUND( SUM(' . $fieldName . '), 2) AS ' . $fieldName
         );
     }
 
     protected function getSumExpression($fieldName)
     {
-        return DB::raw('format(SUM( ' . $fieldName . ' ), 0) AS ' . $fieldName);
+        return DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
     }
 
     /**
