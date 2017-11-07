@@ -28,7 +28,14 @@ class RepoYssKeywordReportConv extends AbstractReportModel
         $endDay,
         $pagination,
         $columnSort,
-        $sort
+        $sort,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
     }
 
@@ -43,7 +50,13 @@ class RepoYssKeywordReportConv extends AbstractReportModel
         $column,
         $accountStatus,
         $startDay,
-        $endDay
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
     }
 }

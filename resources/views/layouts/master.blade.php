@@ -76,10 +76,10 @@
                     <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                <span class="title">@lang('language.Account')<br></span>
+                                <span class="title">@lang('language.account')<br></span>
                                 <span class="element-name">
                                     <img src="/images/yahoo.png">
-                                    Campaign name
+                                    @lang('language.campaignname')
                                 </span>
                             </div>
                         </section>
@@ -214,34 +214,8 @@
                 </div>
 
                 <div class="row group">
-                    <div class="col-md-8 col-xs-12 pull-left">
+                    <div class="col-md-10 col-xs-12 pull-left">
                         @yield('filter-list')
-                    </div>
-                    <div class="col-md-2 col-xs-12 selection-dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <section class="panel">
-                            <div class="panel-body" id="graph-column">
-                                @include('layouts.graph-column')
-                            </div>
-                        </section>
-                        </a>
-                        <ul class="col-md-2 dropdown-menu extended tasks-bar">
-                            <li>
-                                <p class="heading">
-                                <span class="glyphicon glyphicon-search"></span>
-                                <input type="text" placeholder="@lang('language.Search_by_columns')" onkeyup="searchUp()" id="txtLiveSearch">
-                                </p>
-                            </li>
-                            <div id="listSearch">
-                                @foreach ($columnsLiveSearch as $columnsSearch)
-                                <li>
-                                    <a href="#">
-                                        <div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>
-                                    </a>
-                                </li>
-                                @endforeach
-                            </div>
-                        </ul>
                     </div>
                     <div class="col-md-2 col-xs-12 selection-dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -267,11 +241,38 @@
                 </div>
 
                 <div class="row line-chart">
+                    <div class="selection-dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <section class="panel">
+                            <div class="panel-body" id="graph-column">
+                                @include('layouts.graph-column')
+                            </div>
+                        </section>
+                        </a>
+                        <ul class="dropdown-menu extended tasks-bar">
+                            <li>
+                                <p class="heading">
+                                <span class="line-chart-search glyphicon glyphicon-search"></span>
+                                <input type="text" placeholder="@lang('language.Search_by_columns')" onkeyup="searchUp()" id="txtLiveSearch">
+                                </p>
+                            </li>
+                            <div id="listSearch">
+                                @foreach ($columnsLiveSearch as $columnsSearch)
+                                <li>
+                                    <a href="#">
+                                        <div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>
+                                    </a>
+                                </li>
+                                @endforeach
+                            </div>
+                        </ul>
+                    </div>
+
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
                         <span class="no-data-found-message-graph">No data found for graph</span>
                     </div>
-                    <section class="panel">
+                    <section class="panel morris-chart">
                         <div class="panel-body">
                             <div id="report-graph" class="graph"></div>
                         </div>

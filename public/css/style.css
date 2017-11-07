@@ -490,7 +490,55 @@ a, a:hover, a:focus {
 .wrapper .row.group .selection-dropdown a {
     color: inherit;
 }
+/*row line-chart*/
+.wrapper .row.line-chart .selection-dropdown {
+    float: none;
+    padding: 0px;
+    text-align: center;
+    position: absolute;
+    margin-left: 15px;
+    left: 90px;
+    top: 7px;
+}
 
+.wrapper .row.line-chart .selection-dropdown .panel:hover {
+    background-color: #ecedf1;
+}
+
+.wrapper .row.line-chart .col-md-2.selection-dropdown .col-md-2>li>a {
+    padding-left: 30px !important;
+    text-align: left;
+
+}
+
+.wrapper .row.line-chart .selection-dropdown ul {
+    border-radius: 0px;
+    margin-top: 6px;
+    max-height: 294px;
+    overflow: auto;
+    left: 0;
+}
+
+.wrapper .row.line-chart .selection-dropdown ul .line-chart-search {
+    position: absolute;
+    top: 14px;
+}
+.wrapper .row.line-chart .selection-dropdown .panel {
+    border-radius: 0px;
+    height: 100%;
+}
+
+.wrapper .row.line-chart .selection-dropdown .panel .panel-body {
+    border-bottom: none;
+}
+
+.wrapper .row.line-chart .selection-dropdown a {
+    color: inherit;
+}
+
+.wrapper .row.line-chart .morris-chart {
+    margin-top: 16px;
+}
 /*row statistic*/
 .wrapper .row.statistic {
     display: flex;
@@ -5835,7 +5883,7 @@ a.guest-on i {
 
 #txtLiveSearch {
     border: 0;
-    padding-left: 10px;
+    padding-left: 22px;
 }
 
 .row .selection-dropdown .tasks-bar .heading {

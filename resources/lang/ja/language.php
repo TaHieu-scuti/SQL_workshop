@@ -1,10 +1,12 @@
 <?php 
 return [
-    'Account' => 'アカウント名',
+    'account' => 'アカウント名',
     'Search_for_account' => 'アカウント名で検索',
-    'CAMPAIGNS' => 'キャンペーン',
+    'campaign' => 'キャンペーン',
     'AD_GROUPS' => '広告グループ',
-    'KEYWORDS' => 'キーワード',
+    'adgroup' => '広告グループ',
+    'keywords' => 'キーワード',
+    'keyword' => 'キーワード',
     'ADS' => '広告',
     'PREFECTURES' => '県別',
     'BY_TIME_ZONE' => '時間帯別',
@@ -51,5 +53,18 @@ return [
     'impressions' => 'インプレッション',
     'averagecpc' => '平均CPC',
     'averageposition' => '平均掲載順位',
-    'accountname' => 'エンジンアカウント'
+    'accountname' => 'エンジンアカウント',
+    'all_account' => 'すべてのアカウント',
+    'campaignname' => 'キャンペーン名',
+    'all_campaigns' => 'すべてのキャンペーン',
+    'all_adgroup' => 'すべての広告グループ',
+    'all_keywords' => 'すべてのキーワード',
+    'adgroupname' => '広告グループ名',
+    'conversions' => 'コンバージョン',
+    'all_ads' => 'すべての広告',
+    'keyword_name' => 'キーワード名',
+    'adname' => '広告名',
+    'adreport' => '広告レポート',
+    'all_adreports' => 'すべての広告',
+    'client' => 'クライエント'
 ];

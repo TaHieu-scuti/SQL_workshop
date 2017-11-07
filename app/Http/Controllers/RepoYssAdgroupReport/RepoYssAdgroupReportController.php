@@ -47,6 +47,14 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
+    const DEFAULT_COLUMNS = [
+        'clicks',
+        'cost',
+        'impressions',
+        'ctr',
+        'averageCpc',
+        'averagePosition'
+    ];
 
     /** @var \App\Model\RepoYssAdgroupReportCost */
     protected $model;
@@ -61,35 +69,11 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function index()
     {
-        $allColumns = $this->model->getColumnNames();
-        $impossibleColumnsDisplay = [
-            'exeDate',
-            'startDate',
-            'endDate',
-            'account_id',
-            'campaign_id',
-            'campaignID',
-            'adgroupID',
-            'campaignName',
-            'adgroupName',
-            'adgroupDistributionSettings',
-            'trackingURL',
-            'customParameters',
-            'network',
-            'device',
-            'day',
-            'dayOfWeek',
-            'quarter',
-            'month',
-            'week',
-            'hourofday',
-        ];
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
-        $availableColumns = $this->model->unsetColumns($allColumns, $impossibleColumnsDisplay);
-        $modalAndSearchColumnsArray = $availableColumns;
-        array_unshift($availableColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!session('adgroupReport')) {
-            $this->initializeSession($availableColumns);
+            $this->initializeSession($defaultColumns);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -98,7 +82,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
-                self::COLUMNS => $availableColumns, // all columns that show up in modal
+                self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
@@ -106,9 +90,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => $modalAndSearchColumnsArray,
+                self::COLUMNS_FOR_LIVE_SEARCH => $defaultColumns,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $modalAndSearchColumnsArray,
+                self::COLUMNS_FOR_FILTER => $defaultColumns,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
@@ -170,7 +154,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+            self::GROUPED_BY_FIELD => session(self::GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table

@@ -54,8 +54,13 @@ abstract class AbstractReportModel extends Model
         $expressions = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                $expressions[] = static::GROUPED_BY_FIELD_NAME;
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME
+                || $fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                $expressions[] = $fieldName;
                 continue;
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
@@ -180,8 +185,8 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
-        return $this->select(static::FIELDS + $aggregations)
+        $aggregations = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
+        return $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -264,11 +269,11 @@ abstract class AbstractReportModel extends Model
      */
     public function getTotalsRow($startDay, $endDay)
     {
-        $expressions = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
+        $expressions = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
 
         $fields = $this->unsetColumns(static::FIELDS, [static::GROUPED_BY_FIELD_NAME]);
 
-        return $this->select($fields + $expressions)
+        return $this->select(array_merge($fields, $expressions))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -295,8 +300,8 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort
     ) {
-        $aggregations = $this->getAggregated(static::AVERAGE_FIELDS + static::SUM_FIELDS);
-        return $this->select(static::FIELDS + $aggregations)
+        $aggregations = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
+        return $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -312,7 +317,7 @@ abstract class AbstractReportModel extends Model
      */
     public function getColumnNamesForSearch($keyword)
     {
-        $allFieldNames = static::AVERAGE_FIELDS + static::SUM_FIELDS;
+        $allFieldNames = array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS);
         $matchingFieldNames = [];
         foreach ($allFieldNames as $fieldName) {
             if (strpos($allFieldNames, $keyword) !== false) {
