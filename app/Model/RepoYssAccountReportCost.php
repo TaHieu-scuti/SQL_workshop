@@ -377,16 +377,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )->where(
-                    function ($data) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $data->whereDate('day', '=', $endDay);
-                        } else {
-                            $data->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                )
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
-                )->groupBy($joinTableName.'.accountName')
+                )
+                ->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
