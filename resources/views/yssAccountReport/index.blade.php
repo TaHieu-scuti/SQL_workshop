@@ -7,22 +7,22 @@
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body">
-            <a href="campaign-list.html">
+            <a href="campaign-report">
                 @lang('language.CAMPAIGNS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="#">
+            <a href="adgroup-report">
                 @lang('language.AD_GROUPS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="keywords.html">
+            <a href="keyword-report">
                 @lang('language.KEYWORDS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="ad-list.html">
+            <a href="ad-report">
                 @lang('language.ADS')
             </a>
         </li>
