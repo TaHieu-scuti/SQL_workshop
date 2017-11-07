@@ -5,8 +5,13 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\AbstractReportModel;
 
-class RepoYssPrefectureReportCost extends AbstractReportModel
+class RepoYssPrefectureReportCost extends Model
 {
+    protected $table = 'repo_yss_prefecture_report_cost';
+
+    /** @var bool */
+    public $timestamps = false;
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus

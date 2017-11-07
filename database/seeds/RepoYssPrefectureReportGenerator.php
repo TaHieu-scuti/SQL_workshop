@@ -18,37 +18,37 @@ class RepoYssPrefectureReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MAX_CLICKS = 9001;
     const MIN_CTR = 1000000;
-    const MAX_CTR = 2032456345;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 2037437880;
+    const MAX_CTR = 2037400000;
+    const MIN_CONV_RATE = 10000;
+    const MAX_CONV_RATE = 20374;
     const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 2037437880;
+    const MAX_AVERAGE_CPC = 2037400000;
     const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 2037437880;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 2037437880;
-    const MIN_CONV_VALUE = 1000000;
-    const MAX_CONV_VALUE = 2037437880;
-    const MIN_COST_PER_CONV = 1000000;
-    const MAX_COST_PER_CONV = 2037437880;
-    const MIN_VALUE_PER_CONV = 1000000;
-    const MAX_VALUE_PER_CONV = 2037437880;
-    const MIN_MOBILE_BID_ADJ = 1000000;
-    const MAX_MOBILE_BID_ADJ = 2037437880;
-    const MIN_DESKTOP_BID_ADJ = 1000000;
-    const MAX_DESKTOP_BID_ADJ = 2037437880;
-    const MIN_TABLET_BID_ADJ = 1000000;
-    const MAX_TABLET_BID_ADJ = 2037437880;
-    const MIN_VALUE_PER_ALL_CONV = 1000000;
-    const MAX_VALUE_PER_ALL_CONV = 2037437880;
-    const MIN_ALL_CONV = 1000000;
-    const MAX_ALL_CONV = 2037437880;
-    const MIN_ALL_CONV_VALUE = 1000000;
-    const MAX_ALL_CONV_VALUE = 2037437880;
+    const MAX_AVERAGE_POSITION = 2037400000;
+    const MIN_CONVERSIONS = 10000;
+    const MAX_CONVERSIONS = 20374;
+    const MIN_CONV_VALUE = 10000;
+    const MAX_CONV_VALUE = 20374;
+    const MIN_COST_PER_CONV = 10000;
+    const MAX_COST_PER_CONV = 20374;
+    const MIN_VALUE_PER_CONV = 10000;
+    const MAX_VALUE_PER_CONV = 20374;
+    const MIN_MOBILE_BID_ADJ = 10000;
+    const MAX_MOBILE_BID_ADJ = 20374;
+    const MIN_DESKTOP_BID_ADJ = 10000;
+    const MAX_DESKTOP_BID_ADJ = 20374;
+    const MIN_TABLET_BID_ADJ = 10000;
+    const MAX_TABLET_BID_ADJ = 20374;
+    const MIN_VALUE_PER_ALL_CONV = 10000;
+    const MAX_VALUE_PER_ALL_CONV = 20374;
+    const MIN_ALL_CONV = 10000;
+    const MAX_ALL_CONV = 20374;
+    const MIN_ALL_CONV_VALUE = 10000;
+    const MAX_ALL_CONV_VALUE = 20374;
     const MIN_ALL_CONV_RATE = 1000;
-    const MAX_ALL_CONV_RATE = 1437437880;
+    const MAX_ALL_CONV_RATE = 14374;
     const MIN_COST_PER_ALL_CONV = 1000;
-    const MAX_COST_PER_ALL_CONV = 1437437880;
+    const MAX_COST_PER_ALL_CONV = 14374;
     const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const COUNTRY_TERRITORY = [
@@ -61,7 +61,7 @@ class RepoYssPrefectureReportGenerator extends Seeder
     ];
     const CITY = [
     	'HO CHI MINH', 'DA NANG',
-    	'NHA TRANG'
+    	'NHA TRANG', 'KYOTO'
     ];
     const CITY_WAR_DISTRICT = [
     	'NGUYEN PHONG SAC STREET', 'CAY GIAY STREET',
@@ -86,7 +86,7 @@ class RepoYssPrefectureReportGenerator extends Seeder
                 self::MAX_NUMBER_OF_PREFECTURE
             );
 
-            for ($i=0; $i < $ammountOfAdgroup ; $i++) { 
+            for ($i=0; $i < $ammountOfAdgroup ; $i++) {
             	$prefecture = new RepoYssPrefectureReportCost;
             	$prefecture->exeDate = $adgroupReport->exeDate;
             	$prefecture->startDate = $adgroupReport->startDate;
@@ -117,6 +117,10 @@ class RepoYssPrefectureReportGenerator extends Seeder
                 $prefecture->averageCpc = mt_rand(
                     self::MIN_AVERAGE_CPC,
                     self::MAX_AVERAGE_CPC
+                ) / mt_getrandmax();
+				$prefecture->averagePosition = mt_rand(
+                    self::MIN_AVERAGE_POSITION,
+                    self::MAX_AVERAGE_POSITION
                 ) / mt_getrandmax();
              	$prefecture->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
@@ -169,6 +173,7 @@ class RepoYssPrefectureReportGenerator extends Seeder
                 $prefecture->prefecture = self::PREFECTURE[mt_rand(0, count(self::PREFECTURE) - 1)];
                 $prefecture->city = self::CITY[mt_rand(0, count(self::CITY) - 1)];
                 $prefecture->cityWardDistrict = self::CITY_WAR_DISTRICT[mt_rand(0, count(self::CITY_WAR_DISTRICT) - 1)];
+                $prefecture->saveOrFail();
             }
         }
     }
