@@ -28,7 +28,7 @@
         </li>
         <li class="panel-body separator">
         </li>
-        <li class="panel-body">
+        <li class="panel-body specific-filter-item" data-value="prefecture">
             <a href="javascript:void(0)">
                 @lang('language.PREFECTURES')
             </a>
@@ -54,4 +54,3 @@
     <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
     <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop
-

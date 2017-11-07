@@ -130,10 +130,18 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        session([$this->sessionKeyAccountId => null]);
-        session([$this->sessionKeyCampaignId => null]);
-        session([$this->sessionKeyAdgroupId => null]);
-        session([$this->sessionKeyAdReportId => null]);
+        if (session('accountID') === null){
+            session([$this->sessionKeyAccountId => null]);
+        }
+        if (session('campainID') === null){
+            session([$this->sessionKeyCampaignId => null]);
+        }
+        if (session('adgroupId') === null){
+            session([$this->sessionKeyAdgroupId => null]);
+        }
+        if (session('adReportId') === null){
+            session([$this->sessionKeyAdReportId => null]);
+        }
 
     }
 
@@ -377,6 +385,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
+            session(static::GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
@@ -393,6 +402,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
+            session(static::GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),
