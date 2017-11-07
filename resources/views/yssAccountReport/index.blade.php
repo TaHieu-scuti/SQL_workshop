@@ -7,29 +7,29 @@
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body">
-            <a href="campaign-list.html">
+            <a href="{{ route('campaign-report') }}">
                 @lang('language.CAMPAIGNS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="#">
+            <a href="{{ route('adgroup-report') }}">
                 @lang('language.AD_GROUPS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="keywords.html">
+            <a href="{{ route('keyword-report') }}">
                 @lang('language.KEYWORDS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="ad-list.html">
+            <a href="{{ route('ad-report') }}">
                 @lang('language.ADS')
             </a>
         </li>
         <li class="panel-body separator">
         </li>
         <li class="panel-body">
-            <a href="prefectures.html">
+            <a href="javascript:void(0)">
                 @lang('language.PREFECTURES')
             </a>
         </li>
