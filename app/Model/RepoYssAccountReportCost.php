@@ -156,13 +156,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                         $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                     )
                     ->where(
-                        function ($paginatedData) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $paginatedData->whereDate('day', '=', $endDay);
-                            } else {
-                                $paginatedData->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<=', $endDay);
-                            }
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
                     )
                     ->where(
@@ -226,13 +221,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 'repo_yss_accounts.account_id'
             )
             ->where(
-                function ($data) use ($startDay, $endDay) {
-                    if ($startDay === $endDay) {
-                        $data->whereDate('day', '=', $endDay);
-                    } else {
-                        $data->whereDate('day', '>=', $startDay)
-                            ->whereDate('day', '<=', $endDay);
-                    }
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
             ->where(
@@ -353,13 +343,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                             '=',
                             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                         )->where(
-                            function ($data) use ($startDay, $endDay) {
-                                if ($startDay === $endDay) {
-                                    $data->whereDate('day', '=', $endDay);
-                                } else {
-                                    $data->whereDate('day', '>=', $startDay)
-                                        ->whereDate('day', '<=', $endDay);
-                                }
+                            function (Builder $query) use ($startDay, $endDay) {
+                                $this->addTimeRangeCondition($startDay, $endDay, $query);
                             }
                         )
                         ->where(
@@ -411,13 +396,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function ($data) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $data->whereDate('day', '=', $endDay);
-                        } else {
-                            $data->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->groupBy($joinTableName.'.accountName')
                 ->orderBy($columnSort, $sort);
@@ -473,13 +453,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function ($data) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $data->whereDate('day', '=', $endDay);
-                        } else {
-                            $data->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
                 ->where(
@@ -527,13 +502,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                         '=',
                         $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                     )->where(
-                        function ($data) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $data->whereDate('day', '=', $endDay);
-                            } else {
-                                $data->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<=', $endDay);
-                            }
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
                     )
                     ->where(
