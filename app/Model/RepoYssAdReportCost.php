@@ -86,7 +86,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         return $arrayCalculate;
     }
 
-    public function updateSessionID(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
+    public function addQueryConditions(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
     {
         if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
             $query->where('accountid' , '=', $accountId);
@@ -140,7 +140,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                 )
                 ->where(
                     function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -149,8 +149,7 @@ class RepoYssAdReportCost extends AbstractReportModel
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->paginate($pagination);
+            $paginatedData = $paginatedData->paginate($pagination);
         }
         return $paginatedData;
     }
@@ -194,7 +193,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         )
         ->where(
             function (Builder $query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )
         ->groupBy('day');
@@ -202,8 +201,7 @@ class RepoYssAdReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -256,7 +254,7 @@ class RepoYssAdReportCost extends AbstractReportModel
                 )
                 ->where(
                     function (Builder $query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 );
         // get aggregated value
@@ -264,8 +262,7 @@ class RepoYssAdReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [];
@@ -316,15 +313,14 @@ class RepoYssAdReportCost extends AbstractReportModel
                     )
                     ->where(
                         function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                            $this->updateSessionID($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                            $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [
@@ -400,7 +396,7 @@ class RepoYssAdReportCost extends AbstractReportModel
 
         $adreports = self::select('adID', 'adName')->where(
             function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId) {
-                self::updateSessionID($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
+                self::addQueryConditions($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
             }
         )->get();
 

@@ -7,29 +7,29 @@
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body">
-            <a href="campaign-list.html">
+            <a href="campaign-report">
                 @lang('language.CAMPAIGNS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="#">
+            <a href="adgroup-report">
                 @lang('language.AD_GROUPS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="keywords.html">
+            <a href="keyword-report">
                 @lang('language.KEYWORDS')
             </a>
         </li>
         <li class="panel-body">
-            <a href="ad-list.html">
+            <a href="ad-report">
                 @lang('language.ADS')
             </a>
         </li>
         <li class="panel-body separator">
         </li>
-        <li class="panel-body">
-            <a href="prefectures.html">
+        <li class="panel-body specific-filter-item" data-value="prefecture">
+            <a href="javascript:void(0)">
                 @lang('language.PREFECTURES')
             </a>
         </li>
@@ -54,4 +54,3 @@
     <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
     <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop
-

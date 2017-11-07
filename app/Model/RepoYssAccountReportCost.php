@@ -4,8 +4,10 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
+use App\Model\RepoYssPrefectureReportCost as Prefecture;
 use App\Model\RepoYssAccount;
 
 use DateTime;
@@ -59,8 +61,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
-    const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
-    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
 
     /**
      * @param string[] $fieldNames
@@ -69,11 +69,15 @@ class RepoYssAccountReportCost extends AbstractReportModel
     protected function getAggregated(array $fieldNames)
     {
         $tableName = $this->getTable();
+        if ($fieldNames[0] === 'prefecture') {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'accountName' || $fieldName === 'device' ||
-                $fieldName === 'hourofday' || $fieldName === "dayOfWeek"
+                $fieldName === 'hourofday' || $fieldName === "dayOfWeek" ||
+                $fieldName === 'prefecture'
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
@@ -131,40 +135,47 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData  = self::select($arrayCalculate)
-                ->join(
-                    $joinTableName,
-                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                    '=',
-                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )
-                ->where(
-                    function ($paginatedData) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $paginatedData->whereDate('day', '=', $endDay);
-                        } else {
-                            $paginatedData->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
+        if ($groupedByField === 'prefecture') {
+            $prefectureData = $this->addPrefectureCondition(
+                $arrayCalculate,
+                $joinTableName,
+                $startDay,
+                $endDay,
+                $accountId,
+                $adgainerId
+            );
+            $paginatedData  = $prefectureData->groupBy($groupedByField)
+                                ->orderBy($columnSort, $sort);
+        } else {
+            $paginatedData  = self::select($arrayCalculate)
+                    ->join(
+                        $joinTableName,
+                        $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                        '=',
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                    )
+                    ->where(
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
-                    }
-                )
-                ->where(
-                    function ($query) use ($accountId,  $adgainerId) {
-                        if ($accountId !== null) {
-                            $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                        } else {
-                            $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                    )
+                    ->where(
+                        function ($query) use ($accountId,  $adgainerId) {
+                            if ($accountId !== null) {
+                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                            } else {
+                                $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                            }
                         }
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
+                    )
+                    ->groupBy($groupedByField)
+                    ->orderBy($columnSort, $sort);
+        }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->paginate($pagination);
+            $paginatedData = $paginatedData->paginate($pagination);
         }
         return $paginatedData;
     }
@@ -208,13 +219,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 'repo_yss_accounts.account_id'
             )
             ->where(
-                function ($data) use ($startDay, $endDay) {
-                    if ($startDay === $endDay) {
-                        $data->whereDate('day', '=', $endDay);
-                    } else {
-                        $data->whereDate('day', '>=', $startDay)
-                            ->whereDate('day', '<=', $endDay);
-                    }
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
             ->where(
@@ -231,8 +237,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -275,6 +280,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -285,6 +291,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
+        if ($fieldNames[0] === 'prefecture') {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
         foreach ($fieldNames as $fieldName) {
             if ($fieldName !== 'account_id') {
                 if ($fieldName === 'accountName') {
@@ -314,38 +323,43 @@ class RepoYssAccountReportCost extends AbstractReportModel
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        $data = self::select($arrayCalculate)
-                    ->join(
-                        $joinTableName,
-                        $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                        '=',
-                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                    )->where(
-                        function ($data) use ($startDay, $endDay) {
-                            if ($startDay === $endDay) {
-                                $data->whereDate('day', '=', $endDay);
-                            } else {
-                                $data->whereDate('day', '>=', $startDay)
-                                    ->whereDate('day', '<=', $endDay);
+        if ($groupedByField === 'prefecture') {
+            $data = $this->addPrefectureCondition(
+                $arrayCalculate,
+                $joinTableName,
+                $startDay,
+                $endDay,
+                $accountId,
+                $adgainerId
+            );
+        } else {
+            $data = self::select($arrayCalculate)
+                        ->join(
+                            $joinTableName,
+                            $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                            '=',
+                            $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                        )->where(
+                            function (Builder $query) use ($startDay, $endDay) {
+                                $this->addTimeRangeCondition($startDay, $endDay, $query);
                             }
-                        }
-                    )
-                    ->where(
-                        function ($query) use ($accountId,  $adgainerId) {
-                            if ($accountId !== null) {
-                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                            } else {
-                                $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                        )
+                        ->where(
+                            function ($query) use ($accountId,  $adgainerId) {
+                                if ($accountId !== null) {
+                                    $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                                } else {
+                                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                                }
                             }
-                        }
-                    );
+                        );
+        }
         // get aggregated value
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [];
@@ -377,8 +391,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )
-                ->where(
+                )->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
@@ -389,8 +402,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -400,6 +412,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -436,13 +449,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function ($data) use ($startDay, $endDay) {
-                        if ($startDay === $endDay) {
-                            $data->whereDate('day', '=', $endDay);
-                        } else {
-                            $data->whereDate('day', '>=', $startDay)
-                                ->whereDate('day', '<=', $endDay);
-                        }
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
                 ->where(
@@ -458,8 +466,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [
@@ -473,5 +480,35 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->toArray();
         }
         return $data;
+    }
+
+    private function addPrefectureCondition(
+        $arrayCalculate,
+        $joinTableName,
+        $startDay,
+        $endDay,
+        $accountId,
+        $adgainerId
+    ) {
+        return Prefecture::select($arrayCalculate)
+                    ->join(
+                        $joinTableName,
+                        'repo_yss_prefecture_report_cost.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                        '=',
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                    )->where(
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )
+                    ->where(
+                        function ($query) use ($accountId,  $adgainerId) {
+                            if ($accountId !== null) {
+                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                            } else {
+                                $query->where('repo_yss_prefecture_report_cost.account_id', '=', $adgainerId);
+                            }
+                        }
+                    );
     }
 }

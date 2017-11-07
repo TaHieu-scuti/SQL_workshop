@@ -24,7 +24,7 @@
     {{--@section('content')--}}
     <header class="header white-bg">
     <!--logo start-->
-    <a href="index.html" class="logo">
+    <a href="/" class="logo">
         <img src="https://adgainersolutions.com/adgainer/application/images/logos/ad-gainer-logo-v1.1-250x54px-transp-bkgd-flat.png">
     </a>
     </header>

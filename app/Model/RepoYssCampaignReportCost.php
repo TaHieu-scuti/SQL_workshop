@@ -136,8 +136,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->paginate($pagination);
+            $paginatedData = $paginatedData->paginate($pagination);
         }
         return $paginatedData;
     }
@@ -195,8 +194,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }
@@ -262,8 +260,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [];
@@ -327,8 +324,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->first();
+            $data = $data->first();
         }
         if ($data === null) {
             $data = [
@@ -376,8 +372,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->get();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_EQUAL_ZERO)
-                            ->get();
+            $data = $data->get();
         }
         return $data;
     }

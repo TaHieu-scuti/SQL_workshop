@@ -1,16 +1,4 @@
-<div class="col-md-3 fields active" data-name="clicks">
-    <a href="javascript:void(0)">
-        <section class="panel">
-            <div class="panel-body">
-                <span class="title">@lang('language.clicks')<br></span>
-                <span class="content">
-                    <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
-                </span>
-            </div>
-        </section>
-    </a>
-</div>
-<div class="col-md-3 fields" data-name="impressions">
+<div class="col-md-3 fields active" data-name="impressions">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
@@ -22,11 +10,23 @@
         </section>
     </a>
 </div>
+<div class="col-md-3 fields" data-name="clicks">
+    <a href="javascript:void(0)">
+        <section class="panel">
+            <div class="panel-body">
+                <span class="title">@lang('language.clicks')<br></span>
+                <span class="content">
+                    <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
+                </span>
+            </div>
+        </section>
+    </a>
+</div>
 <div class="col-md-3 fields" data-name="cost">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
-                <span class="title">@lang('language.Cost')<br></span>
+                <span class="title">@lang('language.cost')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>{{ $summaryReport['cost'] }}<br>

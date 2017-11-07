@@ -35,7 +35,7 @@
         <!--header start-->
         <header class="header white-bg">
             <!--logo start-->
-            <a href="index.html" class="logo">
+            <a href="/" class="logo">
                 <img src="https://adgainersolutions.com/adgainer/application/images/logos/ad-gainer-logo-v1.1-250x54px-transp-bkgd-flat.png">
             </a>
             <!--logo end-->
@@ -236,7 +236,7 @@
                                 @foreach ($columnsLiveSearch as $columnsSearch)
                                 <li>
                                     <a href="#">
-                                        <div class="desc">{{ $columnsSearch }}</div>
+                                        <div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>
                                     </a>
                                 </li>
                                 @endforeach
