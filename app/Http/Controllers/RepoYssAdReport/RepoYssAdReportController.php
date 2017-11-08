@@ -135,7 +135,6 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $this->updateSessionData($request);
-        // dd(session(self::SESSION_KEY_FIELD_NAME));
         $reports = $this->getDataForTable();
 
         $totalDataArray = $this->getCalculatedData();
