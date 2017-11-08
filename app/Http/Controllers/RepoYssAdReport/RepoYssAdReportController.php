@@ -33,7 +33,7 @@ class RepoYssAdReportController extends AbstractReportController
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
     const SESSION_KEY_PREFIX_ROUTE = '/ad-report';
-    const SESSION_KEY_GROUPED_BY_FIELD = 'adName';
+    const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -41,7 +41,7 @@ class RepoYssAdReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
-    const GROUPED_BY_FIELD = 'groupedByField';
+    const GROUPED_BY_FIELD = 'adName';
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -72,6 +72,7 @@ class RepoYssAdReportController extends AbstractReportController
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
+        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -93,7 +94,7 @@ class RepoYssAdReportController extends AbstractReportController
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-                self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ]);
     }
 
@@ -148,7 +149,7 @@ class RepoYssAdReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::GROUPED_BY_FIELD => session(self::GROUPED_BY_FIELD),
+            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table
