@@ -70,7 +70,7 @@ class RepoYssAdReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
         if (!session('adReport')) {
-            $this->initializeSession($availableColumns);
+            $this->initializeSession($defaultColumns);
         }
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -87,9 +87,9 @@ class RepoYssAdReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => $defaultColumns,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $defaultColumns,
+                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
@@ -134,10 +134,6 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $columns = $this->model->getColumnNames();
-        if (!session('adReport')) {
-            $this->initializeSession($columns);
-        }
         $this->updateSessionData($request);
         $reports = $this->getDataForTable();
 

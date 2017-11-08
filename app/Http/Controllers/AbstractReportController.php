@@ -158,7 +158,7 @@ abstract class AbstractReportController extends Controller
                 session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
             }
         }
-   } 
+   }
 
     public function updateSessionGraphColumnName($graphColumnName)
     {
