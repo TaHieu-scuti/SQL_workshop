@@ -9,9 +9,13 @@ return [
     'keyword' => 'キーワード',
     'ADS' => '広告',
     'PREFECTURES' => '県別',
+    'prefecture' => '県別',
     'BY_TIME_ZONE' => '時間帯別',
+    'hourofday' => '時間帯別',
     'BY_DAYS_OF_THE_WEEK' => '曜日別',
+    'dayofweek' => '曜日別',
     'DEVICES' => 'デバイス別',
+    'device' => 'デバイス別',
     'last_90_days' => '過去90日間',
     'February_May' => '２月 - ５月',
     'show_0' => '0データを表示',
@@ -66,5 +70,5 @@ return [
     'adname' => '広告名',
     'adreport' => '広告レポート',
     'all_adreports' => 'すべての広告',
-    'client' => 'クライエント'
+    'client' => 'クライエント',
 ];
