@@ -326,6 +326,29 @@ var Script = function () {
                 },
             });
         }
+
+        $('table a.table-redirect').click(function() {
+            let tableName = $(this).attr('data-table');
+            if (tableName === 'campaign-report') {
+                let text = $(this).text();
+                let arr = $('select.id_Campaign option');
+                let campaignId = 'all';
+                for (let i = 0; i < arr.length; i++) {
+                    if ($(arr[i]).attr('data-tokens') === text) {
+                        campaignId = $(arr[i]).attr('data-breadcumbs');
+                        break;
+                    }
+                }
+                let obj = new Object();
+                obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+                obj['id_campaign'] = campaignId;
+                obj['id_adgroup'] = 'all';
+                obj['id_adReport'] = 'all';
+                obj['id_keyword'] = 'all';
+                sendRequestData(obj, 'campaign-report', 'adgroup-report');
+            }
+        })
+
     });
 
 }();

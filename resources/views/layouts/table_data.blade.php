@@ -49,7 +49,9 @@
            @foreach($reports as $report)
             <tr>
                 @foreach($fieldNames as $fieldName)
-                    @if (ctype_digit($report->$fieldName))
+                    @if ($fieldName === 'campaignName')
+                        <td><a href="javascript:void(0)" class="table-redirect" data-table="campaign-report">{{ $report->$fieldName }}</a></td>
+                    @elseif (ctype_digit($report->$fieldName))
                         <td>{{ number_format($report->$fieldName, 0, '', ',') }}</td>
                     @elseif (is_float($report->$fieldName))
                         <td>{{ number_format($report->$fieldName, 2, '.', ',') }}</td>
