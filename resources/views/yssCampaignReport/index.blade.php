@@ -4,6 +4,17 @@
     Campaign Report
 @stop
 
+@section('site-information')
+    <section class="panel">
+        <div class="panel-body">
+            <span class="site-info-annotation">@lang('language.account')<br></span>
+            <span class="element-name">
+                @lang('language.campaignname')
+            </span>
+        </div>
+    </section>
+@stop
+
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body">

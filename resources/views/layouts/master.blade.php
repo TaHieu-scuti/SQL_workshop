@@ -46,7 +46,7 @@
                     <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="username">
+                            <span id="username" class="username" value="{{ Auth::user()->username }}">
                                 {{Auth::user()->username}}
                             </span>
                             <b class="caret"></b> 
@@ -76,10 +76,8 @@
                     <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                <span class="title">@lang('language.account')<br></span>
-                                <span class="element-name">
-                                    <img src="/images/yahoo.png">
-                                    @lang('language.campaignname')
+                                <span class="site-information-guess-annotation title"></span><br>
+                                <span class="site-information-guess-specified-name element-name">
                                 </span>
                             </div>
                         </section>
@@ -415,5 +413,59 @@
     <script src="/js/common-function.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
+    <script>
+    $(document).ready(function(){
+        let array = [];
+        let objectAccount = new Object();
+        let objectCampaign = new Object();
+        let objectAdgroup = new Object();
+        let objectKeyword = new Object();
+        let objectAd = new Object();
+        let objectUser = new Object();
+
+        objectUser['title'] = 'Client';
+        objectUser['name'] = 'Client';
+        objectUser['value'] = $('#username').attr('value');
+        array.push(objectUser);
+
+        objectAccount['title'] = 'Account';
+        objectAccount['name'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+        objectAccount['value'] = $('select.id_Account').find(':selected').attr('data-tokens');
+        array.push(objectAccount);
+
+        objectCampaign['title'] = 'Campaign';
+        objectCampaign['name'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
+        objectCampaign['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+        array.push(objectCampaign);
+
+        objectAdgroup['title'] = 'Adgroup';
+        objectAdgroup['name'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
+        objectAdgroup['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+        array.push(objectAdgroup);
+
+        objectKeyword['title'] = 'Keyword';
+        objectKeyword['name'] = $('select.id_KeyWord').find(':selected').attr('data-breadcumbs');
+        objectKeyword['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+        array.push(objectKeyword);
+
+        objectAd['title'] = 'Ad';
+        objectAd['name'] = $('select.id_Ad').find(':selected').attr('data-breadcumbs');
+        objectAd['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+        array.push(objectAd);
+
+        let pageInformation = null;
+        let count = array.length-1;
+        while(count >= 0){
+            if (array[count].name !== 'all' && array[count].name !== undefined){
+                pageInformation = array[count];
+                break;
+            }
+            count--;
+        }
+        console.log(pageInformation);
+        $('.site-information-guess-annotation').append(pageInformation.title);
+        $('.site-information-guess-specified-name').append(pageInformation.value);
+    })
+</script>
 </body>
 </html>
