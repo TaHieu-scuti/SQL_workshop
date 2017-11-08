@@ -71,7 +71,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
-        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
+        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
