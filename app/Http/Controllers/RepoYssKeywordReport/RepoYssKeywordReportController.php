@@ -34,7 +34,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
     const SESSION_KEY_PREFIX_ROUTE = '/keyword-report';
-    const SESSION_KEY_GROUPED_BY_FIELD = 'groupedByField';
+    const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
@@ -70,10 +70,10 @@ class RepoYssKeywordReportController extends AbstractReportController
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }
+        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -95,7 +95,7 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-                self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ]);
     }
 
@@ -113,7 +113,7 @@ class RepoYssKeywordReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table
