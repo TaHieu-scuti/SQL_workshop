@@ -91,12 +91,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 self::START_DAY => session(self::SESSION_KEY_START_DAY),
                 self::END_DAY => session(self::SESSION_KEY_END_DAY),
                 // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => $defaultColumns,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => $defaultColumns,
+                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-                self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+                self::GROUPED_BY_FIELD => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ]);
     }
 
@@ -155,7 +155,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::GROUPED_BY_FIELD => session(self::GROUPED_BY_FIELD),
+            self::GROUPED_BY_FIELD => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table

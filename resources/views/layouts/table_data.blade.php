@@ -8,7 +8,7 @@
     <div class="no-data-found-table hidden-no-data-found-message-table">
         <span class="no-data-found-message-table">No data found for table</span>
     </div>
-@else 
+@else
     <div class="no-data-found-table">
         <span class="no-data-found-message-table">No data found for table</span>
     </div>
@@ -18,7 +18,7 @@
     <table class="table table-striped" id="reportTable">
         <thead>
             <tr>
-                @if($export) 
+                @if($export)
                     @foreach($fieldNames as $fieldName)
                         <th>
                             {{ __('language.' .str_slug($fieldName,'_')) }}
@@ -36,7 +36,7 @@
                                 <a href="javascript:void(0)">
                                 <i class="fa fa-arrow-up"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
-                        @else 
+                        @else
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
