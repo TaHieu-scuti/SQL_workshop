@@ -72,6 +72,7 @@ class RepoYssAdReportController extends AbstractReportController
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
+        $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
