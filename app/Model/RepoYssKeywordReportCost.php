@@ -77,6 +77,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        // dd($groupedByField);
         $arrayCalculate = $this->getAggregated($fieldNames);
         $paginatedData = $this->select($arrayCalculate)
                 ->where(
