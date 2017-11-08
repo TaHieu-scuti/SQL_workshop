@@ -46,7 +46,7 @@
                     <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="username">
+                            <span id="username" class="username" value="{{ Auth::user()->username }}">
                                 {{Auth::user()->username}}
                             </span>
                             <b class="caret"></b> 
@@ -76,10 +76,8 @@
                     <div class="element-title col-md-9 col-xs-12">
                         <section class="panel">
                             <div class="panel-body">
-                                <span class="title">@lang('language.account')<br></span>
-                                <span class="element-name">
-                                    <img src="/images/yahoo.png">
-                                    @lang('language.campaignname')
+                                <span class="site-information-guess-annotation title"></span><br>
+                                <span class="site-information-guess-specified-name element-name">
                                 </span>
                             </div>
                         </section>
