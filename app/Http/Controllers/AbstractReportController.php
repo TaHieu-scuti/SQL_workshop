@@ -253,7 +253,7 @@ abstract class AbstractReportController extends Controller
         $array = session(static::SESSION_KEY_FIELD_NAME);
         $array[0] = $specificItem;
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
-        session()->put([static::GROUPED_BY_FIELD => $specificItem]);
+        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
     }
 
     public function updateSessionData(Request $request)
@@ -383,7 +383,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_PAGINATION),
             session(static::SESSION_KEY_COLUMN_SORT),
             session(static::SESSION_KEY_SORT),
-            session(static::GROUPED_BY_FIELD),
+            session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session($this->sessionKeyAccountId),
             $this->adgainerId,
             session($this->sessionKeyCampaignId),

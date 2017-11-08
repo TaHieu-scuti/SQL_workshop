@@ -80,7 +80,7 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
-        session()->put([self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
+        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD]);
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
@@ -108,7 +108,7 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-                self::GROUPED_BY_FIELD => self::SESSION_KEY_GROUPED_BY_FIELD,
+                self::GROUPED_BY_FIELD => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         );
     }
@@ -135,7 +135,7 @@ class RepoYssAccountReportController extends AbstractReportController
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            self::GROUPED_BY_FIELD => session(self::GROUPED_BY_FIELD),
+            self::GROUPED_BY_FIELD => session(self::SESSION_KEY_GROUPED_BY_FIELD),
         ])->render();
         // if no data found
         // display no data found message on table
