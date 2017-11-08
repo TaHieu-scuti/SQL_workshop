@@ -52,17 +52,17 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
 
     public function addQueryConditions(Builder $query, $adgainerId, $accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
     {
-        if ($accountId !== null) {
-            $query->where('accountid', '=', $accountId);
+        if ($accountId !== null && is_numeric($accountId)) {
+            $query->where('accountid', '=', intval($accountId));
         }
-        if ($campaignId !== null) {
-            $query->where('campaignID', '=', $campaignId);
+        if ($campaignId !== null && is_numeric($campaignId)) {
+            $query->where('campaignID', '=', intval($campaignId));
         }
-        if ($adGroupId !== null) {
-            $query->where('adgroupID', '=', $adGroupId);
+        if ($adGroupId !== null && is_numeric($adGroupId)) {
+            $query->where('adgroupID', '=', intval($adGroupId));
         }
-        if ($adgainerId !== null && $accountId === null && $campaignId === null) {
-            $query->where('account_id', '=', $adgainerId);
+        if ($adgainerId !== null && is_numeric($adgainerId) && $accountId === null && $campaignId === null){
+            $query->where('account_id', '=', intval($adgainerId));
         }
     }
 

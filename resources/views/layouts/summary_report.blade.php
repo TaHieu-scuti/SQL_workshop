@@ -4,7 +4,7 @@
             <div class="panel-body">
                 <span class="title">@lang('language.Impr')<br></span>
                 <span class="content">
-                    <i class="small-blue-stuff"></i>{{ $summaryReport['impressions'] }}<br>
+                    <i class="small-blue-stuff fa fa-circle"></i>{{ $summaryReport['impressions'] }}<br>
                 </span>
             </div>
         </section>
@@ -16,7 +16,7 @@
             <div class="panel-body">
                 <span class="title">@lang('language.clicks')<br></span>
                 <span class="content">
-                    <i class="small-blue-stuff fa fa-circle"></i>{{$summaryReport['clicks']}}<br>
+                    <i class="small-blue-stuff"></i>{{$summaryReport['clicks']}}<br>
                 </span>
             </div>
         </section>
