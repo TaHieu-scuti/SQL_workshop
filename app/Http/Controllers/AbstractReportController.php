@@ -78,7 +78,7 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToCsv()
     {
-        $data = $this->getDataForTable();;
+        $data = $this->getDataForTable();
         $exporter = new NativePHPCsvExporter($data);
         $csvData = $exporter->export();
 
