@@ -223,6 +223,7 @@ $('.apply-custom-period').click(function() {
 $('.status-option li').click(function () {
     var option = $(this).data('status');
     var status;
+    var statusTitle = '';
     switch(option) {
         case 'showZero' :
             statusTitle = 'Show 0';
