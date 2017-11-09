@@ -54,6 +54,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         $this->fileSize += $bytesWritten;
+
     }
 
     /**
@@ -71,7 +72,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
     public function export()
     {
         $this->generateFilename();
-
         $this->fileHandle = tmpfile();
         if ($this->fileHandle === false) {
             throw new CsvException('Unable to open temporary file!');
@@ -79,13 +79,15 @@ class NativePHPCsvExporter implements CSVExporterInterface
 
         // get fields' names
         $fieldNames = array_keys($this->exportData->first()->getAttributes());
+        foreach ($fieldNames as $key => $fieldName) {
+            $fieldNames[$key] = @trans('language.' .str_slug($fieldName,'_'));
+        }
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
                 $this->writeLine($value->toArray());
             }
         );
-
         if (rewind($this->fileHandle) === false) {
             throw new CsvException('Unable to rewind file handle!');
         }
