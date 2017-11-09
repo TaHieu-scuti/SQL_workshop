@@ -5,6 +5,7 @@ namespace App\Export\Native;
 use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
+use Illuminate\Database\Eloquent\Collection;
 
 use DateTime;
 
@@ -19,12 +20,14 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var int */
     private $fileSize = 0;
 
+    /** @var \Illuminate\Database\Eloquent\Collection */
     private $exportData;
+
     /**
      * NativePHPCsvExporter constructor.
-     * @param object $exportData
+     * @param \Illuminate\Database\Eloquent\Collection $exportData
      */
-    public function __construct($exportData)
+    public function __construct(Collection $exportData)
     {
         $this->exportData = $exportData;
     }

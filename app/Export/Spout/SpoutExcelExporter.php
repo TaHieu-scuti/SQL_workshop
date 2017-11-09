@@ -18,12 +18,13 @@ class SpoutExcelExporter implements ExcelExporterInterface
     /** @var string */
     private $fileName;
 
+    /** @var \Illuminate\Database\Eloquent\Collection */
     private $exportData;
     /**
      * SpoutExcelExporter constructor.
-     * @param object $exportData
+     * @param \Illuminate\Database\Eloquent\Collection $exportData
      */
-    public function __construct($exportData)
+    public function __construct(Collection $exportData)
     {
         $this->exportData = $exportData;
     }
