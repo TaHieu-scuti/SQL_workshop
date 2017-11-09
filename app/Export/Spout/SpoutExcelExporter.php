@@ -21,7 +21,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
     private $exportData;
     /**
      * SpoutExcelExporter constructor.
-     * @param AbstractReportModel $model
+     * @param object $exportData
      */
     public function __construct($exportData)
     {

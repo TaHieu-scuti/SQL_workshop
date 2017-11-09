@@ -22,7 +22,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
     private $exportData;
     /**
      * NativePHPCsvExporter constructor.
-     * @param AbstractReportModel $model
+     * @param object $exportData
      */
     public function __construct($exportData)
     {
@@ -75,7 +75,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         // get fields' names
-        // $fieldNames = session($sessionKeyPrefix.'fieldName');
         $fieldNames = array_keys($this->exportData->first()->getAttributes());
         $this->writeLine($fieldNames);
         $this->exportData->each(
