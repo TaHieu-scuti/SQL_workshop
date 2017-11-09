@@ -11,5 +11,5 @@ interface CSVExporterInterface
     /**
      * @return string
      */
-    public function export($sessionKeyPrefix, $data);
+    public function export();
 }

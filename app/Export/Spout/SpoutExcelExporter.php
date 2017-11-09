@@ -15,25 +15,23 @@ use Exception;
 
 class SpoutExcelExporter implements ExcelExporterInterface
 {
-    /** @var \App\AbstractReportModel */
-    private $model;
-
     /** @var string */
     private $fileName;
 
+    private $exportData;
     /**
      * SpoutExcelExporter constructor.
      * @param AbstractReportModel $model
      */
-    public function __construct(AbstractReportModel $model)
+    public function __construct($exportData)
     {
-        $this->model = $model;
+        $this->exportData = $exportData;
     }
 
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->model->getTable();
+        $tableName = $this->exportData->first()->getTable();
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
@@ -52,7 +50,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
      * @return string
      * @throws SpoutException
      */
-    public function export($sessionKeyPrefix, $exportData)
+    public function export()
     {
         try {
             $this->generateFilename();
@@ -65,9 +63,9 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $fieldNames = session($sessionKeyPrefix.'fieldName');
+            $fieldNames = array_keys($this->exportData->first()->getAttributes());
             $writer->addRow($fieldNames);
-            $collections = $exportData->chunk(1000);
+            $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
                     $writer->addRow($value->toArray());

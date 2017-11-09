@@ -10,9 +10,6 @@ use DateTime;
 
 class NativePHPCsvExporter implements CSVExporterInterface
 {
-    /** @var \App\AbstractReportModel */
-    private $model;
-
     /** @var string */
     private $fileName;
 
@@ -22,19 +19,20 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var int */
     private $fileSize = 0;
 
+    private $exportData;
     /**
      * NativePHPCsvExporter constructor.
      * @param AbstractReportModel $model
      */
-    public function __construct(AbstractReportModel $model)
+    public function __construct($exportData)
     {
-        $this->model = $model;
+        $this->exportData = $exportData;
     }
 
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->model->getTable();
+        $tableName = $this->exportData->first()->getTable();
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
@@ -67,7 +65,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
      * @return bool|string
      * @throws CsvException
      */
-    public function export($sessionKeyPrefix, $data)
+    public function export()
     {
         $this->generateFilename();
 
@@ -77,9 +75,10 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         // get fields' names
-        $fieldNames = session($sessionKeyPrefix.'fieldName');
+        // $fieldNames = session($sessionKeyPrefix.'fieldName');
+        $fieldNames = array_keys($this->exportData->first()->getAttributes());
         $this->writeLine($fieldNames);
-        $data->each(
+        $this->exportData->each(
             function ($value) {
                 $this->writeLine($value->toArray());
             }
