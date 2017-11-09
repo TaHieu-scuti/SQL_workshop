@@ -60,7 +60,8 @@ abstract class AbstractReportController extends Controller
     public function exportToExcel()
     {
         $exporter = new SpoutExcelExporter($this->model);
-        $excelData = $exporter->export(static::SESSION_KEY_PREFIX);
+        $data = $this->getDataForTable();
+        $excelData = $exporter->export(static::SESSION_KEY_PREFIX, $data);
 
         return $this->responseFactory->make($excelData, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
@@ -78,7 +79,8 @@ abstract class AbstractReportController extends Controller
     public function exportToCsv()
     {
         $exporter = new NativePHPCsvExporter($this->model);
-        $csvData = $exporter->export(static::SESSION_KEY_PREFIX);
+        $data = $this->getDataForTable();
+        $csvData = $exporter->export(static::SESSION_KEY_PREFIX, $data);
 
         return $this->responseFactory->make($csvData, 200, [
             'Content-Type' => 'application/csv; charset=UTF-8',

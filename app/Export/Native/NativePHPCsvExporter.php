@@ -55,18 +55,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->fileSize += $bytesWritten;
     }
 
-    private function getDataToExport($sessionKeyPrefix)
-    {
-        return $this->model->getDataForExport(
-            session($sessionKeyPrefix.'fieldName'),
-            session($sessionKeyPrefix.'accountStatus'),
-            session($sessionKeyPrefix.'startDay'),
-            session($sessionKeyPrefix.'endDay'),
-            session($sessionKeyPrefix.'columnSort'),
-            session($sessionKeyPrefix.'sort')
-        );
-    }
-
     /**
      * @return string
      */
@@ -79,7 +67,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
      * @return bool|string
      * @throws CsvException
      */
-    public function export($sessionKeyPrefix)
+    public function export($sessionKeyPrefix, $data)
     {
         $this->generateFilename();
 
@@ -91,7 +79,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         // get fields' names
         $fieldNames = session($sessionKeyPrefix.'fieldName');
         $this->writeLine($fieldNames);
-        $data = $this->getDataToExport($sessionKeyPrefix);
         $data->each(
             function ($value) {
                 $this->writeLine($value->toArray());
