@@ -345,43 +345,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function getDataForExport(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $data = $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
-                        if ($campaignId !== null) {
-                            $query->where('campaignID', '=', $campaignId);
-                        } elseif ($campaignId === null && $accountId !== null) {
-                            $query->where('accountid', '=', $accountId);
-                        } elseif ($campaignId === null && $accountId === null) {
-                            $query->where('account_id', '=', $adgainerId);
-                        }
-                    }
-                )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->get();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->get();
-        }
-        return $data;
-    }
-
     /**
      * @param string $keywords
      * @return string[]

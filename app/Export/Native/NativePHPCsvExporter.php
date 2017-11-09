@@ -5,14 +5,12 @@ namespace App\Export\Native;
 use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
+use Illuminate\Database\Eloquent\Collection;
 
 use DateTime;
 
 class NativePHPCsvExporter implements CSVExporterInterface
 {
-    /** @var \App\AbstractReportModel */
-    private $model;
-
     /** @var string */
     private $fileName;
 
@@ -22,19 +20,22 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var int */
     private $fileSize = 0;
 
+    /** @var \Illuminate\Database\Eloquent\Collection */
+    private $exportData;
+
     /**
      * NativePHPCsvExporter constructor.
-     * @param AbstractReportModel $model
+     * @param \Illuminate\Database\Eloquent\Collection $exportData
      */
-    public function __construct(AbstractReportModel $model)
+    public function __construct(Collection $exportData)
     {
-        $this->model = $model;
+        $this->exportData = $exportData;
     }
 
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->model->getTable();
+        $tableName = $this->exportData->first()->getTable();
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
@@ -55,18 +56,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->fileSize += $bytesWritten;
     }
 
-    private function getDataToExport($sessionKeyPrefix)
-    {
-        return $this->model->getDataForExport(
-            session($sessionKeyPrefix.'fieldName'),
-            session($sessionKeyPrefix.'accountStatus'),
-            session($sessionKeyPrefix.'startDay'),
-            session($sessionKeyPrefix.'endDay'),
-            session($sessionKeyPrefix.'columnSort'),
-            session($sessionKeyPrefix.'sort')
-        );
-    }
-
     /**
      * @return string
      */
@@ -79,7 +68,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
      * @return bool|string
      * @throws CsvException
      */
-    public function export($sessionKeyPrefix)
+    public function export()
     {
         $this->generateFilename();
 
@@ -89,10 +78,9 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         // get fields' names
-        $fieldNames = session($sessionKeyPrefix.'fieldName');
+        $fieldNames = array_keys($this->exportData->first()->getAttributes());
         $this->writeLine($fieldNames);
-        $data = $this->getDataToExport($sessionKeyPrefix);
-        $data->each(
+        $this->exportData->each(
             function ($value) {
                 $this->writeLine($value->toArray());
             }

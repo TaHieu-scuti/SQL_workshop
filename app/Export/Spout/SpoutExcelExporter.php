@@ -15,41 +15,28 @@ use Exception;
 
 class SpoutExcelExporter implements ExcelExporterInterface
 {
-    /** @var \App\AbstractReportModel */
-    private $model;
-
     /** @var string */
     private $fileName;
 
+    /** @var \Illuminate\Database\Eloquent\Collection */
+    private $exportData;
     /**
      * SpoutExcelExporter constructor.
-     * @param AbstractReportModel $model
+     * @param \Illuminate\Database\Eloquent\Collection $exportData
      */
-    public function __construct(AbstractReportModel $model)
+    public function __construct(Collection $exportData)
     {
-        $this->model = $model;
+        $this->exportData = $exportData;
     }
 
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->model->getTable();
+        $tableName = $this->exportData->first()->getTable();
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
             . '.xlsx';
-    }
-
-    private function getDataToExport($sessionKeyPrefix)
-    {
-        return $this->model->getDataForExport(
-            session($sessionKeyPrefix.'fieldName'),
-            session($sessionKeyPrefix.'accountStatus'),
-            session($sessionKeyPrefix.'startDay'),
-            session($sessionKeyPrefix.'endDay'),
-            session($sessionKeyPrefix.'columnSort'),
-            session($sessionKeyPrefix.'sort')
-        );
     }
 
     /**
@@ -64,7 +51,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
      * @return string
      * @throws SpoutException
      */
-    public function export($sessionKeyPrefix)
+    public function export()
     {
         try {
             $this->generateFilename();
@@ -77,10 +64,9 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $fieldNames = session($sessionKeyPrefix.'fieldName');
+            $fieldNames = array_keys($this->exportData->first()->getAttributes());
             $writer->addRow($fieldNames);
-            $exportData = $this->getDataToExport($sessionKeyPrefix);
-            $collections = $exportData->chunk(1000);
+            $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
                     $writer->addRow($value->toArray());

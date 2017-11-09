@@ -11,5 +11,5 @@ interface ExcelExporterInterface
     /**
      * @return string
      */
-    public function export($sessionKeyPrefix);
+    public function export();
 }
