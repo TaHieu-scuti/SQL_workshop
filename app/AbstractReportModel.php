@@ -59,6 +59,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
+                || $fieldName === static::ADGROUP_ID
             ) {
                 $expressions[] = $fieldName;
                 continue;

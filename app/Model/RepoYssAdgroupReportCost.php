@@ -14,6 +14,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     // constant
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
+    const ADGROUP_ID = "adgroupID";
 
     /** @var bool */
     public $timestamps = false;
@@ -105,6 +106,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy($groupedByField)
+                ->groupBy('adgroupID')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)

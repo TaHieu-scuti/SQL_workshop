@@ -19,6 +19,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
     const GROUPED_BY_FIELD_NAME = 'accountName';
+    const GROUP_BY_ACCOUNTID = 'mediaID';
 
     /** @var bool */
     public $timestamps = false;
@@ -70,11 +71,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
     protected function getAggregated(array $fieldNames)
     {
         $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
         if ($fieldNames[0] === 'prefecture') {
             $tableName = 'repo_yss_prefecture_report_cost';
         }
         $arrayCalculate = [];
-
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
@@ -85,11 +86,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
+            }
             if (in_array($fieldName, $this->averageFieldArray)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                 );
-            } else {
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
                     ->getName()
@@ -171,7 +175,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                             }
                         }
                     )
-                    ->groupBy($groupedByField)
+                ->groupBy('repo_yss_accounts.accountid')
+                ->groupBy($groupedByField)
                     ->orderBy($columnSort, $sort);
         }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {

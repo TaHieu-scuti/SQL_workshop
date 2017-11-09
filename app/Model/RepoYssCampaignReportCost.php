@@ -62,13 +62,13 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     {
         $tableName = $this->getTable();
         $arrayCalculate = [];
-
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
+                || $fieldName === 'campaignID'
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
@@ -136,6 +136,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy($groupedByField)
+                ->groupBy('campaignID')
                 ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)

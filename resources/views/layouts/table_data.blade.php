@@ -20,12 +20,18 @@
             <tr>
                 @if($export)
                     @foreach($fieldNames as $fieldName)
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                            <?php continue; ?>
+                        @endif
                         <th>
                             {{ __('language.' .str_slug($fieldName,'_')) }}
                         </th>
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                            <?php continue; ?>
+                        @endif
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
@@ -49,8 +55,15 @@
            @foreach($reports as $report)
             <tr>
                 @foreach($fieldNames as $fieldName)
-                    @if ($fieldName === 'campaignName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-table="campaign-report">{{ $report->$fieldName }}</a></td>
+                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                        <?php continue; ?>
+                    @endif
+                    @if ($fieldName === 'accountName')
+                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->accountid}}" data-table="account_report">{{ $report->$fieldName }}</a></td>
+                    @elseif ($fieldName === 'campaignName')
+                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->campaignID}}" data-table="campaign-report">{{ $report->$fieldName }}</a></td>
+                    @elseif ($fieldName === 'adgroupName')
+                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->adgroupID}}" data-table="adgroup-report">{{ $report->$fieldName }}</a></td>
                     @elseif (ctype_digit($report->$fieldName))
                         <td>{{ number_format($report->$fieldName, 0, '', ',') }}</td>
                     @elseif (is_float($report->$fieldName))
@@ -64,7 +77,7 @@
             <tr>
                 <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === $groupedByField)
+                    @if($fieldName === $groupedByField || $fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
                         <?php continue; ?>
                     @endif
                     @if(isset($totalDataArray[$fieldName]))
