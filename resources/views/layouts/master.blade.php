@@ -256,8 +256,8 @@
                             </li>
                             <div id="listSearch">
                                 @foreach ($columnsLiveSearch as $columnsSearch)
-                                <li>
-                                    <a href="#">
+                                <li class="selection-graph" data-column="{{ $columnsSearch }}">
+                                    <a href="javascript:void(0)">
                                         <div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>
                                     </a>
                                 </li>

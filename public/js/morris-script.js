@@ -5,7 +5,7 @@ var Script = function () {
         var lineChart;
         initMorris();
         getMorris();
-        $('.statistic .fields').click(function() {
+        $('.summary_report .fields').click(function() {
             var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
             var columnName = $(this).data('name');
@@ -134,31 +134,13 @@ var Script = function () {
         * onclicking column button
         * update graph with selected column
         */
-        $('#listSearch').delegate('li', 'click', function() {
-            $.ajax({
-                url : prefixRoute + "/display-graph",
-                type : "POST",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data : {
-                    'graphColumnName' : $(this).text(),
-                },
-                beforeSend : function () {
-                    sendingRequest();
-                },
-                success : function (response) {
-                    processData(response);
-                    $('#time-period').html(response.timePeriodLayout);
-                    $('#graph-column').html(response.graphColumnLayout);
-                },
-                error : function (response) {
-                    alert('Something went wrong!');
-                },
-                complete : function () {
-                    completeRequest();
-                }
-            });
+        $('#listSearch .selection-graph').click(function() {
+            let columnName = $(this).attr('data-column');
+            updateMorris(columnName);
+            $('.summary_report .fields').removeClass('active');
+            $('.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
+            $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
+            $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
         });
         // initialise graph
         function initMorris()
@@ -210,6 +192,7 @@ var Script = function () {
                 }
             });
         }
+
         function processData(response)
         {
             var field = response.field;
@@ -226,6 +209,7 @@ var Script = function () {
             }
             setMorris(data, field);
         }
+
         function updateMorris(columnName)
         {
             $.ajax({
@@ -244,6 +228,8 @@ var Script = function () {
                 {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
+                    $('#graph-column').html(response.graphColumnLayout);
+                    $('.summary_report fields active').removeClass('active');
                 },
                 error : function (response) {
                     alert('Something went wrong!');
@@ -253,6 +239,7 @@ var Script = function () {
                 }
             });
         }
+
         $('.selectpicker').on('change', function(){
             var curent_url = $(this).find("option:selected").data("url");
             var str = curent_url.lastIndexOf('/');
