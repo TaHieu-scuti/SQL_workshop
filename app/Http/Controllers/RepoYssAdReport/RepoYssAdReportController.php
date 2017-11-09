@@ -68,7 +68,7 @@ class RepoYssAdReportController extends AbstractReportController
     public function index()
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::SESSION_KEY_GROUPED_BY_FIELD);
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }

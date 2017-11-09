@@ -154,7 +154,7 @@ abstract class AbstractReportController extends Controller
                 || session(static::SESSION_KEY_FIELD_NAME)[0] === 'prefecture'
             ) {
                 $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-                $fieldNames[0] = static::SESSION_KEY_GROUPED_BY_FIELD;
+                $fieldNames[0] = session(static::SESSION_KEY_GROUPED_BY_FIELD);
                 session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
             }
         }
