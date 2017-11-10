@@ -19,7 +19,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
     const GROUPED_BY_FIELD_NAME = 'accountName';
-    const GROUP_BY_ACCOUNTID = 'mediaID';
 
     /** @var bool */
     public $timestamps = false;
