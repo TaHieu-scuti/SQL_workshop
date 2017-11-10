@@ -80,6 +80,35 @@ abstract class AbstractReportModel extends Model
         return $expressions;
     }
 
+    protected function addQueryConditions(
+        Builder $query,
+        $adgainerId,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+            $query->where($this->getTable().'.accountid' , '=', $accountId);
+        }
+        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
+            $query->where($this->getTable().'.campaignID' , '=', $campaignId);
+        }
+        if ($adGroupId !== null && $adReportId === null) {
+            $query->where($this->getTable().'.adgroupID' , '=', $adGroupId);
+        }
+        if ($adReportId !== null) {
+            $query->where($this->getTable().'.adID' , '=', $adReportId);
+        }
+        if ($keywordId !== null) {
+            $query->where($this->getTable().'.keywordID' , '=', $keywordId);
+        }
+        if($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+            $query->where($this->getTable().'.account_id' , '=', $adgainerId);
+        }
+    }
+
     /**
      * @param string $startDay
      * @param string $endDay
@@ -112,6 +141,108 @@ abstract class AbstractReportModel extends Model
     protected function getSumExpression($fieldName)
     {
         return DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
+    }
+
+    public function calculateData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    )
+    {
+        $fieldNames = $this->unsetColumns($fieldNames, [static::GROUPED_BY_FIELD_NAME]);
+
+        $aggregations = $this->getAggregated($fieldNames);
+
+        $data = self::select($aggregations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            );
+        // get aggregated value
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->first();
+        }
+        if ($data === null) {
+            $data = [];
+        } else {
+            $data = $data->toArray();
+        }
+        return $data;
+    }
+
+    public function calculateSummaryData(
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $arrayCalculate = $this->getAggregated($fieldNames);
+        $data = self::select($arrayCalculate)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->where(
+                function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                    $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                }
+            );
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->first();
+        }
+        if ($data === null) {
+            $data = [
+                'clicks' => 0,
+                'impressions' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
+        } else {
+            $data = $data->toArray();
+        }
+        return $data;
     }
 
     /**
@@ -185,7 +316,7 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $aggregations = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
+        $aggregations = $this->getAggregated($fieldNames);
         return $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
