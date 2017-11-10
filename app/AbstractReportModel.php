@@ -52,14 +52,24 @@ abstract class AbstractReportModel extends Model
     {
         $tableName = $this->getTable();
         $expressions = [];
-
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                if (($keyID = array_search(static::KEY_ID, $fieldNames)) !== false) {
+                    unset($fieldNames[$keyID]);
+                }
+            }
+        }
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === static::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
-                || $fieldName === static::ADGROUP_ID
+                || $fieldName === static::KEY_ID
             ) {
                 $expressions[] = $fieldName;
                 continue;

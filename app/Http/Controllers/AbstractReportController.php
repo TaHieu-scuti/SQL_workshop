@@ -21,11 +21,11 @@ abstract class AbstractReportController extends Controller
 
     /** @var \App\AbstractReportModel */
     protected $model;
-    public $sessionKeyCampaignId = "campainID";
-    public $sessionKeyAdgroupId = "adgroupId";
-    public $sessionKeyAdReportId = "adReportId";
-    public $sessionKeyAccountId = "accountID";
-    public $sessionKeywordId = "KeywordID";
+    const SESSION_KEY_CAMPAIGNID = "campainID";
+    const SESSION_KEY_AD_GROUP_ID = "adgroupId";
+    const SESSION_KEY_AD_REPORT_ID = "adReportId";
+    const SESSION_KEY_ACCOUNT_ID = "accountID";
+    const SESSION_KEY_KEYWORD_ID = "KeywordID";
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -131,16 +131,16 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
         if (session('accountID') === null){
-            session([$this->sessionKeyAccountId => null]);
+            session([self::SESSION_KEY_ACCOUNT_ID => null]);
         }
         if (session('campainID') === null){
-            session([$this->sessionKeyCampaignId => null]);
+            session([self::SESSION_KEY_CAMPAIGNID => null]);
         }
         if (session('adgroupId') === null){
-            session([$this->sessionKeyAdgroupId => null]);
+            session([self::SESSION_KEY_AD_GROUP_ID => null]);
         }
         if (session('adReportId') === null){
-            session([$this->sessionKeyAdReportId => null]);
+            session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
 
     }
@@ -200,35 +200,35 @@ abstract class AbstractReportController extends Controller
     public function updateSessionAccountId($accountId)
     {
         session()->put([
-                $this->sessionKeyAccountId => $accountId
+                self::SESSION_KEY_ACCOUNT_ID => $accountId
             ]);
     }
 
     public function updateSessionAdReportId($adReportId)
     {
         session()->put([
-                $this->sessionKeyAdReportId => $adReportId
+                self::SESSION_KEY_AD_REPORT_ID => $adReportId
             ]);
     }
 
     public function updateSessionCampaignId($campaignId)
     {
         session()->put([
-                $this->sessionKeyCampaignId => $campaignId
+                self::SESSION_KEY_CAMPAIGNID => $campaignId
             ]);
     }
 
     public function updateSessionAdGroupId($adGroupId)
     {
         session()->put([
-                $this->sessionKeyAdgroupId => $adGroupId
+                self::SESSION_KEY_AD_GROUP_ID=> $adGroupId
             ]);
     }
 
     public function updateSessionKeywordId($keywordId)
     {
         session()->put([
-                $this->sessionKeywordId => $keywordId
+                self::SESSION_KEY_KEYWORD_ID => $keywordId
             ]);
     }
 
@@ -294,7 +294,7 @@ abstract class AbstractReportController extends Controller
         // get id account media if available
         if ($request->id_account === 'all') {
             session()->put([
-                $this->sessionKeyAccountId => null
+                self::SESSION_KEY_ACCOUNT_ID => null
             ]);
         } elseif ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
@@ -303,7 +303,7 @@ abstract class AbstractReportController extends Controller
         //get id campaign if avaiable
         if ($request->id_campaign === 'all') {
             session()->put([
-                $this->sessionKeyCampaignId => null
+                self::SESSION_KEY_CAMPAIGNID => null
             ]);
         } elseif ($request->id_campaign !== "all" && $request->id_campaign !== null) {
             $this->updateSessionCampaignId($request->id_campaign);
@@ -312,7 +312,7 @@ abstract class AbstractReportController extends Controller
         //get id adGroup if avaiable
         if ($request->id_adgroup === 'all') {
             session()->put([
-                $this->sessionKeyAdgroupId => null
+                self::SESSION_KEY_AD_GROUP_ID => null
             ]);
         } elseif ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
             $this->updateSessionAdGroupId($request->id_adgroup);
@@ -321,7 +321,7 @@ abstract class AbstractReportController extends Controller
         //get id adReport if avaiable
         if ($request->id_adReport === 'all') {
             session()->put([
-                $this->sessionKeyAdReportId => null
+                self::SESSION_KEY_AD_REPORT_ID => null
             ]);
         } elseif ($request->id_adReport !== "all" && $request->id_adReport !== null) {
             $this->updateSessionAdReportId($request->id_adReport);
@@ -330,7 +330,7 @@ abstract class AbstractReportController extends Controller
         //get id keyword if avaiable
         if ($request->id_keyword === 'all') {
             session()->put([
-                $this->sessionKeywordId => null
+                self::SESSION_KEY_KEYWORD_ID => null
             ]);
         } elseif ($request->id_keyword !== "all" && $request->id_keyword !== null) {
             $this->updateSessionKeywordId($request->id_keyword);
@@ -353,12 +353,12 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
-            session($this->sessionKeyAccountId),
+            session(self::SESSION_KEY_ACCOUNT_ID),
             $this->adgainerId,
-            session($this->sessionKeyCampaignId),
-            session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId),
-            session($this->sessionKeywordId)
+            session(self::SESSION_KEY_CAMPAIGNID),
+            session(self::SESSION_KEY_AD_GROUP_ID),
+            session(self::SESSION_KEY_AD_REPORT_ID),
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
 
         if ($data->isEmpty()) {
@@ -384,12 +384,12 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_COLUMN_SORT),
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
-            session($this->sessionKeyAccountId),
+            session(self::SESSION_KEY_ACCOUNT_ID),
             $this->adgainerId,
-            session($this->sessionKeyCampaignId),
-            session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId),
-            session($this->sessionKeywordId)
+            session(self::SESSION_KEY_CAMPAIGNID),
+            session(self::SESSION_KEY_AD_GROUP_ID),
+            session(self::SESSION_KEY_AD_REPORT_ID),
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
     }
 
@@ -401,12 +401,12 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
-            session($this->sessionKeyAccountId),
+            session(self::SESSION_KEY_ACCOUNT_ID),
             $this->adgainerId,
-            session($this->sessionKeyCampaignId),
-            session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId),
-            session($this->sessionKeywordId)
+            session(self::SESSION_KEY_CAMPAIGNID),
+            session(self::SESSION_KEY_AD_GROUP_ID),
+            session(self::SESSION_KEY_AD_REPORT_ID),
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
     }
 
@@ -418,12 +418,12 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
-            session($this->sessionKeyAccountId),
+            session(self::SESSION_KEY_ACCOUNT_ID),
             $this->adgainerId,
-            session($this->sessionKeyCampaignId),
-            session($this->sessionKeyAdgroupId),
-            session($this->sessionKeyAdReportId),
-            session($this->sessionKeywordId)
+            session(self::SESSION_KEY_CAMPAIGNID),
+            session(self::SESSION_KEY_AD_GROUP_ID),
+            session(self::SESSION_KEY_AD_REPORT_ID),
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
     }
 }
