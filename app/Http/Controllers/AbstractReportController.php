@@ -49,9 +49,8 @@ abstract class AbstractReportController extends Controller
             }
             $this->adgainerId = \Auth::id(); // you can access user id here
 
-           return $next($request);
+            return $next($request);
         });
-
     }
 
     /**
@@ -132,23 +131,22 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        if (session('accountID') === null){
+        if (session('accountID') === null) {
             session([$this->sessionKeyAccountId => null]);
         }
-        if (session('campainID') === null){
+        if (session('campainID') === null) {
             session([$this->sessionKeyCampaignId => null]);
         }
-        if (session('adgroupId') === null){
+        if (session('adgroupId') === null) {
             session([$this->sessionKeyAdgroupId => null]);
         }
-        if (session('adReportId') === null){
+        if (session('adReportId') === null) {
             session([$this->sessionKeyAdReportId => null]);
         }
-
     }
 
     public function checkoutSessionFieldName()
-   {
+    {
         if (session(static::SESSION_KEY_FIELD_NAME)) {
             if (session(static::SESSION_KEY_FIELD_NAME)[0] === 'device'
                 || session(static::SESSION_KEY_FIELD_NAME)[0] === 'hourofday'
@@ -160,7 +158,7 @@ abstract class AbstractReportController extends Controller
                 session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
             }
         }
-   }
+    }
 
     public function updateSessionGraphColumnName($graphColumnName)
     {

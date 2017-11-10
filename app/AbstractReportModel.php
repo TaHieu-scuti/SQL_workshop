@@ -173,22 +173,22 @@ abstract class AbstractReportModel extends Model
         $keywordId = null
     ) {
         if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.accountid' , '=', $accountId);
+            $query->where($this->getTable().'.accountid', '=', $accountId);
         }
         if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.campaignID' , '=', $campaignId);
+            $query->where($this->getTable().'.campaignID', '=', $campaignId);
         }
         if ($adGroupId !== null && $adReportId === null) {
-            $query->where($this->getTable().'.adgroupID' , '=', $adGroupId);
+            $query->where($this->getTable().'.adgroupID', '=', $adGroupId);
         }
         if ($adReportId !== null) {
-            $query->where($this->getTable().'.adID' , '=', $adReportId);
+            $query->where($this->getTable().'.adID', '=', $adReportId);
         }
         if ($keywordId !== null) {
-            $query->where($this->getTable().'.keywordID' , '=', $keywordId);
+            $query->where($this->getTable().'.keywordID', '=', $keywordId);
         }
-        if($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-             $query->where($this->getTable().'.account_id' , '=', $adgainerId);
+        if ($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+             $query->where($this->getTable().'.account_id', '=', $adgainerId);
         }
     }
 
@@ -253,8 +253,8 @@ abstract class AbstractReportModel extends Model
                             $adGroupId,
                             $adReportId,
                             $keywordId
-                        )
-                        {
+                        ) {
+                        
                             $this->addQueryConditions(
                                 $query,
                                 $adgainerId,
