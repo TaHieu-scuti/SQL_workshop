@@ -159,6 +159,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -225,6 +226,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -282,26 +284,6 @@ class RepoYssAdReportCost extends AbstractReportModel
             $data = $data->toArray();
         }
         return $data;
-    }
-
-    public function getDataForExport(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        return self::select($arrayCalculate)
-                ->where(
-                    function ($query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
-                ->orderBy($columnSort, $sort)
-                ->get();
     }
 
      /**

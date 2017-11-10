@@ -257,39 +257,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $this->hasOne('App\Model\RepoYssAccount', 'account_id', 'account_id');
     }
 
-    public function getDataForExport(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort
-    ) {
-        $tableName = $this->getTable();
-        $joinTableName = (new RepoYssAccount)->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $data = self::select($arrayCalculate)
-                ->join(
-                    $joinTableName,
-                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                    '=',
-                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->groupBy($joinTableName.'.accountName')
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->get();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->get();
-        }
-        return $data;
-    }
-
     public function calculateSummaryData(
         $fieldNames,
         $accountStatus,

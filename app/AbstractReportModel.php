@@ -365,35 +365,6 @@ abstract class AbstractReportModel extends Model
     }
 
     /**
-     * @param array $fieldNames
-     * @param $accountStatus
-     * @param $startDay
-     * @param $endDay
-     * @param $columnSort
-     * @param $sort
-     * @return \Illuminate\Support\Collection
-     */
-    public function getDataForExport(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort
-    ) {
-        $aggregations = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
-        return $this->select(array_merge(static::FIELDS, $aggregations))
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )
-            ->groupBy(static::GROUPED_BY_FIELD_NAME)
-            ->orderBy($columnSort, $sort)
-            ->get();
-    }
-
-    /**
      * @return string[]
      */
     public function getColumnNamesForSearch($keyword)

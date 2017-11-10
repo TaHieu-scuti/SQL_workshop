@@ -343,8 +343,14 @@ $('.specific-filter-item').click(function() {
         data : {
             'specificItem' : $(this).data('value'),
         },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 });
