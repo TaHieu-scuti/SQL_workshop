@@ -48,12 +48,9 @@ class NativePHPCsvExporter implements CSVExporterInterface
      */
     private function writeLine(array $data)
     {
-        $fp = fopen('php://output', 'w');
-        fputs($fp, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-        if ($fp) {
-            $bytesWritten = fputcsv($this->fileHandle, $data);
-        }
-        fclose($fp);
+
+        fputs($this->fileHandle, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+        $bytesWritten = fputcsv($this->fileHandle, $data);
         if ($bytesWritten === false) {
             throw new CsvException('Failed to write line to csv!');
         }
