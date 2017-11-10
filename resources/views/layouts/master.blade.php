@@ -42,8 +42,8 @@
             <div class="top-nav ">
                 <ul class="nav pull-right top-menu">
                     <!-- user login dropdown start-->
-                    <li><a href="{{URL::asset('')}}account_report/language/en"><img src="/images/english.png"></a></li>
-                    <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
+                    <li><a href="{{URL::asset('')}}language/en"><img src="/images/english.png"></a></li>
+                    <li><a href="{{URL::asset('')}}language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span id="username" class="username" value="{{ Auth::user()->username }}">
