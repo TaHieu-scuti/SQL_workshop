@@ -50,22 +50,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         'trackingURL',
     ];
 
-    public function addQueryConditions(Builder $query, $adgainerId, $accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
-    {
-        if ($accountId !== null && is_numeric($accountId)) {
-            $query->where('accountid', '=', intval($accountId));
-        }
-        if ($campaignId !== null && is_numeric($campaignId)) {
-            $query->where('campaignID', '=', intval($campaignId));
-        }
-        if ($adGroupId !== null && is_numeric($adGroupId)) {
-            $query->where('adgroupID', '=', intval($adGroupId));
-        }
-        if ($adgainerId !== null && is_numeric($adgainerId) && $accountId === null && $campaignId === null){
-            $query->where('account_id', '=', intval($adgainerId));
-        }
-    }
-
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -172,37 +156,16 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+    ) {
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
