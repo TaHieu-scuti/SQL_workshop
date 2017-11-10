@@ -242,12 +242,17 @@ var Script = function () {
 
         $('.selectpicker').on('change', function(){
             var curent_url = $(this).find("option:selected").data("url");
+            let requestId = $(this).find("option:selected").data('breadcumbs');
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
+            processRequestBreadcrumbs(url, requestId);
+
+        });
+        function processRequestBreadcrumbs(url, requestId) {
             switch (url) {
                 case 'account_report' :
                     var obj = new Object();
-                    obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+                    obj['id_account'] = requestId;
                     obj['id_campaign'] = 'all';
                     obj['id_adgroup'] = 'all';
                     obj['id_adReport'] = 'all';
@@ -257,7 +262,7 @@ var Script = function () {
                 case 'campaign-report' :
                     var obj = new Object();
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
-                    obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
+                    obj['id_campaign'] = requestId;
                     obj['id_adgroup'] = 'all';
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
@@ -267,7 +272,7 @@ var Script = function () {
                     var obj = new Object();
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
-                    obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
+                    obj['id_adgroup'] = requestId;
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
                     sendRequestData(obj, url, 'ad-report');
@@ -277,7 +282,7 @@ var Script = function () {
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
-                    obj['id_adReport'] = $('select.id_AdReport').find(':selected').attr('data-breadcumbs');
+                    obj['id_adReport'] = requestId;
                     obj['id_keyword'] = 'all';
                     sendRequestData(obj, url, 'ad-report');
                     break;
@@ -287,15 +292,14 @@ var Script = function () {
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
                     obj['id_adReport'] = 'all';
-                    obj['id_keyword'] = $('select.id_KeyWord').find(':selected').attr('data-breadcumbs');
+                    obj['id_keyword'] = requestId;
                     sendRequestData(obj, url, 'keyword-report');
                     break;
                 default:
                     // code...
                     break;
             }
-        });
-
+        }
         function sendRequestData(datas, route, redirect) {
             $.ajax({
                 url : route + '/updateSession',
@@ -316,24 +320,8 @@ var Script = function () {
 
         $('table a.table-redirect').click(function() {
             let tableName = $(this).attr('data-table');
-            if (tableName === 'campaign-report') {
-                let text = $(this).text();
-                let arr = $('select.id_Campaign option');
-                let campaignId = 'all';
-                for (let i = 0; i < arr.length; i++) {
-                    if ($(arr[i]).attr('data-tokens') === text) {
-                        campaignId = $(arr[i]).attr('data-breadcumbs');
-                        break;
-                    }
-                }
-                let obj = new Object();
-                obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
-                obj['id_campaign'] = campaignId;
-                obj['id_adgroup'] = 'all';
-                obj['id_adReport'] = 'all';
-                obj['id_keyword'] = 'all';
-                sendRequestData(obj, 'campaign-report', 'adgroup-report');
-            }
+            let requestId = $(this).data('id');
+            processRequestBreadcrumbs(tableName, requestId);
         })
 
     });

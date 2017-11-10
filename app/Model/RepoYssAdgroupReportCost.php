@@ -14,6 +14,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     // constant
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
+    const KEY_ID = "adgroupID";
 
     /** @var bool */
     public $timestamps = false;
@@ -48,6 +49,13 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         'dayOfWeek',
         'month',
         'trackingURL',
+    ];
+
+    private $groupByFieldName = [
+        'device',
+        'hourofday',
+        'dayOfWeek',
+        'prefecture',
     ];
 
     /**
@@ -90,6 +98,9 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 )
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
+        if (!in_array($groupedByField, $this->groupByFieldName)) {
+            $paginatedData = $paginatedData->groupBy('adgroupID');
+        }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
@@ -201,6 +212,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,

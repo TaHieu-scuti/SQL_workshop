@@ -54,6 +54,13 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         'campaignType',
     ];
 
+    private $groupByFieldName = [
+        'device',
+        'hourofday',
+        'dayOfWeek',
+        'prefecture',
+    ];
+
     /**
      * @param string[] $fieldNames
      * @return Expression[]
@@ -62,17 +69,29 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     {
         $tableName = $this->getTable();
         $arrayCalculate = [];
-
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME
-                || $fieldName === 'device'
+            if ($fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
             ) {
+                if (($keyID = array_search('campaignID', $fieldNames)) !== false) {
+                    unset($fieldNames[$keyID]);
+                }
+            }
+        }
+        foreach ($fieldNames as $fieldName) {
+             if ($fieldName === self::GROUPED_BY_FIELD_NAME
+                || $fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+                || $fieldName === 'campaignID'
+            ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
+
             if (in_array($fieldName, $this->averageFieldArray)) {
                 $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
             } else {
@@ -137,6 +156,9 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                 )
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
+        if (!in_array($groupedByField, $this->groupByFieldName)) {
+            $paginatedData = $paginatedData->groupBy('campaignID');
+        }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->paginate($pagination);
@@ -259,6 +281,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,

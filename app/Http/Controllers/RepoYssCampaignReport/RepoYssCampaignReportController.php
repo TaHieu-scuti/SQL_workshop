@@ -21,6 +21,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
+    const CAMPAIGN_ID = 'campaignID';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -70,7 +71,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function index()
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
         }

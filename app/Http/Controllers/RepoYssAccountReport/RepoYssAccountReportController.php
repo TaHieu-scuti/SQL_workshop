@@ -21,6 +21,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
+    const MEDIA_ID = 'accountid';
     const GROUPED_BY_FIELD = 'accountName';
     const PREFIX_ROUTE = 'prefixRoute';
     const SORT = 'sort';
@@ -80,7 +81,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD,  self::MEDIA_ID);
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }

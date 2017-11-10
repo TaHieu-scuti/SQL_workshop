@@ -54,8 +54,23 @@ class RepoYssAccountReportCost extends AbstractReportModel
     {
         $tableName = $this->getTable();
 
-        $arrayCalculate = [];
+        $joinTableName = (new RepoYssAccount)->getTable();
+        if ($fieldNames[0] === 'prefecture') {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                if (($keyID = array_search('accountid', $fieldNames)) !== false) {
+                    unset($fieldNames[$keyID]);
+                }
+            }
+        }
 
+        $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
@@ -66,11 +81,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
+            }
             if (in_array($fieldName, $this->averageFieldArray)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                 );
-            } else {
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                     ->getType()
                     ->getName()
@@ -142,6 +160,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 )
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
+
+        if (!in_array($groupedByField, $this->groupByFieldName)) {
+            $paginatedData = $paginatedData->groupBy('repo_yss_accounts.accountid');
+        }
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
