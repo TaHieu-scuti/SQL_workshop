@@ -21,6 +21,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
+    const ADGROUP_ID = "adgroupID";
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -70,7 +71,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function index()
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
