@@ -2,10 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-class RepoYssPrefectureReportCost extends Model
+class RepoYssPrefectureReportCost extends AbstractReportModel
 {
+    const GROUPED_BY_FIELD_NAME = 'prefecture';
+
     protected $table = 'repo_yss_prefecture_report_cost';
 
     /** @var bool */
