@@ -16,6 +16,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     // constant
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'campaignName';
+    const PAGE_ID = 'campaignID';
 
     /** @var bool */
     public $timestamps = false;
@@ -53,45 +54,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         'trackingURL',
         'campaignType',
     ];
-
-    /**
-     * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-        $arrayCalculate = [];
-
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME
-                || $fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
-            ) {
-                $arrayCalculate[] = $fieldName;
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND( SUM(' . $fieldName . '), 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-
+    
     /**
      * @param string $column
      * @param string $accountStatus

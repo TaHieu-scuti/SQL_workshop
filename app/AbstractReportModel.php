@@ -23,6 +23,7 @@ abstract class AbstractReportModel extends Model
     // Please override these constants in the derived report models when necessary
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
+    const PAGE_ID = 'pageId';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -48,6 +49,13 @@ abstract class AbstractReportModel extends Model
         'cost'
     ];
 
+    protected $groupByFieldName = [
+        'device',
+        'hourofday',
+        'dayOfWeek',
+        'prefecture',
+    ];
+
     /**
      * @param string[] $fieldNames
      * @return Expression[]
@@ -55,33 +63,57 @@ abstract class AbstractReportModel extends Model
     protected function getAggregated(array $fieldNames)
     {
         $tableName = $this->getTable();
-        $expressions = [];
-
+        $joinTableName = (new RepoYssAccount)->getTable();
+        if ($fieldNames[0] === 'prefecture') {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME
+            if ($fieldName === 'device'
+                || $fieldName === 'hourofday'
+                || $fieldName === "dayOfWeek"
+                || $fieldName === 'prefecture'
+            ) {
+                $key = array_search(static::PAGE_ID, $fieldNames);
+                if ($key !== false) {
+                    unset($fieldNames[$key]);
+                }
+            }
+        }
+        $arrayCalculate = [];
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
             ) {
-                $expressions[] = $fieldName;
+                $arrayCalculate[] = $fieldName;
                 continue;
             }
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $expressions[] = $this->getAverageExpression($fieldName);
-            } else {
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
+            }
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                );
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
-                    === static::FIELD_TYPE) {
-                    $expressions[] = $this->getTrimmedSumExpression($fieldName);
+                    === self::FIELD_TYPE) {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                    );
                 } else {
-                    $expressions[] = $this->getSumExpression($fieldName);
+                    $arrayCalculate[] = DB::raw(
+                        'SUM( ' . $tableName . '.' . $fieldName . ' ) AS ' . $fieldName
+                    );
                 }
             }
         }
 
-        return $expressions;
+        return $arrayCalculate;
     }
 
     /**
@@ -254,7 +286,6 @@ abstract class AbstractReportModel extends Model
                             $adReportId,
                             $keywordId
                         ) {
-                        
                             $this->addQueryConditions(
                                 $query,
                                 $adgainerId,

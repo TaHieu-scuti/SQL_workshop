@@ -19,6 +19,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
     const GROUPED_BY_FIELD_NAME = 'accountName';
+    const PAGE_ID = 'accountid';
 
     /** @var bool */
     public $timestamps = false;
@@ -55,6 +56,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
         'trackingURL',
         'account_id',
         'accountid'
+    ];
+
+    private $groupByFieldName = [
+        'device',
+        'hourofday',
+        'dayOfWeek',
+        'prefecture',
     ];
 
     // constant

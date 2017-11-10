@@ -14,6 +14,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     // constant
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
+    const KEY_ID = "adgroupID";
 
     /** @var bool */
     public $timestamps = false;
