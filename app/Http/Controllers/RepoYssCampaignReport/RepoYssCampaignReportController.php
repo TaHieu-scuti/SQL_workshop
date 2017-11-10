@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RepoYssCampaignReport;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssCampaignReportCost;
 
+use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
@@ -107,9 +108,15 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
+
+        if ($request->specificItem === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view('layouts.table_data', [
             self::REPORTS => $reports,
