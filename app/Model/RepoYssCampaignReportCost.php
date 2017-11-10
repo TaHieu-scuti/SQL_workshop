@@ -81,7 +81,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
             }
         }
         foreach ($fieldNames as $fieldName) {
-             if ($fieldName === self::GROUPED_BY_FIELD_NAME
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
@@ -288,8 +288,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {

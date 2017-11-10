@@ -49,9 +49,8 @@ abstract class AbstractReportController extends Controller
             }
             $this->adgainerId = \Auth::id(); // you can access user id here
 
-           return $next($request);
+            return $next($request);
         });
-
     }
 
     /**
@@ -132,19 +131,18 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        if (session('accountID') === null){
+        if (session('accountID') === null) {
             session([self::SESSION_KEY_ACCOUNT_ID => null]);
         }
-        if (session('campainID') === null){
+        if (session('campainID') === null) {
             session([self::SESSION_KEY_CAMPAIGNID => null]);
         }
-        if (session('adgroupId') === null){
+        if (session('adgroupId') === null) {
             session([self::SESSION_KEY_AD_GROUP_ID => null]);
         }
-        if (session('adReportId') === null){
+        if (session('adReportId') === null) {
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
-
     }
 
     public function checkoutSessionFieldName()

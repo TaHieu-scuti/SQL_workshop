@@ -199,8 +199,7 @@ class RepoYssAdReportCost extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $arrayCalculate = $this->getAggregated($fieldNames);
         if (empty($arrayCalculate)) {

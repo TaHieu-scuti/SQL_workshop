@@ -183,7 +183,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function ($query) use ($accountId,  $adgainerId) {
+                    function ($query) use ($accountId, $adgainerId) {
                         if ($accountId !== null) {
                             $query->where('repo_yss_accounts.accountid', '=', $accountId);
                         } else {
@@ -221,8 +221,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         try {
             new DateTime($startDay);
             new DateTime($endDay);
@@ -252,7 +251,7 @@ class RepoYssAccountReport extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($accountId,  $adgainerId) {
+                function ($query) use ($accountId, $adgainerId) {
                     if ($accountId !== null) {
                         $query->where('repo_yss_accounts.accountid', '=', $accountId);
                     } else {
@@ -316,8 +315,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
@@ -366,7 +364,7 @@ class RepoYssAccountReport extends AbstractReportModel
                         }
                     )
                     ->where(
-                        function ($query) use ($accountId,  $adgainerId) {
+                        function ($query) use ($accountId, $adgainerId) {
                             if ($accountId !== null) {
                                 $query->where('repo_yss_accounts.accountid', '=', $accountId);
                             } else {
@@ -445,8 +443,7 @@ class RepoYssAccountReport extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
@@ -485,7 +482,7 @@ class RepoYssAccountReport extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function($query) use ($accountId,  $adgainerId) {
+                    function ($query) use ($accountId, $adgainerId) {
                         if ($accountId !== null) {
                             $query->where('repo_yss_accounts.accountid', '=', $accountId);
                         } else {
