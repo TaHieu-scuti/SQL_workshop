@@ -148,7 +148,7 @@ abstract class AbstractReportController extends Controller
     }
 
     public function checkoutSessionFieldName()
-   {
+    {
         if (session(static::SESSION_KEY_FIELD_NAME)) {
             if (session(static::SESSION_KEY_FIELD_NAME)[0] === 'device'
                 || session(static::SESSION_KEY_FIELD_NAME)[0] === 'hourofday'
@@ -160,7 +160,7 @@ abstract class AbstractReportController extends Controller
                 session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
             }
         }
-   }
+    }
 
     public function updateSessionGraphColumnName($graphColumnName)
     {
