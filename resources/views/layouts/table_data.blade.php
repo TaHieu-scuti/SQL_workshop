@@ -68,7 +68,13 @@
                         <?php continue; ?>
                     @endif
                     @if(isset($totalDataArray[$fieldName]))
+                        @if (ctype_digit($totalDataArray[$fieldName]))
+                    <td>{{ number_format($totalDataArray[$fieldName], 0, '', ',') }}</td>
+                        @elseif (is_float($totalDataArray[$fieldName]))
+                    <td>{{ number_format($totalDataArray[$fieldName], 2, '.', ',') }}</td>
+                        @else
                     <td>{{ $totalDataArray[$fieldName] }}</td>
+                        @endif
                     @else
                     <td></td>
                     @endif
