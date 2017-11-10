@@ -405,7 +405,6 @@ $(document).ready(function(){
         count--;
     }
     if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
-        console.log(pageInformation.title);
         if (pageInformation.title == 'Client') {
             $('.site-information-guess-annotation').append('クライエント');
         }
