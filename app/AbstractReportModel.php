@@ -148,6 +148,7 @@ abstract class AbstractReportModel extends Model
         $accountStatus,
         $startDay,
         $endDay,
+        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -156,7 +157,7 @@ abstract class AbstractReportModel extends Model
         $keywordId = null
     )
     {
-        $fieldNames = $this->unsetColumns($fieldNames, [static::GROUPED_BY_FIELD_NAME]);
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
 
         $aggregations = $this->getAggregated($fieldNames);
 
