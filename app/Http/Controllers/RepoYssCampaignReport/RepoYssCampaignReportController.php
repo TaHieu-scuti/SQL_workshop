@@ -186,5 +186,5 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
-   }
+    }
 }

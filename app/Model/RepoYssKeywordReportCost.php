@@ -17,10 +17,8 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         'keywordID',
         'keyword'
     ];
-    const KEY_ID = "keywordID";
-
+    const PAGE_ID = "keywordID";
     const GROUPED_BY_FIELD_NAME = 'keyword';
-
     /** @var bool */
     public $timestamps = false;
 
@@ -32,74 +30,6 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         'averageCpc',
         'averagePosition'
     ];
-
-    public function addQueryConditions(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId)
-    {
-        if ($accountId !== null && $campaignId === null && $adGroupId === null && $keywordId === null) {
-            $query->where('accountid' , '=', $accountId);
-        }
-        if ($campaignId !== null && $adGroupId === null && $keywordId === null) {
-            $query->where('campaignID' , '=', $campaignId);
-        }
-        if ($adGroupId !== null && $keywordId === null) {
-            $query->where('adgroupID' , '=', $adGroupId);
-        }
-        if ($keywordId !== null) {
-            $query->where('keywordID' , '=', $keywordId);
-        }
-        if($accountId === null && $campaignId === null && $adGroupId === null && $keywordId === null) {
-             $query->where('account_id' , '=', $adgainerId);
-        }
-    }
-
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return string[]
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData = $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
-    }
 
     /**
      * @param string $column
@@ -165,8 +95,8 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
+    
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
@@ -232,8 +162,8 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
+    
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {

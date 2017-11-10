@@ -49,9 +49,8 @@ abstract class AbstractReportController extends Controller
             }
             $this->adgainerId = \Auth::id(); // you can access user id here
 
-           return $next($request);
+            return $next($request);
         });
-
     }
 
     /**
@@ -144,11 +143,10 @@ abstract class AbstractReportController extends Controller
         if (session('adReportId') === null){
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
-
     }
 
     public function checkoutSessionFieldName()
-   {
+    {
         if (session(static::SESSION_KEY_FIELD_NAME)) {
             if (session(static::SESSION_KEY_FIELD_NAME)[0] === 'device'
                 || session(static::SESSION_KEY_FIELD_NAME)[0] === 'hourofday'
@@ -160,7 +158,7 @@ abstract class AbstractReportController extends Controller
                 session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
             }
         }
-   }
+    }
 
     public function updateSessionGraphColumnName($graphColumnName)
     {
@@ -280,16 +278,12 @@ abstract class AbstractReportController extends Controller
         }
 
         // get status if available
-        if ($request->status === "all") {
-            $this->updateSessionStatus('all');
-        } elseif ($request->status !== null) {
+        if ($request->status !== null) {
             $this->updateSessionStatus($request->status);
         }
 
         // get statusTitle if available
-        if ($request->statusTitle === "all") {
-            $this->updateSessionStatusTitle('all');
-        } elseif ($request->statusTitle !== null) {
+        if ($request->statusTitle !== null) {
             $this->updateSessionStatusTitle($request->statusTitle);
         }
 

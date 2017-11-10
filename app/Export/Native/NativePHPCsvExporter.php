@@ -54,7 +54,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
         }
 
         $this->fileSize += $bytesWritten;
-
     }
 
     /**
@@ -80,7 +79,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         // get fields' names
         $fieldNames = array_keys($this->exportData->first()->getAttributes());
         foreach ($fieldNames as $key => $fieldName) {
-            $fieldNames[$key] = __('language.' .str_slug($fieldName,'_'));
+            $fieldNames[$key] = __('language.' .str_slug($fieldName, '_'));
         }
         $this->writeLine($fieldNames);
         $this->exportData->each(

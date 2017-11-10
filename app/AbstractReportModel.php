@@ -9,6 +9,8 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
+use App\Model\RepoYssAccount;
+
 use DateTime;
 use Exception;
 
@@ -21,6 +23,9 @@ abstract class AbstractReportModel extends Model
     // Please override these constants in the derived report models when necessary
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
+    const PAGE_ID = 'pageId';
+
+    const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
     const FIELDS = [
     ];
@@ -44,6 +49,13 @@ abstract class AbstractReportModel extends Model
         'cost'
     ];
 
+    protected $groupByFieldName = [
+        'device',
+        'hourofday',
+        'dayOfWeek',
+        'prefecture',
+    ];
+
     /**
      * @param string[] $fieldNames
      * @return Expression[]
@@ -51,44 +63,57 @@ abstract class AbstractReportModel extends Model
     protected function getAggregated(array $fieldNames)
     {
         $tableName = $this->getTable();
-        $expressions = [];
+        $joinTableName = (new RepoYssAccount)->getTable();
+        if ($fieldNames[0] === 'prefecture') {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
             ) {
-                if (($keyID = array_search(static::KEY_ID, $fieldNames)) !== false) {
-                    unset($fieldNames[$keyID]);
+                $key = array_search(static::PAGE_ID, $fieldNames);
+                if ($key !== false) {
+                    unset($fieldNames[$key]);
                 }
             }
         }
+        $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME
+            if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
                 || $fieldName === 'prefecture'
-                || $fieldName === static::KEY_ID
             ) {
-                $expressions[] = $fieldName;
+                $arrayCalculate[] = $fieldName;
                 continue;
             }
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $expressions[] = $this->getAverageExpression($fieldName);
-            } else {
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
+            }
+            if (in_array($fieldName, $this->averageFieldArray)) {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                );
+            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
-                    === static::FIELD_TYPE) {
-                    $expressions[] = $this->getTrimmedSumExpression($fieldName);
+                    === self::FIELD_TYPE) {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                    );
                 } else {
-                    $expressions[] = $this->getSumExpression($fieldName);
+                    $arrayCalculate[] = DB::raw(
+                        'SUM( ' . $tableName . '.' . $fieldName . ' ) AS ' . $fieldName
+                    );
                 }
             }
         }
 
-        return $expressions;
+        return $arrayCalculate;
     }
 
     /**
@@ -170,6 +195,35 @@ abstract class AbstractReportModel extends Model
         return $columns;
     }
 
+    protected function addQueryConditions(
+        Builder $query,
+        $adgainerId,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+            $query->where($this->getTable().'.accountid', '=', $accountId);
+        }
+        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
+            $query->where($this->getTable().'.campaignID', '=', $campaignId);
+        }
+        if ($adGroupId !== null && $adReportId === null) {
+            $query->where($this->getTable().'.adgroupID', '=', $adGroupId);
+        }
+        if ($adReportId !== null) {
+            $query->where($this->getTable().'.adID', '=', $adReportId);
+        }
+        if ($keywordId !== null) {
+            $query->where($this->getTable().'.keywordID', '=', $keywordId);
+        }
+        if ($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
+             $query->where($this->getTable().'.account_id', '=', $adgainerId);
+        }
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -178,7 +232,7 @@ abstract class AbstractReportModel extends Model
      * @param int      $pagination
      * @param string   $columnSort
      * @param string   $sort
-     * @return LengthAwarePaginator
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getDataForTable(
         array $fieldNames,
@@ -196,16 +250,63 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $aggregations = $this->getAggregated(array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS));
-        return $this->select(array_merge(static::FIELDS, $aggregations))
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )
-            ->groupBy($groupedByField)
-            ->orderBy($columnSort, $sort)
-            ->paginate($pagination);
+        $tableName = $this->getTable();
+        $joinTableName = (new RepoYssAccount)->getTable();
+        $arrayCalculate = $this->getAggregated($fieldNames);
+        if ($groupedByField === 'prefecture') {
+            $prefectureData = $this->addPrefectureCondition(
+                $arrayCalculate,
+                $joinTableName,
+                $startDay,
+                $endDay,
+                $accountId,
+                $adgainerId
+            );
+            $paginatedData  = $prefectureData->groupBy($groupedByField)
+                                ->orderBy($columnSort, $sort);
+        } else {
+            $paginatedData  = self::select($arrayCalculate)
+                    ->join(
+                        $joinTableName,
+                        $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                        '=',
+                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+                    )
+                    ->where(
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )
+                    ->where(
+                        function (Builder $query) use (
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        ) {
+                            $this->addQueryConditions(
+                                $query,
+                                $adgainerId,
+                                $accountId,
+                                $campaignId,
+                                $adGroupId,
+                                $adReportId,
+                                $keywordId
+                            );
+                        }
+                    )
+                    ->groupBy($groupedByField)
+                    ->orderBy($columnSort, $sort);
+        }
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->paginate($pagination);
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $paginatedData = $paginatedData->paginate($pagination);
+        }
+        return $paginatedData;
     }
 
     /**
