@@ -32,25 +32,6 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         'averagePosition'
     ];
 
-    public function addQueryConditions(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId)
-    {
-        if ($accountId !== null && $campaignId === null && $adGroupId === null && $keywordId === null) {
-            $query->where('accountid' , '=', $accountId);
-        }
-        if ($campaignId !== null && $adGroupId === null && $keywordId === null) {
-            $query->where('campaignID' , '=', $campaignId);
-        }
-        if ($adGroupId !== null && $keywordId === null) {
-            $query->where('adgroupID' , '=', $adGroupId);
-        }
-        if ($keywordId !== null) {
-            $query->where('keywordID' , '=', $keywordId);
-        }
-        if($accountId === null && $campaignId === null && $adGroupId === null && $keywordId === null) {
-             $query->where('account_id' , '=', $adgainerId);
-        }
-    }
-
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -166,29 +147,8 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $keywordId = null
     )
     {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
@@ -224,7 +184,6 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -233,26 +192,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $keywordId = null
     )
     {
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+        $arrayCalculate = $this->getAggregated($fieldNames);
         $data = $this->select($arrayCalculate)
                     ->where(
                         function (Builder $query) use ($startDay, $endDay) {
