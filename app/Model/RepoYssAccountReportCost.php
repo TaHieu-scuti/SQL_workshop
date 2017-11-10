@@ -7,13 +7,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\AbstractReportModel;
-use App\Model\RepoYssPrefectureReportCost as Prefecture;
-use App\Model\RepoYssAccount;
 
 use DateTime;
 use Exception;
 use Auth;
-use App\User;
 
 class RepoYssAccountReportCost extends AbstractReportModel
 {
@@ -44,27 +41,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         'valuePerAllConv'
     ];
 
-    /** @var array */
-    private $emptyCalculateFieldArray = [
-        'quarter',
-        'week',
-        'network',
-        'device',
-        'day',
-        'dayOfWeek',
-        'month',
-        'trackingURL',
-        'account_id',
-        'accountid'
-    ];
-
-    private $groupByFieldName = [
-        'device',
-        'hourofday',
-        'dayOfWeek',
-        'prefecture',
-    ];
-
     // constant
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
     const FIELD_TYPE = 'float';
@@ -90,7 +66,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
         try {
             new DateTime($startDay);
             new DateTime($endDay);
@@ -179,52 +154,17 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
-        $arrayCalculate = [];
         $tableName = $this->getTable();
-        if ($fieldNames[0] === 'prefecture') {
-            $tableName = 'repo_yss_prefecture_report_cost';
-        }
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName !== 'account_id') {
-                if ($fieldName === 'accountName') {
-                    continue;
-                }
-                if (in_array($fieldName, $this->averageFieldArray)) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND('.'AVG(' . $tableName . '.' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                    );
-                } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                        ->getType()
-                        ->getName()
-                        === self::FIELD_TYPE) {
-                        $arrayCalculate[] = DB::raw(
-                            'format(trim(ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                        );
-                    } else {
-                        $arrayCalculate[] = DB::raw(
-                            'format(SUM(' . $tableName . '.' . $fieldName . '), 0) AS ' . $fieldName
-                        );
-                    }
-                }
-            }
-        }
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+
+        $arrayCalculate = $this->getAggregated($fieldNames);
+
         $joinTableName = (new RepoYssAccount)->getTable();
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        if ($groupedByField === 'prefecture') {
-            $data = $this->addPrefectureCondition(
-                $arrayCalculate,
-                $joinTableName,
-                $startDay,
-                $endDay,
-                $accountId,
-                $adgainerId
-            );
-        } else {
-            $data = self::select($arrayCalculate)
+
+        $data = $this->select($arrayCalculate)
                         ->join(
                             $joinTableName,
                             $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
@@ -244,19 +184,20 @@ class RepoYssAccountReportCost extends AbstractReportModel
                                 }
                             }
                         );
-        }
-        // get aggregated value
+
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                             ->first();
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $data = $data->first();
         }
+
         if ($data === null) {
             $data = [];
         } else {
             $data = $data->toArray();
         }
+
         return $data;
     }
 
@@ -270,7 +211,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
-        $groupedByField,
         $accountId = null,
         $adgainerId = null,
         $campaignId = null,
@@ -278,27 +218,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
-        $arrayCalculate = [];
         $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+
+        $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
         $data = self::select($arrayCalculate)
                 ->join(
@@ -338,35 +260,5 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->toArray();
         }
         return $data;
-    }
-
-    private function addPrefectureCondition(
-        $arrayCalculate,
-        $joinTableName,
-        $startDay,
-        $endDay,
-        $accountId,
-        $adgainerId
-    ) {
-        return Prefecture::select($arrayCalculate)
-                    ->join(
-                        $joinTableName,
-                        'repo_yss_prefecture_report_cost.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                        '=',
-                        $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                    )->where(
-                        function (Builder $query) use ($startDay, $endDay) {
-                            $this->addTimeRangeCondition($startDay, $endDay, $query);
-                        }
-                    )
-                    ->where(
-                        function ($query) use ($accountId, $adgainerId) {
-                            if ($accountId !== null) {
-                                $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                            } else {
-                                $query->where('repo_yss_prefecture_report_cost.account_id', '=', $adgainerId);
-                            }
-                        }
-                    );
     }
 }

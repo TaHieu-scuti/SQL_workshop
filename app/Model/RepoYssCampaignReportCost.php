@@ -54,7 +54,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         'trackingURL',
         'campaignType',
     ];
-    
+
     /**
      * @param string $column
      * @param string $accountStatus
@@ -126,30 +126,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+        $arrayCalculate = $this->getAggregated($fieldNames);
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
@@ -198,7 +176,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
@@ -291,7 +268,9 @@ class RepoYssCampaignReportCost extends AbstractReportModel
 
         $arrCampaigns['all'] = 'All Campaigns';
 
-        $campaigns = self::select('campaignID', 'campaignName')->where('account_id', '=', Auth::user()->account_id)->get();
+        $campaigns = self::select('campaignID', 'campaignName')
+            ->where('account_id', '=', Auth::user()->account_id)
+            ->get();
 
         if ($campaigns) {
             foreach ($campaigns as $key => $campaign) {

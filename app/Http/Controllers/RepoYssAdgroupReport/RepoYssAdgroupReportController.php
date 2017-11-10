@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\RepoYssAdgroupReport;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdgroupReportCost;
+use App\Model\RepoYssPrefectureReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
-use DateTime;
 use Exception;
 
 class RepoYssAdgroupReportController extends AbstractReportController
@@ -144,6 +143,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
+
+        if ($request->specificItem === 'prefecture') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         $reports = $this->getDataForTable();
 
         $totalDataArray = $this->getCalculatedData();

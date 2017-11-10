@@ -116,30 +116,9 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
-        $arrayCalculate = [];
-        $tableName = $this->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'format(trim(ROUND('.'AVG(' . $fieldName . '),2'.'))+0, 2) AS ' . $fieldName
-                );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'format(trim(ROUND(SUM(' . $fieldName . '), 2))+0, 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('format(SUM(' . $fieldName . '), 0) AS ' . $fieldName);
-                }
-            }
-        }
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+        $arrayCalculate = $this->getAggregated($fieldNames);
+
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
@@ -151,8 +130,15 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function (Builder $query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId
+                        );
                     }
                 );
         // get aggregated value
@@ -183,7 +169,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-    
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
@@ -212,7 +197,14 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     )
                     ->where(
                         function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                            $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                            $this->addQueryConditions(
+                                $query,
+                                $adgainerId,
+                                $accountId,
+                                $campaignId,
+                                $adGroupId,
+                                $adReportId
+                            );
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
