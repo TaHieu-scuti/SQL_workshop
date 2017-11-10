@@ -200,7 +200,14 @@ class RepoYssKeywordReportCost extends AbstractReportModel
                     )
                     ->where(
                         function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $keywordId) {
-                            $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $keywordId);
+                            $this->addQueryConditions(
+                                $query,
+                                $adgainerId,
+                                $accountId,
+                                $campaignId,
+                                $adGroupId,
+                                $keywordId
+                            );
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -261,9 +268,16 @@ class RepoYssKeywordReportCost extends AbstractReportModel
 
         $arrKeywords['all'] = 'All Keywords';
 
-        $keywords = self::select('keywordID', 'keyword')->where(
+        $keywords = $this->select('keywordID', 'keyword')->where(
             function ($query) use ($accountId, $campaignId, $adgroupId, $keywordId) {
-                self::addQueryConditions($query, Auth::user()->account_id, $accountId, $campaignId, $adgroupId, $keywordId);
+                $this->addQueryConditions(
+                    $query,
+                    Auth::user()->account_id,
+                    $accountId,
+                    $campaignId,
+                    $adgroupId,
+                    $keywordId
+                );
             }
         )->get();
 

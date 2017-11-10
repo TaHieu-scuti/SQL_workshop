@@ -121,7 +121,14 @@ class RepoYssAdReportCost extends AbstractReportModel
                 )
                 ->where(
                     function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId
+                        );
                     }
                 )
                 ->groupBy(self::GROUPED_BY_FIELD_NAME)
@@ -214,7 +221,14 @@ class RepoYssAdReportCost extends AbstractReportModel
                 )
                 ->where(
                     function (Builder $query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId
+                        );
                     }
                 );
         // get aggregated value
@@ -254,7 +268,14 @@ class RepoYssAdReportCost extends AbstractReportModel
                     )
                     ->where(
                         function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                            $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                            $this->addQueryConditions(
+                                $query,
+                                $adgainerId,
+                                $accountId,
+                                $campaignId,
+                                $adGroupId,
+                                $adReportId
+                            );
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -315,9 +336,16 @@ class RepoYssAdReportCost extends AbstractReportModel
 
         $arrAdReports['all'] = 'All Adreports';
 
-        $adreports = self::select('adID', 'adName')->where(
+        $adreports = $this->select('adID', 'adName')->where(
             function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId) {
-                self::addQueryConditions($query, Auth::user()->account_id, $accountId, $campaignId, $adGroupId, $adReportId);
+                $this->addQueryConditions(
+                    $query,
+                    Auth::user()->account_id,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId
+                );
             }
         )->get();
 

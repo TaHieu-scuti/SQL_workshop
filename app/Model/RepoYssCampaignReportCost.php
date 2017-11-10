@@ -381,7 +381,9 @@ class RepoYssCampaignReportCost extends AbstractReportModel
 
         $arrCampaigns['all'] = 'All Campaigns';
 
-        $campaigns = self::select('campaignID', 'campaignName')->where('account_id', '=', Auth::user()->account_id)->get();
+        $campaigns = self::select('campaignID', 'campaignName')
+            ->where('account_id', '=', Auth::user()->account_id)
+            ->get();
 
         if ($campaigns) {
             foreach ($campaigns as $key => $campaign) {

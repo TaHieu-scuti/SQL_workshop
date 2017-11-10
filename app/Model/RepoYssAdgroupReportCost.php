@@ -93,7 +93,14 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 )
                 ->where(
                     function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId
+                        );
                     }
                 )
                 ->groupBy($groupedByField)
@@ -189,7 +196,14 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 )
                 ->where(
                     function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId
+                        );
                     }
                 );
         // get aggregated value
@@ -248,7 +262,14 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     )
                     ->where(
                         function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                            $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                            $this->addQueryConditions(
+                                $query,
+                                $adgainerId,
+                                $accountId,
+                                $campaignId,
+                                $adGroupId,
+                                $adReportId
+                            );
                         }
                     );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {

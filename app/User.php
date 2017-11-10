@@ -83,7 +83,12 @@ class User extends Authenticatable
             case 'AdReport':
                 $model = new \App\Model\RepoYssAdReportCost;
                 $array[] = $title;
-                $array[] = $model->getAllAdReport(session('accountID'), session('campainID'), session('adgroupId'), session('adReportId'));
+                $array[] = $model->getAllAdReport(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('adReportId')
+                );
                 if (session('adReportId') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -93,7 +98,12 @@ class User extends Authenticatable
             case 'KeyWord':
                 $model = new \App\Model\RepoYssKeywordReportCost;
                 $array[] = $title;
-                $array[] = $model->getAllKeyword(session('accountID'), session('campainID'), session('adgroupId'), session('KeywordID'));
+                $array[] = $model->getAllKeyword(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('KeywordID')
+                );
                 if (session('KeywordID') === null) {
                     $array['flag'] = 'all';
                 } else {
