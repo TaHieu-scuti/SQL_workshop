@@ -66,7 +66,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
 
             $fieldNames = array_keys($this->exportData->first()->getAttributes());
             foreach ($fieldNames as $key => $fieldName) {
-                $fieldNames[$key] =  @trans('language.' . str_slug($fieldName, '_'));
+                $fieldNames[$key] =  __('language.' . str_slug($fieldName, '_'));
             }
             $writer->addRow($fieldNames);
             $collections = $this->exportData->chunk(1000);
