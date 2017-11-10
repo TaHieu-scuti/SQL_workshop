@@ -85,12 +85,15 @@ class NativePHPCsvExporter implements CSVExporterInterface
         // get fields' names
         $fieldNames = array_keys($this->exportData->first()->getAttributes());
         foreach ($fieldNames as $key => $fieldName) {
+            unset($fieldNames[1]);
             $fieldNames[$key] = __('language.' .str_slug($fieldName,'_'));
         }
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
-                $this->writeLine($value->toArray());
+                $arrayValue = $value->toArray();
+                unset($arrayValue['accountid']);
+                $this->writeLine($arrayValue);
             }
         );
         if (rewind($this->fileHandle) === false) {

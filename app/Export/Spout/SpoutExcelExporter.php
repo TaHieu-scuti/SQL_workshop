@@ -66,13 +66,16 @@ class SpoutExcelExporter implements ExcelExporterInterface
 
             $fieldNames = array_keys($this->exportData->first()->getAttributes());
             foreach ($fieldNames as $key => $fieldName) {
+                unset($fieldNames[1]);
                 $fieldNames[$key] =  __('language.' . str_slug($fieldName, '_'));
             }
             $writer->addRow($fieldNames);
             $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
-                    $writer->addRow($value->toArray());
+                    $arrayValue = $value->toArray();
+                    unset($arrayValue['accountid']);
+                    $writer->addRow($arrayValue);
                 }
             }
 
