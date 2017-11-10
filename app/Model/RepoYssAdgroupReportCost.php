@@ -51,72 +51,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         'trackingURL',
     ];
 
-    private $groupByFieldName = [
-        'device',
-        'hourofday',
-        'dayOfWeek',
-        'prefecture',
-    ];
-
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return string[]
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData =  $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions(
-                            $query,
-                            $adgainerId,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId
-                        );
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
-        if (!in_array($groupedByField, $this->groupByFieldName)) {
-            $paginatedData = $paginatedData->groupBy('adgroupID');
-        }
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
-    }
-
     /**
      * @param string $column
      * @param string $accountStatus
@@ -184,6 +118,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $arrayCalculate = $this->getAggregated($fieldNames);
+
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }

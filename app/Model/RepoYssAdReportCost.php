@@ -17,6 +17,7 @@ class RepoYssAdReportCost extends AbstractReportModel
     // constant
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adName';
+    const PAGE_ID = 'adId';
 
     /** @var bool */
     public $timestamps = false;
@@ -52,95 +53,6 @@ class RepoYssAdReportCost extends AbstractReportModel
         'trackingURL',
         'campaignType',
     ];
-
-    /**
-     * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-        $arrayCalculate = [];
-
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND( SUM(' . $fieldName . '), 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return string[]
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData = self::select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions(
-                            $query,
-                            $adgainerId,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId
-                        );
-                    }
-                )
-                ->groupBy(self::GROUPED_BY_FIELD_NAME)
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
-    }
 
     /**
      * @param string $column

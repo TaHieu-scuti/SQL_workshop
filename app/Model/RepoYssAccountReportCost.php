@@ -16,6 +16,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
     const GROUPED_BY_FIELD_NAME = 'accountName';
+    const PAGE_ID = 'accountid';
 
     /** @var bool */
     public $timestamps = false;
@@ -45,134 +46,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
-
-    /**
-     * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-
-        $joinTableName = (new RepoYssAccount)->getTable();
-        if ($fieldNames[0] === 'prefecture') {
-            $tableName = 'repo_yss_prefecture_report_cost';
-        }
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
-            ) {
-                if (($keyID = array_search('accountid', $fieldNames)) !== false) {
-                    unset($fieldNames[$keyID]);
-                }
-            }
-        }
-
-        $arrayCalculate = [];
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME
-                || $fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
-            ) {
-                $arrayCalculate[] = $fieldName;
-                continue;
-            }
-            if ($fieldName === 'accountid') {
-                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
-                );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName . '.' . $fieldName . ' ) AS ' . $fieldName
-                    );
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $tableName = $this->getTable();
-        $joinTableName = (new RepoYssAccount)->getTable();
-        $arrayCalculate = $this->getAggregated($fieldNames);
-
-        $paginatedData  = self::select($arrayCalculate)
-                ->join(
-                    $joinTableName,
-                    $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                    '=',
-                    $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                )
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function ($query) use ($accountId, $adgainerId) {
-                        if ($accountId !== null) {
-                            $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                        } else {
-                            $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
-                        }
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
-
-        if (!in_array($groupedByField, $this->groupByFieldName)) {
-            $paginatedData = $paginatedData->groupBy('repo_yss_accounts.accountid');
-        }
-
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
-    }
 
     /**
      * @param string $column
@@ -291,7 +164,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             return $arrayCalculate;
         }
 
-        $data = self::select($arrayCalculate)
+        $data = $this->select($arrayCalculate)
                         ->join(
                             $joinTableName,
                             $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
