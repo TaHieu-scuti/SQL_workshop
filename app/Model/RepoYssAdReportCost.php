@@ -55,58 +55,6 @@ class RepoYssAdReportCost extends AbstractReportModel
 
     /**
      * @param string[] $fieldNames
-     * @return Expression[]
-     */
-    protected function getAggregated(array $fieldNames)
-    {
-        $tableName = $this->getTable();
-        $arrayCalculate = [];
-
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME) {
-                $arrayCalculate[] = self::GROUPED_BY_FIELD_NAME;
-                continue;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
-                $arrayCalculate[] = DB::raw('ROUND(AVG(' . $fieldName . '), 2) AS ' . $fieldName);
-            } else {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                    ->getType()
-                    ->getName()
-                    === self::FIELD_TYPE) {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND( SUM(' . $fieldName . '), 2) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
-                }
-            }
-        }
-
-        return $arrayCalculate;
-    }
-
-    public function addQueryConditions(Builder $query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId)
-    {
-        if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where('accountid' , '=', $accountId);
-        }
-        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
-            $query->where('campaignID' , '=', $campaignId);
-        }
-        if ($adGroupId !== null && $adReportId === null) {
-            $query->where('adgroupID' , '=', $adGroupId);
-        }
-        if ($adReportId !== null) {
-            $query->where('adID' , '=', $adReportId);
-        }
-        if($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-             $query->where('account_id' , '=', $adgainerId);
-        }
-    }
-
-    /**
-     * @param string[] $fieldNames
      * @param string   $accountStatus
      * @param string   $startDay
      * @param string   $endDay

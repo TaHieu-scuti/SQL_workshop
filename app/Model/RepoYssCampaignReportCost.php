@@ -64,7 +64,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $arrayCalculate = [];
 
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME
+            if ( $fieldName === self::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
@@ -90,60 +90,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         }
 
         return $arrayCalculate;
-    }
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return string[]
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData = $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
-                        if ($campaignId !== null) {
-                            $query->where('campaignID', '=', $campaignId);
-                        } elseif ($campaignId === null && $accountId !== null) {
-                            $query->where('accountid', '=', $accountId);
-                        } elseif ($campaignId === null && $accountId === null) {
-                            $query->where('account_id', '=', $adgainerId);
-                        }
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
     }
 
     /**

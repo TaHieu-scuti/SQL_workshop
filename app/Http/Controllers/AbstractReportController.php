@@ -278,16 +278,12 @@ abstract class AbstractReportController extends Controller
         }
 
         // get status if available
-        if ($request->status === "all") {
-            $this->updateSessionStatus('all');
-        } elseif ($request->status !== null) {
+        if ($request->status !== null) {
             $this->updateSessionStatus($request->status);
         }
 
         // get statusTitle if available
-        if ($request->statusTitle === "all") {
-            $this->updateSessionStatusTitle('all');
-        } elseif ($request->statusTitle !== null) {
+        if ($request->statusTitle !== null) {
             $this->updateSessionStatusTitle($request->statusTitle);
         }
 

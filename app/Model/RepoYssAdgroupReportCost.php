@@ -50,71 +50,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         'trackingURL',
     ];
 
-    public function addQueryConditions(Builder $query, $adgainerId, $accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
-    {
-        if ($accountId !== null && is_numeric($accountId)) {
-            $query->where('accountid', '=', intval($accountId));
-        }
-        if ($campaignId !== null && is_numeric($campaignId)) {
-            $query->where('campaignID', '=', intval($campaignId));
-        }
-        if ($adGroupId !== null && is_numeric($adGroupId)) {
-            $query->where('adgroupID', '=', intval($adGroupId));
-        }
-        if ($adgainerId !== null && is_numeric($adgainerId) && $accountId === null && $campaignId === null){
-            $query->where('account_id', '=', intval($adgainerId));
-        }
-    }
-
-    /**
-     * @param string[] $fieldNames
-     * @param string   $accountStatus
-     * @param string   $startDay
-     * @param string   $endDay
-     * @param int      $pagination
-     * @param string   $columnSort
-     * @param string   $sort
-     * @return string[]
-     */
-    public function getDataForTable(
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $pagination,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $paginatedData =  $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )
-                ->where(
-                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                        $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
-                    }
-                )
-                ->groupBy($groupedByField)
-                ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
-    }
-
     /**
      * @param string $column
      * @param string $accountStatus
@@ -214,7 +149,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
+                    function (Builder $query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
                         $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
                     }
                 );
