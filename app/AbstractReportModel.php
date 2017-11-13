@@ -109,7 +109,7 @@ abstract class AbstractReportModel extends Model
                 }
             }
         }
-        // dd($arrayCalculate);
+
         return $arrayCalculate;
     }
 
