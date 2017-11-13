@@ -64,7 +64,7 @@ abstract class AbstractReportModel extends Model
     {
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        if ($fieldNames[0] === 'prefecture') {
+        if (isset($fieldNames[0]) && $fieldNames[0] === 'prefecture') {
             $tableName = 'repo_yss_prefecture_report_cost';
         }
         foreach ($fieldNames as $fieldName) {
@@ -81,7 +81,7 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::GROUPED_BY_FIELD_NAME
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME
                 || $fieldName === 'device'
                 || $fieldName === 'hourofday'
                 || $fieldName === "dayOfWeek"
@@ -90,14 +90,11 @@ abstract class AbstractReportModel extends Model
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
-            if ($fieldName === 'accountid') {
-                $arrayCalculate[] = $joinTableName.'.'.$fieldName;
-            }
-            if (in_array($fieldName, $this->averageFieldArray)) {
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                 );
-            } elseif (!in_array($fieldName, $this->emptyCalculateFieldArray)) {
+            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
@@ -112,7 +109,7 @@ abstract class AbstractReportModel extends Model
                 }
             }
         }
-
+        // dd($arrayCalculate);
         return $arrayCalculate;
     }
 
@@ -324,35 +321,6 @@ abstract class AbstractReportModel extends Model
         }
 
         return $columns;
-    }
-
-    protected function addQueryConditions(
-        Builder $query,
-        $adgainerId,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.accountid', '=', $accountId);
-        }
-        if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.campaignID', '=', $campaignId);
-        }
-        if ($adGroupId !== null && $adReportId === null) {
-            $query->where($this->getTable().'.adgroupID', '=', $adGroupId);
-        }
-        if ($adReportId !== null) {
-            $query->where($this->getTable().'.adID', '=', $adReportId);
-        }
-        if ($keywordId !== null) {
-            $query->where($this->getTable().'.keywordID', '=', $keywordId);
-        }
-        if ($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-             $query->where($this->getTable().'.account_id', '=', $adgainerId);
-        }
     }
 
     /**

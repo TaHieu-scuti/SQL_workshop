@@ -156,7 +156,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     ) {
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
-
         $arrayCalculate = $this->getAggregated($fieldNames);
 
         $joinTableName = (new RepoYssAccount)->getTable();
@@ -260,5 +259,67 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $data = $data->toArray();
         }
         return $data;
+    }
+
+    public function getDataForTable(
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $pagination,
+        $columnSort,
+        $sort,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $aggregations = $this->getAggregated($fieldNames);
+        $joinTableName = (new RepoYssAccount)->getTable();
+        $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
+            ->join(
+                $joinTableName,
+                $this->getTable(). '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                '=',
+                $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+            )
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            )
+            ->groupBy($groupedByField)
+            ->orderBy($columnSort, $sort);
+
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                            ->paginate($pagination);
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $paginatedData = $paginatedData->paginate($pagination);
+        }
+
+        return $paginatedData;
     }
 }
