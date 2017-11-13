@@ -426,6 +426,17 @@ abstract class AbstractReportModel extends Model
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
+            ->where(
+                function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
+                    if ($campaignId !== null) {
+                        $query->where('campaignID', '=', $campaignId);
+                    } elseif ($campaignId === null && $accountId !== null) {
+                        $query->where('accountid', '=', $accountId);
+                    } elseif ($campaignId === null && $accountId === null) {
+                        $query->where('account_id', '=', $adgainerId);
+                    }
+                }
+            )
             ->groupBy('day')
             ->get();
     }

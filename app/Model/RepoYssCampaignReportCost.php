@@ -25,64 +25,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     protected $table = 'repo_yss_campaign_report_cost';
 
     /**
-     * @param string $column
-     * @param string $accountStatus
-     * @param string $startDay
-     * @param string $endDay
-     * @return \Illuminate\Support\Collection
-     */
-    public function getDataForGraph(
-        $column,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        try {
-            new DateTime($startDay); //NOSONAR
-            new DateTime($endDay); //NOSONAR
-        } catch (Exception $exception) {
-            throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
-        }
-
-        $data = $this->select(
-            DB::raw('SUM('.$column.') as data'),
-            DB::raw(
-                'DATE(day) as day'
-            )
-        )
-        ->where(
-            function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
-            }
-        )
-        ->where(
-            function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
-                if ($campaignId !== null) {
-                    $query->where('campaignID', '=', $campaignId);
-                } elseif ($campaignId === null && $accountId !== null) {
-                    $query->where('accountid', '=', $accountId);
-                } elseif ($campaignId === null && $accountId === null) {
-                    $query->where('account_id', '=', $adgainerId);
-                }
-            }
-        )
-        ->groupBy('day');
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->get();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->get();
-        }
-        return $data;
-    }
-
-    /**
      * @param string $keywords
      * @return string[]
      */
