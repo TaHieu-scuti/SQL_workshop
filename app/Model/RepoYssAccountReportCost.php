@@ -220,7 +220,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $tableName = $this->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
-        DB::connection()->enableQueryLog();
         $data = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
@@ -247,7 +246,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $data = $data->first();
         }
-        // dd(DB::getQueryLog());
         if ($data === null) {
             $data = [
                 'clicks' => 0,
