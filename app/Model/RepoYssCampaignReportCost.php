@@ -24,37 +24,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     /** @var string */
     protected $table = 'repo_yss_campaign_report_cost';
 
-    /** @var array */
-    private $averageFieldArray = [
-        'averageCpc',
-        'averagePosition',
-        'impressionShare',
-        'exactMatchImpressionShare',
-        'budgetLostImpressionShare',
-        'qualityLostImpressionShare',
-        'conversions',
-        'convRate',
-        'convValue',
-        'costPerConv',
-        'valuePerConv',
-        'mobileBidAdj',
-        'desktopBidAdj',
-        'tabletBidAdj'
-    ];
-
-        /** @var array */
-    private $emptyCalculateFieldArray = [
-        'quarter',
-        'week',
-        'network',
-        'device',
-        'day',
-        'dayOfWeek',
-        'month',
-        'trackingURL',
-        'campaignType',
-    ];
-
     /**
      * @param string $column
      * @param string $accountStatus
