@@ -218,7 +218,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $tableName = $this->getTable();
-
         $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
         $data = self::select($arrayCalculate)

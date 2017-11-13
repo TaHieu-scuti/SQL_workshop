@@ -396,7 +396,6 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
-            session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(static::SESSION_KEY_ACCOUNT_ID),
             $this->adgainerId,
             session(static::SESSION_KEY_CAMPAIGNID),
