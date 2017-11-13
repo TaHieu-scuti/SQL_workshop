@@ -82,56 +82,6 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         return $data;
     }
 
-    public function calculateData(
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $groupedByField,
-        $accountId = null,
-        $adgainerId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        if (empty($arrayCalculate)) {
-            return $arrayCalculate;
-        }
-
-        $data = $this->select($arrayCalculate)
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )->where(
-                    function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
-                        if ($campaignId !== null) {
-                            $query->where('campaignID', '=', $campaignId);
-                        } elseif ($campaignId === null && $accountId !== null) {
-                            $query->where('accountid', '=', $accountId);
-                        } elseif ($campaignId === null && $accountId === null) {
-                            $query->where('account_id', '=', $adgainerId);
-                        }
-                    }
-                );
-        // get aggregated value
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->first();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->first();
-        }
-        if ($data === null) {
-            $data = [];
-        } else {
-            $data = $data->toArray();
-        }
-        return $data;
-    }
-
     /**
      * @param string $keywords
      * @return string[]
