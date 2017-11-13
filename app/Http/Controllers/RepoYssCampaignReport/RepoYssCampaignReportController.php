@@ -49,9 +49,9 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
+        'impressions',
         'clicks',
         'cost',
-        'impressions',
         'ctr',
         'averageCpc',
         'averagePosition'
