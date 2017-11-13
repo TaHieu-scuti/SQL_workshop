@@ -427,14 +427,23 @@ abstract class AbstractReportModel extends Model
                 }
             )
             ->where(
-                function (Builder $query) use ($accountId, $adgainerId, $campaignId) {
-                    if ($campaignId !== null) {
-                        $query->where('campaignID', '=', $campaignId);
-                    } elseif ($campaignId === null && $accountId !== null) {
-                        $query->where('accountid', '=', $accountId);
-                    } elseif ($campaignId === null && $accountId === null) {
-                        $query->where('account_id', '=', $adgainerId);
-                    }
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
                 }
             )
             ->groupBy('day')
