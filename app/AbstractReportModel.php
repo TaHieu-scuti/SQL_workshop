@@ -376,8 +376,7 @@ abstract class AbstractReportModel extends Model
                 }
             )
             ->groupBy($groupedByField)
-            ->orderBy($columnSort, $sort)
-            ->paginate($pagination);
+            ->orderBy($columnSort, $sort);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
