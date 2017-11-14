@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RepoAdwDisplayKeywordReportCost extends Model
 {
-    protected $table = "repo_adw_campaign_report_cost";
+    protected $table = "repo_adw_display_keyword_report_cost";
 
     /** @var boolean **/
     public $timestamp = false;
