@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\RepoYssAdReport;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Routing\ResponseFactory;
+
+use App\Model\RepoYssPrefectureReportCost;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdReportCost;
-
-use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Exception;
 
@@ -46,9 +47,9 @@ class RepoYssAdReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
+        'impressions',
         'clicks',
         'cost',
-        'impressions',
         'ctr',
         'averageCpc',
         'averagePosition'
@@ -137,8 +138,12 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $this->updateSessionData($request);
-        $reports = $this->getDataForTable();
 
+        if ($request->specificItem === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
+        $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RepoYssAccountReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAccountReportCost;
+use App\Model\RepoYssPrefectureReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index()
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD,  self::MEDIA_ID);
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
@@ -125,6 +126,12 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
+
+        if ($request->specificItem === 'prefecture') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();

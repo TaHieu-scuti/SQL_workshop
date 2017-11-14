@@ -43,20 +43,30 @@ class NativePHPCsvExporter implements CSVExporterInterface
     }
 
     /**
+     * @throws CsvException
+     */
+    private function writeBOM()
+    {
+        $bytesWritten = fputs($this->fileHandle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        if ($bytesWritten === false) {
+            throw new CsvException('Failed to write Byte Order Mark!');
+        }
+
+        $this->fileSize += $bytesWritten;
+    }
+
+    /**
      * @param array $data
      * @throws CsvException
      */
     private function writeLine(array $data)
     {
-
-        fputs($this->fileHandle, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
         $bytesWritten = fputcsv($this->fileHandle, $data);
         if ($bytesWritten === false) {
             throw new CsvException('Failed to write line to csv!');
         }
 
         $this->fileSize += $bytesWritten;
-
     }
 
     /**
@@ -79,20 +89,18 @@ class NativePHPCsvExporter implements CSVExporterInterface
             throw new CsvException('Unable to open temporary file!');
         }
 
+        $this->writeBOM();
+
         // get fields' names
         $fieldNames = array_keys($this->exportData->first()->getAttributes());
-        foreach ($fieldNames as $key => $fieldName) {
-            unset($fieldNames[1]);
-            $fieldNames[$key] = __('language.' .str_slug($fieldName,'_'));
-        }
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
                 $arrayValue = $value->toArray();
-                unset($arrayValue['accountid']);
                 $this->writeLine($arrayValue);
             }
         );
+
         if (rewind($this->fileHandle) === false) {
             throw new CsvException('Unable to rewind file handle!');
         }
@@ -105,6 +113,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         if (fclose($this->fileHandle) === false) {
             throw new CsvException('Unable to close file handle!');
         }
+
         return $csvData;
     }
 }

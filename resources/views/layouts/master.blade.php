@@ -42,8 +42,8 @@
             <div class="top-nav ">
                 <ul class="nav pull-right top-menu">
                     <!-- user login dropdown start-->
-                    <li><a href="{{URL::asset('')}}account_report/language/en"><img src="/images/english.png"></a></li>
-                    <li><a href="{{URL::asset('')}}account_report/language/ja"><img src="/images/jp.png"></a></li>
+                    <li><a href="{{URL::asset('')}}language/en"><img src="/images/english.png"></a></li>
+                    <li><a href="{{URL::asset('')}}language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span id="username" class="username" value="{{ Auth::user()->username }}">
@@ -68,7 +68,11 @@
                 <div class="row breadcrumb-list">
                     <div class="col-md-12">
                     <!--breadcrumbs start -->
-                    {!! Breadcrumbs::render() !!}
+                    @if (Route::current()->getName() === 'ad-report' || Route::current()->getName() === 'keyword-report')
+                        {!! Breadcrumbs::render('adgroup-report') !!}
+                    @else
+                        {!! Breadcrumbs::render() !!}
+                    @endif
                     <!--breadcrumbs end -->
                     </div>
                 </div>

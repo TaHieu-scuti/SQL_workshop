@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RepoYssKeywordReport;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssKeywordReportCost;
 
+use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
@@ -47,9 +48,9 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
+        'impressions',
         'clicks',
         'cost',
-        'impressions',
         'ctr',
         'averageCpc',
         'averagePosition'
@@ -102,6 +103,11 @@ class RepoYssKeywordReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $this->updateSessionData($request);
+
+        if ($request->specificItem === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();

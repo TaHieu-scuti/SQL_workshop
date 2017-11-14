@@ -86,7 +86,6 @@ class SpoutExcelExporter implements ExcelExporterInterface
                 throw new SpoutException('Unable to read the temporary file!');
             }
             return $excelData;
-
         } catch (SpoutException $exception) {
             throw $exception;
         } catch (Exception $exception) {

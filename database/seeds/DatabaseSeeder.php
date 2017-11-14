@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYssKeywordReportConvTable::class);
         $this->call(PhoneTimeUseTable::class);
         $this->call(RepoYssPrefectureReportCostTable::class);
+        $this->call(RepoAdwAccountReportCostTable::class);
     }
 }
