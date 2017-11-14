@@ -303,7 +303,7 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
                     ->nullable()
                     ->comment('年はyyyyの形式です。')
                     ->index('repo_adw_campaign_report_cost17');
-            $table->bigInteger('accountId')
+            $table->bigInteger('accountid')
                     ->comment('media Id');
             $table->
         });
