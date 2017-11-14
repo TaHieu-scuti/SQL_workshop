@@ -2,7 +2,6 @@
 
 namespace App\Export\Native;
 
-use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
 use Illuminate\Database\Eloquent\Collection;

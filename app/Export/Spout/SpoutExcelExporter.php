@@ -2,7 +2,6 @@
 
 namespace App\Export\Spout;
 
-use App\AbstractReportModel;
 use App\Export\ExcelExporterInterface;
 
 use Box\Spout\Common\Type;
