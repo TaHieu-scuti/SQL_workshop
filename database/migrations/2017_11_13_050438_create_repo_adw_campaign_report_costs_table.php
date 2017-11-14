@@ -305,7 +305,6 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
                     ->index('repo_adw_campaign_report_cost17');
             $table->bigInteger('accountid')
                     ->comment('media Id');
-            $table->
         });
     }
 
