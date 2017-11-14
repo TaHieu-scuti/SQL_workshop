@@ -338,7 +338,7 @@ class CreateRepoAdwDisplayKeywordReportCostsTable extends Migration
                     ->nullable()
                     ->comment('yyyy-MM-年はyyyyの形式です。')
                     ->index('repo_adw_display_keyword_report_cost16');
-            $table->bigInteger('accountId')
+            $table->bigInteger('accountid')
                     ->comment('media Id');
         });
     }
