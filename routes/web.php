@@ -215,7 +215,7 @@ Route::prefix('keyword-report')->group(function () {
     );
 });
 
-Route::get('account_report/language/{locale}', function($locale) {
+Route::get('language/{locale}', function($locale) {
     Session::put('locale',$locale);
     return redirect()->back();
 });
