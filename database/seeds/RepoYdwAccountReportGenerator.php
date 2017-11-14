@@ -22,9 +22,9 @@ class RepoYdwAccountReportGenerator extends Seeder
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
     const MIN_COST = 1;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS = 1;
     const MAX_IMPRESSIONS = 4096;
-    const MIN_CLICKS = 0;
+    const MIN_CLICKS = 1;
     const MAX_CLICKS = 9001;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
@@ -93,7 +93,7 @@ class RepoYdwAccountReportGenerator extends Seeder
             self::MAX_CLICKS
         );
 
-        $costReport->avgCPC = $costReport->cost / $costReport->clicks
+        $costReport->avgCPC = $costReport->cost / $costReport->clicks;
 
         $costReport->avgPosition = mt_rand(
                 self::MIN_AVERAGE_POSITION,
