@@ -65,17 +65,12 @@ class SpoutExcelExporter implements ExcelExporterInterface
                 ->openToFile($tempFileName);
 
             $fieldNames = array_keys($this->exportData->first()->getAttributes());
-            foreach ($fieldNames as $key => $fieldName) {
-                unset($fieldNames[1]);
-                $fieldNames[$key] =  __('language.' . str_slug($fieldName, '_'));
-            }
             $writer->addRow($fieldNames);
+
             $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
-                    $arrayValue = $value->toArray();
-                    unset($arrayValue['accountid']);
-                    $writer->addRow($arrayValue);
+                    $writer->addRow($value->toArray());
                 }
             }
 
@@ -85,6 +80,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
             if ($excelData === false) {
                 throw new SpoutException('Unable to read the temporary file!');
             }
+
             return $excelData;
         } catch (SpoutException $exception) {
             throw $exception;
