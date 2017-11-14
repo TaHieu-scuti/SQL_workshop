@@ -169,6 +169,7 @@ class RepoAdwKeywordReportCost extends Migration
             $table->bigInteger('verticalID')->nullable()->comment('垂直のID。');
             $table->date('week')->nullable()->comment('yyyy-MM-ddの形式の月曜日の日付。');
             $table->integer('year')->nullable()->comment('年はyyyyの形式です。');
+            $table->bigInteger('accountid')->comment('media id');
 
             $table->unique('id','id_UNIQUE');
             $table->index('exeDate','repo_adw_keywords_report_cost1');
