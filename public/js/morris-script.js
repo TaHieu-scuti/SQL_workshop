@@ -246,8 +246,8 @@ var Script = function () {
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
             processRequestBreadcrumbs(url, requestId);
-
         });
+
         function processRequestBreadcrumbs(url, requestId) {
             switch (url) {
                 case 'account_report' :
@@ -275,7 +275,7 @@ var Script = function () {
                     obj['id_adgroup'] = requestId;
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
-                    sendRequestData(obj, url, 'ad-report');
+                    sendRequestData(obj, url, 'adgroup-report');
                     break;
                 case 'ad-report' :
                     var obj = new Object();
