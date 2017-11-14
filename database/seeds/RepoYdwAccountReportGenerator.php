@@ -26,41 +26,12 @@ class RepoYdwAccountReportGenerator extends Seeder
     const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
     const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 89489437437880;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
-    const MIN_IMPRESSION_SHARE = 1000000;
-    const MAX_IMPRESSION_SHARE = 89489437437880;
-    const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
-    const MAX_EXACT_MATCH_IMPRESSION_SHARE = 89489437437880;
-    const MIN_BUDGET_LOST_IMPRESSION_SHARE = 1000000;
-    const MAX_BUDGET_LOST_IMPRESSION_SHARE = 89489437437880;
-    const MIN_QUALITY_LOST_IMPRESSION_SHARE = 1000000;
-    const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
-    const TRACKING_URL = 'http://we.track.people/';
     const MIN_CONVERSIONS = 1000000;
     const MAX_CONVERSIONS = 89489437437880;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
-    const MIN_COST_PER_CONV = 1000000;
-    const MAX_COST_PER_CONV = 89489437437880;
-    const MIN_VALUE_PER_CONV = 1000000;
-    const MAX_VALUE_PER_CONV = 89489437437880;
-    const MIN_ALL_CONV = 1000000;
-    const MAX_ALL_CONV = 89489437437880;
-    const MIN_ALL_CONV_RATE = 1000000;
-    const MAX_ALL_CONV_RATE = 89489437437880;
-    const MIN_ALL_CONV_VALUE = 1000000;
-    const MAX_ALL_CONV_VALUE = 89489437437880;
-    const MIN_COST_PER_ALL_CONV = 1000000;
-    const MAX_COST_PER_ALL_CONV = 89489437437880;
-    const MIN_VALUE_PER_ALL_CONV = 1000000;
-    const MAX_VALUE_PER_ALL_CONV = 89489437437880;
     const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
 
@@ -117,32 +88,29 @@ class RepoYdwAccountReportGenerator extends Seeder
             self::MAX_COST
         );
 
-        $costReport->avgCPC = mt_rand(
-                self::MIN_AVERAGE_CPC,
-                self::MAX_AVERAGE_CPC
-            ) / mt_getrandmax();
+        $costReport->clicks = mt_rand(
+            self::MIN_CLICKS,
+            self::MAX_CLICKS
+        );
+
+        $costReport->avgCPC = $costReport->cost / $costReport->clicks
 
         $costReport->avgPosition = mt_rand(
                 self::MIN_AVERAGE_POSITION,
                 self::MAX_AVERAGE_POSITION
             ) / mt_getrandmax();
 
-        $costReport->clicks = mt_rand(
-            self::MIN_CLICKS,
-            self::MAX_CLICKS
-        );
-
         $costReport->conversions = mt_rand(
                 self::MIN_CONVERSIONS,
                 self::MAX_CONVERSIONS
             ) / mt_getrandmax();
 
-        $costReport->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
-
         $costReport->impressions = mt_rand(
             self::MIN_IMPRESSIONS,
             self::MAX_IMPRESSIONS
         );
+
+        $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
 
         $costReport->valueConv = mt_rand(
                 self::MIN_CONV_VALUE,
