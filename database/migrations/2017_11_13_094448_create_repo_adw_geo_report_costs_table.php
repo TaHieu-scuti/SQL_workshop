@@ -76,6 +76,7 @@ class CreateRepoAdwGeoReportCostsTable extends Migration
             $table->bigInteger('viewThroughConv')->nullable()->comment('ビュースルーコンバージョンの合計数。これは、ディスプレイネットワーク広告が表示された後、後で他の広告とやり取り（クリックなど）せずにサイトのコンバージョンを達成した場合に発生します。このフィールドは、米国のロケールを使用してフォーマットされています。つまり、3桁区切り「,」、小数点区切りは「.」を使用しています。');
             $table->date('week')->nullable()->comment('yyyy-MM-ddの形式の月曜日の日付。');
             $table->integer('year')->nullable()->comment('年はyyyyの形式です。');
+            $table->bigInteger('accountid')->comment('media id');
 
             $table->unique('id', 'id_UNIQUE');
             $table->index('exeDate', 'repo_adw_geo_report_cost1');

@@ -102,6 +102,7 @@ class CreateRepoAdwAdgroupReportCostsTable extends Migration
             $table->double('valueConvCurrentModel')->nullable()->comment('現在選択しているアトリビューションモデルで、過去の「ValuePerConversion」データがどのように表示されるかを示します。このフィールドは、このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
             $table->date('week')->nullable()->comment('yyyy-MM-ddの形式の月曜日の日付。');
             $table->integer('year')->nullable()->comment('年はyyyyの形式です。');
+            $table->bigInteger('accountid')->comment('media id');
 
             $table->unique('id', 'id_UNIQUE');
             $table->index('exeDate', 'repo_adw_adgroup_report_cost1');
