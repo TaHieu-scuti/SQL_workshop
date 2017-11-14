@@ -13,10 +13,6 @@ use Auth;
 
 class RepoYssKeywordReportCost extends AbstractReportModel
 {
-    const FIELDS = [
-        'keywordID',
-        'keyword'
-    ];
     const PAGE_ID = "keywordID";
     const GROUPED_BY_FIELD_NAME = 'keyword';
     /** @var bool */
