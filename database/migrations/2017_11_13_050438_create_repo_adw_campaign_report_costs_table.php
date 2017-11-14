@@ -192,7 +192,7 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
             $table->double('convValueCurrentModel')
                     ->nullable()
                     ->comment('現在選択しているアトリビューションモデルで過去のConversionValueデータがどのように表示されるかを示します。');
-            $table->double('clientName')
+            $table->text('clientName')
                     ->nullable()
                     ->comment('カスタマーのわかりやすい名前。');
             $table->date('day')

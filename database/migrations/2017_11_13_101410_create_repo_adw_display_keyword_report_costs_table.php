@@ -320,12 +320,12 @@ class CreateRepoAdwDisplayKeywordReportCostsTable extends Migration
                     ->nullable()
                     ->comment('この行のメインオブジェクトのカスタムURLパラメータ。 
                                 CustomParameters要素はJSONマップ形式で返されます。');
-            $table->text('valueAllConv')
+            $table->double('valueAllConv')
                     ->nullable()
                     ->comment('すべてのコンバージョンの平均値です。
                                 このフィールドは、小数点の区切り文字としてドット（"."）
                                 でフォーマットされます（例：1000000.00）。');
-            $table->text('valueConv')
+            $table->double('valueConv')
                     ->nullable()
                     ->comment('コンバージョン数の合計をコンバージョン数で割った値。
                                 このフィールドは、小数点の区切り文字としてドット（"."）
