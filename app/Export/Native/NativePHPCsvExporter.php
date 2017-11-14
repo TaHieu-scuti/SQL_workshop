@@ -96,8 +96,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
-                $arrayValue = $value->toArray();
-                $this->writeLine($arrayValue);
+                $this->writeLine($value->toArray());
             }
         );
 
