@@ -68,7 +68,11 @@
                 <div class="row breadcrumb-list">
                     <div class="col-md-12">
                     <!--breadcrumbs start -->
-                    {!! Breadcrumbs::render() !!}
+                    @if (Route::current()->getName() === 'ad-report' || Route::current()->getName() === 'keyword-report')
+                        {!! Breadcrumbs::render('adgroup-report') !!}
+                    @else
+                        {!! Breadcrumbs::render() !!}
+                    @endif
                     <!--breadcrumbs end -->
                     </div>
                 </div>
