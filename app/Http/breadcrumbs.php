@@ -16,15 +16,3 @@ Breadcrumbs::register('adgroup-report', function ($breadcrumbs) {
     $breadcrumbs->parent('campaign-report');
     $breadcrumbs->push('AdGroup', route('adgroup-report'));
 });
-
-//Account -> Campaign -> AdGroup -> AdReport
-Breadcrumbs::register('ad-report', function ($breadcrumbs) {
-    $breadcrumbs->parent('adgroup-report');
-    $breadcrumbs->push('AdReport', route('ad-report'));
-});
-
-//Account -> Campaign -> AdGroup -> AdReport
-Breadcrumbs::register('keyword-report', function ($breadcrumbs) {
-    $breadcrumbs->parent('adgroup-report');
-    $breadcrumbs->push('KeyWord', route('keyword-report'));
-});

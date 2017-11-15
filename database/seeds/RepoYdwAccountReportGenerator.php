@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\RepoAdwAccountReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoYdwAccountReportGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
@@ -22,9 +23,9 @@ class RepoYdwAccountReportGenerator extends Seeder
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
     const MIN_COST = 1;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS = 1;
     const MAX_IMPRESSIONS = 4096;
-    const MIN_CLICKS = 0;
+    const MIN_CLICKS = 1;
     const MAX_CLICKS = 9001;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
@@ -93,17 +94,17 @@ class RepoYdwAccountReportGenerator extends Seeder
             self::MAX_CLICKS
         );
 
-        $costReport->avgCPC = $costReport->cost / $costReport->clicks
+        $costReport->avgCPC = $costReport->cost / $costReport->clicks;
 
         $costReport->avgPosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+            self::MIN_AVERAGE_POSITION,
+            self::MAX_AVERAGE_POSITION
+        ) / mt_getrandmax();
 
         $costReport->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                self::MAX_CONVERSIONS
-            ) / mt_getrandmax();
+            self::MIN_CONVERSIONS,
+            self::MAX_CONVERSIONS
+        ) / mt_getrandmax();
 
         $costReport->impressions = mt_rand(
             self::MIN_IMPRESSIONS,
@@ -113,9 +114,9 @@ class RepoYdwAccountReportGenerator extends Seeder
         $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
 
         $costReport->valueConv = mt_rand(
-                self::MIN_CONV_VALUE,
-                self::MAX_CONV_VALUE
-            ) / mt_getrandmax();
+            self::MIN_CONV_VALUE,
+            self::MAX_CONV_VALUE
+        ) / mt_getrandmax();
 
         $costReport->accountid = $mediaAccountNumber + 1;
 

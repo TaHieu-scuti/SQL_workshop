@@ -388,12 +388,12 @@ $(document).ready(function(){
 
     objectKeyword['title'] = 'Keyword';
     objectKeyword['name'] = $('select.id_KeyWord').find(':selected').attr('data-breadcumbs');
-    objectKeyword['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectKeyword['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
     array.push(objectKeyword);
 
     objectAd['title'] = 'Ad';
     objectAd['name'] = $('select.id_Ad').find(':selected').attr('data-breadcumbs');
-    objectAd['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectAd['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
     array.push(objectAd);
 
     let pageInformation = null;
@@ -405,6 +405,27 @@ $(document).ready(function(){
         }
         count--;
     }
-    $('.site-information-guess-annotation').append(pageInformation.title);
+    if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
+        if (pageInformation.title == 'Client') {
+            $('.site-information-guess-annotation').append('クライエント');
+        }
+        else if(pageInformation.title == 'Account'){
+            $('.site-information-guess-annotation').append('アカウント名');
+        }
+        else if(pageInformation.title == 'Campaign'){
+            $('.site-information-guess-annotation').append('キャンペーン');
+        }
+        else if(pageInformation.title == 'Keyword'){
+            $('.site-information-guess-annotation').append('キーワード');
+        }
+        else if(pageInformation.title == 'Adgroup'){
+            $('.site-information-guess-annotation').append('広告グループ');
+        }
+        else if(pageInformation.title == 'Ad'){
+            $('.site-information-guess-annotation').append('広告');
+        }
+    }else{
+        $('.site-information-guess-annotation').append(pageInformation.title);
+    }
     $('.site-information-guess-specified-name').append(pageInformation.value);
 })
