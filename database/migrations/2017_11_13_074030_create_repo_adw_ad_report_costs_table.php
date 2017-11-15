@@ -37,16 +37,22 @@ class CreateRepoAdwAdReportCostsTable extends Migration
                 $table->double('activeViewAvgCPM')->nullable()->comment('視認可能インプレッションの平均費用（ActiveViewImpressions）。');
                 $table->double('activeViewViewableCTR')->nullable()->comment('広告が表示された後にユーザーが広告をクリックした頻度');
                 $table->bigInteger('activeViewViewableImpressions')->nullable()->comment('ディスプレイネットワークサイトで広告が表示される頻度');
-                $table->double('activeViewMeasurableImprImpr')->nullable()->comment('アクティブビューで計測されたインプレッション数と配信インプレッション数の比。');
+                $table->double('activeViewMeasurableImprImpr')
+                    ->nullable()
+                    ->comment('アクティブビューで計測されたインプレッション数と配信インプレッション数の比。');
                 $table->double('activeViewMeasurableCost')->nullable()->comment('Active Viewで測定可能なインプレッションの費用。');
                 $table->bigInteger('activeViewMeasurableImpr')->nullable()->comment('広告が表示されているプレースメントに広告が表示された回数。');
-                $table->double('activeViewViewableImprMeasurableImpr')->nullable()->comment('広告がアクティブビュー対応サイトに表示された時間（測定可能なインプレッション数）と表示可能（表示可能なインプレッション数）の割合。');
+                $table->double('activeViewViewableImprMeasurableImpr')
+                    ->nullable()
+                    ->comment('広告がアクティブビュー対応サイトに表示された時間（測定可能なインプレッション数）と表示可能（表示可能なインプレッション数）の割合。');
                 $table->bigInteger('adGroupID')->nullable()->comment('広告グループのID。');
                 $table->text('adGroup')->nullable()->comment('広告グループの名前。');
                 $table->string('adGroupState', 50)->nullable()->comment('広告グループのステータス。');
                 $table->string('network', 50)->nullable()->comment('第1レベルのネットワークタイプ。');
                 $table->string('networkWithSearchPartners', 50)->nullable()->comment('第2レベルのネットワークタイプ（検索パートナーを含む）。');
-                $table->string('adType', 50)->nullable()->comment('広告のタイプ。広告のタイプがレポートリクエストのAPIバージョンでサポートされていない場合、このフィールドの値は「不明」になります。');
+                $table->string('adType', 50)
+                    ->nullable()
+                    ->comment('広告のタイプ。広告のタイプがレポートリクエストのAPIバージョンでサポートされていない場合、このフィールドの値は「不明」になります。');
                 $table->double('allConvRate')->nullable()->comment('AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。 "x.xx％"として返されるパーセンテージ。');
                 $table->double('allConv')->nullable()->comment('AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
                 $table->double('allConvValue')->nullable()->comment('推定されたものを含む、すべてのコンバージョンの合計値。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
