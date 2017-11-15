@@ -95,7 +95,10 @@ abstract class AbstractReportModel extends Model
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)                    ->getType()                    ->getName()=== self::FIELD_TYPE
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                                    ->getType()
+                                    ->getName()
+                    === self::FIELD_TYPE
                 ) {
                     $arrayCalculate[] = DB::raw(
                         'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
