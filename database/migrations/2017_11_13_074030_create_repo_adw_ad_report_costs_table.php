@@ -98,7 +98,7 @@ class CreateRepoAdwAdReportCostsTable extends Migration
                         . '広告は複数のクリックタイプで表示できるため、インプレッション数は2倍になり、合計が正確でない可能性があります。'
                     );
                 $table->string('approvalStatus', 50)->nullable()->comment('レビューステートとステータスを組み合わせた承認ステータス。');
-                $table->double('convRate')i
+                $table->double('convRate')
                     ->nullable()
                     ->comment('コンバージョン数をコンバージョンにトラッキングできる合計クリック数で割ったものです。 "x.xx％"として返されるパーセンテージ。');
                 $table->double('conversions')
