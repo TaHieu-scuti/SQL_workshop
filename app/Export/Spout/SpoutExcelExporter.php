@@ -19,13 +19,19 @@ class SpoutExcelExporter implements ExcelExporterInterface
 
     /** @var \Illuminate\Database\Eloquent\Collection */
     private $exportData;
+
+    /** @var string[] */
+    private $fieldNames;
+
     /**
      * SpoutExcelExporter constructor.
      * @param \Illuminate\Database\Eloquent\Collection $exportData
+     * @param string[] $fieldNames
      */
-    public function __construct(Collection $exportData)
+    public function __construct(Collection $exportData, array $fieldNames = null)
     {
         $this->exportData = $exportData;
+        $this->fieldNames = $fieldNames;
     }
 
     private function generateFilename()
@@ -63,7 +69,11 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $fieldNames = array_keys($this->exportData->first()->getAttributes());
+            $fieldNames = $this->fieldNames;
+            if ($fieldNames === null) {
+                $fieldNames = array_keys($this->exportData->first()->getAttributes());
+            }
+
             $writer->addRow($fieldNames);
 
             $collections = $this->exportData->chunk(1000);

@@ -22,13 +22,18 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var \Illuminate\Database\Eloquent\Collection */
     private $exportData;
 
+    /** @var string[] */
+    private $fieldNames;
+
     /**
      * NativePHPCsvExporter constructor.
      * @param \Illuminate\Database\Eloquent\Collection $exportData
+     * @param string[] $fieldNames
      */
-    public function __construct(Collection $exportData)
+    public function __construct(Collection $exportData, array $fieldNames = null)
     {
         $this->exportData = $exportData;
+        $this->fieldNames = $fieldNames;
     }
 
     private function generateFilename()
@@ -91,7 +96,11 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->writeBOM();
 
         // get fields' names
-        $fieldNames = array_keys($this->exportData->first()->getAttributes());
+        $fieldNames = $this->fieldNames;
+        if ($fieldNames === null) {
+            $fieldNames = array_keys($this->exportData->first()->getAttributes());
+        }
+
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
