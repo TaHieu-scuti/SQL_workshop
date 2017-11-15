@@ -20,12 +20,12 @@ class RepoYssAdReportCost extends AbstractReportModel
     const PAGE_ID = 'adId';
 
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $table = 'repo_yss_ad_report_cost';
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class AdGainerUserProvider implements UserProvider
 {
     /**
-     * @var \App\User 
+     * @var \App\User
      */
     private $userModel;
 

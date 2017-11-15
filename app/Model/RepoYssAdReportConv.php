@@ -8,7 +8,7 @@ use App\AbstractReportModel;
 class RepoYssAdReportConv extends AbstractReportModel
 {
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
     

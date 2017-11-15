@@ -17,12 +17,12 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     const KEY_ID = "adgroupID";
 
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $table = 'repo_yss_adgroup_report_cost';
 

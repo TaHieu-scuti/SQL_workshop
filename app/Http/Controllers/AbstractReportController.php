@@ -17,12 +17,12 @@ use Auth;
 abstract class AbstractReportController extends Controller
 {
     /**
-     * @var \Illuminate\Contracts\Routing\ResponseFactory 
+     * @var \Illuminate\Contracts\Routing\ResponseFactory
      */
     protected $responseFactory;
 
     /**
-     * @var \App\AbstractReportModel 
+     * @var \App\AbstractReportModel
      */
     protected $model;
     const SESSION_KEY_CAMPAIGNID = "campainID";
@@ -88,7 +88,9 @@ abstract class AbstractReportController extends Controller
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
-            $excelData, 200, [
+            $excelData,
+            200,
+            [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
@@ -117,7 +119,9 @@ abstract class AbstractReportController extends Controller
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
-            $csvData, 200, [
+            $csvData,
+            200,
+            [
             'Content-Type' => 'application/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',

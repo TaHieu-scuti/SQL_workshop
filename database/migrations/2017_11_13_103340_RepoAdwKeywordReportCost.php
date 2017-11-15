@@ -15,7 +15,8 @@ class RepoAdwKeywordReportCost extends Migration
     public function up()
     {
         Schema::create(
-            'repo_adw_keywords_report_cost', function (Blueprint $table) {
+            'repo_adw_keywords_report_cost',
+            function (Blueprint $table) {
                 $table->increments('id');
                 $table->date('exeDate')->comment('レポートAPI実行日');
                 $table->date('startDate')->comment('APIで指定したレポートの開始日');

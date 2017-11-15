@@ -15,7 +15,8 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(
-            'breadcrumbs', function ($app) {
+            'breadcrumbs',
+            function ($app) {
                 $breadcrumbs = $this->app->make('DaveJamesMiller\Breadcrumbs\Manager');
 
                 $viewPath = __DIR__ . '/../../resources/views/layouts/';

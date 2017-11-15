@@ -7,7 +7,7 @@ use App\AbstractReportModel;
 class RepoYssKeywordReportConv extends AbstractReportModel
 {
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 

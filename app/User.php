@@ -50,70 +50,70 @@ class User extends Authenticatable
 
         $array = [];
         switch ($title) {
-        case 'Account':
-            $model = new RepoYssAccount;
-            $array[] = $title;
-            $array[] = $model->getAllAccounts();
-            if (session('accountID') === null) {
-                $array['flag'] = 'all';
-            } else {
-                $array['flag'] = session('accountID');
-            }
-            break;
-        case 'Campaign':
-            $model = new RepoYssCampaignReportCost;
-            $array[] = $title;
-            $array[] = $model->getAllCampaign();
-            if (session('campainID') === null) {
-                $array['flag'] = 'all';
-            } else {
-                $array['flag'] = session('campainID');
-            }
-            break;
-        case 'AdGroup':
-            $model = new \App\Model\RepoYssAdgroupReportCost;
-            $array[] = $title;
-            $array[] = $model->getAllAdgroup();
-            if (session('adgroupId') === null) {
-                $array['flag'] = 'all';
-            } else {
-                $array['flag'] = session('adgroupId');
-            }
-            break;
-        case 'AdReport':
-            $model = new \App\Model\RepoYssAdReportCost;
-            $array[] = $title;
-            $array[] = $model->getAllAdReport(
-                session('accountID'),
-                session('campainID'),
-                session('adgroupId'),
-                session('adReportId')
-            );
-            if (session('adReportId') === null) {
-                $array['flag'] = 'all';
-            } else {
-                $array['flag'] = session('adReportId');
-            }
-            break;
-        case 'KeyWord':
-            $model = new \App\Model\RepoYssKeywordReportCost;
-            $array[] = $title;
-            $array[] = $model->getAllKeyword(
-                session('accountID'),
-                session('campainID'),
-                session('adgroupId'),
-                session('KeywordID')
-            );
-            if (session('KeywordID') === null) {
-                $array['flag'] = 'all';
-            } else {
-                $array['flag'] = session('adReportId');
-            }
-            break;
+            case 'Account':
+                $model = new RepoYssAccount;
+                $array[] = $title;
+                $array[] = $model->getAllAccounts();
+                if (session('accountID') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('accountID');
+                }
+                break;
+            case 'Campaign':
+                $model = new RepoYssCampaignReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllCampaign();
+                if (session('campainID') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('campainID');
+                }
+                break;
+            case 'AdGroup':
+                $model = new \App\Model\RepoYssAdgroupReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllAdgroup();
+                if (session('adgroupId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adgroupId');
+                }
+                break;
+            case 'AdReport':
+                $model = new \App\Model\RepoYssAdReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllAdReport(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('adReportId')
+                );
+                if (session('adReportId') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adReportId');
+                }
+                break;
+            case 'KeyWord':
+                $model = new \App\Model\RepoYssKeywordReportCost;
+                $array[] = $title;
+                $array[] = $model->getAllKeyword(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('KeywordID')
+                );
+                if (session('KeywordID') === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session('adReportId');
+                }
+                break;
             
-        default:
-            // code...
-            break;
+            default:
+                // code...
+                break;
         }
         return $array;
     }

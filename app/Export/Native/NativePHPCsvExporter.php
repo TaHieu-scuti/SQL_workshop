@@ -11,22 +11,22 @@ use DateTime;
 class NativePHPCsvExporter implements CSVExporterInterface
 {
     /**
-     * @var string 
+     * @var string
      */
     private $fileName;
 
     /**
-     * @var resource 
+     * @var resource
      */
     private $fileHandle;
 
     /**
-     * @var int 
+     * @var int
      */
     private $fileSize = 0;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Collection 
+     * @var \Illuminate\Database\Eloquent\Collection
      */
     private $exportData;
 

@@ -19,13 +19,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const PAGE_ID = 'accountid';
 
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
 
     /**
-     * @var array 
+     * @var array
      */
     private $averageFieldArray = [
         'ctr',
