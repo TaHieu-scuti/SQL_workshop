@@ -13,7 +13,7 @@ class CreateRepoAdwDisplayKeywordReportCostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('repo_adw_display_keyword_report_costs', function (Blueprint $table) {
+        Schema::create('repo_adw_display_keyword_report_cost', function (Blueprint $table) {
             $table->increments('id');
             $table->date('exeDate')
                     ->comment('レポートAPI実行日')

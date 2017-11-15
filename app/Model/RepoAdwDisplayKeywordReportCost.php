@@ -9,5 +9,5 @@ class RepoAdwDisplayKeywordReportCost extends Model
     protected $table = "repo_adw_display_keyword_report_cost";
 
     /** @var boolean **/
-    public $timestamp = false;
+    public $timestamps = false;
 }

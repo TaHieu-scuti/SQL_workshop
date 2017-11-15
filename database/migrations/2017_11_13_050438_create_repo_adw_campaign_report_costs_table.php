@@ -13,7 +13,7 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('repo_adw_campaign_report_costs', function (Blueprint $table) {
+        Schema::create('repo_adw_campaign_report_cost', function (Blueprint $table) {
             $table->increments('id');
             $table->date('exeDate')
                     ->comment('レポートAPI実行日')
@@ -40,6 +40,7 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
                     ->nullable()
                     ->comment('カスタマーアカウントのわかりやすい名前。');
             $table->string('timeZone', 50)
+                    ->nullable()
                     ->comment('顧客アカウント用に選択されたタイムゾーンの名前。たとえば、
                               「（GMT-05：00）東部時間」などです。このフィールドには、
                               タイムゾーンの夏時間の現在の状態は反映されません。')
@@ -305,7 +306,6 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
                     ->index('repo_adw_campaign_report_cost17');
             $table->bigInteger('accountid')
                     ->comment('media Id');
-            $table->
         });
     }
 
