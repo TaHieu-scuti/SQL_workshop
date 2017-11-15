@@ -32,7 +32,6 @@ class CreateRepoAdwCampaignReportCostsTable extends Migration
                     ->comment('ADgainerシステムのアカウントID')
                     ->index('repo_adw_campaign_report_cost4');
                 $table->string('campaign_id', 50)
-                    ->nullable()
                     ->comment('ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得')
                     ->index('repo_adw_campaign_report_cost5');
                 $table->string('currency', 50)

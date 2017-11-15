@@ -77,7 +77,8 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->startDate = $accountReport->startDate;
             $campaignReportCost->endDate = $accountReport->endDate;
             $campaignReportCost->account_id = $accountReport->account_id;
-            $campaignReportCost->campaignId = $accountReport->campaign_id;
+            $campaignReportCost->campaign_id = $accountReport->campaign_id;
+            $campaignReportCost->campaignID = $accountReport->campaign_id;
             $campaignReportCost->campaign = 'Campaign Name ' . $accountReport->campaign_id;
             $campaignReportCost->account = $accountReport->account;
             $campaignReportCost->avgCPC = $campaignReportCost->cost / $campaignReportCost->clicks;
