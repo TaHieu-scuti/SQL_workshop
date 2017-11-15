@@ -8,6 +8,8 @@ class RepoAdwAccountReportCost extends Model
 {
     protected $table = 'repo_adw_account_report_cost';
 
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     public $timestamps = false;
 }

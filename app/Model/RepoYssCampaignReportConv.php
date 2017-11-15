@@ -8,7 +8,9 @@ class RepoYssCampaignReportConv extends AbstractReportModel
 {
     protected $table = 'repo_yss_campaign_report_conv';
 
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     public $timestamps = false;
     /**
      * @param string[] $fieldNames

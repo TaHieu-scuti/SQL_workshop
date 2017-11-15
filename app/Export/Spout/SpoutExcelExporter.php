@@ -15,13 +15,18 @@ use Exception;
 
 class SpoutExcelExporter implements ExcelExporterInterface
 {
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $fileName;
 
-    /** @var \Illuminate\Database\Eloquent\Collection */
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection 
+     */
     private $exportData;
     /**
      * SpoutExcelExporter constructor.
+     *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
      */
     public function __construct(Collection $exportData)

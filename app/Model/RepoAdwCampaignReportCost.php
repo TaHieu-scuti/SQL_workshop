@@ -8,6 +8,8 @@ class RepoAdwCampaignReportCost extends Model
 {
     protected $table = "repo_adw_campaign_report_cost";
 
-    /** @var boolean **/
-    public $timestamp = false;
+    /**
+     * @var boolean 
+     **/
+    public $timestamps = false;
 }

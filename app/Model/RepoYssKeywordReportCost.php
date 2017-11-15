@@ -15,10 +15,14 @@ class RepoYssKeywordReportCost extends AbstractReportModel
 {
     const PAGE_ID = "keywordID";
     const GROUPED_BY_FIELD_NAME = 'keyword';
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     public $timestamps = false;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $table = 'repo_yss_keyword_report_cost';
 
     /**
@@ -27,9 +31,11 @@ class RepoYssKeywordReportCost extends AbstractReportModel
      */
     public function getColumnLiveSearch($keywords)
     {
-        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+        $searchColumns = DB::select(
+            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'"
-            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
+            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"'
+        );
         $result = [];
         foreach ($searchColumns as $searchColumn) {
             foreach ($searchColumn as $value) {

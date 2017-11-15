@@ -16,10 +16,14 @@ use Auth;
 
 abstract class AbstractReportController extends Controller
 {
-    /** @var \Illuminate\Contracts\Routing\ResponseFactory */
+    /**
+     * @var \Illuminate\Contracts\Routing\ResponseFactory 
+     */
     protected $responseFactory;
 
-    /** @var \App\AbstractReportModel */
+    /**
+     * @var \App\AbstractReportModel 
+     */
     protected $model;
     const SESSION_KEY_CAMPAIGNID = "campainID";
     const SESSION_KEY_AD_GROUP_ID = "adgroupId";
@@ -32,7 +36,8 @@ abstract class AbstractReportController extends Controller
 
     /**
      * AbstractReportController constructor.
-     * @param ResponseFactory $responseFactory
+     *
+     * @param ResponseFactory     $responseFactory
      * @param AbstractReportModel $model
      */
     public function __construct(
@@ -43,14 +48,16 @@ abstract class AbstractReportController extends Controller
         $this->model = $model;
         $this->middleware('auth');
         $this->middleware('language');
-        $this->middleware(function (Request $request, $next) {
-            if (!\Auth::check()) {
-                return redirect('/login');
-            }
-            $this->adgainerId = \Auth::id(); // you can access user id here
+        $this->middleware(
+            function (Request $request, $next) {
+                if (!\Auth::check()) {
+                    return redirect('/login');
+                }
+                $this->adgainerId = \Auth::id(); // you can access user id here
 
-            return $next($request);
-        });
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -62,14 +69,16 @@ abstract class AbstractReportController extends Controller
         $exporter = new SpoutExcelExporter($data->getCollection());
         $excelData = $exporter->export();
 
-        return $this->responseFactory->make($excelData, 200, [
+        return $this->responseFactory->make(
+            $excelData, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
             'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
             'Cache-Control' => 'cache, must-revalidate, private',
             'Pragma' => 'public'
-        ]);
+            ]
+        );
     }
 
     /**
@@ -81,14 +90,16 @@ abstract class AbstractReportController extends Controller
         $exporter = new NativePHPCsvExporter($data->getCollection());
         $csvData = $exporter->export();
 
-        return $this->responseFactory->make($csvData, 200, [
+        return $this->responseFactory->make(
+            $csvData, 200, [
             'Content-Type' => 'application/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
             'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
             'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
             'Cache-Control' => 'cache, must-revalidate, private',
             'Pragma' => 'public'
-        ]);
+            ]
+        );
     }
 
     /**
@@ -172,19 +183,23 @@ abstract class AbstractReportController extends Controller
             $positionOfFirstFieldName = 1;
             session()->put(static::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);
         }
-        session()->put([
+        session()->put(
+            [
             static::SESSION_KEY_FIELD_NAME => $fieldName,
             static::SESSION_KEY_PAGINATION => $pagination
-        ]);
+            ]
+        );
     }
 
     public function updateSessionStartDayAndEndDayAndTimePeriodTitle($startDay, $endDay, $timePeriodTitle)
     {
-        session()->put([
+        session()->put(
+            [
             static::SESSION_KEY_START_DAY => $startDay,
             static::SESSION_KEY_END_DAY => $endDay,
             static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle
-        ]);
+            ]
+        );
     }
 
     public function updateSessionStatus($status)
@@ -199,52 +214,67 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionAccountId($accountId)
     {
-        session()->put([
+        session()->put(
+            [
                 self::SESSION_KEY_ACCOUNT_ID => $accountId
-            ]);
+            ]
+        );
     }
 
     public function updateSessionAdReportId($adReportId)
     {
-        session()->put([
+        session()->put(
+            [
                 self::SESSION_KEY_AD_REPORT_ID => $adReportId
-            ]);
+            ]
+        );
     }
 
     public function updateSessionCampaignId($campaignId)
     {
-        session()->put([
+        session()->put(
+            [
                 self::SESSION_KEY_CAMPAIGNID => $campaignId
-            ]);
+            ]
+        );
     }
 
     public function updateSessionAdGroupId($adGroupId)
     {
-        session()->put([
+        session()->put(
+            [
                 self::SESSION_KEY_AD_GROUP_ID=> $adGroupId
-            ]);
+            ]
+        );
     }
 
     public function updateSessionKeywordId($keywordId)
     {
-        session()->put([
+        session()->put(
+            [
                 self::SESSION_KEY_KEYWORD_ID => $keywordId
-            ]);
+            ]
+        );
     }
 
     public function updateSessionColumnSortAndSort($columnSort)
     {
         if (session(static::SESSION_KEY_COLUMN_SORT) !== $columnSort
-            || session(static::SESSION_KEY_SORT) !== 'desc') {
-            session()->put([
+            || session(static::SESSION_KEY_SORT) !== 'desc'
+        ) {
+            session()->put(
+                [
                 static::SESSION_KEY_COLUMN_SORT => $columnSort,
                 static::SESSION_KEY_SORT => 'desc'
-            ]);
+                ]
+            );
         } elseif (session(static::SESSION_KEY_SORT) !== 'asc') {
-            session()->put([
+            session()->put(
+                [
                 static::SESSION_KEY_COLUMN_SORT => $columnSort,
                 static::SESSION_KEY_SORT => 'asc'
-            ]);
+                ]
+            );
         }
     }
 
@@ -289,45 +319,55 @@ abstract class AbstractReportController extends Controller
 
         // get id account media if available
         if ($request->id_account === 'all') {
-            session()->put([
+            session()->put(
+                [
                 self::SESSION_KEY_ACCOUNT_ID => null
-            ]);
+                ]
+            );
         } elseif ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
         }
 
         //get id campaign if avaiable
         if ($request->id_campaign === 'all') {
-            session()->put([
+            session()->put(
+                [
                 self::SESSION_KEY_CAMPAIGNID => null
-            ]);
+                ]
+            );
         } elseif ($request->id_campaign !== "all" && $request->id_campaign !== null) {
             $this->updateSessionCampaignId($request->id_campaign);
         }
 
         //get id adGroup if avaiable
         if ($request->id_adgroup === 'all') {
-            session()->put([
+            session()->put(
+                [
                 self::SESSION_KEY_AD_GROUP_ID => null
-            ]);
+                ]
+            );
         } elseif ($request->id_adgroup !== "all" && $request->id_adgroup !== null) {
             $this->updateSessionAdGroupId($request->id_adgroup);
         }
 
         //get id adReport if avaiable
         if ($request->id_adReport === 'all') {
-            session()->put([
+            session()->put(
+                [
                 self::SESSION_KEY_AD_REPORT_ID => null
-            ]);
+                ]
+            );
         } elseif ($request->id_adReport !== "all" && $request->id_adReport !== null) {
             $this->updateSessionAdReportId($request->id_adReport);
         }
 
         //get id keyword if avaiable
         if ($request->id_keyword === 'all') {
-            session()->put([
+            session()->put(
+                [
                 self::SESSION_KEY_KEYWORD_ID => null
-            ]);
+                ]
+            );
         } elseif ($request->id_keyword !== "all" && $request->id_keyword !== null) {
             $this->updateSessionKeywordId($request->id_keyword);
         }
