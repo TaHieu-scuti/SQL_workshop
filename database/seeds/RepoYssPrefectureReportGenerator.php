@@ -7,7 +7,7 @@ use App\Model\RepoYssPrefectureReportCost;
 // @codingStandardsIgnoreLine
 class RepoYssPrefectureReportGenerator extends Seeder
 {
-	const MIN_NUMBER_OF_PREFECTURE = 1;
+    const MIN_NUMBER_OF_PREFECTURE = 1;
     const MAX_NUMBER_OF_PREFECTURE = 2;
     const MIN_COST = 1;
     const MAX_COST = 1004;
@@ -55,17 +55,17 @@ class RepoYssPrefectureReportGenerator extends Seeder
         'USA', 'VIET NAM',
         'JAPAN', 'KOREA'
     ];
-    Const PREFECTURE = [
-    	'HA NOI', 'NEW YORK',
-    	'SEOUL'
+    const PREFECTURE = [
+        'HA NOI', 'NEW YORK',
+        'SEOUL'
     ];
     const CITY = [
-    	'HO CHI MINH', 'DA NANG',
-    	'NHA TRANG', 'KYOTO'
+        'HO CHI MINH', 'DA NANG',
+        'NHA TRANG', 'KYOTO'
     ];
     const CITY_WAR_DISTRICT = [
-    	'NGUYEN PHONG SAC STREET', 'CAY GIAY STREET',
-    	'NGUYEN TRAI STREET'
+        'NGUYEN PHONG SAC STREET', 'CAY GIAY STREET',
+        'NGUYEN TRAI STREET'
     ];
     const OBJECTIVE_OF_CONVERSION_TRACKING = 'Objective of conversion tracking';
     const CONVERSION_NAME = [
@@ -81,24 +81,24 @@ class RepoYssPrefectureReportGenerator extends Seeder
     {
         $adgroupReports = RepoYssAdgroupReportCost::all();
         foreach ($adgroupReports as $key => $adgroupReport) {
-        	$ammountOfAdgroup = rand(
+            $ammountOfAdgroup = rand(
                 self::MIN_NUMBER_OF_PREFECTURE,
                 self::MAX_NUMBER_OF_PREFECTURE
             );
 
-            for ($i=0; $i < $ammountOfAdgroup ; $i++) {
-            	$prefecture = new RepoYssPrefectureReportCost;
-            	$prefecture->exeDate = $adgroupReport->exeDate;
-            	$prefecture->startDate = $adgroupReport->startDate;
-            	$prefecture->endDate = $adgroupReport->endDate;
-            	$prefecture->accountid = $adgroupReport->accountid;
-            	$prefecture->account_id = $adgroupReport->account_id;
-            	$prefecture->campaign_id = $adgroupReport->campaign_id;
-            	$prefecture->campaignID = $adgroupReport->campaignID;
-            	$prefecture->adgroupID = $adgroupReport->adgroupID;
-            	$prefecture->campaignName = $adgroupReport->campaignName;
-            	$prefecture->adgroupName = $adgroupReport->adgroupName;
-            	$prefecture->cost = mt_rand(
+            for ($i=0; $i < $ammountOfAdgroup; $i++) {
+                $prefecture = new RepoYssPrefectureReportCost;
+                $prefecture->exeDate = $adgroupReport->exeDate;
+                $prefecture->startDate = $adgroupReport->startDate;
+                $prefecture->endDate = $adgroupReport->endDate;
+                $prefecture->accountid = $adgroupReport->accountid;
+                $prefecture->account_id = $adgroupReport->account_id;
+                $prefecture->campaign_id = $adgroupReport->campaign_id;
+                $prefecture->campaignID = $adgroupReport->campaignID;
+                $prefecture->adgroupID = $adgroupReport->adgroupID;
+                $prefecture->campaignName = $adgroupReport->campaignName;
+                $prefecture->adgroupName = $adgroupReport->adgroupName;
+                $prefecture->cost = mt_rand(
                     self::MIN_COST,
                     self::MAX_COST
                 );
@@ -118,11 +118,11 @@ class RepoYssPrefectureReportGenerator extends Seeder
                     self::MIN_AVERAGE_CPC,
                     self::MAX_AVERAGE_CPC
                 ) / mt_getrandmax();
-				$prefecture->averagePosition = mt_rand(
+                $prefecture->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION
                 ) / mt_getrandmax();
-             	$prefecture->conversions = mt_rand(
+                $prefecture->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     self::MAX_CONVERSIONS
                 ) / mt_getrandmax();

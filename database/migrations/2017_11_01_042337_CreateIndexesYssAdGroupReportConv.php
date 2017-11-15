@@ -34,7 +34,6 @@ class CreateIndexesYssAdGroupReportConv extends Migration
                 $table->index('endDate', 'repo_yss_adgroup_report_conv_idx15');
                 $table->index('objectiveOfConversionTracking', 'repo_yss_adgroup_report_conv_idx16');
                 $table->index('accountid', 'repo_yss_adgroup_report_conv_idx17');
-
             }
         );
     }

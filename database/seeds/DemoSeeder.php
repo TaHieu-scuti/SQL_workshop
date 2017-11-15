@@ -611,70 +611,70 @@ class DemoSeeder extends Seeder
             $costReport->averagePosition = self::AVERAGE_POSITION;
 
             $costReport->impressionShare = mt_rand(
-                    self::MIN_IMPRESSION_SHARE,
-                    self::MAX_IMPRESSION_SHARE
-                ) / mt_getrandmax();
+                self::MIN_IMPRESSION_SHARE,
+                self::MAX_IMPRESSION_SHARE
+            ) / mt_getrandmax();
 
             $costReport->exactMatchImpressionShare = mt_rand(
-                    self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
-                    self::MAX_EXACT_MATCH_IMPRESSION_SHARE
-                ) / mt_getrandmax();
+                self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+            ) / mt_getrandmax();
 
             $costReport->budgetLostImpressionShare = mt_rand(
-                    self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-                    self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-                ) / mt_getrandmax();
+                self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+            ) / mt_getrandmax();
 
             $costReport->qualityLostImpressionShare = mt_rand(
-                    self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
-                    self::MAX_QUALITY_LOST_IMPRESSION_SHARE
-                ) / mt_getrandmax();
+                self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
+                self::MAX_QUALITY_LOST_IMPRESSION_SHARE
+            ) / mt_getrandmax();
 
             $costReport->trackingURL = self::TRACKING_URL;
             $convReport->trackingURL = $costReport->trackingURL;
 
             $costReport->conversions = mt_rand(
-                    self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
+                self::MIN_CONVERSIONS,
+                self::MAX_CONVERSIONS
+            ) / mt_getrandmax();
             $convReport->conversions = $costReport->conversions;
 
             $costReport->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                self::MIN_CONV_RATE,
+                self::MAX_CONV_RATE
+            ) / mt_getrandmax();
 
             $costReport->convValue = mt_rand(
-                    self::MIN_CONV_VALUE,
-                    self::MAX_CONV_VALUE
-                ) / mt_getrandmax();
+                self::MIN_CONV_VALUE,
+                self::MAX_CONV_VALUE
+            ) / mt_getrandmax();
             $convReport->convValue = $costReport->convValue;
 
             $costReport->costPerConv = mt_rand(
-                    self::MIN_COST_PER_CONV,
-                    self::MAX_COST_PER_CONV
-                ) / mt_getrandmax();
+                self::MIN_COST_PER_CONV,
+                self::MAX_COST_PER_CONV
+            ) / mt_getrandmax();
 
             $costReport->valuePerConv = mt_rand(
-                    self::MIN_VALUE_PER_CONV,
-                    self::MAX_VALUE_PER_CONV
-                ) / mt_getrandmax();
+                self::MIN_VALUE_PER_CONV,
+                self::MAX_VALUE_PER_CONV
+            ) / mt_getrandmax();
             $convReport->valuePerConv = $costReport->valuePerConv;
 
             $convReport->allConv = mt_rand(
-                    self::MIN_ALL_CONV,
-                    self::MAX_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV,
+                self::MAX_ALL_CONV
+            ) / mt_getrandmax();
 
             $convReport->allConvValue = mt_rand(
-                    self::MIN_ALL_CONV_VALUE,
-                    self::MAX_ALL_CONV_VALUE
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV_VALUE,
+                self::MAX_ALL_CONV_VALUE
+            ) / mt_getrandmax();
 
             $convReport->valuePerAllConv = mt_rand(
-                    self::MIN_VALUE_PER_ALL_CONV,
-                    self::MAX_VALUE_PER_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_VALUE_PER_ALL_CONV,
+                self::MAX_VALUE_PER_ALL_CONV
+            ) / mt_getrandmax();
 
             $convReport->clickType = 'random click';
             $convReport->objectiveOfConversionTracking = 'objective';
@@ -743,7 +743,7 @@ class DemoSeeder extends Seeder
                 $campaignReportCost->campaign_id = self::CAMPAIGN_ID;
                 $campaignReportConv->campaign_id = self::CAMPAIGN_ID;
                 $campaignReportCost->campaignID = $campaignID;
-                $campaignReportConv->campaignID = $campaignID;;
+                $campaignReportConv->campaignID = $campaignID;
                 $campaignReportCost->campaignName = $campaignName;
                 $campaignReportConv->campaignName = $campaignName;
                 $campaignReportCost->campaignDistributionSettings = 'Distribution Settings ' . self::CAMPAIGN_ID;
@@ -768,21 +768,21 @@ class DemoSeeder extends Seeder
                 $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
                 $campaignReportCost->averagePosition = self::AVERAGE_POSITION;
                 $campaignReportCost->impressionShare = mt_rand(
-                        self::MIN_IMPRESSION_SHARE,
-                        self::MAX_IMPRESSION_SHARE
-                    ) / mt_getrandmax();
+                    self::MIN_IMPRESSION_SHARE,
+                    self::MAX_IMPRESSION_SHARE
+                ) / mt_getrandmax();
                 $campaignReportCost->exactMatchImpressionShare = mt_rand(
-                        self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
-                        self::MAX_EXACT_MATCH_IMPRESSION_SHARE
-                    ) / mt_getrandmax();
+                    self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                    self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+                ) / mt_getrandmax();
                 $campaignReportCost->budgetLostImpressionShare = mt_rand(
-                        self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-                        self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-                    ) / mt_getrandmax();
+                    self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                    self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+                ) / mt_getrandmax();
                 $campaignReportCost->qualityLostImpressionShare = mt_rand(
-                        self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
-                        self::MAX_QUALITY_LOST_IMPRESSION_SHARE
-                    ) / mt_getrandmax();
+                    self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
+                    self::MAX_QUALITY_LOST_IMPRESSION_SHARE
+                ) / mt_getrandmax();
                 $campaignReportCost->trackingURL = self::TRACKING_URL;
                 $campaignReportConv->trackingURL = self::TRACKING_URL;
                 $campaignReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . self::CAMPAIGN_ID;
@@ -790,55 +790,55 @@ class DemoSeeder extends Seeder
                 $campaignReportCost->campaignTrackingID = self::CAMPAIGN_ID;
                 $campaignReportConv->campaignTrackingID = self::CAMPAIGN_ID;
                 $campaignReportCost->conversions = mt_rand(
-                        self::MIN_CONVERSIONS,
-                        self::MAX_CONVERSIONS
-                    ) / mt_getrandmax();
+                    self::MIN_CONVERSIONS,
+                    self::MAX_CONVERSIONS
+                ) / mt_getrandmax();
                 $campaignReportConv->conversions = $campaignReportCost->conversions;
                 $campaignReportCost->convRate = mt_rand(
-                        self::MIN_CONV_RATE,
-                        self::MAX_CONV_RATE
-                    ) / mt_getrandmax();
+                    self::MIN_CONV_RATE,
+                    self::MAX_CONV_RATE
+                ) / mt_getrandmax();
                 $campaignReportCost->convValue = mt_rand(
-                        self::MIN_CONV_VALUE,
-                        self::MAX_CONV_VALUE
-                    ) / mt_getrandmax();
+                    self::MIN_CONV_VALUE,
+                    self::MAX_CONV_VALUE
+                ) / mt_getrandmax();
                 $campaignReportConv->convValue = $campaignReportCost->convValue;
                 $campaignReportCost->costPerConv = mt_rand(
-                        self::MIN_COST_PER_CONV,
-                        self::MAX_COST_PER_CONV
-                    ) / mt_getrandmax();
+                    self::MIN_COST_PER_CONV,
+                    self::MAX_COST_PER_CONV
+                ) / mt_getrandmax();
                 $campaignReportCost->valuePerConv = mt_rand(
-                        self::MIN_VALUE_PER_CONV,
-                        self::MAX_VALUE_PER_CONV
-                    ) / mt_getrandmax();
+                    self::MIN_VALUE_PER_CONV,
+                    self::MAX_VALUE_PER_CONV
+                ) / mt_getrandmax();
                 $campaignReportConv->valuePerConv = $campaignReportCost->valuePerConv;
                 $campaignReportCost->mobileBidAdj = mt_rand(
-                        self::MIN_MOBILE_BID_ADJ,
-                        self::MAX_MOBILE_BID_ADJ
-                    ) / mt_getrandmax();
+                    self::MIN_MOBILE_BID_ADJ,
+                    self::MAX_MOBILE_BID_ADJ
+                ) / mt_getrandmax();
                 $campaignReportConv->mobileBidAdj = $campaignReportCost->mobileBidAdj;
                 $campaignReportCost->desktopBidAdj = mt_rand(
-                        self::MIN_DESKTOP_BID_ADJ,
-                        self::MAX_DESKTOP_BID_ADJ
-                    ) / mt_getrandmax();
+                    self::MIN_DESKTOP_BID_ADJ,
+                    self::MAX_DESKTOP_BID_ADJ
+                ) / mt_getrandmax();
                 $campaignReportConv->desktopBidAdj = $campaignReportCost->desktopBidAdj;
                 $campaignReportCost->tabletBidAdj = mt_rand(
-                        self::MIN_TABLET_BID_ADJ,
-                        self::MAX_TABLET_BID_ADJ
-                    ) / mt_getrandmax();
+                    self::MIN_TABLET_BID_ADJ,
+                    self::MAX_TABLET_BID_ADJ
+                ) / mt_getrandmax();
                 $campaignReportConv->tabletBidAdj = $campaignReportCost->tabletBidAdj;
                 $campaignReportConv->valuePerAllConv = mt_rand(
-                        self::MIN_VALUE_PER_ALL_CONV,
-                        self::MAX_VALUE_PER_ALL_CONV
-                    ) / mt_getrandmax();
+                    self::MIN_VALUE_PER_ALL_CONV,
+                    self::MAX_VALUE_PER_ALL_CONV
+                ) / mt_getrandmax();
                 $campaignReportConv->allConv = mt_rand(
-                        self::MIN_ALL_CONV,
-                        self::MAX_ALL_CONV
-                    ) / mt_getrandmax();
+                    self::MIN_ALL_CONV,
+                    self::MAX_ALL_CONV
+                ) / mt_getrandmax();
                 $campaignReportConv->allConvValue = mt_rand(
-                        self::MIN_ALL_CONV_VALUE,
-                        self::MAX_ALL_CONV_VALUE
-                    ) / mt_getrandmax();
+                    self::MIN_ALL_CONV_VALUE,
+                    self::MAX_ALL_CONV_VALUE
+                ) / mt_getrandmax();
                 $campaignReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                 $campaignReportConv->network = $campaignReportCost->network;
                 $campaignReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
@@ -858,7 +858,9 @@ class DemoSeeder extends Seeder
                 $campaignReportConv->campaignType = $campaignReportCost->campaignType;
                 $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                 $campaignReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-                $campaignReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+                $campaignReportConv->conversionName = self::CONVERSION_NAME[
+                    mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                ];
                 $campaignReportCost->accountid = self::ACCOUNTID;
                 $campaignReportConv->accountid = self::ACCOUNTID;
 
@@ -926,60 +928,60 @@ class DemoSeeder extends Seeder
                     $adgroupReportCost->averagePosition = self::AVERAGE_POSITION;
 
                     $adgroupReportCost->impressionShare = mt_rand(
-                            self::MIN_IMPRESSION_SHARE,
-                            self::MAX_IMPRESSION_SHARE
-                        ) / mt_getrandmax();
+                        self::MIN_IMPRESSION_SHARE,
+                        self::MAX_IMPRESSION_SHARE
+                    ) / mt_getrandmax();
 
                     $adgroupReportCost->exactMatchImpressionShare = mt_rand(
-                            self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
-                            self::MAX_EXACT_MATCH_IMPRESSION_SHARE
-                        ) / mt_getrandmax();
+                        self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                        self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+                    ) / mt_getrandmax();
 
                     $adgroupReportCost->qualityLostImpressionShare = mt_rand(
-                            self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-                            self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-                        ) / mt_getrandmax();
+                        self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                        self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+                    ) / mt_getrandmax();
 
                     $adgroupReportCost->trackingURL = self::TRACKING_URL;
                     $adgroupReportConv->trackingURL = self::TRACKING_URL;
                     $adgroupReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
                     $adgroupReportCost->conversions = mt_rand(
-                            self::MIN_CONVERSIONS,
-                            self::MAX_CONVERSIONS
-                        ) / mt_getrandmax();
+                        self::MIN_CONVERSIONS,
+                        self::MAX_CONVERSIONS
+                    ) / mt_getrandmax();
                     $adgroupReportConv->conversions = $adgroupReportCost->conversions;
                     $adgroupReportCost->convRate = mt_rand(
-                            self::MIN_CONV_RATE,
-                            self::MAX_CONV_RATE
-                        ) / mt_getrandmax();
+                        self::MIN_CONV_RATE,
+                        self::MAX_CONV_RATE
+                    ) / mt_getrandmax();
                     $adgroupReportCost->convValue = mt_rand(
-                            self::MIN_CONV_VALUE,
-                            self::MAX_CONV_VALUE
-                        ) / mt_getrandmax();
+                        self::MIN_CONV_VALUE,
+                        self::MAX_CONV_VALUE
+                    ) / mt_getrandmax();
                     $adgroupReportConv->convValue = $adgroupReportCost->convValue;
                     $adgroupReportCost->costPerConv = mt_rand(
-                            self::MIN_COST_PER_CONV,
-                            self::MAX_COST_PER_CONV
-                        ) / mt_getrandmax();
+                        self::MIN_COST_PER_CONV,
+                        self::MAX_COST_PER_CONV
+                    ) / mt_getrandmax();
                     $adgroupReportCost->valuePerConv = mt_rand(
-                            self::MIN_VALUE_PER_CONV,
-                            self::MAX_VALUE_PER_CONV
-                        ) / mt_getrandmax();
+                        self::MIN_VALUE_PER_CONV,
+                        self::MAX_VALUE_PER_CONV
+                    ) / mt_getrandmax();
                     $adgroupReportConv->valuePerConv = $adgroupReportCost->valuePerConv;
                     $adgroupReportCost->mobileBidAdj = mt_rand(
-                            self::MIN_MOBILE_BID_ADJ,
-                            self::MAX_MOBILE_BID_ADJ
-                        ) / mt_getrandmax();
+                        self::MIN_MOBILE_BID_ADJ,
+                        self::MAX_MOBILE_BID_ADJ
+                    ) / mt_getrandmax();
                     $adgroupReportConv->mobileBidAdj = $adgroupReportCost->mobileBidAdj;
                     $adgroupReportCost->desktopBidAdj = mt_rand(
-                            self::MIN_DESKTOP_BID_ADJ,
-                            self::MAX_DESKTOP_BID_ADJ
-                        ) / mt_getrandmax();
+                        self::MIN_DESKTOP_BID_ADJ,
+                        self::MAX_DESKTOP_BID_ADJ
+                    ) / mt_getrandmax();
                     $adgroupReportConv->desktopBidAdj = $adgroupReportCost->desktopBidAdj;
                     $adgroupReportCost->tabletBidAdj = mt_rand(
-                            self::MIN_TABLET_BID_ADJ,
-                            self::MAX_TABLET_BID_ADJ
-                        ) / mt_getrandmax();
+                        self::MIN_TABLET_BID_ADJ,
+                        self::MAX_TABLET_BID_ADJ
+                    ) / mt_getrandmax();
                     $adgroupReportConv->tabletBidAdj = $adgroupReportCost->tabletBidAdj;
                     $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                     $adgroupReportConv->network = $adgroupReportCost->network;
@@ -999,24 +1001,26 @@ class DemoSeeder extends Seeder
                     $adgroupReportCost->hourofday = rand(self::MIN_HOUROFDAY, self::MAX_HOUROFDAY);
                     $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
                     $adgroupReportConv->allConv = mt_rand(
-                            self::MIN_ALL_CONV,
-                            self::MAX_ALL_CONV
-                        ) / mt_getrandmax();
+                        self::MIN_ALL_CONV,
+                        self::MAX_ALL_CONV
+                    ) / mt_getrandmax();
                     $adgroupReportConv->allConvValue = mt_rand(
-                            self::MIN_ALL_CONV_VALUE,
-                            self::MAX_ALL_CONV_VALUE
-                        ) / mt_getrandmax();
+                        self::MIN_ALL_CONV_VALUE,
+                        self::MAX_ALL_CONV_VALUE
+                    ) / mt_getrandmax();
                     $adgroupReportConv->convValue = mt_rand(
-                            self::MIN_CONV_VALUE,
-                            self::MAX_CONV_VALUE
-                        ) / mt_getrandmax();
+                        self::MIN_CONV_VALUE,
+                        self::MAX_CONV_VALUE
+                    ) / mt_getrandmax();
                     $adgroupReportConv->valuePerAllConv = mt_rand(
-                            self::MIN_VALUE_PER_ALL_CONV,
-                            self::MAX_VALUE_PER_ALL_CONV
-                        ) / mt_getrandmax();
+                        self::MIN_VALUE_PER_ALL_CONV,
+                        self::MAX_VALUE_PER_ALL_CONV
+                    ) / mt_getrandmax();
                     $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                     $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-                    $adgroupReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+                    $adgroupReportConv->conversionName = self::CONVERSION_NAME[
+                        mt_rand(0, count(self::CONVERSION_NAME) - 1)
+                    ];
                     $adgroupReportConv->accountid = self::ACCOUNTID;
                     $adgroupReportCost->accountid = self::ACCOUNTID;
 
@@ -1100,63 +1104,63 @@ class DemoSeeder extends Seeder
                         $adReportConv->adTrackingID = $i;
                         $adReportCost->focusDevice = $adReportConv->focusDevice;
                         $adReportConv->conversions =  mt_rand(
-                                self::MIN_CONVERSIONS,
-                                self::MAX_CONVERSIONS
+                            self::MIN_CONVERSIONS,
+                            self::MAX_CONVERSIONS
                         ) / mt_getrandmax();
                         $adReportCost->trackingURL = $adReportConv->trackingURL;
                         $adReportConv->convValue = mt_rand(
-                                self::MIN_CONV_VALUE,
-                                self::MAX_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_VALUE,
+                            self::MAX_CONV_VALUE
+                        ) / mt_getrandmax();
                         $adReportCost->customParameters = $adReportConv->customParameters;
                         $adReportConv->valuePerConv = mt_rand(
-                                self::MIN_VALUE_PER_CONV,
-                                self::MAX_VALUE_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_CONV,
+                            self::MAX_VALUE_PER_CONV
+                        ) / mt_getrandmax();
                         $adReportCost->landingPageURL = $adReportConv->landingPageURL;
                         $adReportConv->allConv = mt_rand(
-                                self::MIN_ALL_CONV,
-                                self::MAX_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV,
+                            self::MAX_ALL_CONV
+                        ) / mt_getrandmax();
                         $adReportCost->landingPageURLSmartphone = $adReportConv->landingPageURLSmartphone;
                         $adReportConv->allConvValue = mt_rand(
-                                self::MIN_ALL_CONV_VALUE,
-                                self::MAX_ALL_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_VALUE,
+                            self::MAX_ALL_CONV_VALUE
+                        ) / mt_getrandmax();
                         $adReportCost->adTrackingID = $adReportConv->adTrackingID;
                         $adReportConv->valuePerAllConv = mt_rand(
-                                self::MIN_VALUE_PER_ALL_CONV,
-                                self::MAX_VALUE_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_ALL_CONV,
+                            self::MAX_VALUE_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $adReportCost->conversions = $adReportConv->conversions;
                         $adReportConv->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                         $adReportCost->convRate = mt_rand(
-                                self::MIN_CONV_RATE,
-                                self::MAX_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_RATE,
+                            self::MAX_CONV_RATE
+                        ) / mt_getrandmax();
                         $adReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                         $adReportCost->convValue = $adReportConv->convValue;
                         $adReportConv->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                         $adReportCost->costPerConv = mt_rand(
-                                self::MIN_COST_PER_CONV,
-                                self::MAX_COST_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_CONV,
+                            self::MAX_COST_PER_CONV
+                        ) / mt_getrandmax();
                         $adReportConv->day = $day;
                         $adReportCost->valuePerConv = $adReportConv->valuePerConv;
                         $adReportConv->dayOfWeek = $day->format('l');
                         $adReportCost->allConv = $adReportConv->allConv;
                         $adReportConv->quarter = (int)ceil((int)$day->format('n') / 3);
                         $adReportCost->allConvRate = mt_rand(
-                                self::MIN_ALL_CONV_RATE,
-                                self::MAX_ALL_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_RATE,
+                            self::MAX_ALL_CONV_RATE
+                        ) / mt_getrandmax();
                         $adReportConv->month = $day->format('F');
                         $adReportCost->allConvValue = $adReportConv->allConvValue;
                         $adReportConv->week = $day->format('W');
                         $adReportCost->costPerAllConv = mt_rand(
-                                self::MIN_COST_PER_ALL_CONV,
-                                self::MAX_COST_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_ALL_CONV,
+                            self::MAX_COST_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $adReportConv->objectiveOfConversionTracking = str_random(10);
                         $adReportCost->valuePerAllConv = $adReportConv->valuePerAllConv;
                         $adReportConv->conversionName = self::CONVERSION_NAME[
@@ -1273,16 +1277,16 @@ class DemoSeeder extends Seeder
                         $keywordReportCost->averagePosition = self::AVERAGE_POSITION;
 
                         $keywordReportCost->impressionShare = mt_rand(
-                                self::MIN_IMPRESSION_SHARE,
-                                self::MAX_IMPRESSION_SHARE
+                            self::MIN_IMPRESSION_SHARE,
+                            self::MAX_IMPRESSION_SHARE
                         ) / mt_getrandmax();
                         $keywordReportCost->exactMatchImpressionShare = mt_rand(
-                                self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
-                                self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+                            self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+                            self::MAX_EXACT_MATCH_IMPRESSION_SHARE
                         ) / mt_getrandmax();
                         $keywordReportCost->qualityLostImpressionShare = mt_rand(
-                                self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-                                self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+                            self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+                            self::MAX_BUDGET_LOST_IMPRESSION_SHARE
                         ) / mt_getrandmax();
                         $keywordReportCost->topOfPageBidEstimate = mt_rand(
                             self::MIN_TOP_OF_PAGE_BID_ESTIMATE,
@@ -1298,51 +1302,51 @@ class DemoSeeder extends Seeder
                         $keywordReportCost->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
                         $keywordReportConv->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
                         $keywordReportCost->conversions = mt_rand(
-                                self::MIN_CONVERSIONS,
-                                self::MAX_CONVERSIONS
-                            ) / mt_getrandmax();
+                            self::MIN_CONVERSIONS,
+                            self::MAX_CONVERSIONS
+                        ) / mt_getrandmax();
                         $keywordReportConv->conversions = $keywordReportCost->conversions;
                         $keywordReportCost->convRate = mt_rand(
-                                self::MIN_CONV_RATE,
-                                self::MAX_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_RATE,
+                            self::MAX_CONV_RATE
+                        ) / mt_getrandmax();
                         $keywordReportCost->convValue = mt_rand(
-                                self::MIN_CONV_VALUE,
-                                self::MAX_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_VALUE,
+                            self::MAX_CONV_VALUE
+                        ) / mt_getrandmax();
                         $keywordReportConv->convValue = $keywordReportCost->convValue;
                         $keywordReportCost->costPerConv = mt_rand(
-                                self::MIN_COST_PER_CONV,
-                                self::MAX_COST_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_CONV,
+                            self::MAX_COST_PER_CONV
+                        ) / mt_getrandmax();
 
                         $keywordReportCost->valuePerConv = mt_rand(
-                                self::MIN_VALUE_PER_CONV,
-                                self::MAX_VALUE_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_CONV,
+                            self::MAX_VALUE_PER_CONV
+                        ) / mt_getrandmax();
                         $keywordReportConv->valuePerConv = $keywordReportCost->valuePerConv;
                         $keywordReportCost->allConv = mt_rand(
-                                self::MIN_ALL_CONV,
-                                self::MAX_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV,
+                            self::MAX_ALL_CONV
+                        ) / mt_getrandmax();
                         $keywordReportConv->allConv = $keywordReportCost->allConv;
                         $keywordReportCost->allConvRate = mt_rand(
-                                self::MIN_ALL_CONV_RATE,
-                                self::MAX_ALL_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_RATE,
+                            self::MAX_ALL_CONV_RATE
+                        ) / mt_getrandmax();
                         $keywordReportCost->allConvValue = mt_rand(
-                                self::MIN_ALL_CONV_VALUE,
-                                self::MAX_ALL_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_VALUE,
+                            self::MAX_ALL_CONV_VALUE
+                        ) / mt_getrandmax();
                         $keywordReportConv->allConvValue = $keywordReportCost->allConvValue;
                         $keywordReportCost->costPerAllConv = mt_rand(
-                                self::MIN_COST_PER_ALL_CONV,
-                                self::MAX_COST_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_ALL_CONV,
+                            self::MAX_COST_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $keywordReportCost->valuePerAllConv = mt_rand(
-                                self::MIN_VALUE_PER_ALL_CONV,
-                                self::MAX_VALUE_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_ALL_CONV,
+                            self::MAX_VALUE_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $keywordReportConv->valuePerAllConv = $keywordReportCost->valuePerAllConv;
                         $keywordReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                         $keywordReportConv->network = $keywordReportCost->network;
@@ -1390,7 +1394,10 @@ class DemoSeeder extends Seeder
 
         $sumsAdgroupPrefectureImpression = [];
         foreach ($impressionSums as $adgroupID => $impression) {
-            $sumsAdgroupPrefectureImpression[$adgroupID] = $this->getRandomValues($impression, count(self::PREFECTURES));
+            $sumsAdgroupPrefectureImpression[$adgroupID] = $this->getRandomValues(
+                $impression,
+                count(self::PREFECTURES)
+            );
         }
 
         $sumsAdgroupPrefectureClick = [];
@@ -1411,7 +1418,10 @@ class DemoSeeder extends Seeder
         foreach ($sumsAdgroupPrefectureImpression as $adgroupID => $impressions) {
             $impressionValuesAdgroupPrefecture[$adgroupID] = [];
             foreach ($impressions as $impression) {
-                $impressionValuesAdgroupPrefecture[$adgroupID][] = $this->getRandomValues($impression, self::NUMBER_OF_DAYS);
+                $impressionValuesAdgroupPrefecture[$adgroupID][] = $this->getRandomValues(
+                    $impression,
+                    self::NUMBER_OF_DAYS
+                );
             }
         }
 
@@ -1478,46 +1488,46 @@ class DemoSeeder extends Seeder
                         $prefectureCost->averagePosition = self::AVERAGE_POSITION;
 
                         $prefectureCost->conversions = mt_rand(
-                                self::MIN_CONVERSIONS,
-                                self::MAX_CONVERSIONS
-                            ) / mt_getrandmax();
+                            self::MIN_CONVERSIONS,
+                            self::MAX_CONVERSIONS
+                        ) / mt_getrandmax();
 
                         $prefectureCost->convRate = mt_rand(
-                                self::MIN_CONV_RATE,
-                                self::MAX_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_RATE,
+                            self::MAX_CONV_RATE
+                        ) / mt_getrandmax();
                         $prefectureCost->convValue = mt_rand(
-                                self::MIN_CONV_VALUE,
-                                self::MAX_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_CONV_VALUE,
+                            self::MAX_CONV_VALUE
+                        ) / mt_getrandmax();
                         $prefectureCost->costPerConv = mt_rand(
-                                self::MIN_COST_PER_CONV,
-                                self::MAX_COST_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_CONV,
+                            self::MAX_COST_PER_CONV
+                        ) / mt_getrandmax();
                         $prefectureCost->valuePerConv = mt_rand(
-                                self::MIN_VALUE_PER_CONV,
-                                self::MAX_VALUE_PER_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_CONV,
+                            self::MAX_VALUE_PER_CONV
+                        ) / mt_getrandmax();
                         $prefectureCost->allConv = mt_rand(
-                                self::MIN_ALL_CONV,
-                                self::MAX_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV,
+                            self::MAX_ALL_CONV
+                        ) / mt_getrandmax();
                         $prefectureCost->allConvRate = mt_rand(
-                                self::MIN_ALL_CONV_RATE,
-                                self::MAX_ALL_CONV_RATE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_RATE,
+                            self::MAX_ALL_CONV_RATE
+                        ) / mt_getrandmax();
                         $prefectureCost->allConvValue = mt_rand(
-                                self::MIN_ALL_CONV_VALUE,
-                                self::MAX_ALL_CONV_VALUE
-                            ) / mt_getrandmax();
+                            self::MIN_ALL_CONV_VALUE,
+                            self::MAX_ALL_CONV_VALUE
+                        ) / mt_getrandmax();
                         $prefectureCost->costPerAllConv = mt_rand(
-                                self::MIN_COST_PER_ALL_CONV,
-                                self::MAX_COST_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_COST_PER_ALL_CONV,
+                            self::MAX_COST_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $prefectureCost->valuePerAllConv = mt_rand(
-                                self::MIN_VALUE_PER_ALL_CONV,
-                                self::MAX_VALUE_PER_ALL_CONV
-                            ) / mt_getrandmax();
+                            self::MIN_VALUE_PER_ALL_CONV,
+                            self::MAX_VALUE_PER_ALL_CONV
+                        ) / mt_getrandmax();
                         $prefectureCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                         $prefectureCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                         $prefectureCost->day = $day;
@@ -1528,7 +1538,9 @@ class DemoSeeder extends Seeder
                         $prefectureCost->countryTerritory = 'Japan';
                         $prefectureCost->prefecture = $prefectureName;
                         $prefectureCost->city = self::CITY[mt_rand(0, count(self::CITY) - 1)];
-                        $prefectureCost->cityWardDistrict = self::CITY_WAR_DISTRICT[mt_rand(0, count(self::CITY_WAR_DISTRICT) - 1)];
+                        $prefectureCost->cityWardDistrict = self::CITY_WAR_DISTRICT[
+                            mt_rand(0, count(self::CITY_WAR_DISTRICT) - 1)
+                        ];
                         $prefectureCost->saveOrFail();
                     }
                 }
