@@ -53,13 +53,31 @@ abstract class AbstractReportController extends Controller
         });
     }
 
+    private function translateFieldNames(array $fieldNames)
+    {
+        $translatedFieldNames = [];
+        foreach ($fieldNames as $fieldName) {
+            $translatedFieldNames[] = __('language.' . strtolower($fieldName));
+        }
+
+        return $translatedFieldNames;
+    }
+
     /**
      * @return \Illuminate\Http\Response
      */
     public function exportToExcel()
     {
         $data = $this->getDataForTable();
-        $exporter = new SpoutExcelExporter($data->getCollection());
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $fieldNames = $this->translateFieldNames(
+            array_keys($collection->first()->getAttributes())
+        );
+
+        $exporter = new SpoutExcelExporter($collection, $fieldNames);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make($excelData, 200, [
@@ -78,7 +96,15 @@ abstract class AbstractReportController extends Controller
     public function exportToCsv()
     {
         $data = $this->getDataForTable();
-        $exporter = new NativePHPCsvExporter($data->getCollection());
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $fieldNames = $this->translateFieldNames(
+            array_keys($collection->first()->getAttributes())
+        );
+
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make($csvData, 200, [
