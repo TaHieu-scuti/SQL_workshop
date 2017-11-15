@@ -130,6 +130,10 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         if ($request->specificItem === 'prefecture') {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
             $this->model = new RepoYssPrefectureReportCost;
