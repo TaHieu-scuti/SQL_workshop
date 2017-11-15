@@ -10,11 +10,14 @@ use Illuminate\Support\Str;
 
 class AdGainerUserProvider implements UserProvider
 {
-    /** @var \App\User */
+    /**
+     * @var \App\User 
+     */
     private $userModel;
 
     /**
      * AdGainerUserProvider constructor.
+     *
      * @param User $userModel
      */
     public function __construct(User $userModel)
@@ -36,7 +39,7 @@ class AdGainerUserProvider implements UserProvider
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param  mixed $identifier
+     * @param  mixed  $identifier
      * @param  string $token
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -50,7 +53,7 @@ class AdGainerUserProvider implements UserProvider
      * Update the "remember me" token for the given user in storage.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param  string $token
+     * @param  string                                     $token
      * @return void
      */
     public function updateRememberToken(Authenticatable $user, $token)
@@ -81,7 +84,7 @@ class AdGainerUserProvider implements UserProvider
      * Validate a user against the given credentials.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param  array $credentials
+     * @param  array                                      $credentials
      * @return bool
      */
     public function validateCredentials(Authenticatable $user, array $credentials)

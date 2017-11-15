@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwCampaignReportCost;
 use App\Model\RepoAdwAccountReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoAdwCampaignReportCostGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
@@ -47,13 +48,13 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
         foreach ($accountReports as $accountReport) {
             $campaignReportCost = new RepoAdwCampaignReportCost;
             $campaignReportCost->avgPosition = $accountReport->avgPosition = mt_rand(
-                                                    self::MIN_AVERAGE_POSITION,
-                                                    self::MAX_AVERAGE_POSITION
-                                                ) / mt_getrandmax();
+                self::MIN_AVERAGE_POSITION,
+                self::MAX_AVERAGE_POSITION
+            ) / mt_getrandmax();
             $campaignReportCost->conversions = mt_rand(
-                                                    self::MIN_CONVERSIONS,
-                                                    self::MAX_CONVERSIONS
-                                                ) / mt_getrandmax();
+                self::MIN_CONVERSIONS,
+                self::MAX_CONVERSIONS
+            ) / mt_getrandmax();
             $campaignReportCost->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST

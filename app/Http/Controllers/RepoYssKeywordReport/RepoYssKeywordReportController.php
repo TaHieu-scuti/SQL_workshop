@@ -56,7 +56,9 @@ class RepoYssKeywordReportController extends AbstractReportController
         'averagePosition'
     ];
 
-    /** @var \App\Model\RepoYssKeywordReportCost */
+    /**
+     * @var \App\Model\RepoYssKeywordReportCost 
+     */
     protected $model;
 
     public function __construct(
@@ -79,7 +81,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-        return view('yssKeywordReport.index', [
+        return view(
+            'yssKeywordReport.index', [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -97,7 +100,8 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-        ]);
+            ]
+        );
     }
 
     public function updateTable(Request $request)
@@ -112,7 +116,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
-        $tableDataLayout = view('layouts.table_data', [
+        $tableDataLayout = view(
+            'layouts.table_data', [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -120,17 +125,20 @@ class RepoYssKeywordReportController extends AbstractReportController
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-        ])->render();
+            ]
+        )->render();
         // if no data found
         // display no data found message on table
         if ($reports->total() !== 0) {
             $this->displayNoDataFoundMessageOnTable = false;
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
                             'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
-        ]);
+            ]
+        );
     }
 
     public function displayGraph(Request $request)
@@ -159,14 +167,16 @@ class RepoYssKeywordReportController extends AbstractReportController
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                         'data' => $data,
                         'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout,
                         'graphColumnLayout' => $graphColumnLayout,
                         'statusLayout' => $statusLayout,
                         'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-        ]);
+            ]
+        );
     }
 
     /**
