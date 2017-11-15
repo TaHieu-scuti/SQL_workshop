@@ -36,7 +36,6 @@ class CreateIndexesYssAdReportConv extends Migration
                 $table->index('startDate', 'repo_yss_ad_report_conv_idx17');
                 $table->index('endDate', 'repo_yss_ad_report_conv_idx18');
                 $table->index('accountid', 'repo_yss_ad_report_conv_idx19');
-
             }
         );
     }
