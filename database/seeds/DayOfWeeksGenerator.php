@@ -62,21 +62,21 @@ class DayOfWeeksGenerator extends Seeder
     {
         $campaignReports = RepoYssCampaignReportCost::all();
         foreach ($campaignReports as $campaignReport) {
-        	$ammountOfCampaign = rand(
+            $ammountOfCampaign = rand(
                 self::MIN_NUMBER_OF_DAYOFWEEK,
                 self::MAX_NUMBER_OF_DAYOFWEEK
             );
-            for ($i=0; $i < $ammountOfCampaign ; $i++) { 
-            	$dayOfWeek = new RepoYssDayofweekReport;
-            	$dayOfWeek->exeDate = $campaignReport->exeDate;
-            	$dayOfWeek->startDate = $campaignReport->startDate;
-            	$dayOfWeek->endDate = $campaignReport->endDate;
-            	$dayOfWeek->accountid = $campaignReport->accountid;
-            	$dayOfWeek->account_id = $campaignReport->account_id;
-            	$dayOfWeek->campaign_id = $campaignReport->campaign_id;
-            	$dayOfWeek->campaignID = $campaignReport->campaignID;
-            	$dayOfWeek->campaignName = $campaignReport->campaignName;
-            	$dayOfWeek->cost = mt_rand(
+            for ($i=0; $i < $ammountOfCampaign; $i++) {
+                $dayOfWeek = new RepoYssDayofweekReport;
+                $dayOfWeek->exeDate = $campaignReport->exeDate;
+                $dayOfWeek->startDate = $campaignReport->startDate;
+                $dayOfWeek->endDate = $campaignReport->endDate;
+                $dayOfWeek->accountid = $campaignReport->accountid;
+                $dayOfWeek->account_id = $campaignReport->account_id;
+                $dayOfWeek->campaign_id = $campaignReport->campaign_id;
+                $dayOfWeek->campaignID = $campaignReport->campaignID;
+                $dayOfWeek->campaignName = $campaignReport->campaignName;
+                $dayOfWeek->cost = mt_rand(
                     self::MIN_COST,
                     self::MAX_COST
                 );
@@ -101,8 +101,8 @@ class DayOfWeeksGenerator extends Seeder
                     self::MAX_AVERAGE_POSITION
                 ) / mt_getrandmax();
                 $dayOfWeek->bidAdjustment = mt_rand(
-                	self::MIN_BIDADJUSTMENT,
-                	self::MAX_BIDADJUSTMENT
+                    self::MIN_BIDADJUSTMENT,
+                    self::MAX_BIDADJUSTMENT
                 );
                 $dayOfWeek->targetScheduleID = $i + 1;
                 $dayOfWeek->targetSchedule = self::TARGET_SCHEDULE[mt_rand(0, count(self::TARGET_SCHEDULE) - 1)];

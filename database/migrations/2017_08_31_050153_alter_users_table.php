@@ -73,7 +73,8 @@ class AlterUsersTable extends Migration
                 $table->string('remember_token', 100)->nullable();
 
                 // remove fields
-                $table->dropColumn([
+                $table->dropColumn(
+                    [
                     'username',
                     'firstName',
                     'lastName',
@@ -103,7 +104,8 @@ class AlterUsersTable extends Migration
                     'adw_refresh_token',
                     'ds_access_token',
                     'ds_refresh_token'
-                ]);
+                    ]
+                );
 
                 // alter fields
                 $table->string('password', 255)->change();

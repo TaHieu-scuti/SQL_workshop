@@ -139,80 +139,80 @@ class RepoYssAccountReportCoGenerator extends Seeder
         $costReport->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
 
         $costReport->averageCpc = mt_rand(
-                self::MIN_AVERAGE_CPC,
-                self::MAX_AVERAGE_CPC
-            ) / mt_getrandmax();
+            self::MIN_AVERAGE_CPC,
+            self::MAX_AVERAGE_CPC
+        ) / mt_getrandmax();
 
         $costReport->averagePosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+            self::MIN_AVERAGE_POSITION,
+            self::MAX_AVERAGE_POSITION
+        ) / mt_getrandmax();
 
         $costReport->impressionShare = mt_rand(
-                self::MIN_IMPRESSION_SHARE,
-                self::MAX_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+            self::MIN_IMPRESSION_SHARE,
+            self::MAX_IMPRESSION_SHARE
+        ) / mt_getrandmax();
 
         $costReport->exactMatchImpressionShare = mt_rand(
-                self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
-                self::MAX_EXACT_MATCH_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+            self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
+            self::MAX_EXACT_MATCH_IMPRESSION_SHARE
+        ) / mt_getrandmax();
 
         $costReport->budgetLostImpressionShare = mt_rand(
-                self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-                self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+            self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+            self::MAX_BUDGET_LOST_IMPRESSION_SHARE
+        ) / mt_getrandmax();
 
         $costReport->qualityLostImpressionShare = mt_rand(
-                self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
-                self::MAX_QUALITY_LOST_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+            self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
+            self::MAX_QUALITY_LOST_IMPRESSION_SHARE
+        ) / mt_getrandmax();
 
         $costReport->trackingURL = self::TRACKING_URL;
         $convReport->trackingURL = $costReport->trackingURL;
 
         $costReport->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                self::MAX_CONVERSIONS
-            ) / mt_getrandmax();
+            self::MIN_CONVERSIONS,
+            self::MAX_CONVERSIONS
+        ) / mt_getrandmax();
         $convReport->conversions = $costReport->conversions;
 
         $costReport->convRate = mt_rand(
-                self::MIN_CONV_RATE,
-                self::MAX_CONV_RATE
-            ) / mt_getrandmax();
+            self::MIN_CONV_RATE,
+            self::MAX_CONV_RATE
+        ) / mt_getrandmax();
 
         $costReport->convValue = mt_rand(
-                self::MIN_CONV_VALUE,
-                self::MAX_CONV_VALUE
-            ) / mt_getrandmax();
+            self::MIN_CONV_VALUE,
+            self::MAX_CONV_VALUE
+        ) / mt_getrandmax();
         $convReport->convValue = $costReport->convValue;
 
         $costReport->costPerConv = mt_rand(
-                self::MIN_COST_PER_CONV,
-                self::MAX_COST_PER_CONV
-            ) / mt_getrandmax();
+            self::MIN_COST_PER_CONV,
+            self::MAX_COST_PER_CONV
+        ) / mt_getrandmax();
 
         $costReport->valuePerConv = mt_rand(
-                self::MIN_VALUE_PER_CONV,
-                self::MAX_VALUE_PER_CONV
-            ) / mt_getrandmax();
+            self::MIN_VALUE_PER_CONV,
+            self::MAX_VALUE_PER_CONV
+        ) / mt_getrandmax();
         $convReport->valuePerConv = $costReport->valuePerConv;
 
         $convReport->allConv = mt_rand(
-                self::MIN_ALL_CONV,
-                self::MAX_ALL_CONV
-            ) / mt_getrandmax();
+            self::MIN_ALL_CONV,
+            self::MAX_ALL_CONV
+        ) / mt_getrandmax();
 
         $convReport->allConvValue = mt_rand(
-                self::MIN_ALL_CONV_VALUE,
-                self::MAX_ALL_CONV_VALUE
-            ) / mt_getrandmax();
+            self::MIN_ALL_CONV_VALUE,
+            self::MAX_ALL_CONV_VALUE
+        ) / mt_getrandmax();
 
         $convReport->valuePerAllConv = mt_rand(
-                self::MIN_VALUE_PER_ALL_CONV,
-                self::MAX_VALUE_PER_ALL_CONV
-            ) / mt_getrandmax();
+            self::MIN_VALUE_PER_ALL_CONV,
+            self::MAX_VALUE_PER_ALL_CONV
+        ) / mt_getrandmax();
 
         $convReport->clickType = 'random click';
         $convReport->objectiveOfConversionTracking = 'objective';
