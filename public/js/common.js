@@ -7,7 +7,7 @@ $('.selectpicker').selectpicker();
 * stop drop-down menu form disappearing on clicking
 */
 $('.dropdown-menu.tasks-bar input').click(function (event) {
-    event.stopPropagation(); 
+    event.stopPropagation();
 });
 
 $('.dropdown-menu.date-option .custom-li').click(function () {
@@ -343,6 +343,28 @@ $('.specific-filter-item').click(function() {
         },
         data : {
             'specificItem' : $(this).data('value'),
+        },
+        beforeSend : function () {
+            sendingRequestTable();
+        },
+        success : function (response) {
+            $('.table_data_report').html(response.tableDataLayout);
+        },
+        complete : function () {
+            completeRequestTable();
+        }
+    });
+});
+
+$('.normal-report').click(function() {
+    $.ajax({
+        url : prefixRoute + "/update-table",
+        type : "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            'normalReport' : 'normal-report',
         },
         beforeSend : function () {
             sendingRequestTable();

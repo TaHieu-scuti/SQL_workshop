@@ -1,7 +1,8 @@
-<?php 
+<?php
 return [
     'account' => 'アカウント名',
     'Search_for_account' => 'アカウント名で検索',
+    'engineAccount' => 'エンジンアカウント',
     'campaign' => 'キャンペーン',
     'AD_GROUPS' => '広告グループ',
     'adgroup' => '広告グループ',
