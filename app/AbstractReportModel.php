@@ -35,6 +35,11 @@ abstract class AbstractReportModel extends Model
         'averagePosition'
     ];
 
+    const AVERAGE_FIELDS_ADW = [
+        'avgCPC',
+        'avgPosition'
+    ];
+
     const SUM_FIELDS = [
         'clicks',
         'impressions',
@@ -67,16 +72,10 @@ abstract class AbstractReportModel extends Model
         if (isset($fieldNames[0]) && $fieldNames[0] === 'prefecture') {
             $tableName = 'repo_yss_prefecture_report_cost';
         }
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
-            ) {
-                $key = array_search(static::PAGE_ID, $fieldNames);
-                if ($key !== false) {
-                    unset($fieldNames[$key]);
-                }
+        if (array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames) === false) {
+            $key = array_search(static::PAGE_ID, $fieldNames);
+            if ($key !== false) {
+                unset($fieldNames[$key]);
             }
         }
         $arrayCalculate = [];
@@ -90,6 +89,11 @@ abstract class AbstractReportModel extends Model
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
+
+            if ($fieldName === static::PAGE_ID) {
+                $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
+            }
+
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName

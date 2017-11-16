@@ -30,6 +30,7 @@ abstract class AbstractReportController extends Controller
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
 
+    protected $page = 1;
     /**
      * AbstractReportController constructor.
      * @param ResponseFactory $responseFactory
@@ -51,6 +52,10 @@ abstract class AbstractReportController extends Controller
 
             return $next($request);
         });
+    }
+
+    protected function updateNumberPage ($page) {
+        $this->page = $page;
     }
 
     /**
