@@ -13,3 +13,6 @@ npm-debug.log
 .env
 *.orig
 *.swp
+.buildpath
+.project
+.settings
