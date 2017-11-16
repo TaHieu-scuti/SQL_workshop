@@ -30,6 +30,12 @@ class UpdateAdwCampaignCostTableStructure extends Migration
      */
     public function down()
     {
-        //
+        Schema::table(
+            'repo_adw_campaign_report_cost',
+            function (Blueprint $table) {
+                $table->string('timeZone', 50)
+                    ->change();
+            }
+        )
     }
 }
