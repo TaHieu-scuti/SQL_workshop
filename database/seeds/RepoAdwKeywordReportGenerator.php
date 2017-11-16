@@ -7,7 +7,7 @@ use App\Model\RepoAdwKeywordReportCost;
 // @codingStandardsIgnoreLine
 class RepoAdwKeywordReportGenerator extends Seeder
 {
-	const MIN_NUMBER_OF_KEYWORD = 1;
+    const MIN_NUMBER_OF_KEYWORD = 1;
     const MAX_NUMBER_OF_KEYWORD = 2;
     const KEYWORD = 'Keyword ';
     const MIN_COST = 1;
@@ -30,7 +30,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MAX_ALL_CONV = 894894374;
     const MIN_ALL_CONV_VALUE = 1000000;
     const MAX_ALL_CONV_VALUE = 894894374;
- 	const MIN_VALUE_ALL_CONV = 1000000;
+    const MIN_VALUE_ALL_CONV = 1000000;
     const MAX_VALUE_ALL_CONV = 894894374;
     const MIN_TOTAL_CONV_VALUE = 1000000;
     const MAX_TOTAL_CONV_VALUE = 894894374;
@@ -59,7 +59,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->startDate = $adgroupReport->startDate;
                 $keywordReportCost->endDate = $adgroupReport->endDate;
                 $keywordReportCost->account_id = $adgroupReport->account_id;
-                $keywordReportCost->account = $adgroupReport->account;                
+                $keywordReportCost->account = $adgroupReport->account;
                 $keywordReportCost->campaign_id = $adgroupReport->campaign_id;
                 $keywordReportCost->adGroupID = $adgroupReport->adGroupID;
                 $keywordReportCost->adGroup = $adgroupReport->adgroup;
