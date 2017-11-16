@@ -26,7 +26,10 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->string('currency', 50)->nullable()->comment('顧客口座の通貨。');
                 $table->text('account')->nullable()->comment('カスタマーアカウントのわかりやすい名前。');
                 $table->string('timeZone')->nullable()
-                    ->comment('顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。');
+                    ->comment(
+                        '顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、'
+                           . 'タイムゾーンの夏時間の現在の状態は反映されません。'
+                    );
                 $table->double('activeViewAvgCPM')->nullable()
                     ->comment('視認可能インプレッションの平均費用（ActiveViewImpressions）。');
                 $table->double('activeViewViewableCTR')->nullable()
@@ -48,9 +51,15 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->string('networkWithSearchPartners', 50)->nullable()
                     ->comment('第2レベルのネットワークタイプ（検索パートナーを含む）。');
                 $table->double('allConvRate')->nullable()
-                    ->comment('AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。 "x.xx％"として返されるパーセンテージ。');
+                    ->comment(
+                        'AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、'
+                        . '広告のクリックがコンバージョンにつながった頻度です。 "x.xx％"として返されるパーセンテージ。'
+                    );
                 $table->double('allConv')->nullable()
-                    ->comment('AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        'AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。'
+                           . 'このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->double('allConvValue')->nullable()
                     ->comment('推定されたものを含む、すべてのコンバージョンの合計値。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
                 $table->string('approvalStatus', 50)->nullable()->comment('基準の承認ステータス。');
@@ -74,11 +83,17 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->string('campaignState', 50)->nullable()->comment('キャンペーンのステータス。');
                 $table->bigInteger('clicks')->nullable()->comment('クリック数。');
                 $table->string('clickType', 50)->nullable()
-                    ->comment('[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。 広告は複数のクリックタイプで表示できるため、インプレッション数は2倍になり、合計が正確でない可能性があります。');
+                    ->comment(
+                        '[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。 広告は複数のクリックタイプで表示できるため、'
+                           . 'インプレッション数は2倍になり、合計が正確でない可能性があります。'
+                    );
                 $table->double('convRate')->nullable()
                     ->comment('コンバージョン数をコンバージョンにトラッキングできる合計クリック数で割ったものです。 "x.xx％"として返されるパーセンテージ。');
                 $table->double('conversions')->nullable()
-                    ->comment('最適化を選択したすべてのコンバージョンアクションのコンバージョン数。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '最適化を選択したすべてのコンバージョンアクションのコンバージョン数。このフィールドは、小数点の区切り文字としてドット（"."）'
+                           . 'でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->double('totalConvValue')->nullable()
                     ->comment('すべてのコンバージョンのコンバージョン値の合計。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
                 $table->double('cost')->nullable()->comment('この期間のクリック単価（CPC）とインプレッション単価（CPM）の合計。');
@@ -86,23 +101,42 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->double('costConv')->nullable()
                     ->comment('コンバージョントラッキングクリック数に起因する費用をコンバージョン数で割った値');
                 $table->double('costConvCurrentModel')->nullable()
-                    ->comment('現在選択しているアトリビューションモデルで、過去の「CostPerConversion」データがどのように表示されるかを示します。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '現在選択しているアトリビューションモデルで、過去の「CostPerConversion」データがどのように表示されるかを示します。'
+                           . 'このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->double('maxCPC')->nullable()
-                    ->comment('クリック単価制。値は、a）小額の金額、b）AdWordsが自動的に選択された入札戦略で入札単価を設定する場合は「自動：x」または「自動」、c）クリック単価が適用されない場合は「 - 」のいずれかです行に');
+                    ->comment(
+                        'クリック単価制。値は、a）小額の金額、b）AdWordsが自動的に選択された入札戦略で入札単価を設定する場合は「自動：x」'
+                           . 'または「自動」、c）クリック単価が適用されない場合は「 - 」のいずれかです行に'
+                    );
                 $table->string('maxCPCSource', 50)->nullable()->comment('CPC入札のソース。 - 」のいずれかです行に');
                 $table->double('maxCPM')->nullable()->comment('1,000インプレッションあたりの単価）の単価');
                 $table->string('adRelevance', 50)->nullable()->comment('広告の品質スコア');
                 $table->text('keyword')->nullable()
-                    ->comment('Criterionの記述的な文字列。レポートの条件タイプのフォーマットの詳細については、レポートガイドのCriteriaプレフィックスセクション（URL：https://developers.google.com/adwords/api/docs/guides/reporting#criteria_prefixes）を参照してください。');
+                    ->comment(
+                        'Criterionの記述的な文字列。レポートの条件タイプのフォーマットの詳細については、レポートガイドの'
+                        . 'Criteriaプレフィックスセクション（URL：https://developers.google.com'
+                        . '/adwords/api/docs/guides/reporting#criteria_prefixes）を参照してください。'
+                    );
                 $table->text('destinationURL')->nullable()->comment('広告を表示した条件のリンク先URL。');
                 $table->double('crossDeviceConv')->nullable()
-                    ->comment('顧客が1つの端末でAdWords広告をクリックしてから別の端末やブラウザで変換した後のコンバージョンデバイス間のコンバージョンは既にAllConversions列に含まれています。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '顧客が1つの端末でAdWords広告をクリックしてから別の端末やブラウザで変換した後のコンバージョンデバイス間のコンバージョンは既に'
+                        . 'AllConversions列に含まれています。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->double('ctr')->nullable()
                     ->comment('広告がクリックされた回数（クリック数）を広告が表示された回数（インプレッション数）で割ったものです。 "x.xx％"として返されるパーセンテージ。');
                 $table->double('conversionsCurrentModel')->nullable()
-                    ->comment('現在選択しているアトリビューションモデルでの過去の「コンバージョン」データの表示方法を示します。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '現在選択しているアトリビューションモデルでの過去の「コンバージョン」データの表示方法を示します。'
+                           . 'このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->double('convValueCurrentModel')->nullable()
-                    ->comment('現在選択しているアトリビューションモデルで、過去の「ConversionValue」データがどのように表示されるかを示します。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '現在選択しているアトリビューションモデルで、過去の「ConversionValue」データがどのように表示されるかを示します。'
+                           . 'このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->text('clientName')->nullable()->comment('カスタマーのわかりやすい名前。');
                 $table->date('day')->nullable()->comment('日付はyyyy-MM-ddの形式になります。');
                 $table->string('dayOfWeek', 50)->nullable()->comment('曜日の名前です（例：「月曜日」）。');
@@ -115,22 +149,36 @@ class RepoAdwKeywordReportCost extends Migration
                     ->comment('FirstPositionCpcの値にキーワードの入札単価を変更すると、週あたりの費用の見積もりが変わる可能性があります。');
                 $table->bigInteger('customerID')->nullable()->comment('顧客ID。');
                 $table->text('appFinalURL')->nullable()
-                    ->comment('この行のメインオブジェクトの最終的なアプリURLのリスト。リストのエントリは、a）「android-app：」（Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）のいずれかで始まります。 AppUrlList要素はJSONリスト形式で返されます。');
+                    ->comment(
+                        'この行のメインオブジェクトの最終的なアプリURLのリスト。リストのエントリは、a）「android-app：」（'
+                        . 'Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）のいずれかで始まります。 AppUrl'
+                        . 'List要素はJSONリスト形式で返されます。'
+                    );
                 $table->text('mobileFinalURL')->nullable()
                     ->comment('この行のメインオブジェクトの最終的なモバイルURLのリスト。 UrlList要素はJSONリスト形式で返されます。');
                 $table->text('finalURL')->nullable()
                     ->comment('この行の主要オブジェクトの最終的なURLのリスト。 UrlList要素はJSONリスト形式で返されます。');
                 $table->double('firstPageCPC')->nullable()
-                    ->comment('検索結果の最初のページに広告を表示するために必要なクリック単価の見積もり。通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。');
+                    ->comment(
+                        '検索結果の最初のページに広告を表示するために必要なクリック単価の見積もり。通常マイクロ秒単位の数字ですが、'
+                        . '自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。'
+                    );
                 $table->double('firstPositionCPC')->nullable()
-                    ->comment('広告がGoogle検索結果の最初のページの最初の位置に表示されるのに必要な金額を見積もります。通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。');
+                    ->comment(
+                        '広告がGoogle検索結果の最初のページの最初の位置に表示されるのに必要な金額を見積もります。'
+                        . '通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、'
+                        . '単に「auto」という文字列であってもかまいません。'
+                    );
                 $table->bigInteger('gmailForwards')->nullable()->comment('広告が誰かにメッセージとして転送された回数。');
                 $table->bigInteger('gmailSaves')->nullable()
                     ->comment('Gmail広告をメッセージとして受信トレイに保存した回数。');
                 $table->bigInteger('gmailClicksToWebsite')->nullable()
                     ->comment('Gmail広告の展開状態でのリンク先ページへのクリック数。');
                 $table->boolean('hasQualityScore')->nullable()
-                    ->comment('基準のQualityScoreフィールドに値があるかどうか。レポート要求述部のこのフィールドを使用して、QualityScoreフィールドの値の有無にかかわらず条件を含めるか除外します。');
+                    ->comment(
+                        '基準のQualityScoreフィールドに値があるかどうか。レポート要求述部のこのフィールドを使用して、'
+                        . 'QualityScoreフィールドの値の有無にかかわらず条件を含めるか除外します。'
+                    );
                 $table->bigInteger('keywordID')->nullable()->comment('この行の主オブジェクトのID。');
                 $table->bigInteger('impressions')->nullable()
                     ->comment('Googleネットワークの検索結果ページやウェブサイトに広告が表示された回数をカウントします。');
@@ -150,15 +198,26 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->string('monthOfYear', 50)->nullable()->comment('月の名前です（例：「12月」）。');
                 $table->string('landingPageExperience', 50)->nullable()->comment('ランディングページの品質スコア。');
                 $table->integer('qualityScore')->nullable()
-                    ->comment('AdGroupCriterionの品質スコア。範囲は1（最低）〜10（最高）です。品質スコア情報がない場合、 " - "が返されます。 「HasQualityScore」列を使用してフィルタを適用して、QualityScoreフィールドの値の有無にかかわらず条件を含めるか除外することができます。詳細については、レポートコンセプトガイド（URL：https://developers.google.com/adwords/api/docs/guides/reporting-concepts#quality_score_in_reports）をご覧ください。');
+                    ->comment(
+                        'AdGroupCriterionの品質スコア。範囲は1（最低）〜10（最高）です。品質スコア情報がない場合、 " - "が返されます。'
+                        . ' 「HasQualityScore」列を使用してフィルタを適用して、QualityScoreフィールドの値の有無にかかわらず条件を含めるか除外することができます。'
+                        . '詳細については、レポートコンセプトガイド（URL：https://developers.google.com/'
+                        . 'adwords/api/docs/guides/reporting-concepts#quality_score_in_reports）をご覧ください。'
+                    );
                 $table->date('quarter')->nullable()
                     ->comment('四半期の最初の日は、yyyy-MM-ddの形式です。四半期の暦年を使用します。たとえば、2014年第2四半期は2014-04-01に開始します。');
                 $table->string('expectedClickthroughRate', 50)->nullable()->comment('他の広告主様のクリック率と比較して');
                 $table->string('keywordState', 50)->nullable()
-                    ->comment('この行のメインオブジェクトのステータス。たとえば、キャンペーンの掲載結果レポートでは、これが各行のキャンペーンのステータスになります。広告グループの掲載結果レポートでは、これは各行の広告グループのステータスになります。');
+                    ->comment(
+                        'この行のメインオブジェクトのステータス。たとえば、キャンペーンの掲載結果レポートでは、これが各行のキャンペーンのステータスになります。'
+                        . '広告グループの掲載結果レポートでは、これは各行の広告グループのステータスになります。'
+                    );
                 $table->string('criterionServingStatus', 50)->nullable()->comment('基準のステータスを提供します。');
                 $table->double('topOfPageCPC')->nullable()
-                    ->comment('検索結果の最初のページの上部に広告を表示するために必要なクリック単価の見積もり。通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。');
+                    ->comment(
+                        '検索結果の最初のページの上部に広告を表示するために必要なクリック単価の見積もり。通常マイクロ秒単位の数字ですが、'
+                        . '自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。'
+                    );
                 $table->text('trackingTemplate')->nullable()->comment('この行のメインオブジェクトのトラッキングテンプレート。');
                 $table->text('customParameter')->nullable()
                     ->comment('この行のメインオブジェクトのカスタムURLパラメータ。 CustomParameters要素はJSONマップ形式で返されます。');
@@ -167,7 +226,10 @@ class RepoAdwKeywordReportCost extends Migration
                 $table->double('valueConv')->nullable()
                     ->comment('コンバージョン数の合計をコンバージョン数で割った値。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
                 $table->double('valueConvCurrentModel')->nullable()
-                    ->comment('現在選択しているアトリビューションモデルで、過去の「ValuePerConversion」データがどのように表示されるかを示します。このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。');
+                    ->comment(
+                        '現在選択しているアトリビューションモデルで、過去の「ValuePerConversion」データがどのように表示されるかを示します。'
+                           . 'このフィールドは、小数点の区切り文字としてドット（"."）でフォーマットされます（例：1000000.00）。'
+                    );
                 $table->bigInteger('verticalID')->nullable()->comment('垂直のID。');
                 $table->date('week')->nullable()->comment('yyyy-MM-ddの形式の月曜日の日付。');
                 $table->integer('year')->nullable()->comment('年はyyyyの形式です。');
