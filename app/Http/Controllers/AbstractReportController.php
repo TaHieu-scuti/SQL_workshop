@@ -172,6 +172,7 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
+        session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         if (session('accountID') === null) {
             session([self::SESSION_KEY_ACCOUNT_ID => null]);
         }
@@ -316,6 +317,14 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
     }
 
+    public function updateNormalReport()
+    {
+        $array = session(static::SESSION_KEY_FIELD_NAME);
+        $array[0] = static::GROUPED_BY_FIELD;
+        session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
+        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+    }
+
     public function updateSessionData(Request $request)
     {
         // update session.graphColumnName
@@ -409,6 +418,10 @@ abstract class AbstractReportController extends Controller
 
         if ($request->specificItem !== null) {
             $this->updateSessionGroupedByFieldName($request->specificItem);
+        }
+
+        if ($request->normalReport !== null) {
+            $this->updateNormalReport();
         }
     }
 
