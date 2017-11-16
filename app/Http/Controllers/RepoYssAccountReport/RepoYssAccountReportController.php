@@ -88,7 +88,10 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $this->checkoutSessionFieldName();
         // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
