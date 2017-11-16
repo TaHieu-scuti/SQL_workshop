@@ -20,7 +20,7 @@ class UpdateAdwCampaignCostTableStructure extends Migration
                     ->nullable()
                     ->change();
             }
-        )
+        );
     }
 
     /**
@@ -36,6 +36,6 @@ class UpdateAdwCampaignCostTableStructure extends Migration
                 $table->string('timeZone', 50)
                     ->change();
             }
-        )
+        );
     }
 }
