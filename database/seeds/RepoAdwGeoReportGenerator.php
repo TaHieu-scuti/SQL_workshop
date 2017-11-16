@@ -37,7 +37,7 @@ class RepoAdwGeoReportGenerator extends Seeder
     public function run()
     {
         $adgroupReports = RepoAdwAdgroupReportCost::all();
-        foreach ($adgroupReports as $key => $adgroupReport) {
+        foreach ($adgroupReports as $adgroupReport) {
             $ammountOfAdgroup = rand(
                 self::MIN_NUMBER_OF_PREFECTURE,
                 self::MAX_NUMBER_OF_PREFECTURE
