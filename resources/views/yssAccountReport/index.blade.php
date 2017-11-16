@@ -6,8 +6,12 @@
 
 @section('filter-list')
     <ul class="panel">
+        <li class="panel-body normal-report">
+            <a href="javascript:void(0)">
+                @lang('language.engineAccount')
+            </a>
+        </li>
         <li class="panel-body">
-
             <a href="{{ route('campaign-report') }}">
                 @lang('language.campaign')
             </a>
