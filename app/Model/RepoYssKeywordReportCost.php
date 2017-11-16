@@ -16,12 +16,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
     const PAGE_ID = "keywordID";
     const GROUPED_BY_FIELD_NAME = 'keyword';
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $table = 'repo_yss_keyword_report_cost';
 

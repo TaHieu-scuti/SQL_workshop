@@ -2,7 +2,6 @@
 
 namespace App\Export\Native;
 
-use App\AbstractReportModel;
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,33 +11,38 @@ use DateTime;
 class NativePHPCsvExporter implements CSVExporterInterface
 {
     /**
-     * @var string 
+     * @var string
      */
     private $fileName;
 
     /**
-     * @var resource 
+     * @var resource
      */
     private $fileHandle;
 
     /**
-     * @var int 
+     * @var int
      */
     private $fileSize = 0;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Collection 
+     * @var \Illuminate\Database\Eloquent\Collection
      */
     private $exportData;
+
+    /** @var string[] */
+    private $fieldNames;
 
     /**
      * NativePHPCsvExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
+     * @param string[] $fieldNames
      */
-    public function __construct(Collection $exportData)
+    public function __construct(Collection $exportData, array $fieldNames = null)
     {
         $this->exportData = $exportData;
+        $this->fieldNames = $fieldNames;
     }
 
     private function generateFilename()
@@ -49,6 +53,19 @@ class NativePHPCsvExporter implements CSVExporterInterface
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
             . '.csv';
+    }
+
+    /**
+     * @throws CsvException
+     */
+    private function writeBOM()
+    {
+        $bytesWritten = fputs($this->fileHandle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        if ($bytesWritten === false) {
+            throw new CsvException('Failed to write Byte Order Mark!');
+        }
+
+        $this->fileSize += $bytesWritten;
     }
 
     /**
@@ -85,17 +102,21 @@ class NativePHPCsvExporter implements CSVExporterInterface
             throw new CsvException('Unable to open temporary file!');
         }
 
+        $this->writeBOM();
+
         // get fields' names
-        $fieldNames = array_keys($this->exportData->first()->getAttributes());
-        foreach ($fieldNames as $key => $fieldName) {
-            $fieldNames[$key] = __('language.' .str_slug($fieldName, '_'));
+        $fieldNames = $this->fieldNames;
+        if ($fieldNames === null) {
+            $fieldNames = array_keys($this->exportData->first()->getAttributes());
         }
+
         $this->writeLine($fieldNames);
         $this->exportData->each(
             function ($value) {
                 $this->writeLine($value->toArray());
             }
         );
+
         if (rewind($this->fileHandle) === false) {
             throw new CsvException('Unable to rewind file handle!');
         }
@@ -108,6 +129,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         if (fclose($this->fileHandle) === false) {
             throw new CsvException('Unable to close file handle!');
         }
+
         return $csvData;
     }
 }

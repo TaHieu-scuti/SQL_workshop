@@ -56,7 +56,7 @@ class RepoYssAdReportController extends AbstractReportController
     ];
 
     /**
-     * @var \App\Model\RepoYssAdReportCost 
+     * @var \App\Model\RepoYssAdReportCost
      */
     protected $model;
 
@@ -81,7 +81,8 @@ class RepoYssAdReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return view(
-            'yssAdReport.index', [
+            'yssAdReport.index',
+            [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -154,7 +155,8 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
-            'layouts.table_data', [
+            'layouts.table_data',
+            [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),

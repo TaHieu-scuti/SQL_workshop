@@ -60,7 +60,7 @@ class RepoYssAccountReportController extends AbstractReportController
     ];
 
     /**
-     * @var \App\Model\RepoYssAccountReportCost 
+     * @var \App\Model\RepoYssAccountReportCost
      */
     protected $model;
 
@@ -130,6 +130,10 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         if ($request->specificItem === 'prefecture') {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
             $this->model = new RepoYssPrefectureReportCost;
@@ -140,7 +144,8 @@ class RepoYssAccountReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
-            'layouts.table_data', [
+            'layouts.table_data',
+            [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),

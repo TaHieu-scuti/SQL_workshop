@@ -19,12 +19,12 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     const PAGE_ID = 'campaignID';
 
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $table = 'repo_yss_campaign_report_cost';
 

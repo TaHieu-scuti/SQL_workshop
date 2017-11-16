@@ -2,7 +2,6 @@
 
 namespace App\Export\Spout;
 
-use App\AbstractReportModel;
 use App\Export\ExcelExporterInterface;
 
 use Box\Spout\Common\Type;
@@ -16,22 +15,28 @@ use Exception;
 class SpoutExcelExporter implements ExcelExporterInterface
 {
     /**
-     * @var string 
+     * @var string
      */
     private $fileName;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Collection 
+     * @var \Illuminate\Database\Eloquent\Collection
      */
     private $exportData;
+
+    /** @var string[] */
+    private $fieldNames;
+
     /**
      * SpoutExcelExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
+     * @param string[] $fieldNames
      */
-    public function __construct(Collection $exportData)
+    public function __construct(Collection $exportData, array $fieldNames = null)
     {
         $this->exportData = $exportData;
+        $this->fieldNames = $fieldNames;
     }
 
     private function generateFilename()
@@ -69,11 +74,13 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $writer = WriterFactory::create(Type::XLSX)
                 ->openToFile($tempFileName);
 
-            $fieldNames = array_keys($this->exportData->first()->getAttributes());
-            foreach ($fieldNames as $key => $fieldName) {
-                $fieldNames[$key] =  __('language.' . str_slug($fieldName, '_'));
+            $fieldNames = $this->fieldNames;
+            if ($fieldNames === null) {
+                $fieldNames = array_keys($this->exportData->first()->getAttributes());
             }
+
             $writer->addRow($fieldNames);
+
             $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
@@ -87,6 +94,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
             if ($excelData === false) {
                 throw new SpoutException('Unable to read the temporary file!');
             }
+
             return $excelData;
         } catch (SpoutException $exception) {
             throw $exception;

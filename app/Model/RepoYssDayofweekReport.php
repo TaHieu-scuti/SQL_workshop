@@ -8,12 +8,12 @@ use App\AbstractReportModel;
 class RepoYssDayofweekReport extends AbstractReportModel
 {
     /**
-     * @var bool 
+     * @var bool
      */
     public $timestamps = false;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $table = 'repo_yss_dayofweek_report';
     /**

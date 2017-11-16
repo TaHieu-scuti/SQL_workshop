@@ -54,7 +54,9 @@ class CreateRepoYssCampaignReportCostsTable extends Migration
                 $table->double('tabletBidAdj')->nullable()->comment('タブレット入札価格調整率（％）');
                 $table->string('network', 50)->nullable()->comment('広告掲載方式の指定');
                 $table->string('device', 50)->nullable()->comment('デバイス');
-                $table->dateTime('day')->nullable()->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
+                $table->dateTime('day')
+                    ->nullable()
+                    ->comment('レコードの対象日：年（year）、月（monthofYear）、日（day）。左項目を加工してDATETIMEに変換');
                 $table->string('dayOfWeek', 50)->nullable()->comment('曜日');
                 $table->string('quarter', 50)->nullable()->comment('四半期');
                 $table->string('month', 50)->nullable()->comment('毎月');
