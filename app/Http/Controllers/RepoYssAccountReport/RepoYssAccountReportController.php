@@ -48,6 +48,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
+    const PREFECTURE = 'prefecture';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -89,7 +90,7 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
         $this->checkoutSessionFieldName();
@@ -133,12 +134,12 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
 
-        if ($request->specificItem === 'prefecture') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
+        if ($request->specificItem === self::PREFECTURE) {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
             $this->model = new RepoYssPrefectureReportCost;
         }
 
