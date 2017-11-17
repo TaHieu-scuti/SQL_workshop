@@ -50,7 +50,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         Collection $exportData,
         array $fieldNames = null,
         array $aliases = null
-    ){
+    ) {
         $this->exportData = $exportData;
         $this->fieldNames = $fieldNames;
         $this->aliases = $aliases;
