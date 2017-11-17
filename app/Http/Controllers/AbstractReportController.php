@@ -71,7 +71,8 @@ abstract class AbstractReportController extends Controller
         return $translatedFieldNames;
     }
 
-    protected function updateNumberPage ($page) {
+    protected function updateNumberPage($page)
+    {
         $this->page = $page;
     }
 

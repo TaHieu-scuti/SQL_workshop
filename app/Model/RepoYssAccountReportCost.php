@@ -66,10 +66,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
         }
     }
 
-    protected function getBinddingSql($data) {
+    protected function getBinddingSql($data)
+    {
         $sql = $data->toSql();
-        foreach($data->getBindings() as $binding)
-        {
+        foreach ($data->getBindings() as $binding) {
             $value = is_numeric($binding) ? $binding : "'".$binding."'";
             $sql = preg_replace('/\?/', $value, $sql, 1);
         }
@@ -107,18 +107,17 @@ class RepoYssAccountReportCost extends AbstractReportModel
             }
         }
         return $arrSelect;
-
     }
 
-    protected function  getAggregatedGraph($column)
+    protected function getAggregatedGraph($column)
     {
         $arrSelect = [];
         $tableName = $this->getTable();
         $arrSelect[] = DB::raw('DATE(day) as day');
         if (in_array($column, static::AVERAGE_FIELDS)) {
             $arrSelect[] = DB::raw(
-                    'ROUND(AVG('. $column .'), 2) AS data'
-                );
+                'ROUND(AVG('. $column .'), 2) AS data'
+            );
         } elseif (in_array($column, static::SUM_FIELDS)) {
             if (DB::connection()->getDoctrineColumn($tableName, $column)
                     ->getType()
@@ -140,7 +139,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     {
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         array_push($fieldNames, 'avgCPC', 'avgPosition');
-        if(array_search('accountName', $fieldNames) === false) {
+        if (array_search('accountName', $fieldNames) === false) {
             $key = array_search(static::GROUPED_BY_FIELD_NAME_ADW, $fieldNames);
             if ($key !== false) {
                 unset($fieldNames[$key]);
@@ -376,14 +375,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $sql = $this->getBinddingSql($data);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
-            ->select(DB::raw('sum(clicks) as clicks,
-                    sum(cost) as cost,
-                    sum(impressions) as impressions,
-                    sum(ctr) as ctr,
-                    avg(averageCpc) as averageCpc,
-                    avg(averagePosition) as averagePosition'
-                )
-            );
+            ->select(DB::raw('
+                sum(clicks) as clicks,
+                sum(cost) as cost,
+                sum(impressions) as impressions,
+                sum(ctr) as ctr,
+                avg(averageCpc) as averageCpc,
+                avg(averagePosition) as averagePosition
+            '));
 
         $data = $data->first();
 
@@ -447,13 +446,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $event->statement->setFetchMode(PDO::FETCH_ASSOC);
         });
         $data = DB::table(DB::raw("({$sql}) as tbl"))
-            ->select(DB::raw('sum(clicks) as clicks,
-                    sum(cost) as cost,
-                    sum(impressions) as impressions,
-                    avg(averageCpc) as averageCpc,
-                    avg(averagePosition) as averagePosition'
-                )
-            );
+            ->select(DB::raw('
+                sum(clicks) as clicks,
+                sum(cost) as cost,
+                sum(impressions) as impressions,
+                avg(averageCpc) as averageCpc,
+                avg(averagePosition) as averagePosition
+            '));
 
         $data = $data->first();
         if ($data === null) {
@@ -489,7 +488,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
 
         $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAccountReport = \App\Model\RepoAdwAccountReportCost::select(array_merge([DB::raw("'adw' as engine")], $adwAggreations))
+        $adwAccountReport = \App\Model\RepoAdwAccountReportCost::select(
+            array_merge([DB::raw("'adw' as engine")], $adwAggreations)
+        )
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -555,13 +556,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $datas = DB::table(DB::raw("({$sql}) as tbl"))
                 ->select(
                     DB::raw($groupedByField),
-                    DB::raw('sum(clicks) as clicks,
-                            sum(cost) as cost,
-                            sum(impressions) as impressions,
-                            sum(ctr) as ctr,
-                            avg(averageCpc) as averageCpc,
-                            avg(averagePosition) as averagePosition'
-                        )
+                    DB::raw('
+                        sum(clicks) as clicks,
+                        sum(cost) as cost,
+                        sum(impressions) as impressions,
+                        sum(ctr) as ctr,
+                        avg(averageCpc) as averageCpc,
+                        avg(averagePosition) as averagePosition
+                    ')
                 )
                 ->groupBy($groupedByField);
         }
@@ -571,14 +573,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $datas;
     }
 
-    protected function getDatasAccountOfGoogle (
+    protected function getDatasAccountOfGoogle(
         array $fieldNames,
         $startDay,
         $endDay,
         $adgainerId = null,
         $accountId = null
-        )
-    {
+    ) {
         $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = \App\Model\RepoAdwAccountReportCost::select(array_merge($adwAggreations))
             ->where(

@@ -101,7 +101,8 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20), count($dataReports),
+            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
+            count($dataReports),
             20,
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
@@ -159,7 +160,8 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($reports->toArray(), ($this->page - 1) * 20, 20), count($reports),
+            array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
+            count($reports),
             20,
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
@@ -167,14 +169,16 @@ class RepoYssAccountReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
-        $tableDataLayout = view('layouts.table_data', [
-            self::REPORTS => $results,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-            self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray,
-            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+        $tableDataLayout = view(
+            'layouts.table_data',
+            [
+                self::REPORTS => $results,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
         // if no data found
