@@ -6,6 +6,11 @@
 
 @section('filter-list')
     <ul class="panel">
+        <li class="panel-body normal-report">
+            <a href="javascript:void(0)">
+                @lang('language.AD_GROUPS')
+            </a>
+        </li>
         <li class="panel-body">
             <a href="{{ route('keyword-report') }}">
                 @lang('language.keywords')

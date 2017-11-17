@@ -45,6 +45,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'adgroupName';
     const PREFIX_ROUTE = 'prefixRoute';
+    const PREFECTURE = 'prefecture';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -76,7 +77,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
