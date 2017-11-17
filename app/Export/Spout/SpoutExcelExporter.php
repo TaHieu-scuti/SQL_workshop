@@ -44,7 +44,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
         Collection $exportData,
         array $fieldNames = null,
         array $aliases = null
-    ){
+    ) {
         $this->exportData = $exportData;
         $this->fieldNames = $fieldNames;
         $this->aliases = $aliases;
