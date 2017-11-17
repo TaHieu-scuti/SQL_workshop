@@ -59,11 +59,11 @@
                         @continue
                     @endif
                     @if ($fieldName === 'accountName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a></td>
+                        <td><a href="/campaign-report/{{isset($report['engine']) ? $report['engine'] : ''}}/{{isset($report['accountid']) ? $report['accountid'] : ''}}">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'campaignName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a></td>
+                        <td><a href="/adgroup-report/{{isset($report['engine']) ? $report['engine'] : ''}}/{{isset($report['accountid']) ? $report['accountid'] : ''}}/{{isset($report['campaignId']) ? $report['campaignId'] : ''}}">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'adgroupName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a></td>
+                        <td><a href="/keyword-report/{{isset($report['engine']) ? $report['engine'] : ''}}/{{isset($report['accountid']) ? $report['accountid'] : ''}}/{{isset($report['campaignId']) ? $report['campaignId'] : ''}}/{{isset($report['adgroupID']) ? $report['adgroupID'] : ''}}">{{ $report[$fieldName] }}</a></td>
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif (is_float($report[$fieldName]))
