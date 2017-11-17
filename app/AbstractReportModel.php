@@ -90,7 +90,7 @@ abstract class AbstractReportModel extends Model
                 continue;
             }
 
-            if ($fieldName === static::PAGE_ID) {
+            if ($fieldName === 'accountid') {
                 $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
             }
 
