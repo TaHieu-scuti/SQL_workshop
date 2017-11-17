@@ -212,6 +212,7 @@ class RepoYssAccountReportController extends AbstractReportController
                         ->render();
         $graphColumnLayout = view('layouts.graph-column')
                         ->with('graphColumnName', session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
+                        ->with(self::COLUMNS_FOR_LIVE_SEARCH, self::DEFAULT_COLUMNS)
                         ->render();
         try {
             $data = $this->getDataForGraph();

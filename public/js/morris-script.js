@@ -134,8 +134,8 @@ var Script = function () {
         * onclicking column button
         * update graph with selected column
         */
-        $('#listSearch .selection-graph').click(function() {
-            let columnName = $(this).attr('data-column');
+        $('#selectpickerGraph').on('change', function() {
+            let columnName = $(this).find("option:selected").data('column');
             updateMorris(columnName);
             $('.summary_report .fields').removeClass('active');
             $('.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
@@ -182,7 +182,7 @@ var Script = function () {
                 success: function(response) {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('#graph-column').html(response.graphColumnLayout);
+                    $('#selectpickerGraph').html(response.graphColumnLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');
@@ -228,7 +228,7 @@ var Script = function () {
                 {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('#graph-column').html(response.graphColumnLayout);
+                    $('#selectpickerGraph').html(response.graphColumnLayout);
                     $('.summary_report fields active').removeClass('active');
                 },
                 error : function (response) {
@@ -240,7 +240,7 @@ var Script = function () {
             });
         }
 
-        $('.selectpicker').on('change', function(){
+        $('.selectpickerBreadCrumbs').on('change', function(){
             var curent_url = $(this).find("option:selected").data("url");
             let requestId = $(this).find("option:selected").data('breadcumbs');
             var str = curent_url.lastIndexOf('/');
