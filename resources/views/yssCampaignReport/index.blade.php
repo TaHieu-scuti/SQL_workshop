@@ -17,6 +17,11 @@
 
 @section('filter-list')
     <ul class="panel">
+        <li class="panel-body normal-report">
+            <a href="javascript:void(0)">
+                @lang('language.campaign')
+            </a>
+        </li>
         <li class="panel-body">
             <a href="{{ route('adgroup-report') }}">
                 @lang('language.AD_GROUPS')

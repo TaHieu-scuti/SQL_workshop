@@ -46,6 +46,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'campaignName';
     const PREFIX_ROUTE = 'prefixRoute';
+    const PREFECTURE = 'prefecture';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -77,7 +78,10 @@ class RepoYssCampaignReportController extends AbstractReportController
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -115,12 +119,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
 
-        if ($request->specificItem === 'prefecture') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
+        if ($request->specificItem === self::PREFECTURE) {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
             $this->model = new RepoYssPrefectureReportCost;
         }
 
