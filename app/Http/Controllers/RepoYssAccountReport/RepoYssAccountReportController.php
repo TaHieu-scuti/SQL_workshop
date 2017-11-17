@@ -82,7 +82,7 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
@@ -96,6 +96,17 @@ class RepoYssAccountReportController extends AbstractReportController
         $this->checkoutSessionFieldName();
         // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
+
+        if (isset($request->page)) {
+            $this->updateNumberPage($request->page);
+        }
+        $results = new \Illuminate\Pagination\LengthAwarePaginator(
+            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
+            count($dataReports),
+            20,
+            $this->page,
+            ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
+        );
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(
@@ -103,7 +114,7 @@ class RepoYssAccountReportController extends AbstractReportController
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
-                self::REPORTS => $dataReports, // data that returned from query
+                self::REPORTS => $results, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
@@ -144,24 +155,35 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         $reports = $this->getDataForTable();
+
+        if (isset($request->page)) {
+            $this->updateNumberPage($request->page);
+        }
+        $results = new \Illuminate\Pagination\LengthAwarePaginator(
+            array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
+            count($reports),
+            20,
+            $this->page,
+            ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
+        );
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
             'layouts.table_data',
             [
-            self::REPORTS => $reports,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-            self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray,
-            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                self::REPORTS => $results,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
         // if no data found
         // display no data found message on table
-        if ($reports->total() !== 0) {
+        if ($results->total() !== 0) {
             $this->displayNoDataFoundMessageOnTable = false;
         }
         return $this->responseFactory->json(
@@ -199,7 +221,7 @@ class RepoYssAccountReportController extends AbstractReportController
         foreach ($data as $value) {
             // if data !== null, display on graph
             // else, display "no data found" image
-            if ($value['data'] !== null) {
+            if ($value->data !== null) {
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }

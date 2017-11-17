@@ -82,7 +82,7 @@ class RepoYdwAccountReportGenerator extends Seeder
 
         $costReport->account_id = $agAccountNumber + 1;
 
-        $costReport->account = 'Account'.($agAccountNumber + 1);
+        $costReport->account = 'Account'.($mediaAccountNumber + 1);
 
         $costReport->cost = mt_rand(
             self::MIN_COST,

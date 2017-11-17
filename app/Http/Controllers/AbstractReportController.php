@@ -34,6 +34,7 @@ abstract class AbstractReportController extends Controller
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
 
+    protected $page = 1;
     /**
      * AbstractReportController constructor.
      *
@@ -68,6 +69,11 @@ abstract class AbstractReportController extends Controller
         }
 
         return $translatedFieldNames;
+    }
+
+    protected function updateNumberPage($page)
+    {
+        $this->page = $page;
     }
 
     /**

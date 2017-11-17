@@ -59,17 +59,17 @@
                         @continue
                     @endif
                     @if ($fieldName === 'accountName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->accountid}}" data-table="account_report">{{ $report->$fieldName }}</a></td>
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'campaignName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->campaignID}}" data-table="campaign-report">{{ $report->$fieldName }}</a></td>
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'adgroupName')
-                        <td><a href="javascript:void(0)" class="table-redirect" data-id = "{{$report->adgroupID}}" data-table="adgroup-report">{{ $report->$fieldName }}</a></td>
-                    @elseif (ctype_digit($report->$fieldName))
-                        <td>{{ number_format($report->$fieldName, 0, '', ',') }}</td>
-                    @elseif (is_float($report->$fieldName))
-                        <td>{{ number_format($report->$fieldName, 2, '.', ',') }}</td>
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a></td>
+                    @elseif (ctype_digit($report[$fieldName]))
+                        <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
+                    @elseif (is_float($report[$fieldName]))
+                        <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
-                        <td>{{ $report->$fieldName }}</td>
+                        <td>{{ $report[$fieldName] }}</td>
                     @endif
                 @endforeach
             </tr>
@@ -80,19 +80,20 @@
                     @if($fieldName === $groupedByField || $fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
                         @continue
                     @endif
-                    @if(isset($totalDataArray[$fieldName]))
-                        @if (ctype_digit($totalDataArray[$fieldName]))
-                    <td>{{ number_format($totalDataArray[$fieldName], 0, '', ',') }}</td>
-                        @elseif (is_float($totalDataArray[$fieldName]))
-                    <td>{{ number_format($totalDataArray[$fieldName], 2, '.', ',') }}</td>
+                    @if(isset($totalDataArray->$fieldName))
+                        @if (ctype_digit($totalDataArray->$fieldName))
+                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                        @elseif (is_float($totalDataArray->$fieldName))
+                    <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
                         @else
-                    <td>{{ $totalDataArray[$fieldName] }}</td>
+                    <td>{{ $totalDataArray->$fieldName }}</td>
                         @endif
                     @else
                     <td></td>
                     @endif
                 @endforeach
             </tr>
+
             @if (!$export)
             <tr>
                 <td class="paginator">

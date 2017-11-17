@@ -24,6 +24,10 @@ abstract class AbstractReportModel extends Model
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
     const PAGE_ID = 'pageId';
+    const DEVICE = "device";
+    const DAY_OF_WEEK = "dayOfWeek";
+    const PREFECTURE ="prefecture";
+    const HOUR_OF_DAY = "hourofday";
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -33,6 +37,11 @@ abstract class AbstractReportModel extends Model
     const AVERAGE_FIELDS = [
         'averageCpc',
         'averagePosition'
+    ];
+
+    const AVERAGE_FIELDS_ADW = [
+        'avgCPC',
+        'avgPosition'
     ];
 
     const SUM_FIELDS = [
@@ -64,32 +73,31 @@ abstract class AbstractReportModel extends Model
     {
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
-        if (isset($fieldNames[0]) && $fieldNames[0] === 'prefecture') {
+        if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
             $tableName = 'repo_yss_prefecture_report_cost';
         }
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
-            ) {
-                $key = array_search(static::PAGE_ID, $fieldNames);
-                if ($key !== false) {
-                    unset($fieldNames[$key]);
-                }
+        if (array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames) === false) {
+            $key = array_search(static::PAGE_ID, $fieldNames);
+            if ($key !== false) {
+                unset($fieldNames[$key]);
             }
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === static::GROUPED_BY_FIELD_NAME
-                || $fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
+                || $fieldName === self::DEVICE
+                || $fieldName === self::HOUR_OF_DAY
+                || $fieldName === self::DAY_OF_WEEK
+                || $fieldName === self::PREFECTURE
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
+
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
+            }
+
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
@@ -112,6 +120,16 @@ abstract class AbstractReportModel extends Model
         }
 
         return $arrayCalculate;
+    }
+
+    protected function getBinddingSql($data)
+    {
+        $sql = $data->toSql();
+        foreach ($data->getBindings() as $binding) {
+            $value = is_numeric($binding) ? $binding : "'".$binding."'";
+            $sql = preg_replace('/\?/', $value, $sql, 1);
+        }
+        return $sql;
     }
 
     protected function addQueryConditions(
