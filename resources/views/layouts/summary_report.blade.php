@@ -68,7 +68,7 @@
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>
                     @if (ctype_digit($summaryReport['averageCpc']))
-                        <td>{{ number_format($summaryReportaverageCpc, 0, '', ',') }}</td>
+                        <td>{{ number_format($summaryReport['averageCpc'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['averageCpc']))
                         <td>{{ number_format($summaryReport['averageCpc'], 2, '.', ',') }}</td>
                     @else

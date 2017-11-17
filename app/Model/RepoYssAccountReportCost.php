@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\AbstractReportModel;
 use Illuminate\Database\Events\StatementPrepared;
 use Illuminate\Support\Facades\Event;
+use \App\Model\RepoAdwAccountReportCost;
 
 use DateTime;
 use Exception;
@@ -55,7 +56,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
 
-    protected function addQueryConditionsForGoogle(Builder $query, $adgainerId, $accountId = null)
+    private function addQueryConditionsForGoogle(Builder $query, $adgainerId, $accountId = null)
     {
         $tableName = (new RepoAdwAccountReportCost)->getTable();
         if ($accountId !== null) {
@@ -66,17 +67,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         }
     }
 
-    protected function getBinddingSql($data)
-    {
-        $sql = $data->toSql();
-        foreach ($data->getBindings() as $binding) {
-            $value = is_numeric($binding) ? $binding : "'".$binding."'";
-            $sql = preg_replace('/\?/', $value, $sql, 1);
-        }
-        return $sql;
-    }
-
-    protected function getAggregatedGrabphOfGoogle($column)
+    private function getAggregatedGraphOfGoogle($column)
     {
         $arrSelect = [];
         $tableName = (new RepoAdwAccountReportCost)->getTable();
@@ -109,7 +100,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $arrSelect;
     }
 
-    protected function getAggregatedGraph($column)
+    private function getAggregatedGraph($column)
     {
         $arrSelect = [];
         $tableName = $this->getTable();
@@ -135,7 +126,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $arrSelect;
     }
 
-    protected function getAggregatedOfGoogle(array $fieldNames)
+    private function getAggregatedOfGoogle(array $fieldNames)
     {
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         array_push($fieldNames, 'avgCPC', 'avgPosition');
@@ -237,9 +228,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
         $arrSelect = $this->getAggregatedGraph($column);
-        $arrSelectGoogle = $this->getAggregatedGrabphOfGoogle($column);
+        $arrSelectGoogle = $this->getAggregatedGraphOfGoogle($column);
 
-        $dataForGoogle = \App\Model\RepoAdwAccountReportCost::select($arrSelectGoogle)
+        $dataForGoogle = RepoAdwAccountReportCost::select($arrSelectGoogle)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -488,7 +479,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $joinTableName = (new RepoYssAccount)->getTable();
 
         $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAccountReport = \App\Model\RepoAdwAccountReportCost::select(
+        $adwAccountReport = RepoAdwAccountReportCost::select(
             array_merge([DB::raw("'adw' as engine")], $adwAggreations)
         )
             ->where(
@@ -581,7 +572,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountId = null
     ) {
         $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAccountReport = \App\Model\RepoAdwAccountReportCost::select(array_merge($adwAggreations))
+        $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggreations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);

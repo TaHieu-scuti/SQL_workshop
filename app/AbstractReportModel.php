@@ -118,6 +118,16 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
+    protected function getBinddingSql($data)
+    {
+        $sql = $data->toSql();
+        foreach ($data->getBindings() as $binding) {
+            $value = is_numeric($binding) ? $binding : "'".$binding."'";
+            $sql = preg_replace('/\?/', $value, $sql, 1);
+        }
+        return $sql;
+    }
+
     protected function addQueryConditions(
         Builder $query,
         $adgainerId,
