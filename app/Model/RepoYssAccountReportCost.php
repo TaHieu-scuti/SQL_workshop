@@ -145,10 +145,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $tableName = 'repo_yss_prefecture_report_cost';
         }
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
+            if ($fieldName === self::DEVICE
+                || $fieldName === self::HOUR_OF_DAY
+                || $fieldName === self::DAY_OF_WEEK
+                || $fieldName === self::PREFECTURE
             ) {
                 $key = array_search(static::PAGE_ID, $fieldNames);
                 if ($key !== false) {
@@ -159,10 +159,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === 'device'
-                || $fieldName === 'hourofday'
-                || $fieldName === "dayOfWeek"
-                || $fieldName === 'prefecture'
+            if ($fieldName === self::DEVICE
+                || $fieldName === self::HOUR_OF_DAY
+                || $fieldName === self::DAY_OF_WEEK
+                || $fieldName === self::PREFECTURE
                 || $fieldName === self::PAGE_ID
             ) {
                 $arrayCalculate[] = $fieldName;
