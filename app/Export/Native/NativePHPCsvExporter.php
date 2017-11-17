@@ -33,16 +33,27 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var string[] */
     private $fieldNames;
 
+    /** @var string[] */
+    private $aliases;
+
     /**
      * NativePHPCsvExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
-     * @param string[] $fieldNames
+     * @param string[] $fieldNames Optional fieldNames to export.
+     *                             When set only the fields of this array will be exported,
+     *                             even if the models in the collection have other values as well.
+     * @param string[] $aliases    Optional aliases for the fieldNames, when passed these names will be used instead of
+     *                             the actual field/column names.
      */
-    public function __construct(Collection $exportData, array $fieldNames = null)
-    {
+    public function __construct(
+        Collection $exportData,
+        array $fieldNames = null,
+        array $aliases = null
+    ){
         $this->exportData = $exportData;
         $this->fieldNames = $fieldNames;
+        $this->aliases = $aliases;
     }
 
     private function generateFilename()
@@ -110,10 +121,19 @@ class NativePHPCsvExporter implements CSVExporterInterface
             $fieldNames = array_keys($this->exportData->first()->getAttributes());
         }
 
-        $this->writeLine($fieldNames);
+        if ($this->aliases === null) {
+            $this->writeLine($fieldNames);
+        } else {
+            $this->writeLine($this->aliases);
+        }
+
         $this->exportData->each(
-            function ($value) {
-                $this->writeLine($value->toArray());
+            function ($value) use ($fieldNames) {
+                $array = [];
+                foreach ($fieldNames as $fieldName) {
+                    $array[$fieldName] = $value->$fieldName;
+                }
+                $this->writeLine($array);
             }
         );
 
