@@ -141,7 +141,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             }
         }
         $tableName = (new RepoAdwAccountReportCost)->getTable();
-        if (isset($fieldNames[0]) && $fieldNames[0] === 'prefecture') {
+        if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
             $tableName = 'repo_yss_prefecture_report_cost';
         }
         foreach ($fieldNames as $fieldName) {
