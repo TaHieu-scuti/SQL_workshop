@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddAveragePositionPrefectureCostTable extends Migration
 {
     /**
@@ -28,8 +29,7 @@ class AddAveragePositionPrefectureCostTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('repo_yss_prefecture_report_cost', 'averagePosition'))
-        {
+        if (Schema::hasColumn('repo_yss_prefecture_report_cost', 'averagePosition')) {
             Schema::table(
                 'repo_yss_prefecture_report_cost',
                 function (Blueprint $table) {

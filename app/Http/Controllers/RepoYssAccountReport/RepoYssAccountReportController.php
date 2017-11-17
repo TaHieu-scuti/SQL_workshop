@@ -48,6 +48,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const COLUMNS = 'columns';
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
+    const PREFECTURE = 'prefecture';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -59,12 +60,15 @@ class RepoYssAccountReportController extends AbstractReportController
         'averagePosition'
     ];
 
-    /** @var \App\Model\RepoYssAccountReportCost */
+    /**
+     * @var \App\Model\RepoYssAccountReportCost
+     */
     protected $model;
 
     /**
      * RepoYssAccountReportController constructor.
-     * @param ResponseFactory      $responseFactory
+     *
+     * @param ResponseFactory          $responseFactory
      * @param RepoYssAccountReportCost $model
      */
     public function __construct(
@@ -85,7 +89,10 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $this->checkoutSessionFieldName();
         // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
@@ -137,8 +144,12 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if ($request->specificItem === 'prefecture') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
+        if ($request->specificItem === self::PREFECTURE) {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
             $this->model = new RepoYssPrefectureReportCost;
         }
 
@@ -164,17 +175,20 @@ class RepoYssAccountReportController extends AbstractReportController
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-        ])->render();
+            ]
+        )->render();
         // if no data found
         // display no data found message on table
         if ($results->total() !== 0) {
             $this->displayNoDataFoundMessageOnTable = false;
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
                             'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
-        ]);
+            ]
+        );
     }
 
     /**
@@ -207,14 +221,16 @@ class RepoYssAccountReportController extends AbstractReportController
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                             'data' => $data,
                             'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                             'timePeriodLayout' => $timePeriodLayout,
                             'graphColumnLayout' => $graphColumnLayout,
                             'statusLayout' => $statusLayout,
                             'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-            ]);
+            ]
+        );
     }
 
     /**

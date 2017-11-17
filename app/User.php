@@ -112,7 +112,7 @@ class User extends Authenticatable
                 break;
             
             default:
-                # code...
+                // code...
                 break;
         }
         return $array;

@@ -57,7 +57,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         'averagePosition'
     ];
 
-    /** @var \App\Model\RepoYssCampaignReportCost */
+    /**
+     * @var \App\Model\RepoYssCampaignReportCost
+     */
     protected $model;
 
     public function __construct(
@@ -81,7 +83,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
 
-        return view('yssCampaignReport.index', [
+        return view(
+            'yssCampaignReport.index',
+            [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
@@ -99,7 +103,8 @@ class RepoYssCampaignReportController extends AbstractReportController
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-        ]);
+            ]
+        );
     }
 
     public function updateTable(Request $request)
@@ -110,7 +115,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+
         if ($request->specificItem === 'prefecture') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'prefecture']);
             $this->model = new RepoYssPrefectureReportCost;
         }
 
@@ -119,7 +129,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
 
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
-        $tableDataLayout = view('layouts.table_data', [
+        $tableDataLayout = view(
+            'layouts.table_data',
+            [
             self::REPORTS => $reports,
             self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -127,17 +139,20 @@ class RepoYssCampaignReportController extends AbstractReportController
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-        ])->render();
+            ]
+        )->render();
         // if no data found
         // display no data found message on table
         if ($reports->total() !== 0) {
             $this->displayNoDataFoundMessageOnTable = false;
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                             'summaryReportLayout' => $summaryReportLayout,
                             'tableDataLayout' => $tableDataLayout,
                             'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
-        ]);
+            ]
+        );
     }
 
     public function displayGraph(Request $request)
@@ -166,14 +181,16 @@ class RepoYssCampaignReportController extends AbstractReportController
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }
-        return $this->responseFactory->json([
+        return $this->responseFactory->json(
+            [
                         'data' => $data,
                         'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout,
                         'graphColumnLayout' => $graphColumnLayout,
                         'statusLayout' => $statusLayout,
                         'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-        ]);
+            ]
+        );
     }
 
     /**

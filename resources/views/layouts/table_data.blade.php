@@ -21,7 +21,7 @@
                 @if($export)
                     @foreach($fieldNames as $fieldName)
                         @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
-                            <?php continue; ?>
+                            @continue
                         @endif
                         <th>
                             {{ __('language.' .str_slug($fieldName,'_')) }}
@@ -30,7 +30,7 @@
                 @else
                     @foreach($fieldNames as $fieldName)
                         @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
-                            <?php continue; ?>
+                            @continue
                         @endif
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
@@ -56,7 +56,7 @@
             <tr>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID")
-                        <?php continue; ?>
+                        @continue
                     @endif
                     @if ($fieldName === 'accountName')
                         <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a></td>
@@ -78,7 +78,7 @@
                 <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField || $fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
-                        <?php continue; ?>
+                        @continue
                     @endif
                     @if(isset($totalDataArray->$fieldName))
                         @if (ctype_digit($totalDataArray->$fieldName))

@@ -33,7 +33,6 @@ class CreateIndexesYssAdGroupReportCost extends Migration
                 $table->index('startDate', 'repo_yss_adgroup_report_cost_idx14');
                 $table->index('endDate', 'repo_yss_adgroup_report_cost_idx15');
                 $table->index('accountid', 'repo_yss_adgroup_report_cost_idx16');
-
             }
         );
     }

@@ -10,6 +10,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
 
     protected $table = 'repo_yss_prefecture_report_cost';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddColumnToAdwAccountReportCostTable extends Migration
 {
     /**
@@ -13,9 +14,12 @@ class AddColumnToAdwAccountReportCostTable extends Migration
      */
     public function up()
     {
-        Schema::table('repo_adw_account_report_cost', function (Blueprint $table) {
-            $table->bigInteger('accountid')->nullable()->comment('アカウントID');
-        });
+        Schema::table(
+            'repo_adw_account_report_cost',
+            function (Blueprint $table) {
+                $table->bigInteger('accountid')->nullable()->comment('アカウントID');
+            }
+        );
     }
 
     /**
@@ -25,8 +29,11 @@ class AddColumnToAdwAccountReportCostTable extends Migration
      */
     public function down()
     {
-        Schema::table('repo_adw_account_report_cost', function (Blueprint $table) {
-            $table->dropColumn('accountid');
-        });
+        Schema::table(
+            'repo_adw_account_report_cost',
+            function (Blueprint $table) {
+                $table->dropColumn('accountid');
+            }
+        );
     }
 }

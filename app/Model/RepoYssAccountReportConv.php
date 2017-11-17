@@ -8,7 +8,9 @@ class RepoYssAccountReportConv extends AbstractReportModel
 {
     protected $table = 'repo_yss_account_report_conv';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
     /**

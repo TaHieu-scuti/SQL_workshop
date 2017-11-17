@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\RepoAdwAccountReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoYdwAccountReportGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
@@ -96,14 +97,14 @@ class RepoYdwAccountReportGenerator extends Seeder
         $costReport->avgCPC = $costReport->cost / $costReport->clicks;
 
         $costReport->avgPosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+            self::MIN_AVERAGE_POSITION,
+            self::MAX_AVERAGE_POSITION
+        ) / mt_getrandmax();
 
         $costReport->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                self::MAX_CONVERSIONS
-            ) / mt_getrandmax();
+            self::MIN_CONVERSIONS,
+            self::MAX_CONVERSIONS
+        ) / mt_getrandmax();
 
         $costReport->impressions = mt_rand(
             self::MIN_IMPRESSIONS,
@@ -113,9 +114,9 @@ class RepoYdwAccountReportGenerator extends Seeder
         $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
 
         $costReport->valueConv = mt_rand(
-                self::MIN_CONV_VALUE,
-                self::MAX_CONV_VALUE
-            ) / mt_getrandmax();
+            self::MIN_CONV_VALUE,
+            self::MAX_CONV_VALUE
+        ) / mt_getrandmax();
 
         $costReport->accountid = $mediaAccountNumber + 1;
 

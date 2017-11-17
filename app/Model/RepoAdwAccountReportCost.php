@@ -9,7 +9,9 @@ class RepoAdwAccountReportCost extends AbstractReportModel
 {
     protected $table = 'repo_adw_account_report_cost';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
     // constant

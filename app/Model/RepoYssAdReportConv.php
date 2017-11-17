@@ -7,7 +7,9 @@ use App\AbstractReportModel;
 
 class RepoYssAdReportConv extends AbstractReportModel
 {
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $timestamps = false;
     
     protected $table = 'repo_yss_ad_report_conv';

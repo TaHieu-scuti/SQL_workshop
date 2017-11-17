@@ -22,11 +22,15 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const GROUPED_BY_FIELD_NAME_ADW = 'account';
     const PAGE_ID = 'accountid';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $averageFieldArray = [
         'ctr',
         'averageCpc',
@@ -296,9 +300,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
         /* TODO: the columns should be retrieved in a unified way,
         if it cannot be done with AbstractReportModel::getColumnNames
         we should make something that works for both cases */
-        $searchColumns = DB::select('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+        $searchColumns = DB::select(
+            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'"
-            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"');
+            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"'
+        );
 
         $result = [];
         foreach ($searchColumns as $searchColumn) {
@@ -342,16 +348,16 @@ class RepoYssAccountReportCost extends AbstractReportModel
         }
         $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId, $accountId);
         $data = $this->select($arrayCalculate)
-                        ->join(
-                            $joinTableName,
-                            $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                            '=',
-                            $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-                        )->where(
-                            function (Builder $query) use ($startDay, $endDay) {
+            ->join(
+                $joinTableName,
+                $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+                '=',
+                $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+            )->where(
+                function (Builder $query) use ($startDay, $endDay) {
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
-                            }
-                        )
+                }
+            )
                         ->where(
                             function ($query) use ($accountId, $adgainerId) {
                                 if ($accountId !== null) {

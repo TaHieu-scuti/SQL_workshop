@@ -100,9 +100,10 @@ abstract class AbstractReportModel extends Model
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                        ->getType()
-                        ->getName()
-                    === self::FIELD_TYPE) {
+                                    ->getType()
+                                    ->getName()
+                    === self::FIELD_TYPE
+                ) {
                     $arrayCalculate[] = DB::raw(
                         'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
                     );
@@ -147,8 +148,8 @@ abstract class AbstractReportModel extends Model
     }
 
     /**
-     * @param string $startDay
-     * @param string $endDay
+     * @param string  $startDay
+     * @param string  $endDay
      * @param Builder $query
      */
     protected function addTimeRangeCondition($startDay, $endDay, Builder $query)
@@ -384,7 +385,7 @@ abstract class AbstractReportModel extends Model
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                            ->paginate($pagination);
+                ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $paginatedData = $paginatedData->paginate($pagination);
         }
