@@ -27,16 +27,27 @@ class SpoutExcelExporter implements ExcelExporterInterface
     /** @var string[] */
     private $fieldNames;
 
+    /** @var string[] */
+    private $aliases;
+
     /**
      * SpoutExcelExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
-     * @param string[] $fieldNames
+     * @param string[] $fieldNames Optional fieldNames to export.
+     *                             When set only the fields of this array will be exported,
+     *                             even if the models in the collection have other values as well.
+     * @param string[] $aliases    Optional aliases for the fieldNames, when passed these names will be used instead of
+     *                             the actual field/column names.
      */
-    public function __construct(Collection $exportData, array $fieldNames = null)
-    {
+    public function __construct(
+        Collection $exportData,
+        array $fieldNames = null,
+        array $aliases = null
+    ) {
         $this->exportData = $exportData;
         $this->fieldNames = $fieldNames;
+        $this->aliases = $aliases;
     }
 
     private function generateFilename()
@@ -79,12 +90,20 @@ class SpoutExcelExporter implements ExcelExporterInterface
                 $fieldNames = array_keys($this->exportData->first()->getAttributes());
             }
 
-            $writer->addRow($fieldNames);
+            if ($this->aliases === null) {
+                $writer->addRow($fieldNames);
+            } else {
+                $writer->addRow($this->aliases);
+            }
 
             $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
-                    $writer->addRow($value->toArray());
+                    $array = [];
+                    foreach ($fieldNames as $fieldName) {
+                        $array[$fieldName] = $value->$fieldName;
+                    }
+                    $writer->addRow($array);
                 }
             }
 
