@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\RepoYssAccountReport;
 
 use App\Export\Native\NativePHPCsvExporter;
+use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoYssPrefectureReportCost;
@@ -278,6 +279,36 @@ class RepoYssAccountReportController extends AbstractReportController
             200,
             [
                 'Content-Type' => 'application/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+                'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+                'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+                'Cache-Control' => 'cache, must-revalidate, private',
+                'Pragma' => 'public'
+            ]
+        );
+    }
+
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function exportToExcel()
+    {
+        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $this->getDataForTable();
+
+        $aliases = $this->translateFieldNames($fieldNames);
+
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $excelData = $exporter->export();
+
+        return $this->responseFactory->make(
+            $excelData,
+            200,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
                 'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
                 'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
                 'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
