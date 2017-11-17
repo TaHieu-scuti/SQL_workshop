@@ -61,7 +61,7 @@ abstract class AbstractReportController extends Controller
         );
     }
 
-    private function translateFieldNames(array $fieldNames)
+    protected function translateFieldNames(array $fieldNames)
     {
         $translatedFieldNames = [];
         foreach ($fieldNames as $fieldName) {
