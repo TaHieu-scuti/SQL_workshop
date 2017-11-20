@@ -68,7 +68,7 @@ abstract class AbstractReportModel extends Model
         'averagePosition' => 'averagePosition',
     ];
 
-    const ADW_FIELD_MAP = [
+    const ADW_FIELDS_MAP = [
 //      'columns' => 'alias'
         'impressions' => 'impressions',
         'clicks' => 'clicks',
