@@ -33,13 +33,19 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
+    const CLICKS = 'clicks';
+    const COST = 'cost';
+    const IMPRESSIONS = 'impressions';
+    const CTR = 'ctr';
+    const AVERAGE_POSITION = 'averagePosition';
+    const AVERAGE_CPC = 'averageCpc';
     const ADW_FIELDS = [
-        'clicks' => 'clicks',
-        'cost' => 'cost',
-        'impressions' => 'impressions',
-        'ctr' => 'ctr',
-        'averagePosition' => 'avgPosition',
-        'averageCpc' => 'avgCPC'
+        self::CLICKS => self::CLICKS,
+        self::COST => self::COST,
+        self::IMPRESSIONS => self::IMPRESSIONS,
+        self::CTR => self::CTR,
+        self::AVERAGE_POSITION => 'avgPosition',
+        self::AVERAGE_CPC => 'avgCPC'
     ];
 
     private function addQueryConditionsForGoogle(Builder $query, $adgainerId, $accountId = null)
