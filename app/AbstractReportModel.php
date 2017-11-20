@@ -58,6 +58,26 @@ abstract class AbstractReportModel extends Model
         'cost'
     ];
 
+    const YSS_FIELD_MAP = [
+//      'columns' => 'alias'
+        'impressions' => 'impressions',
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'ctr' => 'ctr',
+        'averageCpc' => 'averageCpc',
+        'averagePosition' => 'averagePosition',
+    ];
+
+    const ADW_FIELD_MAP = [
+//      'columns' => 'alias'
+        'impressions' => 'impressions',
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'ctr' => 'ctr',
+        'avgCPC' => 'averageCpc',
+        'avgPosition' => 'averagePosition',
+    ];
+
     protected $groupByFieldName = [
         'device',
         'hourofday',
@@ -206,7 +226,8 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
 
@@ -263,7 +284,8 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $data = self::select($arrayCalculate)
@@ -366,7 +388,8 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $aggregations = $this->getAggregated($fieldNames);
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
@@ -425,7 +448,8 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         try {
             new DateTime($startDay); //NOSONAR

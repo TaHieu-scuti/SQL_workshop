@@ -30,6 +30,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_AD_REPORT_ID = "adReportId";
     const SESSION_KEY_ACCOUNT_ID = "accountID";
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
+    const SESSION_KEY_ENGINE = "engine";
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -191,6 +192,9 @@ abstract class AbstractReportController extends Controller
         if (session('adReportId') === null) {
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
+        if (session('engine') === null) {
+            session([self::SESSION_KEY_ENGINE => 'yss']);
+        }
     }
 
     public function checkoutSessionFieldName()
@@ -323,6 +327,10 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
     }
 
+    public  function  updateSessionEngine($engine) {
+        session()->put([self::SESSION_KEY_ENGINE => $engine]);
+    }
+
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
@@ -422,6 +430,11 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionColumnSortAndSort($request->columnSort);
         }
 
+        //get engine if available
+        if ($request->engine !== null && $request->engine === 'adw') {
+            $this->updateSessionEngine($request->engine);
+        }
+
         if ($request->specificItem !== null) {
             $this->updateSessionGroupedByFieldName($request->specificItem);
         }
@@ -443,7 +456,8 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID)
+            session(self::SESSION_KEY_KEYWORD_ID),
+            session(self::SESSION_KEY_ENGINE)
         );
 
         if ($data->isEmpty()) {
@@ -474,7 +488,8 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID)
+            session(self::SESSION_KEY_KEYWORD_ID),
+            session(self::SESSION_KEY_ENGINE)
         );
     }
 
@@ -490,7 +505,8 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
-            session(static::SESSION_KEY_KEYWORD_ID)
+            session(static::SESSION_KEY_KEYWORD_ID),
+            session(self::SESSION_KEY_ENGINE)
         );
     }
 
@@ -507,7 +523,8 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID)
+            session(self::SESSION_KEY_KEYWORD_ID),
+            session(self::SESSION_KEY_ENGINE)
         );
     }
 }

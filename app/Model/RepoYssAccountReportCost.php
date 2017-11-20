@@ -219,7 +219,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         try {
             new DateTime($startDay);
@@ -299,7 +300,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
@@ -371,7 +373,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $tableName = $this->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
@@ -445,7 +448,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $engine
     ) {
         $aggregations = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
