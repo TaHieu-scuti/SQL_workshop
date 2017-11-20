@@ -210,6 +210,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
      * @return \Illuminate\Support\Collection
      */
     public function getDataForGraph(
+        $engine,
         $column,
         $accountStatus,
         $startDay,
@@ -219,8 +220,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay);
@@ -290,6 +290,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
      * @return array
      */
     public function calculateData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -300,8 +301,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
@@ -364,6 +364,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     }
 
     public function calculateSummaryData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -373,8 +374,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $tableName = $this->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
@@ -435,6 +435,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     }
 
     public function getDataForTable(
+        $engine,
         array $fieldNames,
         $accountStatus,
         $startDay,
@@ -448,8 +449,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $aggregations = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();

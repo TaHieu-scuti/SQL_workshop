@@ -327,7 +327,8 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
     }
 
-    public  function  updateSessionEngine($engine) {
+    public function updateSessionEngine($engine)
+    {
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
@@ -447,6 +448,7 @@ abstract class AbstractReportController extends Controller
     public function getDataForGraph()
     {
         $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -456,8 +458,7 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID),
-            session(self::SESSION_KEY_ENGINE)
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
 
         if ($data->isEmpty()) {
@@ -475,6 +476,7 @@ abstract class AbstractReportController extends Controller
     public function getDataForTable()
     {
         return $this->model->getDataForTable(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -488,14 +490,14 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID),
-            session(self::SESSION_KEY_ENGINE)
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
     }
 
     public function getCalculatedSummaryReport()
     {
         return $this->model->calculateSummaryData(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_SUMMARY_REPORT),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -505,14 +507,14 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
-            session(static::SESSION_KEY_KEYWORD_ID),
-            session(self::SESSION_KEY_ENGINE)
+            session(static::SESSION_KEY_KEYWORD_ID)
         );
     }
 
     public function getCalculatedData()
     {
         return $this->model->calculateData(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -523,8 +525,7 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
-            session(self::SESSION_KEY_KEYWORD_ID),
-            session(self::SESSION_KEY_ENGINE)
+            session(self::SESSION_KEY_KEYWORD_ID)
         );
     }
 }

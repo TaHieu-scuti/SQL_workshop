@@ -216,6 +216,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function calculateData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -226,8 +227,7 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
 
@@ -275,6 +275,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function calculateSummaryData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -284,8 +285,7 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $data = self::select($arrayCalculate)
@@ -375,6 +375,7 @@ abstract class AbstractReportModel extends Model
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getDataForTable(
+        $engine,
         array $fieldNames,
         $accountStatus,
         $startDay,
@@ -388,8 +389,7 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         $aggregations = $this->getAggregated($fieldNames);
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
@@ -439,6 +439,7 @@ abstract class AbstractReportModel extends Model
      * @throws \InvalidArgumentException
      */
     public function getDataForGraph(
+        $engine,
         $column,
         $accountStatus,
         $startDay,
@@ -448,8 +449,7 @@ abstract class AbstractReportModel extends Model
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null,
-        $engine
+        $keywordId = null
     ) {
         try {
             new DateTime($startDay); //NOSONAR
