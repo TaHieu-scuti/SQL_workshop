@@ -30,6 +30,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_AD_REPORT_ID = "adReportId";
     const SESSION_KEY_ACCOUNT_ID = "accountID";
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
+    const SESSION_KEY_ENGINE = "engine";
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -191,6 +192,9 @@ abstract class AbstractReportController extends Controller
         if (session('adReportId') === null) {
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
+        if (session('engine') === null) {
+            session([self::SESSION_KEY_ENGINE => null]);
+        }
     }
 
     public function checkoutSessionFieldName()
@@ -323,6 +327,11 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
     }
 
+    public function updateSessionEngine($engine)
+    {
+        session()->put([self::SESSION_KEY_ENGINE => $engine]);
+    }
+
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
@@ -422,6 +431,11 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionColumnSortAndSort($request->columnSort);
         }
 
+        //get engine if available
+        if ($request->engine !== null) {
+            $this->updateSessionEngine($request->engine);
+        }
+
         if ($request->specificItem !== null) {
             $this->updateSessionGroupedByFieldName($request->specificItem);
         }
@@ -434,6 +448,7 @@ abstract class AbstractReportController extends Controller
     public function getDataForGraph()
     {
         $data = $this->model->getDataForGraph(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -461,6 +476,7 @@ abstract class AbstractReportController extends Controller
     public function getDataForTable()
     {
         return $this->model->getDataForTable(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -481,6 +497,7 @@ abstract class AbstractReportController extends Controller
     public function getCalculatedSummaryReport()
     {
         return $this->model->calculateSummaryData(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_SUMMARY_REPORT),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
@@ -497,6 +514,7 @@ abstract class AbstractReportController extends Controller
     public function getCalculatedData()
     {
         return $this->model->calculateData(
+            session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
