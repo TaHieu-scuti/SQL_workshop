@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Model\RepoAdwAccountReportCost;
 use Auth;
 
 class RepoYssAccount extends Model
@@ -21,16 +22,24 @@ class RepoYssAccount extends Model
     {
         $arrayAccounts = [];
 
-        $accounts = self::select('accountName', 'accountid')->where('account_id', '=', Auth::user()->account_id)->get();
+        $accounts = self::select('accountName', 'accountid')
+            ->where('account_id', '=', Auth::user()->account_id);
+
+        $adwAccount = RepoAdwAccountReportCost::select('account AS accountNAme', 'accountid')
+            ->where('account_id', '=', Auth::user()->account_id);
+
+        $accounts->union($adwAccount);
+
+        $datas = $accounts->get();
 
         $arrayAccounts['all'] = 'All Account';
-        
-        if ($accounts) {
-            foreach ($accounts as $key => $account) {
-                $arrayAccounts[$account->accountid] = $account->accountName;
-            }
-        }
-        
-        return $arrayAccounts;
+        // hieu here
+//        if ($datas) {
+//            foreach ($datas as $key => $account) {
+//                var_dump($account->accountName);
+//                $arrayAccounts[$account->accountid] = $account->accountName;
+//            }
+//        }
+        return $datas->toArray();
     }
 }

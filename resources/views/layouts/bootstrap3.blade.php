@@ -1,7 +1,7 @@
 @if ($breadcrumbs)
     <ul class="breadcrumb">
         @foreach ($breadcrumbs as $breadcrumb)
-            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title); ?>
+            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);?>
             <input type="hidden" name="id_{{$breadcrumb->title}}" id="id_{{$breadcrumb->title}}" value="all">
             @if ($breadcrumb->url && !$breadcrumb->last)
                 <li class="breadcrumb-item">
