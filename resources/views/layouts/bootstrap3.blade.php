@@ -7,7 +7,7 @@
                 <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
                         <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}</a><br></span>
-                        <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
                             @if (count($titleBreadCumbs[1]) > 0)
                                     @foreach ($titleBreadCumbs[1] as $key => $account)
                                         <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" 
@@ -40,7 +40,7 @@
                 <li class="breadcrumb-item active">
                     <div class="breadcrumb-item-detail">
                         <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}<br></span>
-                        <select class="selectpicker tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
                             @if (count($titleBreadCumbs[1]) > 0)
                                 @foreach ($titleBreadCumbs[1] as $key => $account)
                                     <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" data-url= "{{ $breadcrumb->url }}" @if ( $titleBreadCumbs['flag'] === 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif >

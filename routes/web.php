@@ -54,10 +54,6 @@ Route::prefix('account_report')->group(function () {
         '/display-graph',
         'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
     );
-    Route::post(
-        '/live_search',
-        'RepoYssAccountReport\RepoYssAccountReportController@liveSearch'
-    );
     Route::get(
         '/export_excel',
         'RepoYssAccountReport\RepoYssAccountReportController@exportToExcel'
@@ -91,10 +87,6 @@ Route::prefix('campaign-report')->group(function () {
         '/update-table',
         'RepoYssCampaignReport\RepoYssCampaignReportController@updateTable'
     );
-    Route::post(
-        '/live_search',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@liveSearch'
-    );
     Route::get(
         '/export_excel',
         'RepoYssCampaignReport\RepoYssCampaignReportController@exportToExcel'
@@ -125,10 +117,6 @@ Route::prefix('adgroup-report')->group(function () {
     Route::post(
         '/update-table',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateTable'
-    );
-    Route::post(
-        '/live_search',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@liveSearch'
     );
     Route::get(
         '/export_excel',
@@ -161,10 +149,6 @@ Route::prefix('ad-report')->group(function () {
         '/update-table',
         'RepoYssAdReport\RepoYssAdReportController@updateTable'
     );
-    Route::post(
-        '/live_search',
-        'RepoYssAdReport\RepoYssAdReportController@liveSearch'
-    );
     Route::get(
         '/export_excel',
         'RepoYssAdReport\RepoYssAdReportController@exportToExcel'
@@ -196,10 +180,6 @@ Route::prefix('keyword-report')->group(function () {
     Route::post(
         '/update-table',
         'RepoYssKeywordReport\RepoYssKeywordReportController@updateTable'
-    );
-    Route::post(
-        '/live_search',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@liveSearch'
     );
     Route::get(
         '/export_excel',

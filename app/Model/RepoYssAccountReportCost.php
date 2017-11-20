@@ -282,34 +282,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     }
 
     /**
-     * @param string $keywords
-     * @return string[]
-     */
-    public function getColumnLiveSearch($keywords)
-    {
-        /* TODO: the columns should be retrieved in a unified way,
-        if it cannot be done with AbstractReportModel::getColumnNames
-        we should make something that works for both cases */
-        $searchColumns = DB::select(
-            'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = "'. DB::connection()->getDatabaseName() .'" AND TABLE_NAME = "'. $this->table .'"
-            AND COLUMN_NAME LIKE '. '"%' . $keywords . '%"'
-        );
-
-        $result = [];
-        foreach ($searchColumns as $searchColumn) {
-            foreach ($searchColumn as $value) {
-                $result[] = $value;
-            }
-        }
-
-        // remove column id, campaign_id ....
-        $unsetColumns = ['id', 'campaign_id', 'account_id', 'network',
-                             'device', 'day', 'dayOfWeek', 'week', 'month', 'quarter'];
-        return $this->unsetColumns($result, $unsetColumns);
-    }
-
-    /**
      * @param $fieldNames
      * @param $accountStatus
      * @param $startDay

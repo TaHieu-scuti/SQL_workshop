@@ -101,6 +101,7 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::SUMMARY_REPORT => $summaryReportData,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
             ]
         );
     }
@@ -154,9 +155,6 @@ class RepoYssKeywordReportController extends AbstractReportController
         $statusLayout = view('layouts.status-title')
                         ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
                         ->render();
-        $graphColumnLayout = view('layouts.graph-column')
-                        ->with(self::GRAPH_COLUMN_NAME, session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
-                        ->render();
         try {
             $data = $this->getDataForGraph();
         } catch (Exception $exception) {
@@ -174,24 +172,9 @@ class RepoYssKeywordReportController extends AbstractReportController
                         'data' => $data,
                         'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                         'timePeriodLayout' => $timePeriodLayout,
-                        'graphColumnLayout' => $graphColumnLayout,
                         'statusLayout' => $statusLayout,
                         'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
             ]
-        );
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function liveSearch(Request $request)
-    {
-        $result = $this->model->getColumnLiveSearch($request["keywords"]);
-
-        return $this->responseFactory->view(
-            'layouts.dropdown_search',
-            [self::COLUMNS_FOR_LIVE_SEARCH => $result]
         );
     }
 
