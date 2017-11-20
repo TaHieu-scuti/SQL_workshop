@@ -349,11 +349,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $data = $data->union($adwAccountReport);
 
         $sql = $this->getBinddingSql($data);
+        $rawExpression = $this->getRawExpression($fieldNames);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
-            ->select($fieldNames);
+        ->select($rawExpression);
 
         $data = $data->first();
-
         if ($data === null) {
             $data = [];
         }
@@ -521,17 +521,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
             $sql = $this->getBinddingSql($datas);
+            $rawExpression = $this->getRawExpression($fieldNames);
             $datas = DB::table(DB::raw("({$sql}) as tbl"))
                 ->select(
                     DB::raw($groupedByField),
-                    DB::raw('
-                        sum(clicks) as clicks,
-                        sum(cost) as cost,
-                        sum(impressions) as impressions,
-                        sum(ctr) as ctr,
-                        avg(averageCpc) as averageCpc,
-                        avg(averagePosition) as averagePosition
-                    ')
+                    $rawExpression
                 )
                 ->groupBy($groupedByField);
         }
@@ -561,5 +555,19 @@ class RepoYssAccountReportCost extends AbstractReportModel
             );
 
         return $adwAccountReport;
+    }
+
+    private function getRawExpression($fieldNames)
+    {
+        $rawExpression = [];
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, static::SUM_FIELDS)) {
+                $rawExpression[] = DB::raw('sum(' .$fieldName. ') as ' . $fieldName);
+            } else {
+                $rawExpression[] = DB::raw('avg(' .$fieldName. ') as ' . $fieldName);
+            }
+        }
+
+        return $rawExpression;
     }
 }
