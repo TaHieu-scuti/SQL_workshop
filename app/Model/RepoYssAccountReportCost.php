@@ -28,33 +28,19 @@ class RepoYssAccountReportCost extends AbstractReportModel
      */
     public $timestamps = false;
 
-
-    /**
-     * @var array
-     */
-    private $averageFieldArray = [
-        'ctr',
-        'averageCpc',
-        'averagePosition',
-        'impressionShare',
-        'exactMatchImpressionShare',
-        'budgetLostImpressionShare',
-        'qualityLostImpressionShare',
-        'conversions',
-        'convRate',
-        'convValue',
-        'costPerConv',
-        'valuePerConv',
-        'allConvRate',
-        'costPerAllConv',
-        'valuePerAllConv'
-    ];
-
     // constant
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
     const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
+    const ADW_FIELDS = [
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'impressions' => 'impressions',
+        'ctr' => 'ctr',
+        'averagePosition' => 'avgPosition',
+        'averageCpc' => 'avgCPC'
+    ];
 
     private function addQueryConditionsForGoogle(Builder $query, $adgainerId, $accountId = null)
     {
@@ -129,7 +115,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
     private function getAggregatedOfGoogle(array $fieldNames)
     {
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
-        array_push($fieldNames, 'avgCPC', 'avgPosition');
         if (array_search('accountName', $fieldNames) === false) {
             $key = array_search(static::GROUPED_BY_FIELD_NAME_ADW, $fieldNames);
             if ($key !== false) {
@@ -172,28 +157,21 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $arrayCalculate[] = $fieldName .' AS accountName';
                 continue;
             }
-            if (in_array($fieldName, static::AVERAGE_FIELDS_ADW)) {
-                if ($fieldName === 'avgCPC') {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG('. $fieldName . '), 2) AS averageCpc'
-                    );
-                }
-                if ($fieldName === 'avgPosition') {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG('. $fieldName . '), 2) AS averagePosition'
-                    );
-                }
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG('. self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName
+                        'ROUND(SUM(' . self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $fieldName . ' ) AS ' . $fieldName
+                        'SUM( ' . self::ADW_FIELDS[$fieldName] . ' ) AS ' . $fieldName
                     );
                 }
             }
@@ -366,14 +344,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $sql = $this->getBinddingSql($data);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
-            ->select(DB::raw('
-                sum(clicks) as clicks,
-                sum(cost) as cost,
-                sum(impressions) as impressions,
-                sum(ctr) as ctr,
-                avg(averageCpc) as averageCpc,
-                avg(averagePosition) as averagePosition
-            '));
+            ->select($fieldNames);
 
         $data = $data->first();
 
