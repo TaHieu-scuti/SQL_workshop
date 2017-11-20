@@ -193,7 +193,7 @@ abstract class AbstractReportController extends Controller
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
         if (session('engine') === null) {
-            session([self::SESSION_KEY_ENGINE => 'yss']);
+            session([self::SESSION_KEY_ENGINE => null]);
         }
     }
 
@@ -432,7 +432,7 @@ abstract class AbstractReportController extends Controller
         }
 
         //get engine if available
-        if ($request->engine !== null && $request->engine === 'adw') {
+        if ($request->engine !== null) {
             $this->updateSessionEngine($request->engine);
         }
 
