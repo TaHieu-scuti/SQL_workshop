@@ -246,33 +246,9 @@
                     <div class="selection-dropdown selectionOnGraph">
                         <select class="selectpicker" id="selectpickerGraph" data-live-search="true">
                             @foreach ($columnsLiveSearch as $columnsSearch)
-                                <option class="selection-graph" data-column="{{ $columnsSearch }}" data-tokens="{{ __('language.' .str_slug($columnsSearch,'_')) }}">{{ __('language.' .str_slug($columnsSearch,'_')) }}</option>
+                                <option class="selection-graph" data-column="{{ $columnsSearch }}" {{$columnsSearch === $graphColumnName ? "selected" : ''}} data-tokens="{{ __('language.' .str_slug($columnsSearch,'_')) }}">{{ __('language.' .str_slug($columnsSearch,'_')) }}</option>
                             @endforeach
                         </select>
-                        {{--<a data-toggle="dropdown" class="dropdown-toggle" href="#">--}}
-                        {{--<section class="panel">--}}
-                            {{--<div class="panel-body" id="graph-column">--}}
-                                {{--@include('layouts.graph-column')--}}
-                            {{--</div>--}}
-                        {{--</section>--}}
-                        {{--</a>--}}
-                        {{--<ul class="dropdown-menu extended tasks-bar">--}}
-                            {{--<li>--}}
-                                {{--<p class="heading">--}}
-                                {{--<span class="line-chart-search glyphicon glyphicon-search"></span>--}}
-                                {{--<input type="text" placeholder="@lang('language.Search_by_columns')" onkeyup="searchUp()" id="txtLiveSearch">--}}
-                                {{--</p>--}}
-                            {{--</li>--}}
-                            {{--<div id="listSearch">--}}
-                                {{--@foreach ($columnsLiveSearch as $columnsSearch)--}}
-                                {{--<li class="selection-graph" data-column="{{ $columnsSearch }}">--}}
-                                    {{--<a href="javascript:void(0)">--}}
-                                        {{--<div class="desc">{{ __('language.' .str_slug($columnsSearch,'_')) }}</div>--}}
-                                    {{--</a>--}}
-                                {{--</li>--}}
-                                {{--@endforeach--}}
-                            {{--</div>--}}
-                        {{--</ul>--}}
                     </div>
 
                     <div class="loading-gif-on-graph hidden-graph"></div>

@@ -182,7 +182,6 @@ var Script = function () {
                 success: function(response) {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('#selectpickerGraph').html(response.graphColumnLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');
@@ -228,7 +227,6 @@ var Script = function () {
                 {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('#selectpickerGraph').html(response.graphColumnLayout);
                     $('.summary_report fields active').removeClass('active');
                 },
                 error : function (response) {
