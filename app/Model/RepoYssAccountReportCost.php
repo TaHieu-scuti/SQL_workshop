@@ -65,12 +65,12 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $tableName = (new RepoAdwAccountReportCost)->getTable();
         $arrSelect[] = DB::raw('DATE(day) as day');
         if (in_array($column, static::AVERAGE_FIELDS)) {
-            if ($column === 'averageCpc') {
+            if ($column === self::AVERAGE_CPC) {
                 $arrSelect[] = DB::raw(
                     'ROUND(AVG( avgCPC ), 2) AS data'
                 );
             }
-            if ($column === 'averagePosition') {
+            if ($column === self::AVERAGE_POSITION) {
                 $arrSelect[] = DB::raw(
                     'ROUND(AVG( avgPosition ), 2) AS data'
                 );
