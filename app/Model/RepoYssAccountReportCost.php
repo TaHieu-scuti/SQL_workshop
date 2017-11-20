@@ -502,8 +502,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 ->groupBy($groupedByField);
         }
 
-        $datas = $datas->get();
-
+        $datas = $datas->orderBy($columnSort, $sort)->get();
         return $datas;
     }
 
