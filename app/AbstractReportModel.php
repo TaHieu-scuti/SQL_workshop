@@ -58,7 +58,7 @@ abstract class AbstractReportModel extends Model
         'cost'
     ];
 
-    const YSS_FIELD_MAP = [
+    const YSS_FIELDS_MAP = [
 //      'columns' => 'alias'
         'impressions' => 'impressions',
         'clicks' => 'clicks',
