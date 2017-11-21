@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\RepoYssAdgroupReportCost;
 
+// @codingStandardsIgnoreLine
 class AddingTimezoneDataForAdgroupReportCost extends Seeder
 {
     /**
@@ -14,7 +15,7 @@ class AddingTimezoneDataForAdgroupReportCost extends Seeder
     {
         $adgroups = RepoYssAdgroupReportCost::select('id')->get();
         foreach ($adgroups as $adgroup) {
-            $adgroup->hourofday = rand(0,23);
+            $adgroup->hourofday = rand(0, 23);
             $adgroup->saveOrFail();
         }
     }

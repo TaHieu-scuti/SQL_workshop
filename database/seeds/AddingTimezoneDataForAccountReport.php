@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\RepoYssAccountReportCost;
 
+// @codingStandardsIgnoreLine
 class AddingTimezoneDataForAccountReport extends Seeder
 {
     /**
@@ -14,7 +15,7 @@ class AddingTimezoneDataForAccountReport extends Seeder
     {
         $accounts = RepoYssAccountReportCost::select('id')->get();
         foreach ($accounts as $account) {
-            $account->hourofday = rand(0,23);
+            $account->hourofday = rand(0, 23);
             $account->saveOrFail();
         }
     }
