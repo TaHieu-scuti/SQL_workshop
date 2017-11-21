@@ -121,6 +121,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -169,6 +170,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
