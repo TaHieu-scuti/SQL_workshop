@@ -206,7 +206,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $this->updateSessionData($request);
     }
 
-    public function updateModel() {
+    public function updateModel()
+    {
         $engine = session('engine');
         if ($engine === 'yss') {
             $this->model = new RepoYssAdgroupReportCost;

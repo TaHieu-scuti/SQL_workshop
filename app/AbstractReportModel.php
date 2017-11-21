@@ -553,7 +553,8 @@ abstract class AbstractReportModel extends Model
         return $matchingFieldNames;
     }
 
-    public function updateFieldNames(array $fieldNames) {
+    public function updateFieldNames(array $fieldNames)
+    {
         $resultFieldNames = [];
         $engine = session('engine');
         if ($engine === 'yss' || $engine === null) {
@@ -564,7 +565,8 @@ abstract class AbstractReportModel extends Model
         return $resultFieldNames;
     }
 
-    public function setKeyFieldNames(array $fieldNames, array $fieldsMap) {
+    public function setKeyFieldNames(array $fieldNames, array $fieldsMap)
+    {
         $result = [];
         foreach ($fieldNames as $fieldName) {
             $includedInFieldsMap = false;
@@ -582,5 +584,4 @@ abstract class AbstractReportModel extends Model
         }
         return $result;
     }
-
 }
