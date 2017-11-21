@@ -16,10 +16,8 @@ class RepoAdwCampaignReportCost extends Model
 
     public function getAllAdwCampaign()
     {
-        $adwCampaign = self::select('campaignID', 'campaign as campaignName')
+        return self::select('campaignID', 'campaign as campaignName')
             ->where('account_id', '=', Auth::user()->account_id)
             ->get();
-
-        return $adwCampaign;
     }
 }

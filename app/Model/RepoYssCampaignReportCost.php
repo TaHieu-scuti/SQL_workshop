@@ -30,15 +30,15 @@ class RepoYssCampaignReportCost extends AbstractReportModel
 
     public static function getAllCampaign()
     {
-        $modelAdwCampaign = new RepoAdwCampaignReportCost();
         $arrCampaigns = [];
-//        dd(session('engine'));
+        
         $arrCampaigns['all'] = 'All Campaigns';
         if (session('engine') === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
                 ->where('account_id', '=', Auth::user()->account_id)
                 ->get();
         } elseif (session('engine') === 'adw') {
+            $modelAdwCampaign = new RepoAdwCampaignReportCost();
             $campaigns = $modelAdwCampaign->getAllAdwCampaign();
         }
         if ($campaigns) {

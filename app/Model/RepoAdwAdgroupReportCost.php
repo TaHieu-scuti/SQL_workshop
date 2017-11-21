@@ -12,9 +12,7 @@ class RepoAdwAdgroupReportCost extends Model
 
     public function getAllAdwAdgroup()
     {
-        $adwAdgroup = self::select('adGroupID as adgroupID', 'adgroupName')
+        return self::select('adGroupID as adgroupID', 'adgroupName')
             ->where('account_id', '=', Auth::user()->account_id)->get();
-
-        return $adwAdgroup;
     }
 }
