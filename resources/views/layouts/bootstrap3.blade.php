@@ -11,14 +11,22 @@
                         <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
                         @if (count($titleBreadCumbs[1]) > 0)
                                     @foreach ($titleBreadCumbs[1] as $key => $account)
-                                        <?php if (is_array($account)) {
+                                    <?php
+                                        if (is_array($account)) {
                                             $key = $account['accountid'];
-                                            $account = $account['accountName']; } ?>
+                                            $engine = $account['engine'];
+                                            $account = $account['accountName'];
+                                        } elseif ($account !== 'All Account') {
+                                            $engine = $titleBreadCumbs['engine'];
+                                        } ?>
                                         <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
+                                            @if ($account !== 'All Account')
+                                                data-engine = "{{  $engine }}"
+                                            @endif
                                             @if ( $titleBreadCumbs['flag'] === 'all')
                                                 {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                             @else
-                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}
+                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session('engine') ? "selected" : ""}}
                                             @endif
                                         data-url= "{{ $breadcrumb->url }}" >
                                             <a href="#">
@@ -51,16 +59,19 @@
                                         if (is_array($account)) {
                                             $key = $account['accountid'];
                                             $engine = $account['engine'];
-                                            $account = $account['accountName']; } ?>
+                                            $account = $account['accountName'];
+                                        } elseif ( $account !== 'All Account' ) {
+                                            $engine = $titleBreadCumbs['engine'];
+                                        } ?>
                                     <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
                                             @if ($account !== 'All Account')
-                                            data-engine = "{{ isset($engine) ? $engine : $titleBreadCumbs['engine']}}"
+                                            data-engine = "{{  $engine }}"
                                             @endif
                                             data-url= "{{ $breadcrumb->url }}"
                                         @if ( $titleBreadCumbs['flag'] === 'all')
                                             {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                         @else
-                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}
+                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session('engine') ? "selected" : ""}}
                                         @endif >
                                     <a href="#">
                                         <div class="desc" >

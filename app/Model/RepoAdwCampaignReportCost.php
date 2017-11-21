@@ -12,4 +12,13 @@ class RepoAdwCampaignReportCost extends Model
      * @var boolean
      **/
     public $timestamps = false;
+
+    public function getAllAdwCampaign()
+    {
+        $adwCampaign = self::select('campaignID', 'campaign as campaignName')
+            ->where('account_id', '=', Auth::user()->account_id)
+            ->get();
+
+        return $adwCampaign;
+    }
 }

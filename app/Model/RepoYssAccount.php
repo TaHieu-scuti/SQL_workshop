@@ -21,7 +21,7 @@ class RepoYssAccount extends Model
 
     public static function getAllAccounts()
     {
-        $accounts = self::select(DB::raw('"Yss" as engine'), 'accountName', 'accountid')
+        $accounts = self::select(DB::raw('"yss" as engine'), 'accountName', 'accountid')
             ->where('account_id', '=', Auth::user()->account_id);
 
         $adwAccount = RepoAdwAccountReportCost::select(DB::raw('"adw" as engine'), 'account AS accountNAme', 'accountid')
@@ -30,14 +30,7 @@ class RepoYssAccount extends Model
         $accounts->union($adwAccount);
         $datas = $accounts->get();
         $datas['all'] = 'All Account';
-//        if ($datas) {
-//            foreach ($datas as $key => $account) {
-////                $arr = [];
-////                array_push($arr, $account->accountName, $account->accountid);
-////                $arrayAccounts[$key] = $arr;
-//                $arrayAccounts[$account->accountid] = $account->accountName;
-//            }
-//        }
+
         return $datas->toArray();
     }
 }

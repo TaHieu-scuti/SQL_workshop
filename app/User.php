@@ -69,6 +69,10 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('campainID');
                 }
+                if ( session('engine') !== null ) {
+
+                   $array['engine'] =  session('engine');
+                }
                 break;
             case 'AdGroup':
                 $model = new \App\Model\RepoYssAdgroupReportCost;
@@ -78,6 +82,9 @@ class User extends Authenticatable
                     $array['flag'] = 'all';
                 } else {
                     $array['flag'] = session('adgroupId');
+                }
+                if ( session('engine') !== null ) {
+                    $array['engine'] =  session('engine');
                 }
                 break;
             case 'AdReport':
@@ -94,6 +101,9 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adReportId');
                 }
+                if ( session('engine') !== null ) {
+                    $array['engine'] =  session('engine');
+                }
                 break;
             case 'KeyWord':
                 $model = new \App\Model\RepoYssKeywordReportCost;
@@ -108,6 +118,9 @@ class User extends Authenticatable
                     $array['flag'] = 'all';
                 } else {
                     $array['flag'] = session('adReportId');
+                }
+                if ( session('engine') !== null ) {
+                    $array['engine'] =  session('engine');
                 }
                 break;
             
