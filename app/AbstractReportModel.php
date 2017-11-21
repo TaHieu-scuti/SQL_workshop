@@ -58,6 +58,26 @@ abstract class AbstractReportModel extends Model
         'cost'
     ];
 
+    const YSS_FIELDS_MAP = [
+//      'columns' => 'alias'
+        'impressions' => 'impressions',
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'ctr' => 'ctr',
+        'averageCpc' => 'averageCpc',
+        'averagePosition' => 'averagePosition',
+    ];
+
+    const ADW_FIELDS_MAP = [
+//      'columns' => 'alias'
+        'impressions' => 'impressions',
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'ctr' => 'ctr',
+        'avgCPC' => 'averageCpc',
+        'avgPosition' => 'averagePosition',
+    ];
+
     protected $groupByFieldName = [
         'device',
         'hourofday',
@@ -196,6 +216,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function calculateData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -254,6 +275,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function calculateSummaryData(
+        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -353,6 +375,7 @@ abstract class AbstractReportModel extends Model
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getDataForTable(
+        $engine,
         array $fieldNames,
         $accountStatus,
         $startDay,
@@ -416,6 +439,7 @@ abstract class AbstractReportModel extends Model
      * @throws \InvalidArgumentException
      */
     public function getDataForGraph(
+        $engine,
         $column,
         $accountStatus,
         $startDay,

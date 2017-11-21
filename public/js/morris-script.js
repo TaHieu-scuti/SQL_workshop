@@ -243,10 +243,11 @@ var Script = function () {
             let requestId = $(this).find("option:selected").data('breadcumbs');
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
-            processRequestBreadcrumbs(url, requestId);
+            let engine = null;
+            processRequestBreadcrumbs(url, requestId, engine);
         });
 
-        function processRequestBreadcrumbs(url, requestId) {
+        function processRequestBreadcrumbs(url, requestId, engine) {
             switch (url) {
                 case 'account_report' :
                     var obj = new Object();
@@ -255,6 +256,7 @@ var Script = function () {
                     obj['id_adgroup'] = 'all';
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
+                    obj['engine'] = engine;
                     sendRequestData(obj, url, 'campaign-report');
                     break;
                 case 'campaign-report' :
@@ -318,8 +320,9 @@ var Script = function () {
 
         $('table a.table-redirect').click(function() {
             let tableName = $(this).attr('data-table');
+            let engine = $(this).data('engine');
             let requestId = $(this).data('id');
-            processRequestBreadcrumbs(tableName, requestId);
+            processRequestBreadcrumbs(tableName, requestId, engine);
         })
 
     });
