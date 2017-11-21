@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\RepoAdwAccountReportCost;
 use Auth;
+use DB;
 
 class RepoYssAccount extends Model
 {
@@ -20,23 +21,20 @@ class RepoYssAccount extends Model
 
     public static function getAllAccounts()
     {
-        $arrayAccounts = [];
-
-        $accounts = self::select('accountName', 'accountid')
+        $accounts = self::select(DB::raw('"Yss" as engine'), 'accountName', 'accountid')
             ->where('account_id', '=', Auth::user()->account_id);
 
-        $adwAccount = RepoAdwAccountReportCost::select('account AS accountNAme', 'accountid')
+        $adwAccount = RepoAdwAccountReportCost::select(DB::raw('"adw" as engine'), 'account AS accountNAme', 'accountid')
             ->where('account_id', '=', Auth::user()->account_id);
 
         $accounts->union($adwAccount);
-
         $datas = $accounts->get();
-
-        $arrayAccounts['all'] = 'All Account';
-        // hieu here
+        $datas['all'] = 'All Account';
 //        if ($datas) {
 //            foreach ($datas as $key => $account) {
-//                var_dump($account->accountName);
+////                $arr = [];
+////                array_push($arr, $account->accountName, $account->accountid);
+////                $arrayAccounts[$key] = $arr;
 //                $arrayAccounts[$account->accountid] = $account->accountName;
 //            }
 //        }
