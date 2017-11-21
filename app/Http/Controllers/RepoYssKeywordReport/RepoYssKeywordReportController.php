@@ -4,7 +4,7 @@ namespace App\Http\Controllers\RepoYssKeywordReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssKeywordReportCost;
-
+use App\Model\RepoAdwKeywordReportCost;
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -44,6 +44,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'keyword';
+    const ADW_GROUPED_BY_FIELD = self::GROUPED_BY_FIELD;
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -71,6 +72,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
+        $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
         if (!session('keywordReport')) {
@@ -108,6 +110,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
 
         if ($request->specificItem === 'prefecture') {
@@ -146,6 +149,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -180,6 +184,18 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateSessionID(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
+    }
+
+    public function updateModel()
+    {
+        $engine = session('engine');
+        if ($engine === 'yss') {
+            $this->model = new RepoYssKeywordReportCost;
+        } elseif ($engine === 'adw') {
+            $this->model = new RepoAdwKeywordReportCost;
+        }
+        return $engine;
     }
 }

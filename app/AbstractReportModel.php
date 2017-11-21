@@ -420,7 +420,6 @@ abstract class AbstractReportModel extends Model
             )
             ->groupBy($groupedByField)
             ->orderBy($columnSort, $sort);
-
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->paginate($pagination);
@@ -553,7 +552,8 @@ abstract class AbstractReportModel extends Model
         return $matchingFieldNames;
     }
 
-    public function updateFieldNames(array $fieldNames) {
+    public function updateFieldNames(array $fieldNames)
+    {
         $resultFieldNames = [];
         $engine = session('engine');
         if ($engine === 'yss' || $engine === null) {
@@ -564,7 +564,8 @@ abstract class AbstractReportModel extends Model
         return $resultFieldNames;
     }
 
-    public function setKeyFieldNames(array $fieldNames, array $fieldsMap) {
+    public function setKeyFieldNames(array $fieldNames, array $fieldsMap)
+    {
         $result = [];
         foreach ($fieldNames as $fieldName) {
             $includedInFieldsMap = false;
@@ -582,5 +583,4 @@ abstract class AbstractReportModel extends Model
         }
         return $result;
     }
-
 }
