@@ -32,7 +32,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     {
         $modelAdwCampaign = new RepoAdwCampaignReportCost();
         $arrCampaigns = [];
-
+//        dd(session('engine'));
         $arrCampaigns['all'] = 'All Campaigns';
         if (session('engine') === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')

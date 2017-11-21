@@ -7,11 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use App\Model\RepoYssAccount;
 use App\Model\RepoYssCampaignReportCost;
+use App\Http\Controllers\AbstractReportController;
 
 class User extends Authenticatable
 {
     use Notifiable;
-
+    const ENGINE = 'engine';
     /**
      * Indicates if the model should be timestamped.
      *
@@ -69,8 +70,8 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('campainID');
                 }
-                if (session('engine') !== null) {
-                    $array['engine'] =  session('engine');
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             case 'AdGroup':
@@ -82,8 +83,8 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adgroupId');
                 }
-                if (session('engine') !== null) {
-                    $array['engine'] =  session('engine');
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             case 'AdReport':
@@ -100,8 +101,8 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adReportId');
                 }
-                if (session('engine') !== null) {
-                    $array['engine'] =  session('engine');
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             case 'KeyWord':
@@ -118,8 +119,8 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adReportId');
                 }
-                if (session('engine') !== null) {
-                    $array['engine'] =  session('engine');
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             
