@@ -69,9 +69,8 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('campainID');
                 }
-                if ( session('engine') !== null ) {
-
-                   $array['engine'] =  session('engine');
+                if (session('engine') !== null) {
+                    $array['engine'] =  session('engine');
                 }
                 break;
             case 'AdGroup':
@@ -83,7 +82,7 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adgroupId');
                 }
-                if ( session('engine') !== null ) {
+                if (session('engine') !== null) {
                     $array['engine'] =  session('engine');
                 }
                 break;
@@ -101,7 +100,7 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adReportId');
                 }
-                if ( session('engine') !== null ) {
+                if (session('engine') !== null) {
                     $array['engine'] =  session('engine');
                 }
                 break;
@@ -119,7 +118,7 @@ class User extends Authenticatable
                 } else {
                     $array['flag'] = session('adReportId');
                 }
-                if ( session('engine') !== null ) {
+                if (session('engine') !== null) {
                     $array['engine'] =  session('engine');
                 }
                 break;

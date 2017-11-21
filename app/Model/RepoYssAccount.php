@@ -24,7 +24,11 @@ class RepoYssAccount extends Model
         $accounts = self::select(DB::raw('"yss" as engine'), 'accountName', 'accountid')
             ->where('account_id', '=', Auth::user()->account_id);
 
-        $adwAccount = RepoAdwAccountReportCost::select(DB::raw('"adw" as engine'), 'account AS accountNAme', 'accountid')
+        $adwAccount = RepoAdwAccountReportCost::select(
+            DB::raw('"adw" as engine'),
+            'account AS accountNAme',
+            'accountid'
+        )
             ->where('account_id', '=', Auth::user()->account_id);
 
         $accounts->union($adwAccount);
