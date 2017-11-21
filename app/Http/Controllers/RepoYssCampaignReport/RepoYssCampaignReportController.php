@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RepoYssCampaignReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssCampaignReportCost;
+use App\Model\RepoAdwCampaignReportCost;
 
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -45,6 +46,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'campaignName';
+    const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
 
@@ -73,8 +75,13 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function index()
     {
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        if ($engine === 'yss') {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        } elseif ($engine === 'adw') {
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        }
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
         }
@@ -197,5 +204,15 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
+    }
+    public function updateModel()
+    {
+        $engine = session('engine');
+        if ($engine === 'yss') {
+            $this->model = new RepoYssCampaignReportCost;
+        } elseif ($engine === 'adw') {
+            $this->model = new RepoAdwCampaignReportCost;
+        }
+        return $engine;
     }
 }
