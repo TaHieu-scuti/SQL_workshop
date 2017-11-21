@@ -31,7 +31,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     public static function getAllCampaign()
     {
         $arrCampaigns = [];
-        
+
         $arrCampaigns['all'] = 'All Campaigns';
         if (session('engine') === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
