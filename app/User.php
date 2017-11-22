@@ -55,12 +55,12 @@ class User extends Authenticatable
                 $model = new RepoYssAccount;
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllAccounts(
-                    session('accountID')
+                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID)
                 );
-                if (session('accountID') === null) {
+                if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('accountID');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
                 }
                 break;
             case 'Campaign':
@@ -73,10 +73,10 @@ class User extends Authenticatable
                     session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
                     session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
                 );
-                if (session('campainID') === null) {
+                if (session(AbstractReportController::SESSION_KEY_CAMPAIGNID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('campainID');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_CAMPAIGNID);
                 }
                 if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
                     $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
@@ -92,10 +92,10 @@ class User extends Authenticatable
                     session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
                     session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
                 );
-                if (session('adgroupId') === null) {
+                if (session(AbstractReportController::SESSION_KEY_AD_GROUP_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('adgroupId');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_AD_GROUP_ID);
                 }
                 if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
                     $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);

@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\AbstractReportController;
+
+?>
 @if ($breadcrumbs)
     <ul class="breadcrumb">
         @foreach ($breadcrumbs as $breadcrumb)
@@ -26,7 +30,7 @@
                                             @if ( $titleBreadCumbs['flag'] === 'all')
                                                 {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                             @else
-                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session('engine') ? "selected" : ""}}
+                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
                                             @endif
                                         data-url= "{{ $breadcrumb->url }}" >
                                             <a href="#">
@@ -71,7 +75,7 @@
                                         @if ( $titleBreadCumbs['flag'] === 'all')
                                             {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                         @else
-                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session('engine') ? "selected" : ""}}
+                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
                                         @endif >
                                     <a href="#">
                                         <div class="desc" >
