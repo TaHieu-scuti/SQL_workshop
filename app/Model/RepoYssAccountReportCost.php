@@ -493,9 +493,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             Event::listen(StatementPrepared::class, function ($event) {
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
-            if (($key = array_search('accountid', $fieldNames)) !== false) {
-                unset($fieldNames[$key]);
-            }
+            $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
 
             $sql = $this->getBinddingSql($datas);
             $rawExpressions = $this->getRawExpression($fieldNames);
@@ -538,7 +536,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->groupByFieldName)) {
-                $rawExpression[] = $fieldName;
+                $rawExpression[] = DB::raw($fieldName);
                 continue;
             }
             if (in_array($fieldName, static::SUM_FIELDS)) {
