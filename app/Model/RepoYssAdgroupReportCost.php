@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 use DateTime;
 use Exception;
 use Auth;
@@ -36,7 +37,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $arrAdgroups = [];
 
         $arrAdgroups['all'] = 'All Adgroup';
-        if (session('engine') === 'yss') {
+        if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
                 ->where(
                     function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
@@ -52,7 +53,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     }
                 )
                 ->get();
-        } elseif (session('engine') === 'adw') {
+        } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
             $modelAdwAdgroup = new RepoAdwAdgroupReportCost();
             $adgroups = $modelAdwAdgroup->getAllAdwAdgroup(
                 $accountId = null,

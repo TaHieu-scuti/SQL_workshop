@@ -6,6 +6,7 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 
 use DateTime;
 use Exception;
@@ -38,7 +39,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $arrCampaigns = [];
 
         $arrCampaigns['all'] = 'All Campaigns';
-        if (session('engine') === 'yss') {
+        if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
                 ->where(
                     function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
@@ -54,7 +55,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     }
                 )
                 ->get();
-        } elseif (session('engine') === 'adw') {
+        } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
             $modelAdwCampaign = new RepoAdwCampaignReportCost();
             $campaigns = $modelAdwCampaign->getAllAdwCampaign(
                 $accountId = null,
