@@ -7,10 +7,10 @@
 
                     <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}</a><br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
-                        @if (count($titleBreadCumbs[1]) > 0)
-                                    @foreach ($titleBreadCumbs[1] as $key => $account)
+                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}</a><br></span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        @if (count($titleBreadCumbs['contents']) > 0)
+                                    @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
                                         if (is_array($account)) {
                                             $key = $account['accountid'];
@@ -51,10 +51,10 @@
             @else
                 <li class="breadcrumb-item active">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}<br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
-                            @if (count($titleBreadCumbs[1]) > 0)
-                                @foreach ($titleBreadCumbs[1] as $key => $account)
+                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}<br></span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                            @if (count($titleBreadCumbs['contents']) > 0)
+                                @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
                                         if (is_array($account)) {
                                             $key = $account['accountid'];
