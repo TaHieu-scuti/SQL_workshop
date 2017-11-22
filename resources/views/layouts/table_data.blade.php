@@ -105,4 +105,3 @@
     </table>
     </div>
 </div>
-{{ var_dump($totalDataArray) }}

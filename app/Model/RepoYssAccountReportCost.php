@@ -287,6 +287,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        Event::listen(StatementPrepared::class, function ($event) {
+            $event->statement->setFetchMode(PDO::FETCH_OBJ);
+        });
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
         $arrayCalculate = $this->getAggregated($fieldNames);
@@ -325,17 +328,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $rawExpression = $this->getRawExpression($fieldNames);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
-
         $data = $data->first();
-        if ($data === null) {
-            $data = [];
-        }
-        if ($groupedByField === 'device') {
-            var_dump($data);
-            die;
-        }
-        var_dump($data);
-        die;
         return $data;
     }
 
