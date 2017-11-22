@@ -76,7 +76,7 @@ class RepoYssAdReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === null) {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
-        } elseif($engine === 'adw'){
+        } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
         }
 
@@ -85,7 +85,7 @@ class RepoYssAdReportController extends AbstractReportController
         }
         if ($engine === 'yss' || $engine === null) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
-        }elseif($engine === 'adw') {
+        } elseif ($engine === 'adw') {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::ADW_GROUPED_BY_FIELD]);
         }
         
@@ -202,7 +202,7 @@ class RepoYssAdReportController extends AbstractReportController
         $engine = session('engine');
         if ($engine === 'yss' || $engine === null) {
             $this->model = new RepoYssAdReportCost;
-        } elseif($engine === 'adw'){
+        } elseif ($engine === 'adw') {
             $this->model = new RepoAdwAdReportCost;
         }
         return $engine;
