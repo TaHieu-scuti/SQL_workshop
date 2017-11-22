@@ -80,10 +80,10 @@
                     @if($fieldName === $groupedByField
                         || $fieldName === "accountid"
                         || $fieldName === "campaignID"
-                        || $fieldName === "adgroupID")
+                        || $fieldName === "adgroupID"
+                        || $fieldName === "campaign")
                         @continue
                     @endif
-
                     @if(isset($totalDataArray->$fieldName))
                         @if (ctype_digit($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
