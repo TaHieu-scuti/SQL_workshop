@@ -26,17 +26,39 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
      */
     protected $table = 'repo_yss_adgroup_report_cost';
 
-    public static function getAllAdgroup()
+    public function getAllAdgroup(
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null)
     {
         $arrAdgroups = [];
 
         $arrAdgroups['all'] = 'All Adgroup';
         if (session('engine') === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
-                ->where('account_id', '=', Auth::user()->account_id)->get();
+                ->where(
+                    function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
+                        $this->addQueryConditions(
+                            $query,
+                            Auth::user()->account_id,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    })
+                ->get();
         } elseif (session('engine') === 'adw') {
             $modelAdwAdgroup = new RepoAdwAdgroupReportCost();
-            $adgroups = $modelAdwAdgroup->getAllAdwAdgroup();
+            $adgroups = $modelAdwAdgroup->getAllAdwAdgroup(
+                $accountId = null,
+                $campaignId = null,
+                $adGroupId = null,
+                $adReportId = null,
+                $keywordId = null);
         }
         if ($adgroups) {
             foreach ($adgroups as $key => $adgroup) {

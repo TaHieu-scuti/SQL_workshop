@@ -54,7 +54,9 @@ class User extends Authenticatable
             case 'Account':
                 $model = new RepoYssAccount;
                 $array[] = $title;
-                $array[] = $model->getAllAccounts();
+                $array[] = $model->getAllAccounts(
+                    session('accountID')
+                );
                 if (session('accountID') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -64,7 +66,13 @@ class User extends Authenticatable
             case 'Campaign':
                 $model = new RepoYssCampaignReportCost;
                 $array[] = $title;
-                $array[] = $model->getAllCampaign();
+                $array[] = $model->getAllCampaign(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('adReportId'),
+                    session('KeywordID')
+                );
                 if (session('campainID') === null) {
                     $array['flag'] = 'all';
                 } else {
@@ -77,7 +85,13 @@ class User extends Authenticatable
             case 'AdGroup':
                 $model = new \App\Model\RepoYssAdgroupReportCost;
                 $array[] = $title;
-                $array[] = $model->getAllAdgroup();
+                $array[] = $model->getAllAdgroup(
+                    session('accountID'),
+                    session('campainID'),
+                    session('adgroupId'),
+                    session('adReportId'),
+                    session('KeywordID')
+                );
                 if (session('adgroupId') === null) {
                     $array['flag'] = 'all';
                 } else {
