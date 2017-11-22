@@ -81,6 +81,7 @@
                         || $fieldName === "accountid"
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
+                        || $fieldName === "campaignName"
                         || $fieldName === "campaign")
                         @continue
                     @endif
