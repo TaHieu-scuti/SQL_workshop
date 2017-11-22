@@ -91,9 +91,9 @@ class RepoYdnReportGenerator extends Seeder
             $costReport->averageCpc = $costReport->cost / $costReport->clicks;
 
             $costReport->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                self::MIN_AVERAGE_POSITION,
+                self::MAX_AVERAGE_POSITION
+            ) / mt_getrandmax();
 
             $costReport->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
