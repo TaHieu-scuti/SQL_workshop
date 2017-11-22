@@ -7,11 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use App\Model\RepoYssAccount;
 use App\Model\RepoYssCampaignReportCost;
+use App\Http\Controllers\AbstractReportController;
 
 class User extends Authenticatable
 {
     use Notifiable;
-
+    const ENGINE = 'engine';
     /**
      * Indicates if the model should be timestamped.
      *
@@ -52,62 +53,52 @@ class User extends Authenticatable
         switch ($title) {
             case 'Account':
                 $model = new RepoYssAccount;
-                $array[] = $title;
-                $array[] = $model->getAllAccounts();
-                if (session('accountID') === null) {
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllAccounts(
+                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID)
+                );
+                if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('accountID');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
                 }
                 break;
             case 'Campaign':
                 $model = new RepoYssCampaignReportCost;
-                $array[] = $title;
-                $array[] = $model->getAllCampaign();
-                if (session('campainID') === null) {
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllCampaign(
+                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID),
+                    session(AbstractReportController::SESSION_KEY_CAMPAIGNID),
+                    session(AbstractReportController::SESSION_KEY_AD_GROUP_ID),
+                    session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
+                    session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
+                );
+                if (session(AbstractReportController::SESSION_KEY_CAMPAIGNID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('campainID');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_CAMPAIGNID);
+                }
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             case 'AdGroup':
                 $model = new \App\Model\RepoYssAdgroupReportCost;
-                $array[] = $title;
-                $array[] = $model->getAllAdgroup();
-                if (session('adgroupId') === null) {
-                    $array['flag'] = 'all';
-                } else {
-                    $array['flag'] = session('adgroupId');
-                }
-                break;
-            case 'AdReport':
-                $model = new \App\Model\RepoYssAdReportCost;
-                $array[] = $title;
-                $array[] = $model->getAllAdReport(
-                    session('accountID'),
-                    session('campainID'),
-                    session('adgroupId'),
-                    session('adReportId')
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllAdgroup(
+                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID),
+                    session(AbstractReportController::SESSION_KEY_CAMPAIGNID),
+                    session(AbstractReportController::SESSION_KEY_AD_GROUP_ID),
+                    session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
+                    session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
                 );
-                if (session('adReportId') === null) {
+                if (session(AbstractReportController::SESSION_KEY_AD_GROUP_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session('adReportId');
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_AD_GROUP_ID);
                 }
-                break;
-            case 'KeyWord':
-                $model = new \App\Model\RepoYssKeywordReportCost;
-                $array[] = $title;
-                $array[] = $model->getAllKeyword(
-                    session('accountID'),
-                    session('campainID'),
-                    session('adgroupId'),
-                    session('KeywordID')
-                );
-                if (session('KeywordID') === null) {
-                    $array['flag'] = 'all';
-                } else {
-                    $array['flag'] = session('adReportId');
+                if (session(AbstractReportController::SESSION_KEY_ENGINE) !== null) {
+                    $array[self::ENGINE] =  session(AbstractReportController::SESSION_KEY_ENGINE);
                 }
                 break;
             

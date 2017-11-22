@@ -3,7 +3,9 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Model\RepoAdwAccountReportCost;
 use Auth;
+use DB;
 
 class RepoYssAccount extends Model
 {
@@ -17,20 +19,38 @@ class RepoYssAccount extends Model
         'deliveryStatus',    // Delivery status of the ad
     ];
 
-    public static function getAllAccounts()
+    public function getAllAccounts($accountId = null)
     {
-        $arrayAccounts = [];
+        $accounts = self::select(DB::raw('"yss" as engine'), 'accountName', 'accountid')
+            ->where(
+                function ($query) use ($accountId) {
+                    if ($accountId !== null) {
+                        $query->where('accountid', '=', $accountId);
+                    } else {
+                        $query->where('account_id', '=', Auth::user()->account_id);
+                    }
+                }
+            );
 
-        $accounts = self::select('accountName', 'accountid')->where('account_id', '=', Auth::user()->account_id)->get();
+        $adwAccount = RepoAdwAccountReportCost::select(
+            DB::raw('"adw" as engine'),
+            'account AS accountNAme',
+            'accountid'
+        )
+            ->where(
+                function ($query) use ($accountId) {
+                    if ($accountId !== null) {
+                        $query->where('accountid', '=', $accountId);
+                    } else {
+                        $query->where('account_id', '=', Auth::user()->account_id);
+                    }
+                }
+            );
 
-        $arrayAccounts['all'] = 'All Account';
-        
-        if ($accounts) {
-            foreach ($accounts as $key => $account) {
-                $arrayAccounts[$account->accountid] = $account->accountName;
-            }
-        }
-        
-        return $arrayAccounts;
+        $accounts->union($adwAccount);
+        $datas = $accounts->get();
+        $datas['all'] = 'All Account';
+
+        return $datas->toArray();
     }
 }

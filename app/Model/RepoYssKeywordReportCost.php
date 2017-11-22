@@ -24,32 +24,4 @@ class RepoYssKeywordReportCost extends AbstractReportModel
      * @var string
      */
     protected $table = 'repo_yss_keyword_report_cost';
-
-    public function getAllKeyword($accountId = null, $campaignId = null, $adgroupId = null, $keywordId = null)
-    {
-        $arrKeywords = [];
-
-        $arrKeywords['all'] = 'All Keywords';
-
-        $keywords = $this->select('keywordID', 'keyword')->where(
-            function ($query) use ($accountId, $campaignId, $adgroupId, $keywordId) {
-                $this->addQueryConditions(
-                    $query,
-                    Auth::user()->account_id,
-                    $accountId,
-                    $campaignId,
-                    $adgroupId,
-                    $keywordId
-                );
-            }
-        )->get();
-
-        if ($keywords) {
-            foreach ($keywords as $key => $keyword) {
-                $arrKeywords[$keyword->keywordID] = $keyword->keyword;
-            }
-        }
-
-        return $arrKeywords;
-    }
 }
