@@ -8,6 +8,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdReportCost;
+use App\Model\RepoAdwAdReportCost;
 
 use Exception;
 
@@ -43,6 +44,7 @@ class RepoYssAdReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'adName';
+    const ADW_GROUPED_BY_FIELD = 'ad';
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -70,12 +72,23 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function index()
     {
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        if ($engine === 'yss' || $engine === null) {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        } elseif($engine === 'adw'){
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
+        }
+
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+        if ($engine === 'yss' || $engine === null) {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+        }elseif($engine === 'adw') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::ADW_GROUPED_BY_FIELD]);
+        }
+        
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -107,6 +120,7 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -141,6 +155,7 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
 
         if ($request->specificItem === 'prefecture') {
@@ -180,5 +195,16 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
+    }
+
+    public function updateModel()
+    {
+        $engine = session('engine');
+        if ($engine === 'yss' || $engine === null) {
+            $this->model = new RepoYssAdReportCost;
+        } elseif($engine === 'adw'){
+            $this->model = new RepoAdwAdReportCost;
+        }
+        return $engine;
     }
 }
