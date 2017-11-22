@@ -331,7 +331,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         if ($data === null) {
             $data = [];
         }
-
         return $data;
     }
 

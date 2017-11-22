@@ -77,9 +77,13 @@
             <tr>
                 <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === $groupedByField || $fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                    @if($fieldName === $groupedByField
+                        || $fieldName === "accountid"
+                        || $fieldName === "campaignID"
+                        || $fieldName === "adgroupID")
                         @continue
                     @endif
+
                     @if(isset($totalDataArray->$fieldName))
                         @if (ctype_digit($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>

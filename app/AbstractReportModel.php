@@ -234,7 +234,6 @@ abstract class AbstractReportModel extends Model
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
 
         $aggregations = $this->getAggregated($fieldNames);
-
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -269,8 +268,6 @@ abstract class AbstractReportModel extends Model
         }
         if ($data === null) {
             $data = [];
-        } else {
-            $data = $data->toArray();
         }
         return $data;
     }
@@ -296,8 +293,21 @@ abstract class AbstractReportModel extends Model
                 }
             )
             ->where(
-                function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                    $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId)
+                {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId
+                    );
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
