@@ -17,9 +17,11 @@ class RepoYdnReportGenerator extends Seeder
         3
     ];
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
-    const MAX_NUMBER_OF_CAMPAIGNS = 12;
-    const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
-    const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
+    const MAX_NUMBER_OF_CAMPAIGNS = 5;
+    const MIN_NUMBER_OF_ADGROUP = 1;
+    const MAX_NUMBER_OF_ADGROUP = 5;
+    const MIN_NUMBER_OF_AD_REPORT = 1;
+    const MAX_NUMBER_OF_AD_REPORT = 5;
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 1;
@@ -28,30 +30,9 @@ class RepoYdnReportGenerator extends Seeder
     const MAX_CLICKS = 9001;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
-    const MIN_CONV_VALUE = 1000000;
-    const MAX_CONV_VALUE = 89489437437880;
-    const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
 
     private function processDay(DateTime $day)
-    {
-        for ($i = 0; $i < self::NUMBER_OF_ACCOUNTS; ++$i) {
-            $this->processAGAccount($day, $i);
-        }
-    }
-
-    private function processAGAccount(DateTime $day, $agAccountNumber)
-    {
-        $numberOfMediaAccounts = self::NUMBER_OF_MEDIA_ACCOUNTS[$agAccountNumber];
-
-        for ($i = 0; $i < $numberOfMediaAccounts; $i++) {
-            $this->processMediaAccount($day, $agAccountNumber, (($agAccountNumber + 1) * 10) + $i);
-        }
-    }
-
-    private function processMediaAccount(DateTime $day, $agAccountNumber, $mediaAccountNumber)
     {
         $numberOfCampaigns = rand(
             self::MIN_NUMBER_OF_CAMPAIGNS,
@@ -59,89 +40,110 @@ class RepoYdnReportGenerator extends Seeder
         );
 
         for ($i = 0; $i < $numberOfCampaigns + 1; ++$i) {
-            $this->processCampaign($day, $agAccountNumber, $mediaAccountNumber, $i);
+            $this->processCampaign($day, $i);
         }
     }
 
-    private function processCampaign(DateTime $day, $agAccountNumber, $mediaAccountNumber, $campaignNumber)
+    private function processCampaign(DateTime $day, $campaignNumber)
     {
         $numberOfReports = rand(
-            self::MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN,
-            self::MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN
+            self::MIN_NUMBER_OF_ADGROUP,
+            self::MAX_NUMBER_OF_ADGROUP
         );
 
         for ($i = 0; $i < $numberOfReports + 1; ++$i) {
-            $this->createReport($day, $agAccountNumber, $mediaAccountNumber, $campaignNumber);
+            $this->processAdGroup($day, $campaignNumber, $i);
         }
     }
 
-    private function createReport(DateTime $day, $agAccountNumber, $mediaAccountNumber, $campaignNumber)
+    private function processAdGroup(DateTime $day, $campaignNumber, $adGroupNumber)
     {
-        $costReport = new RepoAdwAccountReportCost;
-
-        $costReport->account_id = $agAccountNumber + 1;
-
-        $costReport->account = 'Account'.($mediaAccountNumber + 1);
-
-        $costReport->cost = mt_rand(
-            self::MIN_COST,
-            self::MAX_COST
+        $numberOfReports = rand(
+            self::MIN_NUMBER_OF_AD_REPORT,
+            self::MAX_NUMBER_OF_AD_REPORT
         );
 
-        $costReport->clicks = mt_rand(
-            self::MIN_CLICKS,
-            self::MAX_CLICKS
-        );
+        for ($i = 0; $i < $numberOfReports + 1; ++$i) {
+            $this->createReport($day, $campaignNumber, $adGroupNumber, $i);
+        }
+    }
 
-        $costReport->avgCPC = $costReport->cost / $costReport->clicks;
+    private function createReport(DateTime $day, $campaignNumber, $adGroupNumber, $adReportNumber)
+    {
+        $repoYdnAccounts = RepoYdnAccount::select('account_id', 'accountId', 'accountName')->get();
+        foreach ($repoYdnAccounts as $account) {
+            $costReport = new RepoYdnReport();
 
-        $costReport->avgPosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+            $costReport->account_id = $account->account_id;
 
-        $costReport->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                self::MAX_CONVERSIONS
-            ) / mt_getrandmax();
+            $costReport->accountName = $account->accountName;
 
-        $costReport->impressions = mt_rand(
-            self::MIN_IMPRESSIONS,
-            self::MAX_IMPRESSIONS
-        );
+            $costReport->cost = mt_rand(
+                self::MIN_COST,
+                self::MAX_COST
+            );
 
-        $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+            $costReport->clicks = mt_rand(
+                self::MIN_CLICKS,
+                self::MAX_CLICKS
+            );
 
-        $costReport->valueConv = mt_rand(
-                self::MIN_CONV_VALUE,
-                self::MAX_CONV_VALUE
-            ) / mt_getrandmax();
+            $costReport->averageCpc = $costReport->cost / $costReport->clicks;
 
-        $costReport->accountid = $mediaAccountNumber + 1;
+            $costReport->averagePosition = mt_rand(
+                    self::MIN_AVERAGE_POSITION,
+                    self::MAX_AVERAGE_POSITION
+                ) / mt_getrandmax();
 
-        $costReport->campaign_id = $campaignNumber + 1;
+            $costReport->impressions = mt_rand(
+                self::MIN_IMPRESSIONS,
+                self::MAX_IMPRESSIONS
+            );
 
-        $costReport->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+            $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
 
-        $costReport->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+            $costReport->accountid = $account->accountId;
 
-        $costReport->day = $day;
+            $costReport->mediaID = $account->accountId;
 
-        $costReport->dayOfWeek = $day->format('l');
+            $costReport->mediaName = 'YDN ' . str_random(10);
 
-        $costReport->quarter = $day->format('Y-m-d');
+            $costReport->campaign_id = $campaignNumber + 1;
 
-        $costReport->month = $day->format('Y-m-d');
+            $costReport->campaignID = $campaignNumber + 1;
 
-        $costReport->week = $day->format('W');
+            $costReport->campaignName = 'Campaign ' . ($campaignNumber + 1);
 
-        $costReport->exeDate = $day->format('Y-m-d');
+            $costReport->adgroupID = $adGroupNumber + 1;
 
-        $costReport->startDate = $day->format('Y-m-d');
+            $costReport->adgroupName = 'AdGroup ' . ($adGroupNumber + 1);
 
-        $costReport->endDate = $day->format('Y-m-d');
+            $costReport->adID = $adReportNumber + 1;
 
-        $costReport->saveOrFail();
+            $costReport->adName = 'Ad Report ' . ($adReportNumber + 1);
+
+            $costReport->prefectureID = $adReportNumber + 1;
+
+            $costReport->prefecture = 'Prefecture ' . ($adReportNumber + 1);
+
+            $costReport->hourofday = rand(0, 23);
+
+            $costReport->searchKeywordID = $adReportNumber + 1;
+
+            $costReport->searchKeyword = 'Keyword ' . ($adReportNumber + 1);
+
+            $costReport->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
+
+            $costReport->day = $day;
+
+            $costReport->exeDate = $day->format('Y-m-d');
+
+            $costReport->startDate = $day->format('Y-m-d');
+
+            $costReport->endDate = $day->format('Y-m-d');
+
+            $costReport->saveOrFail();
+        }
     }
 
     /**
