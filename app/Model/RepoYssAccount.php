@@ -19,7 +19,7 @@ class RepoYssAccount extends Model
         'deliveryStatus',    // Delivery status of the ad
     ];
 
-    public static function getAllAccounts($accountId = null)
+    public function getAllAccounts($accountId = null)
     {
         $accounts = self::select(DB::raw('"yss" as engine'), 'accountName', 'accountid')
             ->where(
@@ -29,7 +29,8 @@ class RepoYssAccount extends Model
                     } else {
                         $query->where('account_id', '=', Auth::user()->account_id);
                     }
-                });
+                }
+            );
 
         $adwAccount = RepoAdwAccountReportCost::select(
             DB::raw('"adw" as engine'),
@@ -43,7 +44,8 @@ class RepoYssAccount extends Model
                     } else {
                         $query->where('account_id', '=', Auth::user()->account_id);
                     }
-                });
+                }
+            );
 
         $accounts->union($adwAccount);
         $datas = $accounts->get();

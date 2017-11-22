@@ -28,8 +28,13 @@ class RepoYssCampaignReportCost extends AbstractReportModel
      */
     protected $table = 'repo_yss_campaign_report_cost';
 
-    public function getAllCampaign($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null, $keywordId = null)
-    {
+    public function getAllCampaign(
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
         $arrCampaigns = [];
 
         $arrCampaigns['all'] = 'All Campaigns';
@@ -46,7 +51,8 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                             $adReportId,
                             $keywordId
                         );
-                })
+                    }
+                )
                 ->get();
         } elseif (session('engine') === 'adw') {
             $modelAdwCampaign = new RepoAdwCampaignReportCost();

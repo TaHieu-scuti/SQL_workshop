@@ -31,8 +31,8 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null)
-    {
+        $keywordId = null
+    ) {
         $arrAdgroups = [];
 
         $arrAdgroups['all'] = 'All Adgroup';
@@ -49,7 +49,8 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                             $adReportId,
                             $keywordId
                         );
-                    })
+                    }
+                )
                 ->get();
         } elseif (session('engine') === 'adw') {
             $modelAdwAdgroup = new RepoAdwAdgroupReportCost();
@@ -58,7 +59,8 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 $campaignId = null,
                 $adGroupId = null,
                 $adReportId = null,
-                $keywordId = null);
+                $keywordId = null
+            );
         }
         if ($adgroups) {
             foreach ($adgroups as $key => $adgroup) {

@@ -11,8 +11,13 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
     protected $table = 'repo_adw_adgroup_report_cost';
     public $timestamps = false;
 
-    public function getAllAdwAdgroup($accountId = null, $campaignId = null, $adgroupId = null, $adReportId = null, $keywordId = null)
-    {
+    public function getAllAdwAdgroup(
+        $accountId = null,
+        $campaignId = null,
+        $adgroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
         return self::select('adGroupID as adgroupID', 'adGroup')
             ->where(
                 function ($query) use ($accountId, $campaignId, $adgroupId, $adReportId, $keywordId) {
@@ -25,7 +30,8 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
                         $adReportId,
                         $keywordId
                     );
-                })
+                }
+            )
             ->get();
     }
 }
