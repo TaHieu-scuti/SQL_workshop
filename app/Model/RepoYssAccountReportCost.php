@@ -306,16 +306,15 @@ class RepoYssAccountReportCost extends AbstractReportModel
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
-                        ->where(
-                            function ($query) use ($accountId, $adgainerId) {
-                                if ($accountId !== null) {
-                                    $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                                } else {
-                                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
-                                }
-                            }
-                        );
-
+            ->where(
+                function ($query) use ($accountId, $adgainerId) {
+                    if ($accountId !== null) {
+                        $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                    } else {
+                        $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                    }
+                }
+            );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
             $adwAccountReport = $adwAccountReport->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
@@ -331,7 +330,12 @@ class RepoYssAccountReportCost extends AbstractReportModel
         if ($data === null) {
             $data = [];
         }
-
+        if ($groupedByField === 'device') {
+            var_dump($data);
+            die;
+        }
+        var_dump($data);
+        die;
         return $data;
     }
 
