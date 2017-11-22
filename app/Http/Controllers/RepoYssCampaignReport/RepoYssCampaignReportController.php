@@ -85,7 +85,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        $this->updateGroupByFieldWhenSessionEngineChange();
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -170,7 +170,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
