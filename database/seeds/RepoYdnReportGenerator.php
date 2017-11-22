@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
+// @codingStandardsIgnoreLine
 class RepoYdnReportGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
