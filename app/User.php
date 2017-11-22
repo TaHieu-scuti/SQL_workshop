@@ -54,9 +54,7 @@ class User extends Authenticatable
             case 'Account':
                 $model = new RepoYssAccount;
                 $array['title'] = $title;
-                $array['contents'] = $model->getAllAccounts(
-                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID)
-                );
+                $array['contents'] = $model->getAllAccounts();
                 if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
