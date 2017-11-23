@@ -48,17 +48,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
         self::AVERAGE_CPC => 'avgCPC'
     ];
 
-    private function addQueryConditionsForGoogle(Builder $query, $adgainerId, $accountId = null)
-    {
-        $tableName = (new RepoAdwAccountReportCost)->getTable();
-        if ($accountId !== null) {
-            $query->where($tableName.'.accountid', '=', $accountId);
-        }
-        if ($accountId === null) {
-            $query->where($tableName.'.account_id', '=', $adgainerId);
-        }
-    }
-
     private function getAggregatedGraphOfGoogle($column)
     {
         $arrSelect = [];
@@ -223,7 +212,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($accountId, $adgainerId) {
+                function ($query) use ($adgainerId) {
                     $query->where('account_id', '=', $adgainerId);
                 }
             )
@@ -297,7 +286,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId, $accountId);
+        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId);
         $data = $this->select($arrayCalculate)
             ->join(
                 $joinTableName,
@@ -352,7 +341,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
         $ydnAccountCalculate = $modelYdnReport->calculateSummaryDataYdn($fieldNames, $startDay, $endDay, $adgainerId);
-        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId, $accountId);
+        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId);
         $data = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
@@ -509,8 +498,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         array $fieldNames,
         $startDay,
         $endDay,
-        $adgainerId = null,
-        $accountId = null
+        $adgainerId = null
     ) {
         $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggreations))
@@ -519,7 +507,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId, $accountId) {
+                function (Builder $query) use ($adgainerId) {
                     $query->where('account_id', '=', $adgainerId);
                 }
             );
