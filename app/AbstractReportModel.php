@@ -28,6 +28,7 @@ abstract class AbstractReportModel extends Model
     const DAY_OF_WEEK = "dayOfWeek";
     const PREFECTURE ="prefecture";
     const HOUR_OF_DAY = "hourofday";
+    const SESSION_KEY_ENGINE = 'engine';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -569,7 +570,7 @@ abstract class AbstractReportModel extends Model
     public function updateFieldNames(array $fieldNames)
     {
         $resultFieldNames = [];
-        $engine = session('engine');
+        $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss' || $engine === null) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
         } elseif ($engine === 'adw') {
@@ -584,6 +585,17 @@ abstract class AbstractReportModel extends Model
         foreach ($fieldNames as $fieldName) {
             $includedInFieldsMap = false;
             //check fieldName is included in the fieldsMap
+
+            // if(array_search($fieldName, $fieldsMap)) {
+            //     // get the key of current element of $fieldsMap
+            //     $key = key($fieldsMap);
+            //     // get the value of current element of $fieldsMap
+            //     $value = current($fieldsMap);
+            //     $result[$key] = $value;
+            //     $includedInFieldsMap = true;
+            //     break;
+            // }
+
             foreach ($fieldsMap as $key => $value) {
                 if ($fieldName === $value) {
                     $result[$key] = $value;
@@ -600,7 +612,7 @@ abstract class AbstractReportModel extends Model
 
     public function updateColumnForGraph($column)
     {
-        $engine = session('engine');
+        $engine = session(self::SESSION_KEY_ENGINE);
         $arrayMapping = [];
         if ($engine === null || $engine === 'yss') {
             $arrayMapping = self::YSS_FIELDS_MAP;

@@ -179,9 +179,9 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        if (session(SESSION_KEY_ENGINE) === 'yss' || session(SESSION_KEY_ENGINE) === null) {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss' || session(self::SESSION_KEY_ENGINE) === null) {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
-        } elseif (session(SESSION_KEY_ENGINE) === 'adw') {
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
         if (session('accountID') === null) {
@@ -196,7 +196,7 @@ abstract class AbstractReportController extends Controller
         if (session('adReportId') === null) {
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
-        if (session('engine') === null) {
+        if (session(self::SESSION_KEY_ENGINE) === null) {
             session([self::SESSION_KEY_ENGINE => null]);
         }
     }
