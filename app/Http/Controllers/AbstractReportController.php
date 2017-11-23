@@ -201,13 +201,14 @@ abstract class AbstractReportController extends Controller
         }
     }
 
-    public function updateGroupByFieldWhenSessionEngineChange()
+    public function updateGroupByFieldWhenSessionEngineChange(array $columns)
     {
         if (session('engine') === 'yss' || session('engine') === null) {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         } elseif (session('engine') === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
+        session([static::SESSION_KEY_FIELD_NAME => $columns]);
     }
 
     public function checkoutSessionFieldName()
