@@ -72,13 +72,19 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        if ($engine === null || $engine === 'yss') {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        } elseif ($engine === 'adw') {
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
+        }
+        
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+        //update column fieldnames and grouped by field when change engine
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
