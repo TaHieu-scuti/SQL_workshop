@@ -210,7 +210,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     }
     public function updateModel()
     {
-        $engine = session('engine');
+        $engine = session(SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
             $this->model = new RepoYssCampaignReportCost;
         } elseif ($engine === 'adw') {

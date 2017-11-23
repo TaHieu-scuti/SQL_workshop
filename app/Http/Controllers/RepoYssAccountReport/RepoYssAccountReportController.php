@@ -86,7 +86,7 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function index(Request $request)
     {
-        session()->forget('engine');
+        session()->forget(SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
         if (!session('accountReport')) {

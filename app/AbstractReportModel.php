@@ -66,6 +66,8 @@ abstract class AbstractReportModel extends Model
         'ctr' => 'ctr',
         'averageCpc' => 'averageCpc',
         'averagePosition' => 'averagePosition'
+        'campaignName' => 'campaignName',
+        'adgroupName' => 'adgroupName'
     ];
 
     const ADW_FIELDS_MAP = [
