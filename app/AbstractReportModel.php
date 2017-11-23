@@ -65,7 +65,7 @@ abstract class AbstractReportModel extends Model
         'cost' => 'cost',
         'ctr' => 'ctr',
         'averageCpc' => 'averageCpc',
-        'averagePosition' => 'averagePosition'
+        'averagePosition' => 'averagePosition',
         'campaignName' => 'campaignName',
         'adgroupName' => 'adgroupName'
     ];
