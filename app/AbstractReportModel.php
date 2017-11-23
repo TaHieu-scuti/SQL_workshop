@@ -461,6 +461,7 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
+        $column = $this->updateColumnForGraph($column);
         try {
             new DateTime($startDay); //NOSONAR
             new DateTime($endDay); //NOSONAR
@@ -593,5 +594,22 @@ abstract class AbstractReportModel extends Model
             }
         }
         return $result;
+    }
+
+    public function updateColumnForGraph($column)
+    {
+        $engine = session('engine');
+        $arrayMapping = [];
+        if ($engine === null || $engine === 'yss') {
+            $arrayMapping = self::YSS_FIELDS_MAP;
+        } elseif ($engine === 'adw') {
+            $arrayMapping = self::ADW_FIELDS_MAP;
+        }
+        foreach ($arrayMapping as $key => $value) {
+            if ($column === $value) {
+                return $key;
+            }
+        }
+        return $column;
     }
 }
