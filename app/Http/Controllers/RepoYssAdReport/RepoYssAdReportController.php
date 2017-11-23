@@ -83,12 +83,7 @@ class RepoYssAdReportController extends AbstractReportController
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
-        if ($engine === 'yss' || $engine === null) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
-        } elseif ($engine === 'adw') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::ADW_GROUPED_BY_FIELD]);
-        }
-        
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();

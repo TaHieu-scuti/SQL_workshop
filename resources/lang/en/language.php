@@ -70,6 +70,7 @@ return [
     'keyword_name' => 'Keyword name',
     'adname' => 'Ad name',
     'adreport' => 'Ad Report',
+    'ad' => 'Ad',
     'all_adreports' => 'All Adreports',
     'client' => 'Client'
 ];
