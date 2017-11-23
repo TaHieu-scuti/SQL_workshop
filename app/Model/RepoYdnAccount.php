@@ -8,4 +8,6 @@ use App\AbstractReportModel;
 class RepoYdnAccount extends AbstractReportModel
 {
     protected $table = 'repo_ydn_accounts';
+
+    public $timestamps = false;
 }
