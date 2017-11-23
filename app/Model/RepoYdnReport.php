@@ -120,7 +120,7 @@ class RepoYdnReport extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId, $accountId) {
+                function (Builder $query) use ($adgainerId) {
                     $query->where('account_id', '=', $adgainerId);
                 }
             )
