@@ -298,8 +298,8 @@ abstract class AbstractReportModel extends Model
                     $accountId,
                     $campaignId,
                     $adGroupId,
-                    $adReportId)
-                {
+                    $adReportId
+                ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
