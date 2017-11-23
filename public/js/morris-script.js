@@ -243,7 +243,7 @@ var Script = function () {
             let requestId = $(this).find("option:selected").data('breadcumbs');
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
-            let engine = null;
+            let engine = $(this).find("option:selected").data('engine');
             processRequestBreadcrumbs(url, requestId, engine);
         });
 

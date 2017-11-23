@@ -6,6 +6,7 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 
 use DateTime;
 use Exception;
@@ -28,16 +29,42 @@ class RepoYssCampaignReportCost extends AbstractReportModel
      */
     protected $table = 'repo_yss_campaign_report_cost';
 
-    public static function getAllCampaign()
-    {
+    public function getAllCampaign(
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
         $arrCampaigns = [];
 
         $arrCampaigns['all'] = 'All Campaigns';
-
-        $campaigns = self::select('campaignID', 'campaignName')
-            ->where('account_id', '=', Auth::user()->account_id)
-            ->get();
-
+        if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
+            $campaigns = self::select('campaignID', 'campaignName')
+                ->where(
+                    function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
+                        $this->addQueryConditions(
+                            $query,
+                            Auth::user()->account_id,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    }
+                )
+                ->get();
+        } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
+            $modelAdwCampaign = new RepoAdwCampaignReportCost();
+            $campaigns = $modelAdwCampaign->getAllAdwCampaign(
+                $accountId = null,
+                $campaignId = null,
+                $adGroupId = null,
+                $adReportId = null,
+                $keywordId = null
+            );
+        }
         if ($campaigns) {
             foreach ($campaigns as $key => $campaign) {
                 $arrCampaigns[$campaign->campaignID] = $campaign->campaignName;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RepoYssCampaignReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssCampaignReportCost;
+use App\Model\RepoAdwCampaignReportCost;
 
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -45,6 +46,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'campaignName';
+    const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
 
@@ -73,12 +75,18 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function index()
     {
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        if ($engine === 'yss') {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        } elseif ($engine === 'adw') {
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+        }
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        //update column fieldnames and grouped by field when change engine
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -114,6 +122,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -137,13 +146,13 @@ class RepoYssCampaignReportController extends AbstractReportController
         $tableDataLayout = view(
             'layouts.table_data',
             [
-            self::REPORTS => $reports,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
-            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-            self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray,
-            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                self::REPORTS => $reports,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
         // if no data found
@@ -153,24 +162,25 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'summaryReportLayout' => $summaryReportLayout,
-                            'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
     }
 
     public function displayGraph(Request $request)
     {
+        $engine = $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
-                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                        ->render();
+            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->render();
         $statusLayout = view('layouts.status-title')
-                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
-                        ->render();
+            ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
+            ->render();
         try {
             $data = $this->getDataForGraph();
         } catch (Exception $exception) {
@@ -185,11 +195,11 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                        'data' => $data,
-                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                        'timePeriodLayout' => $timePeriodLayout,
-                        'statusLayout' => $statusLayout,
-                        'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                'data' => $data,
+                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
             ]
         );
     }
@@ -197,5 +207,15 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
+    }
+    public function updateModel()
+    {
+        $engine = session('engine');
+        if ($engine === 'yss') {
+            $this->model = new RepoYssCampaignReportCost;
+        } elseif ($engine === 'adw') {
+            $this->model = new RepoAdwCampaignReportCost;
+        }
+        return $engine;
     }
 }

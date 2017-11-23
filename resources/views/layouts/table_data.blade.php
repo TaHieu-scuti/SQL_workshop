@@ -77,7 +77,12 @@
             <tr>
                 <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === $groupedByField || $fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                    @if($fieldName === $groupedByField
+                        || $fieldName === "accountid"
+                        || $fieldName === "campaignID"
+                        || $fieldName === "adgroupID"
+                        || $fieldName === "campaignName"
+                        || $fieldName === "campaign")
                         @continue
                     @endif
                     @if(isset($totalDataArray->$fieldName))
