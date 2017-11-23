@@ -1,29 +1,45 @@
+<?php
+use App\Http\Controllers\AbstractReportController;
+
+?>
 @if ($breadcrumbs)
     <ul class="breadcrumb">
         @foreach ($breadcrumbs as $breadcrumb)
-            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title); ?>
+            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);?>
             <input type="hidden" name="id_{{$breadcrumb->title}}" id="id_{{$breadcrumb->title}}" value="all">
             @if ($breadcrumb->url && !$breadcrumb->last)
-                <li class="breadcrumb-item">
+
+                    <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}</a><br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
-                            @if (count($titleBreadCumbs[1]) > 0)
-                                    @foreach ($titleBreadCumbs[1] as $key => $account)
-                                        <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" 
+                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}</a><br></span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        @if (count($titleBreadCumbs['contents']) > 0)
+                                    @foreach ($titleBreadCumbs['contents'] as $key => $account)
+                                    <?php
+                                        if (is_array($account)) {
+                                            $key = $account['accountid'];
+                                            $engine = $account['engine'];
+                                            $account = $account['accountName'];
+                                        } elseif ($account !== 'All Account') {
+                                            $engine = $titleBreadCumbs['engine'];
+                                        } ?>
+                                        <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
+                                            @if ($account !== 'All Account')
+                                                data-engine = "{{  $engine }}"
+                                            @endif
                                             @if ( $titleBreadCumbs['flag'] === 'all')
                                                 {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                             @else
-                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}
+                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
                                             @endif
                                         data-url= "{{ $breadcrumb->url }}" >
                                             <a href="#">
                                                 <div class="desc" >
-                                                    @if ($account == 'All Account'
-                                                    || $account == 'All Campaigns'
-                                                    || $account == 'All Adgroup'
-                                                    || $account == 'All Keywords'
-                                                    || $account == 'All Adreports')
+                                                    @if ($account === 'All Account'
+                                                        || $account === 'All Campaigns'
+                                                        || $account === 'All Adgroup'
+                                                        || $account === 'All Keywords'
+                                                        || $account === 'All Adreports')
                                                         {{__('language.' .str_slug($account,'_'))}}
                                                     @else
                                                         {{$account}}
@@ -39,14 +55,35 @@
             @else
                 <li class="breadcrumb-item active">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs[0],'_')) }}<br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs[0]}}" data-live-search="true" id="dropdownBreadcrumbs">
-                            @if (count($titleBreadCumbs[1]) > 0)
-                                @foreach ($titleBreadCumbs[1] as $key => $account)
-                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}" data-url= "{{ $breadcrumb->url }}" @if ( $titleBreadCumbs['flag'] === 'all'){{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}} @else{{ (int)$key === (int)$titleBreadCumbs['flag'] ? "selected" : ""}}@endif >
+                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}<br></span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                            @if (count($titleBreadCumbs['contents']) > 0)
+                                @foreach ($titleBreadCumbs['contents'] as $key => $account)
+                                    <?php
+                                        if (is_array($account)) {
+                                            $key = $account['accountid'];
+                                            $engine = $account['engine'];
+                                            $account = $account['accountName'];
+                                        } elseif ( $account !== 'All Account' ) {
+                                            $engine = $titleBreadCumbs['engine'];
+                                        } ?>
+                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
+                                            @if ($account !== 'All Account')
+                                            data-engine = "{{  $engine }}"
+                                            @endif
+                                            data-url= "{{ $breadcrumb->url }}"
+                                        @if ( $titleBreadCumbs['flag'] === 'all')
+                                            {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
+                                        @else
+                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
+                                        @endif >
                                     <a href="#">
                                         <div class="desc" >
-                                            @if ($account == 'All Account' || $account == 'All Campaigns' || $account == 'All Adgroup' || $account == 'All Keywords' || $account == 'All Adreports')
+                                            @if ($account === 'All Account'
+                                                || $account === 'All Campaigns'
+                                                || $account === 'All Adgroup'
+                                                || $account === 'All Keywords'
+                                                || $account === 'All Adreports')
                                                 {{__('language.' .str_slug($account,'_'))}}
                                             @else
                                                 {{$account}}

@@ -28,32 +28,4 @@ class RepoYssAdReportCost extends AbstractReportModel
      * @var string
      */
     protected $table = 'repo_yss_ad_report_cost';
-
-    public function getAllAdReport($accountId = null, $campaignId = null, $adGroupId = null, $adReportId = null)
-    {
-        $arrAdReports = [];
-
-        $arrAdReports['all'] = 'All Adreports';
-
-        $adreports = $this->select('adID', 'adName')->where(
-            function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId) {
-                $this->addQueryConditions(
-                    $query,
-                    Auth::user()->account_id,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId
-                );
-            }
-        )->get();
-
-        if ($adreports) {
-            foreach ($adreports as $key => $adreport) {
-                $arrAdReports[$adreport->adID] = $adreport->adName;
-            }
-        }
-
-        return $arrAdReports;
-    }
 }

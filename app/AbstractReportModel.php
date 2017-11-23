@@ -170,7 +170,7 @@ abstract class AbstractReportModel extends Model
             $query->where($this->getTable().'.campaignID', '=', $campaignId);
         }
         if ($adGroupId !== null && $adReportId === null) {
-            $query->where($this->getTable().'.adgroupID', '=', $adGroupId);
+            $query->where('adgroupID', '=', $adGroupId);
         }
         if ($adReportId !== null) {
             $query->where($this->getTable().'.adID', '=', $adReportId);

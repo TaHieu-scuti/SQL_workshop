@@ -287,6 +287,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        Event::listen(StatementPrepared::class, function ($event) {
+            $event->statement->setFetchMode(PDO::FETCH_OBJ);
+        });
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
         $arrayCalculate = $this->getAggregated($fieldNames);
@@ -306,16 +309,15 @@ class RepoYssAccountReportCost extends AbstractReportModel
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
-                        ->where(
-                            function ($query) use ($accountId, $adgainerId) {
-                                if ($accountId !== null) {
-                                    $query->where('repo_yss_accounts.accountid', '=', $accountId);
-                                } else {
-                                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
-                                }
-                            }
-                        );
-
+            ->where(
+                function ($query) use ($accountId, $adgainerId) {
+                    if ($accountId !== null) {
+                        $query->where('repo_yss_accounts.accountid', '=', $accountId);
+                    } else {
+                        $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                    }
+                }
+            );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
             $adwAccountReport = $adwAccountReport->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
@@ -326,11 +328,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $rawExpression = $this->getRawExpression($fieldNames);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
-
         $data = $data->first();
-        if ($data === null) {
-            $data = [];
-        }
         return $data;
     }
 
@@ -495,14 +493,17 @@ class RepoYssAccountReportCost extends AbstractReportModel
             Event::listen(StatementPrepared::class, function ($event) {
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
+            $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
+
             $sql = $this->getBinddingSql($datas);
-            $rawExpression = $this->getRawExpression($fieldNames);
-            $datas = DB::table(DB::raw("({$sql}) as tbl"))
+            $rawExpressions = $this->getRawExpression($fieldNames);
+            array_unshift($rawExpressions, DB::raw($groupedByField));
+            return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select(
-                    DB::raw($groupedByField),
-                    $rawExpression
+                    $rawExpressions
                 )
-                ->groupBy($groupedByField);
+                ->groupBy($groupedByField)
+                ->orderBy($columnSort, $sort)->get();
         }
 
         return $datas->orderBy($columnSort, $sort)->get();
@@ -534,6 +535,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->groupByFieldName)) {
+                $rawExpression[] = DB::raw($fieldName);
+                continue;
+            }
             if (in_array($fieldName, static::SUM_FIELDS)) {
                 $rawExpression[] = DB::raw('sum(' .$fieldName. ') as ' . $fieldName);
             } else {
