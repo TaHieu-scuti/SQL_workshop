@@ -585,25 +585,10 @@ abstract class AbstractReportModel extends Model
         foreach ($fieldNames as $fieldName) {
             $includedInFieldsMap = false;
             //check fieldName is included in the fieldsMap
-
-            // if(array_search($fieldName, $fieldsMap)) {
-            //     // get the key of current element of $fieldsMap
-            //     $key = key($fieldsMap);
-            //     // get the value of current element of $fieldsMap
-            //     $value = current($fieldsMap);
-            //     $result[$key] = $value;
-            //     $includedInFieldsMap = true;
-            //     break;
-            // }
-
-            foreach ($fieldsMap as $key => $value) {
-                if ($fieldName === $value) {
-                    $result[$key] = $value;
-                    $includedInFieldsMap = true;
-                    break;
-                }
-            }
-            if (!$includedInFieldsMap) {
+            $key = array_search($fieldName, $fieldsMap);
+            if ($key !== false) {
+                $result[$key] = $fieldsMap[$key];
+            } else {
                 $result[$fieldName] = $fieldName;
             }
         }
