@@ -84,7 +84,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
