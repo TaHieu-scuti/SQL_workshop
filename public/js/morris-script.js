@@ -251,13 +251,17 @@ var Script = function () {
             switch (url) {
                 case 'account_report' :
                     var obj = new Object();
+                    var urlReload = 'campaign-report';
                     obj['id_account'] = requestId;
                     obj['id_campaign'] = 'all';
                     obj['id_adgroup'] = 'all';
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
                     obj['engine'] = engine;
-                    sendRequestData(obj, url, 'campaign-report');
+                    if (requestId === 'all') {
+                        urlReload = 'account_report';
+                    }
+                    sendRequestData(obj, url, urlReload);
                     break;
                 case 'campaign-report' :
                     var obj = new Object();

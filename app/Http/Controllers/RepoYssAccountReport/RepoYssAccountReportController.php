@@ -92,7 +92,7 @@ class RepoYssAccountReportController extends AbstractReportController
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        session([self::SESSION_KEY_ACCOUNT_ID => null]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
