@@ -179,7 +179,11 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        if (session(self::SESSION_KEY_ENGINE) === 'yss' || session(self::SESSION_KEY_ENGINE) === null) {
+            session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
         if (session('accountID') === null) {
             session([self::SESSION_KEY_ACCOUNT_ID => null]);
         }
@@ -192,9 +196,19 @@ abstract class AbstractReportController extends Controller
         if (session('adReportId') === null) {
             session([self::SESSION_KEY_AD_REPORT_ID => null]);
         }
-        if (session('engine') === null) {
+        if (session(self::SESSION_KEY_ENGINE) === null) {
             session([self::SESSION_KEY_ENGINE => null]);
         }
+    }
+
+    public function updateGroupByFieldWhenSessionEngineChange(array $columns)
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss' || session(self::SESSION_KEY_ENGINE) === null) {
+            session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
+        session([static::SESSION_KEY_FIELD_NAME => $columns]);
     }
 
     public function checkoutSessionFieldName()

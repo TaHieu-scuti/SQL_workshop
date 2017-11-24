@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RepoYssAdgroupReport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdgroupReportCost;
+use App\Model\RepoAdwAdgroupReportCost;
 use App\Model\RepoYssPrefectureReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -44,6 +45,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'adgroupName';
+    const ADW_GROUPED_BY_FIELD = 'adGroup';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
 
@@ -72,12 +74,17 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function index()
     {
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+        if ($engine === 'yss') {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+        } elseif ($engine === 'adw') {
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
+        }
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -112,6 +119,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
         try {
             $data = $this->getDataForGraph();
@@ -146,6 +154,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('adgroupReport')) {
             $this->initializeSession($columns);
@@ -195,5 +204,16 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
+    }
+
+    public function updateModel()
+    {
+        $engine = session(self::SESSION_KEY_ENGINE);
+        if ($engine === 'yss') {
+            $this->model = new RepoYssAdgroupReportCost;
+        } elseif ($engine === 'adw') {
+            $this->model = new RepoAdwAdgroupReportCost;
+        }
+        return $engine;
     }
 }
