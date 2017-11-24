@@ -16,3 +16,4 @@ npm-debug.log
 .buildpath
 .project
 .settings
+.DS_Store
