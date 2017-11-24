@@ -33,5 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoAdwKeywordReportCostTable::class);
         $this->call(RepoAdwAdReportTable::class);
         $this->call(RepoAdwGeoReportCostTable::class);
+        $this->call(RepoYdnReportsTable::class);
+        $this->call(RepoYdnAccountsTable::class);
     }
 }
