@@ -28,6 +28,7 @@ abstract class AbstractReportModel extends Model
     const DAY_OF_WEEK = "dayOfWeek";
     const PREFECTURE ="prefecture";
     const HOUR_OF_DAY = "hourofday";
+    const SESSION_KEY_ENGINE = 'engine';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -65,7 +66,9 @@ abstract class AbstractReportModel extends Model
         'cost' => 'cost',
         'ctr' => 'ctr',
         'averageCpc' => 'averageCpc',
-        'averagePosition' => 'averagePosition'
+        'averagePosition' => 'averagePosition',
+        'campaignName' => 'campaignName',
+        'adgroupName' => 'adgroupName'
     ];
 
     const ADW_FIELDS_MAP = [
@@ -298,8 +301,8 @@ abstract class AbstractReportModel extends Model
                     $accountId,
                     $campaignId,
                     $adGroupId,
-                    $adReportId)
-                {
+                    $adReportId
+                ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
@@ -461,6 +464,7 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
+        $column = $this->updateColumnForGraph($column);
         try {
             new DateTime($startDay); //NOSONAR
             new DateTime($endDay); //NOSONAR
@@ -566,8 +570,8 @@ abstract class AbstractReportModel extends Model
     public function updateFieldNames(array $fieldNames)
     {
         $resultFieldNames = [];
-        $engine = session('engine');
-        if ($engine === 'yss' || $engine === null) {
+        $engine = session(self::SESSION_KEY_ENGINE);
+        if ($engine === 'yss') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
         } elseif ($engine === 'adw') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
@@ -579,19 +583,31 @@ abstract class AbstractReportModel extends Model
     {
         $result = [];
         foreach ($fieldNames as $fieldName) {
-            $includedInFieldsMap = false;
             //check fieldName is included in the fieldsMap
-            foreach ($fieldsMap as $key => $value) {
-                if ($fieldName === $value) {
-                    $result[$key] = $value;
-                    $includedInFieldsMap = true;
-                    break;
-                }
-            }
-            if (!$includedInFieldsMap) {
+            $key = array_search($fieldName, $fieldsMap);
+            if ($key !== false) {
+                $result[$key] = $fieldsMap[$key];
+            } else {
                 $result[$fieldName] = $fieldName;
             }
         }
         return $result;
+    }
+
+    public function updateColumnForGraph($column)
+    {
+        $engine = session(self::SESSION_KEY_ENGINE);
+        $arrayMapping = [];
+        if ($engine === 'yss') {
+            $arrayMapping = self::YSS_FIELDS_MAP;
+        } elseif ($engine === 'adw') {
+            $arrayMapping = self::ADW_FIELDS_MAP;
+        }
+        foreach ($arrayMapping as $key => $value) {
+            if ($column === $value) {
+                return $key;
+            }
+        }
+        return $column;
     }
 }
