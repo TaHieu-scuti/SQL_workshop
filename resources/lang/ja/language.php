@@ -70,6 +70,7 @@ return [
     'keyword_name' => 'キーワード名',
     'adname' => '広告名',
     'adreport' => '広告レポート',
+    'ad' => '広告レポート',
     'all_adreports' => 'すべての広告',
     'client' => 'クライエント',
 ];

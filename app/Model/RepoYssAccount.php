@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\RepoAdwAccountReportCost;
+use App\Model\RepoYdnAccount;
 use Auth;
 use DB;
 
@@ -24,17 +25,21 @@ class RepoYssAccount extends Model
         $accounts = self::select(DB::raw('"yss" as engine'), 'accountName', 'accountid')
             ->where('account_id', '=', Auth::user()->account_id);
 
-        $adwAccount = RepoAdwAccountReportCost::select(
+        $adwAccounts = RepoAdwAccountReportCost::select(
             DB::raw('"adw" as engine'),
             'account AS accountNAme',
             'accountid'
         )
             ->where('account_id', '=', Auth::user()->account_id);
 
-        $accounts->union($adwAccount);
-        $datas = $accounts->get();
-        $datas['all'] = 'All Account';
+        $ydnAccounts = RepoYdnAccount::select(DB::raw('"ydn" as engine'), 'accountName', 'accountId as accountid')
+            ->where('account_id', '=', Auth::user()->account_id);
 
-        return $datas->toArray();
+        $accounts->union($adwAccounts)->union($ydnAccounts);
+        $arr = ['all' => 'All Account'];
+        $datas = $accounts->get();
+        $datas = $datas->toArray();
+
+        return $arr + $datas;
     }
 }
