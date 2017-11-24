@@ -39,8 +39,7 @@ class RepoYssAccount extends Model
         $arr = ['all' => 'All Account'];
         $datas = $accounts->get();
         $datas = $datas->toArray();
-        $datas = $arr + $datas;
 
-        return $datas;
+        return $arr + $datas;
     }
 }
