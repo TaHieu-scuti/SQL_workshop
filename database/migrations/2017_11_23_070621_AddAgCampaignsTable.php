@@ -11,7 +11,7 @@ class AddAgCampaignsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up() //NOSONAR
     {
         DB::statement(
             "CREATE TABLE `campaigns` (
