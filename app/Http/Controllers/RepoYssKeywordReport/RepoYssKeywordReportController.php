@@ -190,13 +190,12 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateSessionID(Request $request)
     {
-        $this->updateModel();
         $this->updateSessionData($request);
     }
 
     public function updateModel()
     {
-        $engine = session('engine');
+        $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
             $this->model = new RepoYssKeywordReportCost;
         } elseif ($engine === 'adw') {
