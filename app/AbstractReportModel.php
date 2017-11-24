@@ -583,7 +583,6 @@ abstract class AbstractReportModel extends Model
     {
         $result = [];
         foreach ($fieldNames as $fieldName) {
-            $includedInFieldsMap = false;
             //check fieldName is included in the fieldsMap
             $key = array_search($fieldName, $fieldsMap);
             if ($key !== false) {
@@ -599,7 +598,7 @@ abstract class AbstractReportModel extends Model
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         $arrayMapping = [];
-        if ($engine === null || $engine === 'yss') {
+        if ($engine === 'yss') {
             $arrayMapping = self::YSS_FIELDS_MAP;
         } elseif ($engine === 'adw') {
             $arrayMapping = self::ADW_FIELDS_MAP;

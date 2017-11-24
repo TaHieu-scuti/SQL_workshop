@@ -208,6 +208,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     {
         $this->updateSessionData($request);
     }
+
     public function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
