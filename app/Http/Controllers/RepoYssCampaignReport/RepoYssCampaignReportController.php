@@ -171,7 +171,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
