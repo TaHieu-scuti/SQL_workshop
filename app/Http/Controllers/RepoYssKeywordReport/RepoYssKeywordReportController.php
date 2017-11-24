@@ -4,7 +4,7 @@ namespace App\Http\Controllers\RepoYssKeywordReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssKeywordReportCost;
-
+use App\Model\RepoAdwKeywordReportCost;
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -44,6 +44,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const COLUMNS_FOR_LIVE_SEARCH = 'columnsLiveSearch';
     const KEY_PAGINATION = 'keyPagination';
     const GROUPED_BY_FIELD = 'keyword';
+    const ADW_GROUPED_BY_FIELD = self::GROUPED_BY_FIELD;
     const PREFIX_ROUTE = 'prefixRoute';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -71,12 +72,19 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
+        $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        if ($engine === null || $engine === 'yss') {
+            array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+        } elseif ($engine === 'adw') {
+            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
+        }
+        
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }
-        session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD]);
+        //update column fieldnames and grouped by field when change engine
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -108,6 +116,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
 
         if ($request->specificItem === 'prefecture') {
@@ -146,6 +155,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
                         ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -181,5 +191,16 @@ class RepoYssKeywordReportController extends AbstractReportController
     public function updateSessionID(Request $request)
     {
         $this->updateSessionData($request);
+    }
+
+    public function updateModel()
+    {
+        $engine = session(self::SESSION_KEY_ENGINE);
+        if ($engine === 'yss') {
+            $this->model = new RepoYssKeywordReportCost;
+        } elseif ($engine === 'adw') {
+            $this->model = new RepoAdwKeywordReportCost;
+        }
+        return $engine;
     }
 }
