@@ -171,7 +171,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function displayGraph(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
@@ -208,9 +208,10 @@ class RepoYssCampaignReportController extends AbstractReportController
     {
         $this->updateSessionData($request);
     }
+
     public function updateModel()
     {
-        $engine = session('engine');
+        $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
             $this->model = new RepoYssCampaignReportCost;
         } elseif ($engine === 'adw') {

@@ -84,7 +84,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
-
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -208,7 +208,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function updateModel()
     {
-        $engine = session('engine');
+        $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
             $this->model = new RepoYssAdgroupReportCost;
         } elseif ($engine === 'adw') {
