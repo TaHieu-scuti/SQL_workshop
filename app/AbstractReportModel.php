@@ -28,6 +28,7 @@ abstract class AbstractReportModel extends Model
     const DAY_OF_WEEK = "dayOfWeek";
     const PREFECTURE ="prefecture";
     const HOUR_OF_DAY = "hourofday";
+    const SESSION_KEY_ENGINE = 'engine';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -66,6 +67,8 @@ abstract class AbstractReportModel extends Model
         'ctr' => 'ctr',
         'averageCpc' => 'averageCpc',
         'averagePosition' => 'averagePosition',
+        'campaignName' => 'campaignName',
+        'adgroupName' => 'adgroupName'
     ];
 
     const ADW_FIELDS_MAP = [
@@ -76,6 +79,8 @@ abstract class AbstractReportModel extends Model
         'ctr' => 'ctr',
         'avgCPC' => 'averageCpc',
         'avgPosition' => 'averagePosition',
+        'campaign' => 'campaignName',
+        'adGroup' => 'adgroupName'
     ];
 
     protected $groupByFieldName = [
@@ -91,6 +96,7 @@ abstract class AbstractReportModel extends Model
      */
     protected function getAggregated(array $fieldNames)
     {
+        $fieldNames = $this->updateFieldNames($fieldNames);
         $tableName = $this->getTable();
         $joinTableName = (new RepoYssAccount)->getTable();
         if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
@@ -103,7 +109,7 @@ abstract class AbstractReportModel extends Model
             }
         }
         $arrayCalculate = [];
-        foreach ($fieldNames as $fieldName) {
+        foreach ($fieldNames as $key => $fieldName) {
             if ($fieldName === static::GROUPED_BY_FIELD_NAME
                 || $fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
@@ -120,7 +126,7 @@ abstract class AbstractReportModel extends Model
 
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                    'ROUND(AVG(' . $tableName . '.' . $key . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -129,16 +135,15 @@ abstract class AbstractReportModel extends Model
                     === self::FIELD_TYPE
                 ) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName . '.' . $fieldName . '), 2) AS ' . $fieldName
+                        'ROUND(SUM(' . $tableName . '.' . $key . '), 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName . '.' . $fieldName . ' ) AS ' . $fieldName
+                        'SUM( ' . $tableName . '.' . $key . ' ) AS ' . $fieldName
                     );
                 }
             }
         }
-
         return $arrayCalculate;
     }
 
@@ -232,7 +237,6 @@ abstract class AbstractReportModel extends Model
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
 
         $aggregations = $this->getAggregated($fieldNames);
-
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -259,7 +263,6 @@ abstract class AbstractReportModel extends Model
                     );
                 }
             );
-        // get aggregated value
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->first();
@@ -268,8 +271,6 @@ abstract class AbstractReportModel extends Model
         }
         if ($data === null) {
             $data = [];
-        } else {
-            $data = $data->toArray();
         }
         return $data;
     }
@@ -295,8 +296,21 @@ abstract class AbstractReportModel extends Model
                 }
             )
             ->where(
-                function ($query) use ($adgainerId, $accountId, $campaignId, $adGroupId, $adReportId) {
-                    $this->addQueryConditions($query, $adgainerId, $accountId, $campaignId, $adGroupId, $adReportId);
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId
+                    );
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -426,7 +440,6 @@ abstract class AbstractReportModel extends Model
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $paginatedData = $paginatedData->paginate($pagination);
         }
-
         return $paginatedData;
     }
 
@@ -451,6 +464,7 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
+        $column = $this->updateColumnForGraph($column);
         try {
             new DateTime($startDay); //NOSONAR
             new DateTime($endDay); //NOSONAR
@@ -551,5 +565,49 @@ abstract class AbstractReportModel extends Model
         }
 
         return $matchingFieldNames;
+    }
+
+    public function updateFieldNames(array $fieldNames)
+    {
+        $resultFieldNames = [];
+        $engine = session(self::SESSION_KEY_ENGINE);
+        if ($engine === 'yss' || $engine === null) {
+            $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
+        } elseif ($engine === 'adw') {
+            $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
+        }
+        return $resultFieldNames;
+    }
+
+    public function setKeyFieldNames(array $fieldNames, array $fieldsMap)
+    {
+        $result = [];
+        foreach ($fieldNames as $fieldName) {
+            //check fieldName is included in the fieldsMap
+            $key = array_search($fieldName, $fieldsMap);
+            if ($key !== false) {
+                $result[$key] = $fieldsMap[$key];
+            } else {
+                $result[$fieldName] = $fieldName;
+            }
+        }
+        return $result;
+    }
+
+    public function updateColumnForGraph($column)
+    {
+        $engine = session(self::SESSION_KEY_ENGINE);
+        $arrayMapping = [];
+        if ($engine === 'yss') {
+            $arrayMapping = self::YSS_FIELDS_MAP;
+        } elseif ($engine === 'adw') {
+            $arrayMapping = self::ADW_FIELDS_MAP;
+        }
+        foreach ($arrayMapping as $key => $value) {
+            if ($column === $value) {
+                return $key;
+            }
+        }
+        return $column;
     }
 }
