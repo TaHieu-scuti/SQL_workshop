@@ -240,7 +240,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         }
     }
 
-    private function getAggregatedForPrefectureGoogle(Array $fieldNames)
+    private function getAggregatedForPrefectureGoogle(array $fieldNames)
     {
         $adwAggregations = [];
         $joinTableName = 'criteria';
