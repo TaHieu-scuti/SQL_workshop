@@ -360,32 +360,46 @@ $(document).ready(function(){
 
     objectUser['title'] = 'Client';
     objectUser['name'] = 'Client';
+    objectUser['engine'] = "";
     objectUser['value'] = $('#username').attr('value');
     array.push(objectUser);
+
+    var engine = $('select.id_Account').find(':selected').attr('data-engine');
+
+    var iconEngine = '<i class="fa fa-yahoo" aria-hidden="true"></i>';
+
+    if(engine === 'adw') {
+        iconEngine = '<i class="fa fa-google" aria-hidden="true"></i>';
+    }
 
     objectAccount['title'] = 'Account';
     objectAccount['name'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
     objectAccount['value'] = $('select.id_Account').find(':selected').attr('data-tokens');
+    objectAccount['engine'] = iconEngine;
     array.push(objectAccount);
 
     objectCampaign['title'] = 'Campaign';
     objectCampaign['name'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
     objectCampaign['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectCampaign['engine'] = iconEngine;
     array.push(objectCampaign);
 
     objectAdgroup['title'] = 'Adgroup';
     objectAdgroup['name'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
     objectAdgroup['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectAdgroup['engine'] = iconEngine;
     array.push(objectAdgroup);
 
     objectKeyword['title'] = 'Keyword';
     objectKeyword['name'] = $('select.id_KeyWord').find(':selected').attr('data-breadcumbs');
     objectKeyword['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
+    objectKeyword['engine'] = iconEngine;
     array.push(objectKeyword);
 
     objectAd['title'] = 'Ad';
     objectAd['name'] = $('select.id_Ad').find(':selected').attr('data-breadcumbs');
     objectAd['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
+    objectAd['engine'] = iconEngine;
     array.push(objectAd);
 
     let pageInformation = null;
@@ -419,5 +433,5 @@ $(document).ready(function(){
     }else{
         $('.site-information-guess-annotation').append(pageInformation.title);
     }
-    $('.site-information-guess-specified-name').append(pageInformation.value);
+    $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })

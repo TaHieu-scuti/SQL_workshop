@@ -7,6 +7,7 @@ use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdgroupReportCost;
 use App\Model\RepoAdwAdgroupReportCost;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoYdnAdgroupReport;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -76,7 +77,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        if ($engine === 'yss') {
+        if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
@@ -213,6 +214,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->model = new RepoYssAdgroupReportCost;
         } elseif ($engine === 'adw') {
             $this->model = new RepoAdwAdgroupReportCost;
+        } elseif ($engine === 'ydn') {
+            $this->model = new RepoYdnAdgroupReport;
         }
         return $engine;
     }

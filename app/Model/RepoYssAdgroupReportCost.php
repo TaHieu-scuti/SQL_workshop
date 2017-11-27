@@ -35,7 +35,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $arrAdgroups = [];
-
+        $adgroups = null;
         $arrAdgroups['all'] = 'All Adgroup';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
@@ -62,8 +62,16 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 $adReportId = null,
                 $keywordId = null
             );
+        } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'ydn') {
+            $modelYdnAdgroup = new RepoYdnAdgroupReport();
+            $adgroups = $modelYdnAdgroup->getAllYdnAdgroup(
+                $accountId = null,
+                $campaignId = null,
+                $adGroupId = null,
+                $adReportId = null
+            );
         }
-        if ($adgroups) {
+        if (!is_null($adgroups)) {
             foreach ($adgroups as $key => $adgroup) {
                 $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
             }

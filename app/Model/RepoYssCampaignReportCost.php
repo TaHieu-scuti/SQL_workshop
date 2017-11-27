@@ -37,7 +37,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $arrCampaigns = [];
-
+        $campaigns = null;
         $arrCampaigns['all'] = 'All Campaigns';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
@@ -56,7 +56,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                 )
                 ->get();
         } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
-            $modelAdwCampaign = new RepoAdwCampaignReportCost();
+            $modelAdwCampaign = new RepoAdwCampaignReportCost;
             $campaigns = $modelAdwCampaign->getAllAdwCampaign(
                 $accountId = null,
                 $campaignId = null,
@@ -64,8 +64,16 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                 $adReportId = null,
                 $keywordId = null
             );
+        } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'ydn') {
+            $modelYdnCampaign = new RepoYdnCampaignReport;
+            $campaigns = $modelYdnCampaign->getAllYdnCampaign(
+                $accountId = null,
+                $campaignId = null,
+                $adGroupId = null,
+                $adReportId = null
+            );
         }
-        if ($campaigns) {
+        if (!is_null($campaigns)) {
             foreach ($campaigns as $key => $campaign) {
                 $arrCampaigns[$campaign->campaignID] = $campaign->campaignName;
             }

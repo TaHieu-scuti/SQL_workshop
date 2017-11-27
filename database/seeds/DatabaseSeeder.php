@@ -25,15 +25,20 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYssAdReportCostTable::class);
         $this->call(RepoYssKeywordReportCostTable::class);
         $this->call(RepoYssKeywordReportConvTable::class);
-        $this->call(PhoneTimeUseTable::class);
         $this->call(RepoYssPrefectureReportCostTable::class);
+        $this->call(RepoYssDayOfWeekReport::class);
+
         $this->call(RepoAdwAccountReportCostTable::class);
         $this->call(RepoAdwCampaignReportCostTable::class);
         $this->call(RepoAdwAdgroupReportCostTable::class);
         $this->call(RepoAdwKeywordReportCostTable::class);
         $this->call(RepoAdwAdReportTable::class);
         $this->call(RepoAdwGeoReportCostTable::class);
+
         $this->call(RepoYdnReportsTable::class);
         $this->call(RepoYdnAccountsTable::class);
+
+        $this->call(PhoneTimeUseTable::class); // TODO: make generator and update resource
+        // TODO: Add seeder for campaigns table
     }
 }
