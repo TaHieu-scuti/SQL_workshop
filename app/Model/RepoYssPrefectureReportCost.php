@@ -80,7 +80,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy($groupedByField);
-                // ->orderBy($columnSort, $sort);
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
             $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
