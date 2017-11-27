@@ -17,8 +17,7 @@ class RepoYdnAdgroupReport extends AbstractReportModel
         $accountId = null,
         $campaignId = null,
         $adgroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $adReportId = null
     ) {
         return self::select('adgroupID', 'adgroupName')
             ->where(

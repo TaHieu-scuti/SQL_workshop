@@ -68,8 +68,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 $accountId = null,
                 $campaignId = null,
                 $adGroupId = null,
-                $adReportId = null,
-                $keywordId = null
+                $adReportId = null
             );
         }
         if ($adgroups) {
