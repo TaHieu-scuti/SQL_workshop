@@ -35,8 +35,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $arrAdgroups = [];
-
-        $adgroups = [];
+        $adgroups = null;
         $arrAdgroups['all'] = 'All Adgroup';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
