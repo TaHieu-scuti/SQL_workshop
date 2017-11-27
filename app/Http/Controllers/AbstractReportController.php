@@ -179,7 +179,10 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
         session([static::SESSION_KEY_SORT => 'desc']);
         session([static::SESSION_KEY_SUMMARY_REPORT => $summaryReport]);
-        if (session(self::SESSION_KEY_ENGINE) === 'yss' || session(self::SESSION_KEY_ENGINE) === null) {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss'
+            || session(self::SESSION_KEY_ENGINE) === 'ydn'
+            || session(self::SESSION_KEY_ENGINE) === null
+        ) {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
@@ -203,7 +206,10 @@ abstract class AbstractReportController extends Controller
 
     public function updateGroupByFieldWhenSessionEngineChange(array $columns)
     {
-        if (session(self::SESSION_KEY_ENGINE) === 'yss' || session(self::SESSION_KEY_ENGINE) === null) {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss'
+            || session(self::SESSION_KEY_ENGINE) === 'ydn'
+            || session(self::SESSION_KEY_ENGINE) === null
+        ) {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
