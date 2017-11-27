@@ -46,7 +46,7 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->startDate = $campaignReport->startDate;
                 $adgroupReportCost->endDate = $campaignReport->endDate;
                 $adgroupReportCost->account_id = $campaignReport->account_id;
-                $adgroupReportCost->campaign_id = rand(1, 5);
+                $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->account = $campaignReport->account;
                 $adgroupReportCost->adGroupID = $i;
                 $adgroupReportCost->adGroup = 'Adgroup Name ' . $i;
