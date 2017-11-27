@@ -119,56 +119,58 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
-        Event::listen(StatementPrepared::class, function ($event) {
-            $event->statement->setFetchMode(PDO::FETCH_OBJ);
-        });
-        $yssAggregations = $this->getAggregated($fieldNames);
-        $yssPrefectureData = self::select($yssAggregations)
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use (
-                    $adgainerId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                ) {
-                    $this->addQueryConditions(
-                        $query,
+        if (request()->is('account_report/*') || request()->is('account_report')) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(PDO::FETCH_OBJ);
+            });
+            $yssAggregations = $this->getAggregated($fieldNames);
+            $yssPrefectureData = self::select($yssAggregations)
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use (
                         $adgainerId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
                         $keywordId
-                    );
-                }
-            );
-        $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-        $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
-            ->join(
-                self::ADW_JOIN_TABLE_NAME,
-                'repo_adw_geo_report_cost.region',
-                '=',
-                self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
-            )
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
-                }
-            )
-            ->union($yssPrefectureData)
-            ->first();
-        return $adwPrefectureData;
+                    ) {
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    }
+                );
+            $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
+            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+                ->join(
+                    self::ADW_JOIN_TABLE_NAME,
+                    'repo_adw_geo_report_cost.region',
+                    '=',
+                    self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
+                )
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use ($adgainerId) {
+                        $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                    }
+                )
+                ->union($yssPrefectureData)
+                ->first();
+            return $adwPrefectureData;
+        }
     }
 
     public function calculateSummaryData(
@@ -184,56 +186,58 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
-        Event::listen(StatementPrepared::class, function ($event) {
-            $event->statement->setFetchMode(PDO::FETCH_OBJ);
-        });
-        $yssAggregations = $this->getAggregated($fieldNames);
-        $yssPrefectureData = self::select($yssAggregations)
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use (
-                    $adgainerId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                ) {
-                    $this->addQueryConditions(
-                        $query,
+        if (request()->is('account_report/*') || request()->is('account_report')) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(PDO::FETCH_OBJ);
+            });
+            $yssAggregations = $this->getAggregated($fieldNames);
+            $yssPrefectureData = self::select($yssAggregations)
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use (
                         $adgainerId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
                         $keywordId
-                    );
-                }
-            );
-        $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-        $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
-            ->join(
-                self::ADW_JOIN_TABLE_NAME,
-                'repo_adw_geo_report_cost.region',
-                '=',
-                self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
-            )
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
-                }
-            )
-            ->union($yssPrefectureData)
-            ->first();
-        return $adwPrefectureData;
+                    ) {
+                        $this->addQueryConditions(
+                            $query,
+                            $adgainerId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    }
+                );
+            $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
+            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+                ->join(
+                    self::ADW_JOIN_TABLE_NAME,
+                    'repo_adw_geo_report_cost.region',
+                    '=',
+                    self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
+                )
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use ($adgainerId) {
+                        $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                    }
+                )
+                ->union($yssPrefectureData)
+                ->first();
+            return $adwPrefectureData;
+        }
     }
 
     private function getAggregatedForPrefectureGoogle(Array $fieldNames)
