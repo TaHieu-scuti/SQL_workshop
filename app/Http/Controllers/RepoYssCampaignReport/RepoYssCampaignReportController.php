@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RepoYssCampaignReport;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssCampaignReportCost;
 use App\Model\RepoAdwCampaignReportCost;
+use App\Model\RepoYdnCampaignReport;
 
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -77,7 +78,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        if ($engine === 'yss') {
+        if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
@@ -216,6 +217,8 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->model = new RepoYssCampaignReportCost;
         } elseif ($engine === 'adw') {
             $this->model = new RepoAdwCampaignReportCost;
+        } elseif ($engine === 'ydn') {
+            $this->model = new RepoYdnCampaignReport;
         }
         return $engine;
     }

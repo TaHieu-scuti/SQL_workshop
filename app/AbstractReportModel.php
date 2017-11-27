@@ -570,7 +570,10 @@ abstract class AbstractReportModel extends Model
     {
         $resultFieldNames = [];
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss' || $engine === null) {
+        if ($engine === 'yss'
+            || $engine === 'ydn'
+            || $engine === null
+        ) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
         } elseif ($engine === 'adw') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
