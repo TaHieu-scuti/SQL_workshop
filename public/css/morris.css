@@ -27,3 +27,15 @@
 
 #report-graph {height: 250px;}
 #report-graph > svg { width: 100% !important; }
+
+.fa-google, .fa-yahoo {
+    margin-right: 10px;
+}
+
+.fa-google {
+    color: blue;
+}
+
+.fa-yahoo {
+    color: red;
+}
