@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Model\RepoYdnAccount;
+use App\Model\RepoYdnReport;
 
 // @codingStandardsIgnoreLine
 class RepoYdnReportGenerator extends Seeder
@@ -108,7 +110,7 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->mediaName = 'YDN ' . str_random(10);
 
-            $costReport->campaign_id = $campaignNumber + 1;
+            $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 
             $costReport->campaignID = $campaignNumber + 1;
 

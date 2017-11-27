@@ -20,7 +20,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
         3
     ];
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
-    const MAX_NUMBER_OF_CAMPAIGNS = 12;
+    const MAX_NUMBER_OF_CAMPAIGNS = 8;
     const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
     const MIN_COST = 1;
@@ -118,7 +118,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
         $costReport->accountid = $mediaAccountNumber + 1;
         $convReport->accountid = $costReport->accountid;
 
-        $costReport->campaign_id = $campaignNumber + 1;
+        $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
         $convReport->campaign_id = $costReport->campaign_id;
 
         $costReport->cost = mt_rand(

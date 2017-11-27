@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwAccountReportCost;
 
 // @codingStandardsIgnoreLine
-class RepoYdwAccountReportGenerator extends Seeder
+class RepoAdwAccountReportGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
     const INTERVAL = 'P1D';
@@ -120,7 +120,7 @@ class RepoYdwAccountReportGenerator extends Seeder
 
         $costReport->accountid = $mediaAccountNumber + 1;
 
-        $costReport->campaign_id = $campaignNumber + 1;
+        $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 
         $costReport->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
 
