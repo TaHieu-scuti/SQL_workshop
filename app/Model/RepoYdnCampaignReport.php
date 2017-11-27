@@ -16,7 +16,7 @@ class RepoYdnCampaignReport extends AbstractReportModel
     public function getAllYdnCampaign(
         $accountId = null,
         $campaignID = null,
-        $adgroupID= null,
+        $adgroupID = null,
         $adID = null
     ) {
         return self::select('campaignID', 'campaignName as campaignName')
