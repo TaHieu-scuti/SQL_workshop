@@ -75,7 +75,7 @@ class RepoYssAdReportController extends AbstractReportController
     {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        if ($engine === 'yss' || $engine === 'ydn' || $engine === null) {
+        if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
