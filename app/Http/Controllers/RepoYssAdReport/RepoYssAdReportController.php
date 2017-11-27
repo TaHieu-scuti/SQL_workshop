@@ -9,6 +9,7 @@ use App\Model\RepoYssPrefectureReportCost;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdReportCost;
 use App\Model\RepoAdwAdReportCost;
+use App\Model\RepoYdnAdReport;
 
 use Exception;
 
@@ -74,7 +75,7 @@ class RepoYssAdReportController extends AbstractReportController
     {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
-        if ($engine === 'yss' || $engine === null) {
+        if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
@@ -195,10 +196,12 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss' || $engine === null) {
+        if ($engine === 'yss') {
             $this->model = new RepoYssAdReportCost;
         } elseif ($engine === 'adw') {
             $this->model = new RepoAdwAdReportCost;
+        } elseif ($engine === 'ydn') {
+            $this->model = new RepoYdnAdReport;
         }
         return $engine;
     }
