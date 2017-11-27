@@ -432,6 +432,5 @@ $(document).ready(function(){
     }else{
         $('.site-information-guess-annotation').append(pageInformation.title);
     }
-    console.log(pageInformation);
     $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })
