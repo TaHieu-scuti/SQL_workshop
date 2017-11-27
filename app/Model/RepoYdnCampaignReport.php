@@ -19,7 +19,7 @@ class RepoYdnCampaignReport extends AbstractReportModel
         $adgroupID = null,
         $adID = null
     ) {
-        return self::select('campaignID', 'campaignName as campaignName')
+        return self::select('campaignID', 'campaignName')
             ->where(
                 function ($query) use ($accountId, $campaignID, $adgroupID, $adID) {
                     $this->addQueryConditions(
