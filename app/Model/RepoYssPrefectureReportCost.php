@@ -81,7 +81,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 )
                 ->groupBy($groupedByField);
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+            return RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -100,7 +100,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->groupBy('criteria.Name')
                 ->union($yssPrefectureData)
                 ->get();
-            return $adwPrefectureData;
         }
     }
 
@@ -150,7 +149,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 );
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+            return RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -168,7 +167,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 )
                 ->union($yssPrefectureData)
                 ->first();
-            return $adwPrefectureData;
         }
     }
 
@@ -217,7 +215,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 );
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+            return RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -235,7 +233,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 )
                 ->union($yssPrefectureData)
                 ->first();
-            return $adwPrefectureData;
         }
     }
 
