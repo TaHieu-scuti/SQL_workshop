@@ -35,6 +35,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $arrAdgroups = [];
+        $adgroups = null;
 
         $arrAdgroups['all'] = 'All Adgroup';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
@@ -63,7 +64,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                 $keywordId = null
             );
         }
-        if ($adgroups) {
+        if (!is_null($adgroups)) {
             foreach ($adgroups as $key => $adgroup) {
                 $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;
             }
