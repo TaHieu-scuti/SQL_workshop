@@ -228,6 +228,7 @@ var Script = function () {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                     $('.summary_report fields active').removeClass('active');
+                    $('.selectionOnGraph').html(response.graphItemLayout);
                 },
                 error : function (response) {
                     alert('Something went wrong!');

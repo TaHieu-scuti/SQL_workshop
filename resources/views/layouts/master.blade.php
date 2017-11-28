@@ -49,7 +49,7 @@
                             <span id="username" class="username" value="{{ Auth::user()->username }}">
                                 {{Auth::user()->username}}
                             </span>
-                            <b class="caret"></b> 
+                            <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
@@ -244,13 +244,8 @@
 
                 <div class="row line-chart">
                     <div class="selection-dropdown selectionOnGraph">
-                        <select class="selectpicker" id="selectpickerGraph" data-live-search="true">
-                            @foreach ($columnsLiveSearch as $columnsSearch)
-                                <option class="selection-graph" data-column="{{ $columnsSearch }}" {{$columnsSearch === $graphColumnName ? "selected" : ''}} data-tokens="{{ __('language.' .str_slug($columnsSearch,'_')) }}">{{ __('language.' .str_slug($columnsSearch,'_')) }}</option>
-                            @endforeach
-                        </select>
+                    @include('layouts.graph_items')
                     </div>
-
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
                         <span class="no-data-found-message-graph">No data found for graph</span>
@@ -298,7 +293,7 @@
                                             <p>Results per page</p>
                                             <div class="form-group">
                                                 <input type="radio" name="resultPerPage" value="20" {{(int)$keyPagination === 20 ? 'checked' : ''}} > 20<br>
-                                            </div> 
+                                            </div>
 
                                             <div class="form-group">
                                                 <input type="radio" name="resultPerPage" value="50" {{(int)$keyPagination === 50 ? 'checked' : ''}}> 50<br>
