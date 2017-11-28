@@ -482,12 +482,8 @@ abstract class AbstractReportController extends Controller
         );
 
         if ($data->isEmpty()) {
-            if (session(static::SESSION_KEY_END_DAY) === session(static::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
-            } else {
                 $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => null];
                 $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
-            }
         }
 
         return $data;
