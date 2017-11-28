@@ -33,6 +33,55 @@ class RepoYdnReportGenerator extends Seeder
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const PREFECTURE = [
+        'Hokkaido',
+        'Aomori',
+        'Iwate',
+        'Miyagi',
+        'Akita',
+        'Yamagata',
+        'Fukushima',
+        'Ibaraki',
+        'Tochigi',
+        'Gunma',
+        'Saitama',
+        'Chiba',
+        'Tokyo',
+        'Kanagawa',
+        'Niigata',
+        'Toyama',
+        'Ishikawa',
+        'Fukui',
+        'Yamanashi',
+        'Nagano',
+        'Gifu',
+        'Shizuoka',
+        'Aichi',
+        'Mie',
+        'Shiga',
+        'Kyoto',
+        'Osaka',
+        'Hyogo',
+        'Nara',
+        'Wakayama',
+        'Tottori',
+        'Shimane',
+        'Okayama',
+        'Hiroshima',
+        'Yamaguchi',
+        'Tokushima',
+        'Kagawa',
+        'Ehime',
+        'Kochi',
+        'Fukuoka',
+        'Saga',
+        'Nagasaki',
+        'Kumamoto',
+        'Oita',
+        'Miyazaki',
+        'Kagoshima',
+        'Okinawa'
+    ];
 
     private function processDay(DateTime $day)
     {
@@ -126,7 +175,7 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->prefectureID = $adReportNumber + 1;
 
-            $costReport->prefecture = 'Prefecture ' . ($adReportNumber + 1);
+            $costReport->prefecture = self::PREFECTURE[mt_rand(0, count(self::PREFECTURE) - 1)];
 
             $costReport->hourofday = rand(0, 23);
 
