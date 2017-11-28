@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 
 use App\Model\RepoYssAccount;
+use App\Model\RepoYssAccountReportCost;
 
 // @codingStandardsIgnoreLine
 class RepoYssAccounts extends Seeder
@@ -14,7 +15,7 @@ class RepoYssAccounts extends Seeder
      */
     public function run()
     {
-        $yssAccountReports = App\RepoYssAccountReport::query()
+        $yssAccountReports = RepoYssAccountReportCost::query()
             ->select(['account_id', 'accountid'])
             ->distinct()
             ->get();
