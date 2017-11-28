@@ -237,9 +237,6 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportConv->accountid = $campaignReport->accountid;
                 $adgroupReportCost->accountid = $campaignReport->accountid;
 
-                $adgroupReportCost->hourofday = $campaignReport->hourofday;
-                $adgroupReportConv->hourofday = $adgroupReportCost->hourofday;
-
                 $adgroupReportCost->saveOrFail();
                 $adgroupReportConv->saveOrFail();
             }
