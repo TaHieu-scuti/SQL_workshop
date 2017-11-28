@@ -95,8 +95,8 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportConv->campaign_id = $accountReport->campaign_id;
             $campaignReportCost->campaignID = $accountReport->campaign_id;
             $campaignReportConv->campaignID = $accountReport->campaign_id;
-            $campaignReportCost->campaignName = 'Campaign Name ' . $accountReport->campaign_id;
-            $campaignReportConv->campaignName = 'Campaign Name ' . $accountReport->campaign_id;
+            $campaignReportCost->campaignName = 'YSS Campaign Name ' . $accountReport->campaign_id;
+            $campaignReportConv->campaignName = 'YSS Campaign Name ' . $accountReport->campaign_id;
             $campaignReportCost->campaignDistributionSettings = 'Distribution Settings ' . $accountReport->campaign_id;
             $campaignReportConv->campaignDistributionSettings = 'Distribution Settings ' . $accountReport->campaign_id;
             $campaignReportCost->campaignDistributionStatus = 'Distribution Status' . $accountReport->campaign_id;
