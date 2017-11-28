@@ -23,7 +23,7 @@ class RepoYssAccounts extends Seeder
             $account = new RepoYssAccount;
             $account->accountid = $yssAccountReport->accountid;
             $account->account_id = $yssAccountReport->account_id;
-            $account->accountName = str_random(10);
+            $account->accountName = 'YSS ' . str_random(10);
             $account->accountType = str_random(10);
             $account->accountStatus = 'enabled';
             $account->deliveryStatus = 'enabled';

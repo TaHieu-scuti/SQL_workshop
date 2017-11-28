@@ -114,15 +114,15 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->campaignID = $campaignNumber + 1;
 
-            $costReport->campaignName = 'Campaign ' . ($campaignNumber + 1);
+            $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
 
             $costReport->adgroupID = $adGroupNumber + 1;
 
-            $costReport->adgroupName = 'AdGroup ' . ($adGroupNumber + 1);
+            $costReport->adgroupName = 'YDN AdGroup ' . ($adGroupNumber + 1);
 
             $costReport->adID = $adReportNumber + 1;
 
-            $costReport->adName = 'Ad Report ' . ($adReportNumber + 1);
+            $costReport->adName = 'YDN Ad Report ' . ($adReportNumber + 1);
 
             $costReport->prefectureID = $adReportNumber + 1;
 
