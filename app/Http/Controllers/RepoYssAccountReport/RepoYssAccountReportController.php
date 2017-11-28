@@ -160,7 +160,6 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         $reports = $this->getDataForTable();
-
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
