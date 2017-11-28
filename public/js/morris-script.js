@@ -161,7 +161,7 @@ var Script = function () {
             });
         }
 
-        $(window).on('resize', function() { 
+        $(window).on('resize', function() {
             lineChart.redraw();
         });
 

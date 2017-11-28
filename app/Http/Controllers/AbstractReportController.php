@@ -160,7 +160,7 @@ abstract class AbstractReportController extends Controller
         $timePeriodTitle = "Last 90 days";
         $accountStatus = "showZero";
         $statusTitle = "Show 0";
-        $graphColumnName = "clicks";
+        $graphColumnName = "impressions";
         $summaryReport = [
             'clicks',
             'impressions',
