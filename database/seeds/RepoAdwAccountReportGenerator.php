@@ -142,6 +142,8 @@ class RepoAdwAccountReportGenerator extends Seeder
 
         $costReport->endDate = $day->format('Y-m-d');
 
+        $costReport->hourOfDay = rand(0, 23);
+
         $costReport->saveOrFail();
     }
 

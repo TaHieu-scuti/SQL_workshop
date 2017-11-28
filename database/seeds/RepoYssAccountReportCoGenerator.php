@@ -248,6 +248,9 @@ class RepoYssAccountReportCoGenerator extends Seeder
         $costReport->endDate = $day->format('Y-m-d');
         $convReport->endDate = $costReport->endDate;
 
+        $costReport->hourofday = rand(0, 23);
+        $convReport->hourofday = $costReport->hourofday;
+
         $costReport->saveOrFail();
         $convReport->saveOrFail();
     }
