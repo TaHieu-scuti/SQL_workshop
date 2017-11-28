@@ -110,8 +110,8 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportConv->adgroupID = $i;
                 $adgroupReportCost->campaignName = $campaignReport->campaignName;
                 $adgroupReportConv->campaignName = $campaignReport->campaignName;
-                $adgroupReportCost->adgroupName = 'Adgroup Name ' . $i;
-                $adgroupReportConv->adgroupName = 'Adgroup Name ' . $i;
+                $adgroupReportCost->adgroupName = 'YSS Adgroup Name ' . $i;
+                $adgroupReportConv->adgroupName = 'YSS Adgroup Name ' . $i;
                 $adgroupReportCost->adgroupDistributionSettings = 'Adgroup Distribution setting';
                 $adgroupReportConv->adgroupDistributionSettings = $adgroupReportCost->adgroupDistributionSettings;
                 $adgroupReportCost->adGroupBid = mt_rand(

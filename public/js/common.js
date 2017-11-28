@@ -318,6 +318,7 @@ $('.specific-filter-item').click(function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+            $('.summary_report').html(response.summaryReportLayout);
         },
         complete : function () {
             completeRequestTable();
@@ -365,10 +366,10 @@ $(document).ready(function(){
 
     var engine = $('select.id_Account').find(':selected').attr('data-engine');
 
-    var iconEngine = '<i class="fa fa-yahoo" aria-hidden="true"></i>';
+    var iconEngine = '<img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >';
 
     if(engine === 'adw') {
-        iconEngine = '<i class="fa fa-google" aria-hidden="true"></i>';
+        iconEngine = '<img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >';
     }
 
     objectAccount['title'] = 'Account';

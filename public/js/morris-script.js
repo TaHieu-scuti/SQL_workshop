@@ -152,12 +152,11 @@ var Script = function () {
                 labels: ['clicks'],
                 lineColors:['#0d88e0'],
                 parseTime:false,
-                hideHover:false,
                 lineWidth:'3px',
                 pointSize: 0,
                 smooth: false,
                 redraw: true,
-                hideHover: 'auto',
+                hideHover: 'auto'
             });
         }
 
@@ -170,7 +169,7 @@ var Script = function () {
             lineChart.setData(data);
             lineChart.options.labels = [fieldName];
         }
-        // set graph with `click` for y-axis
+        // set graph with `clicks` for y-axis
         function getMorris()
         {
             $.ajax({
@@ -183,7 +182,7 @@ var Script = function () {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                 },
-                error : function (response) {
+                error : function () {
                     alert('Something went wrong!');
                 },
                 complete : function () {
@@ -300,7 +299,6 @@ var Script = function () {
                     sendRequestData(obj, url, 'keyword-report');
                     break;
                 default:
-                    // code...
                     break;
             }
         }

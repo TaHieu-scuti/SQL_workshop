@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(UsersTableSeeder::class);
+        $this->call(CriteriaTableSeeder::class);
+
         $this->call(RepoYssAccountsTable::class);
         $this->call(RepoYssAccountReportsCostTable::class);
         $this->call(RepoYssAccountReportsConvTable::class);
