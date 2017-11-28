@@ -53,7 +53,7 @@ function getFilterDate(option)
             break;
         case 'lastBusinessWeek' :
             timePeriodTitle = 'Last business week (Mon – Fri)';
-            endDay = moment(moment().subtract(1, 'weeks')).format("YYYY-MM-DD");
+            endDay = moment().day(-2).format("YYYY-MM-DD");
             startDay = moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD");
             break;
         case 'last7DaysToday' :
