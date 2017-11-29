@@ -12,9 +12,7 @@ class RepoAdwGeoReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
     const MIN_CONV_RATE = 10000;
     const MAX_CONV_RATE = 20374;
     const MIN_AVERAGE_POSITION = 1000000;
@@ -64,11 +62,11 @@ class RepoAdwGeoReportGenerator extends Seeder
                 );
                 $geoReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
                 $geoReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $geoReportCost->impressions
                 );
                 $geoReportCost->ctr = ($geoReportCost->clicks / $geoReportCost->impressions) * 100;
                 $geoReportCost->avgCPC = $geoReportCost->cost / $geoReportCost->clicks;

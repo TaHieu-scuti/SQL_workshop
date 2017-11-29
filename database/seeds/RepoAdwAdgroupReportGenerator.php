@@ -14,9 +14,7 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
     const MIN_CONV_RATE = 1000000;
     const MAX_CONV_RATE = 894894374;
     const MIN_AVERAGE_POSITION = 1000000;
@@ -58,11 +56,11 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 );
                 $adgroupReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $campaignReport->impressions
                 );
                 $adgroupReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $adgroupReportCost->impressions
                 );
                 $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
                 $adgroupReportCost->avgCPC = $adgroupReportCost->cost / $adgroupReportCost->clicks;

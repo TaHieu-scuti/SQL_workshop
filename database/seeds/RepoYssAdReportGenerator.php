@@ -14,9 +14,7 @@ class RepoYssAdReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
     const MIN_CTR = 1000;
     const MAX_CTR = 1032456345;
     const MIN_CONV_RATE = 1000;
@@ -120,12 +118,12 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportConv->description2 = str_random(10);
                 $adReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adGroupReport->impressions
                 );
                 $adReportConv->focusDevice = str_random(10);
                 $adReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $adReportCost->impressions
                 );
                 $adReportConv->trackingURL = self::TRACKING_URL;
                 $adReportCost->ctr = mt_rand(

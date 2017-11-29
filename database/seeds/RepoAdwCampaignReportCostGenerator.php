@@ -26,9 +26,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 89489437437880;
     const MIN_CONVERSIONS = 1000000;
@@ -59,14 +57,17 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
                 self::MIN_COST,
                 self::MAX_COST
             );
-            $campaignReportCost->clicks = mt_rand(
-                self::MIN_CLICKS,
-                self::MAX_CLICKS
-            );
+
             $campaignReportCost->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
-                self::MAX_IMPRESSIONS
+                $accountReport->impressions
             );
+
+            $campaignReportCost->clicks = mt_rand(
+                self::MIN_CLICKS,
+                $campaignReportCost->impressions
+            );
+
             $campaignReportCost->month = $accountReport->month;
             $campaignReportCost->valueConv = mt_rand(
                 self::MIN_CONV_VALUE,

@@ -30,9 +30,7 @@ class RepoYssKeywordReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 1004;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 1004;
     const MIN_CTR = 1000000;
     const MAX_CTR = 7344032456345;
     const MIN_AVERAGE_CPC = 1000000;
@@ -177,12 +175,12 @@ class RepoYssKeywordReportGenerator extends Seeder
 
                 $keywordReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
 
                 $keywordReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $keywordReportCost->impressions
                 );
 
                 $keywordReportCost->ctr = mt_rand(

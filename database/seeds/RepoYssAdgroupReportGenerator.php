@@ -20,9 +20,7 @@ class RepoYssAdgroupReportGenerator extends Seeder
     const MIN_ADGROUP_BID = 1;
     const MAX_ADGROUP_BID = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
     const MIN_CTR = 1000000;
     const MAX_CTR = 7344032456345;
     const MIN_CONV_RATE = 1000000;
@@ -126,11 +124,11 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 );
                 $adgroupReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $campaignReport->impressions
                 );
                 $adgroupReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $adgroupReportCost->impressions
                 );
                 $adgroupReportCost->ctr = mt_rand(
                     self::MIN_CTR,
