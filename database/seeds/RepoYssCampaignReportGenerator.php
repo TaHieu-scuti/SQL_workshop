@@ -116,8 +116,18 @@ class RepoYssCampaignReportGenerator extends Seeder
                 self::MIN_CLICKS,
                 $campaignReportCost->impressions
             );
-            $campaignReportCost->ctr = ($campaignReportCost->clicks / $campaignReportCost->impressions) * 100;
-            $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
+
+            if ($campaignReportCost->impressions === 0) {
+                $campaignReportCost->ctr = 0;
+            } else {
+                $campaignReportCost->ctr = ($campaignReportCost->clicks / $campaignReportCost->impressions) * 100;
+            }
+
+            if ($campaignReportCost->clicks === 0) {
+                $campaignReportCost->averageCpc = 0;
+            } else {
+                $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
+            }
             $campaignReportCost->averagePosition = mt_rand(
                 self::MIN_AVERAGE_POSITION,
                 self::MAX_AVERAGE_POSITION
