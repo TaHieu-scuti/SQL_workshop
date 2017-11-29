@@ -82,12 +82,24 @@ class DayOfWeeksGenerator extends Seeder
                     self::MIN_CLICKS,
                     $dayOfWeek->impressions
                 );
-                $dayOfWeek->ctr = ($dayOfWeek->clicks / $dayOfWeek->impressions) * 100;
-                $dayOfWeek->averageCpc = $dayOfWeek->cost / $dayOfWeek->clicks;
+
+                if ($dayOfWeek->impressions === 0) {
+                    $dayOfWeek->ctr = 0;
+                } else {
+                    $dayOfWeek->ctr = ($dayOfWeek->clicks / $dayOfWeek->impressions) * 100;
+                }
+
+                if ($dayOfWeek->clicks === 0) {
+                    $dayOfWeek->averageCpc = 0;
+                } else {
+                    $dayOfWeek->averageCpc = $dayOfWeek->cost / $dayOfWeek->clicks;
+                }
+
                 $dayOfWeek->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION
                 ) / mt_getrandmax();
+
                 $dayOfWeek->bidAdjustment = mt_rand(
                     self::MIN_BIDADJUSTMENT,
                     self::MAX_BIDADJUSTMENT
