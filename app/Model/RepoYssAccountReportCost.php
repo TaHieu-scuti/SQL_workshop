@@ -157,7 +157,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     'ROUND(AVG('. self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if($fieldName === 'cost') {
+                if ($fieldName === 'cost') {
                     $arrayCalculate[] = DB::raw(
                         'SUM( ' . self::ADW_FIELDS[$fieldName] . ' ) AS ' . $fieldName
                     );
