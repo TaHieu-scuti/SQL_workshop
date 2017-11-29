@@ -15,8 +15,6 @@ class RepoYssCampaignReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
     const MIN_CONV_RATE = 1000000;
     const MAX_CONV_RATE = 89489437437880;
     const MIN_AVERAGE_CPC = 1000000;
@@ -120,7 +118,7 @@ class RepoYssCampaignReportGenerator extends Seeder
                 self::MIN_CLICKS,
                 $campaignReportCost->impressions
             );
-            $campaignReportCost->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
+            $campaignReportCost->ctr = ($campaignReportCost->clicks / $campaignReportCost->impressions) * 100;
             $campaignReportCost->averageCpc = mt_rand(
                 self::MIN_AVERAGE_CPC,
                 self::MAX_AVERAGE_CPC

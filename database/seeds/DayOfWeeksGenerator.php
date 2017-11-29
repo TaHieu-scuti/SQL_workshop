@@ -15,8 +15,6 @@ class DayOfWeeksGenerator extends Seeder
     const MIN_BIDADJUSTMENT = 1;
     const MAX_BIDADJUSTMENT = 1000;
     const MIN_CLICKS = 0;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 2032456345;
     const MIN_CONV_RATE = 1000000;
     const MAX_CONV_RATE = 2037437880;
     const MIN_AVERAGE_CPC = 1000000;
@@ -86,10 +84,7 @@ class DayOfWeeksGenerator extends Seeder
                     self::MIN_CLICKS,
                     $dayOfWeek->impressions
                 );
-                $dayOfWeek->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
+                $dayOfWeek->ctr = ($dayOfWeek->clicks / $dayOfWeek->impressions) * 100;
                 $dayOfWeek->averageCpc = mt_rand(
                     self::MIN_AVERAGE_CPC,
                     self::MAX_AVERAGE_CPC

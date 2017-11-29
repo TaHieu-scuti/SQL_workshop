@@ -15,8 +15,6 @@ class RepoYssPrefectureReportGenerator extends Seeder
     const MIN_BIDADJUSTMENT = 1;
     const MAX_BIDADJUSTMENT = 1000;
     const MIN_CLICKS = 0;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 2037400000;
     const MIN_CONV_RATE = 10000;
     const MAX_CONV_RATE = 20374;
     const MIN_AVERAGE_CPC = 1000000;
@@ -153,10 +151,7 @@ class RepoYssPrefectureReportGenerator extends Seeder
                     self::MIN_CLICKS,
                     $prefecture->impressions
                 );
-                $prefecture->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
+                $prefecture->ctr = ($prefecture->clicks / $prefecture->impressions) * 100;
                 $prefecture->averageCpc = mt_rand(
                     self::MIN_AVERAGE_CPC,
                     self::MAX_AVERAGE_CPC

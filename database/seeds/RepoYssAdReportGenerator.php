@@ -15,8 +15,6 @@ class RepoYssAdReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
-    const MIN_CTR = 1000;
-    const MAX_CTR = 1032456345;
     const MIN_CONV_RATE = 1000;
     const MAX_CONV_RATE = 1437437880;
     const MIN_AVERAGE_CPC = 1000;
@@ -126,10 +124,7 @@ class RepoYssAdReportGenerator extends Seeder
                     $adReportCost->impressions
                 );
                 $adReportConv->trackingURL = self::TRACKING_URL;
-                $adReportCost->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
+                $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
                 $adReportConv->customParameters = str_random(10);
                 $adReportCost->averageCpc = mt_rand(
                     self::MIN_AVERAGE_CPC,

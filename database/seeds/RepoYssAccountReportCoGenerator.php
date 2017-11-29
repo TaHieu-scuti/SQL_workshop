@@ -28,8 +28,6 @@ class RepoYssAccountReportCoGenerator extends Seeder
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
     const MIN_AVERAGE_CPC = 1000000;
     const MAX_AVERAGE_CPC = 89489437437880;
     const MIN_AVERAGE_POSITION = 1000000;
@@ -135,7 +133,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
             $costReport->impressions
         );
 
-        $costReport->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
+        $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
 
         $costReport->averageCpc = mt_rand(
             self::MIN_AVERAGE_CPC,
