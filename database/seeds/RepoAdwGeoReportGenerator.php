@@ -11,7 +11,7 @@ class RepoAdwGeoReportGenerator extends Seeder
     const MAX_NUMBER_OF_PREFECTURE = 2;
     const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
+    const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
