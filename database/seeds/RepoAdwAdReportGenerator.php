@@ -85,7 +85,7 @@ class RepoAdwAdReportGenerator extends Seeder
                     $adReportCost->impressions
                 );
                 $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
-                $adReportCost->avgCPC = $adReportCost->const / $adReportCost->clicks;
+                $adReportCost->avgCPC = $adReportCost->cost / $adReportCost->clicks;
                 $adReportCost->avgPosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION

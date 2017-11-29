@@ -17,8 +17,6 @@ class RepoYssAdReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 1000;
     const MAX_CONV_RATE = 1437437880;
-    const MIN_AVERAGE_CPC = 1000;
-    const MAX_AVERAGE_CPC = 1437437880;
     const MIN_AVERAGE_POSITION = 1000;
     const MAX_AVERAGE_POSITION = 1437437880;
     const TRACKING_URL = 'http://we.track.people/';
@@ -126,10 +124,7 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportConv->trackingURL = self::TRACKING_URL;
                 $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
                 $adReportConv->customParameters = str_random(10);
-                $adReportCost->averageCpc = mt_rand(
-                    self::MIN_AVERAGE_CPC,
-                    self::MAX_AVERAGE_CPC
-                ) / mt_getrandmax();
+                $adReportCost->averageCpc = $adReportCost->cost / $adGroupReport->clicks;
                 $adReportConv->landingPageURL = self::LOADING_PAGE_URL;
                 $adReportCost->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,

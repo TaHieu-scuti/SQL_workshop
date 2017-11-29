@@ -17,8 +17,6 @@ class RepoYssPrefectureReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 10000;
     const MAX_CONV_RATE = 20374;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 2037400000;
     const MIN_AVERAGE_POSITION = 1000000;
     const MAX_AVERAGE_POSITION = 2037400000;
     const MIN_CONVERSIONS = 10000;
@@ -152,10 +150,7 @@ class RepoYssPrefectureReportGenerator extends Seeder
                     $prefecture->impressions
                 );
                 $prefecture->ctr = ($prefecture->clicks / $prefecture->impressions) * 100;
-                $prefecture->averageCpc = mt_rand(
-                    self::MIN_AVERAGE_CPC,
-                    self::MAX_AVERAGE_CPC
-                ) / mt_getrandmax();
+                $prefecture->averageCpc = $prefecture->cost / $prefecture->clicks;
                 $prefecture->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION

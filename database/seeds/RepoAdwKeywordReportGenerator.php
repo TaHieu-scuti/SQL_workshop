@@ -78,7 +78,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                     $keywordReportCost->impressions
                 );
                 $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
-                $keywordReportCost->avgCPC = $keywordReportCost->const / $keywordReportCost->clicks;
+                $keywordReportCost->avgCPC = $keywordReportCost->cost / $keywordReportCost->clicks;
                 $keywordReportCost->avgPosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION
