@@ -157,6 +157,12 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     'ROUND(AVG('. self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+                if($fieldName === 'cost') {
+                    $arrayCalculate[] = DB::raw(
+                        'SUM( ' . self::ADW_FIELDS[$fieldName] . ' ) AS ' . $fieldName
+                    );
+                    continue;
+                }
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                         ->getType()
                         ->getName()
@@ -171,7 +177,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             }
         }
-
         return $arrayCalculate;
     }
 
@@ -490,7 +495,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort)->get();
         }
-
         return $datas->orderBy($columnSort, $sort)->get();
     }
 

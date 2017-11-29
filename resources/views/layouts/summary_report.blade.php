@@ -48,8 +48,6 @@
                     <i class="fa fa-rmb"></i>
                     @if (ctype_digit($summaryReport['cost']))
                         <td>{{ number_format($summaryReport['cost'], 0, '', ',') }}</td>
-                    @elseif (is_float($summaryReport['cost']))
-                        <td>{{ number_format($summaryReport['cost'], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $summaryReport['cost'] }}</td>
                     @endif
