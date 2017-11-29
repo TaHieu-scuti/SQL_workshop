@@ -131,9 +131,17 @@ class RepoYssAccountReportCoGenerator extends Seeder
             $costReport->impressions
         );
 
-        $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+        if ($costReport->impressions === 0) {
+            $costReport->ctr = 0;
+        } else {
+            $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+        }
 
-        $costReport->averageCpc = $costReport->cost / $costReport->clicks;
+        if ($costReport->clicks === 0) {
+            $costReport->averageCpc = 0;
+        } else {
+            $costReport->averageCpc = $costReport->cost / $costReport->clicks;
+        }
 
         $costReport->averagePosition = mt_rand(
             self::MIN_AVERAGE_POSITION,
