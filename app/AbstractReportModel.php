@@ -507,7 +507,7 @@ abstract class AbstractReportModel extends Model
      */
     public function getSummaryData($startDay, $endDay)
     {
-        $expressions = $this->getAggregated(self::SUMMARY_FIELDS);
+        $expressions = $this->getAggregated(static::SUMMARY_FIELDS);
 
         if (empty($expressions)) {
             return $expressions;
