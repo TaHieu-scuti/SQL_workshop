@@ -161,7 +161,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                         ->getType()
                         ->getName()
                     === self::FIELD_TYPE) {
-
                     $arrayCalculate[] = DB::raw(
                         'ROUND(SUM(' . self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
                     );
