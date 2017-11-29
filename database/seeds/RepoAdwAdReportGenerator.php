@@ -107,7 +107,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 if ($adReportCost->clicks === 0) {
                     $adReportCost->convRate = 0;
                 } else {
-                    $adReportCost->convRate = ($adReportCost->conversions / $adgroupReport->clicks) * 100;
+                    $adReportCost->convRate = ($adReportCost->conversions / $adReportCost->clicks) * 100;
                 }
 
                 $adReportCost->valueConv = mt_rand(
