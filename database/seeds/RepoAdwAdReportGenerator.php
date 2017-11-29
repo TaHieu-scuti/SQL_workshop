@@ -15,10 +15,7 @@ class RepoAdwAdReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_CONV_RATE = 100;
-    const MAX_CONV_RATE = 89489437;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 894894374;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 894894374;
     const MIN_ALL_CONV_RATE = 100;
@@ -104,12 +101,15 @@ class RepoAdwAdReportGenerator extends Seeder
 
                 $adReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $adReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $adReportCost->clicks
+                );
+
+                if ($adReportCost->clicks === 0) {
+                    $adReportCost->convRate = 0;
+                } else {
+                    $adReportCost->convRate = ($adReportCost->conversions / $adgroupReport->clicks) * 100;
+                }
+
                 $adReportCost->valueConv = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

@@ -13,12 +13,9 @@ class RepoAdwGeoReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 1;
     const MIN_CLICKS = 0;
-    const MIN_CONV_RATE = 10000;
-    const MAX_CONV_RATE = 20374;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_CONVERSIONS = 10000;
-    const MAX_CONVERSIONS = 20374;
+    const MIN_CONVERSIONS = 0;
     const MIN_ALL_CONV = 10000;
     const MAX_ALL_CONV = 20374;
     const MIN_ALL_CONV_VALUE = 10000;
@@ -88,12 +85,15 @@ class RepoAdwGeoReportGenerator extends Seeder
 
                 $geoReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $geoReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $geoReportCost->clicks
+                );
+
+                if ($geoReportCost->clicks === 0) {
+                    $geoReportCost->convRate = 0;
+                } else {
+                    $geoReportCost->convRate = ($geoReportCost->conversions / $geoReportCost->clicks) * 100;
+                }
+
                 $geoReportCost->allConv = mt_rand(
                     self::MIN_ALL_CONV,
                     self::MAX_ALL_CONV

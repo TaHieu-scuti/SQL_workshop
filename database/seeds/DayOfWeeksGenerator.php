@@ -15,12 +15,9 @@ class DayOfWeeksGenerator extends Seeder
     const MIN_BIDADJUSTMENT = 1;
     const MAX_BIDADJUSTMENT = 1000;
     const MIN_CLICKS = 0;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 2037437880;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 2037437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 2037437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -106,14 +103,18 @@ class DayOfWeeksGenerator extends Seeder
                 );
                 $dayOfWeek->targetScheduleID = $i + 1;
                 $dayOfWeek->targetSchedule = self::TARGET_SCHEDULE[mt_rand(0, count(self::TARGET_SCHEDULE) - 1)];
+
                 $dayOfWeek->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $dayOfWeek->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $dayOfWeek->clicks
+                );
+
+                if ($dayOfWeek->clicks === 0) {
+                    $dayOfWeek->convRate = 0;
+                } else {
+                    $dayOfWeek->convRate = ($dayOfWeek->conversions / $dayOfWeek->clicks) * 100;
+                }
+
                 $dayOfWeek->convValue = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

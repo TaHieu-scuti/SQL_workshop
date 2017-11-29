@@ -28,6 +28,7 @@ class RepoYdnReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
+    const MIN_CONVERSIONS = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -199,6 +200,17 @@ class RepoYdnReportGenerator extends Seeder
             $costReport->startDate = $day->format('Y-m-d');
 
             $costReport->endDate = $day->format('Y-m-d');
+
+            $costReport->conversions = mt_rand(
+                self::MIN_CONVERSIONS,
+                $costReport->clicks
+            );
+
+            if ($costReport->clicks === 0) {
+                $costReport->convRate = 0;
+            } else {
+                $costReport->convRate = ($costReport->conversions / $costReport->clicks) * 100;
+            }
 
             $costReport->saveOrFail();
         }

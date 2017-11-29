@@ -39,14 +39,11 @@ class RepoYssKeywordReportGenerator extends Seeder
     const MAX_EXACT_MATCH_IMPRESSION_SHARE = 89489437437880;
     const MIN_BUDGET_LOST_IMPRESSION_SHARE = 1000000;
     const MAX_BUDGET_LOST_IMPRESSION_SHARE = 89489437437880;
-    const MIN_CONV_RATE = 100;
-    const MAX_CONV_RATE = 89489437;
     const TRACKING_URL = 'http://we.track.people/';
     const LANDING_PAGE_URL = 'http://lading.page/';
     const LANDING_PAGE_URL_SMART_PHONE = 'http://lading.page.smartphone/';
     const CUSTOM_PARAMETERS = 'Custom Parameters';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -232,14 +229,16 @@ class RepoYssKeywordReportGenerator extends Seeder
 
                 $keywordReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
+                    $keywordReportCost->clicks
+                );
+
                 $keywordReportConv->conversions = $keywordReportCost->conversions;
 
-                $keywordReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->convRate = 0;
+                } else {
+                    $keywordReportCost->convRate = ($keywordReportCost->conversions / $keywordReportCost->clicks) * 100;
+                }
 
                 $keywordReportCost->convValue = mt_rand(
                     self::MIN_CONV_VALUE,

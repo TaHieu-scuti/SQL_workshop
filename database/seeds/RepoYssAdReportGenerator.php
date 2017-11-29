@@ -15,8 +15,6 @@ class RepoYssAdReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
-    const MIN_CONV_RATE = 1000;
-    const MAX_CONV_RATE = 1437437880;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
     const TRACKING_URL = 'http://we.track.people/';
@@ -24,8 +22,7 @@ class RepoYssAdReportGenerator extends Seeder
     const DESTINATION_URL = 'http://we.track.destinationURL/';
     const LOADING_PAGE_URL = 'http://we.track.landingPageURL/';
     const LOADING_PAGE_URL_SMART_PHONE = 'http://we.track.landingPageURLSmartphone/';
-    const MIN_CONVERSIONS = 1000;
-    const MAX_CONVERSIONS = 1437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000;
     const MAX_CONV_VALUE = 1437437880;
     const MIN_COST_PER_CONV = 1000;
@@ -147,10 +144,12 @@ class RepoYssAdReportGenerator extends Seeder
                 $adReportCost->description2 = $adReportConv->description2;
                 $adReportConv->adTrackingID = $i;
                 $adReportCost->focusDevice = $adReportConv->focusDevice;
+
                 $adReportConv->conversions =  mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
+                        $adReportConv->clicks
+                );
+
                 $adReportCost->trackingURL = $adReportConv->trackingURL;
                 $adReportConv->convValue = mt_rand(
                     self::MIN_CONV_VALUE,
@@ -178,10 +177,13 @@ class RepoYssAdReportGenerator extends Seeder
                 ) / mt_getrandmax();
                 $adReportCost->conversions = $adReportConv->conversions;
                 $adReportConv->network = $adGroupReport->network;
-                $adReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+
+                if ($adReportCost->clicks === 0) {
+                    $adReportCost->convRate = 0;
+                } else {
+                    $adReportCost->convRate = ($adReportCost->conversions / $adReportCost->clicks) * 100;
+                }
+
                 $adReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                 $adReportCost->convValue = $adReportConv->convValue;
                 $adReportConv->device = $adGroupReport->device;

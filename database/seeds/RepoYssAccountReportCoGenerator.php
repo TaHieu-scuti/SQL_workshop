@@ -39,10 +39,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
     const MIN_QUALITY_LOST_IMPRESSION_SHARE = 1000000;
     const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
     const TRACKING_URL = 'http://we.track.people/';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -173,14 +170,16 @@ class RepoYssAccountReportCoGenerator extends Seeder
 
         $costReport->conversions = mt_rand(
             self::MIN_CONVERSIONS,
-            self::MAX_CONVERSIONS
-        ) / mt_getrandmax();
+            $costReport->clicks
+        );
+
         $convReport->conversions = $costReport->conversions;
 
-        $costReport->convRate = mt_rand(
-            self::MIN_CONV_RATE,
-            self::MAX_CONV_RATE
-        ) / mt_getrandmax();
+        if ($costReport->clicks === 0) {
+            $costReport->convRate = 0;
+        } else {
+            $costReport->convRate = ($costReport->conversions / $costReport->clicks) * 100;
+        }
 
         $costReport->convValue = mt_rand(
             self::MIN_CONV_VALUE,

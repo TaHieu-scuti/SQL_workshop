@@ -15,12 +15,9 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 894894374;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 894894374;
+    const MIN_CONVERSIONS = 0;
     const MIN_ALL_CONV_VALUE = 1000000;
     const MAX_ALL_CONV_VALUE = 894894374;
     const NETWORKS = ['network1', 'network2', 'network3'];
@@ -82,12 +79,15 @@ class RepoAdwAdgroupReportGenerator extends Seeder
 
                 $adgroupReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $adgroupReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $adgroupReportCost->clicks
+                );
+
+                if ($adgroupReportCost->clicks === 0) {
+                    $adgroupReportCost->convRate = 0;
+                } else {
+                    $adgroupReportCost->convRate = ($adgroupReportCost->conversions / $adgroupReportCost->clicks) * 100;
+                }
+
                 $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                 $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
                 $adgroupReportCost->day = $campaignReport->day;

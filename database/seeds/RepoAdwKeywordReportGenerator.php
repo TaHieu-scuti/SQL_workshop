@@ -16,10 +16,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_CONV_RATE = 100;
-    const MAX_CONV_RATE = 89489437;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 894894374;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 894894374;
     const MIN_ALL_CONV_RATE = 100;
@@ -97,12 +94,15 @@ class RepoAdwKeywordReportGenerator extends Seeder
 
                 $keywordReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $keywordReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $keywordReportCost->clicks
+                );
+
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->convRate = 0;
+                } else {
+                    $keywordReportCost->convRate = ($keywordReportCost->conversions / $keywordReportCost->clicks) * 100;
+                }
+
                 $keywordReportCost->valueConv = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE
