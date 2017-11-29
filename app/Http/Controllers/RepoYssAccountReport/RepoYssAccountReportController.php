@@ -97,7 +97,6 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         $this->checkoutSessionFieldName();
-        // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
 
         if (isset($request->page)) {

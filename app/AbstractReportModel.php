@@ -37,25 +37,19 @@ abstract class AbstractReportModel extends Model
 
     const AVERAGE_FIELDS = [
         'averageCpc',
-        'averagePosition'
-    ];
-
-    const AVERAGE_FIELDS_ADW = [
-        'avgCPC',
-        'avgPosition'
+        'averagePosition',
+        'ctr'
     ];
 
     const SUM_FIELDS = [
         'clicks',
         'impressions',
-        'cost',
-        'ctr'
+        'cost'
     ];
 
     const SUMMARY_FIELDS = [
         'impressions',
         'clicks',
-        'ctr',
         'cost'
     ];
 
