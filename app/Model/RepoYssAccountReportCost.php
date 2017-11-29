@@ -425,9 +425,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $aggregations = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
 
-        $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = RepoAdwAccountReportCost::select(
-            array_merge([DB::raw("'adw' as engine")], $adwAggreations)
+            array_merge([DB::raw("'adw' as engine")], $adwAggregations)
         )
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -500,8 +500,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $endDay,
         $adgainerId = null
     ) {
-        $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggreations))
+        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
