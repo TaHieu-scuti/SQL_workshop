@@ -126,8 +126,19 @@ class RepoYssAdgroupReportGenerator extends Seeder
                     self::MIN_CLICKS,
                     $adgroupReportCost->impressions
                 );
-                $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
-                $adgroupReportCost->averageCpc = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+
+                if ($adgroupReportCost->impressions === 0) {
+                    $adgroupReportCost->ctr = 0;
+                } else {
+                    $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
+                }
+
+                if ($adgroupReportCost->clicks === 0) {
+                    $adgroupReportCost->averageCpc = 0;
+                } else {
+                    $adgroupReportCost->averageCpc = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+                }
+
                 $adgroupReportCost->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION
