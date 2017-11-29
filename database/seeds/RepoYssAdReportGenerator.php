@@ -122,9 +122,21 @@ class RepoYssAdReportGenerator extends Seeder
                     $adReportCost->impressions
                 );
                 $adReportConv->trackingURL = self::TRACKING_URL;
-                $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
+
+                if ($adReportCost->impressions === 0) {
+                    $adGroupReport->ctr = 0;
+                } else {
+                    $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
+                }
+
                 $adReportConv->customParameters = str_random(10);
-                $adReportCost->averageCpc = $adReportCost->cost / $adGroupReport->clicks;
+
+                if ($adGroupReport->clicks === 0) {
+                    $adReportCost->averageCpc = 0;
+                } else {
+                    $adReportCost->averageCpc = $adReportCost->cost / $adGroupReport->clicks;
+                }
+
                 $adReportConv->landingPageURL = self::LOADING_PAGE_URL;
                 $adReportCost->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
