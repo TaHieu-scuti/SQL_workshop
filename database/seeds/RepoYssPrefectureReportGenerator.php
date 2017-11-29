@@ -149,8 +149,19 @@ class RepoYssPrefectureReportGenerator extends Seeder
                     self::MIN_CLICKS,
                     $prefecture->impressions
                 );
-                $prefecture->ctr = ($prefecture->clicks / $prefecture->impressions) * 100;
-                $prefecture->averageCpc = $prefecture->cost / $prefecture->clicks;
+
+                if ($prefecture->impressions === 0) {
+                    $prefecture->ctr = 0;
+                } else {
+                    $prefecture->ctr = ($prefecture->clicks / $prefecture->impressions) * 100;
+                }
+
+                if ($prefecture->clicks === 0) {
+                    $prefecture->averageCpc = 0;
+                } else {
+                    $prefecture->averageCpc = $prefecture->cost / $prefecture->clicks;
+                }
+
                 $prefecture->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
                     self::MAX_AVERAGE_POSITION
