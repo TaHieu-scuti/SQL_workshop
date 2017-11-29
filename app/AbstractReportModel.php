@@ -147,7 +147,7 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    protected function getBinddingSql($data)
+    protected function getBindingSql($data)
     {
         $sql = $data->toSql();
         foreach ($data->getBindings() as $binding) {
@@ -513,7 +513,7 @@ abstract class AbstractReportModel extends Model
      */
     public function getSummaryData($startDay, $endDay)
     {
-        $expressions = $this->getAggregated(static::SUMMARY_FIELDS);
+        $expressions = $this->getAggregated(self::SUMMARY_FIELDS);
 
         if (empty($expressions)) {
             return $expressions;
