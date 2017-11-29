@@ -31,8 +31,8 @@ class RepoYssKeywordReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_IMPRESSION_SHARE = 1000000;
     const MAX_IMPRESSION_SHARE = 89489437437880;
     const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
@@ -192,9 +192,9 @@ class RepoYssKeywordReportGenerator extends Seeder
                 }
 
                 $keywordReportCost->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
 
                 $keywordReportCost->impressionShare = mt_rand(
                     self::MIN_IMPRESSION_SHARE,

@@ -11,14 +11,14 @@ class RepoAdwAdgroupReportGenerator extends Seeder
 {
     const MIN_NUMBER_OF_ADGROUP = 1;
     const MAX_NUMBER_OF_ADGROUP = 2;
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MIN_CLICKS = 1;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 1000000;
     const MAX_CONV_RATE = 894894374;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 894894374;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 1000000;
     const MAX_CONVERSIONS = 894894374;
     const MIN_ALL_CONV_VALUE = 1000000;
@@ -62,12 +62,24 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                     self::MIN_CLICKS,
                     $adgroupReportCost->impressions
                 );
-                $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
-                $adgroupReportCost->avgCPC = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+
+                if ($adgroupReportCost->impressions === 0) {
+                    $adgroupReportCost->ctr = 0;
+                } else {
+                    $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
+                }
+
+                if ($adgroupReportCost->clicks === 0) {
+                    $adgroupReportCost->avgCPC = 0;
+                } else {
+                    $adgroupReportCost->avgCPC = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+                }
+
                 $adgroupReportCost->avgPosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $adgroupReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     self::MAX_CONVERSIONS

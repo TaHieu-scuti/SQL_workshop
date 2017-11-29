@@ -23,12 +23,11 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MAX_NUMBER_OF_CAMPAIGNS = 5;
     const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
-    const MIN_COST = 1;
-    const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MIN_CLICKS = 1;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_COST = 0;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 1000000;
     const MAX_CONVERSIONS = 89489437437880;
     const MIN_CONV_VALUE = 1000000;
@@ -46,13 +45,15 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
         foreach ($accountReports as $accountReport) {
             $campaignReportCost = new RepoAdwCampaignReportCost;
             $campaignReportCost->avgPosition = $accountReport->avgPosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+                self::MIN_AVERAGE_POSITION * 100000,
+                self::MAX_AVERAGE_POSITION * 100000
+            ) / 100000;
+
             $campaignReportCost->conversions = mt_rand(
                 self::MIN_CONVERSIONS,
                 self::MAX_CONVERSIONS
             ) / mt_getrandmax();
+
             $campaignReportCost->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST
@@ -82,8 +83,19 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->campaignID = $accountReport->campaign_id;
             $campaignReportCost->campaign = 'ADW Campaign Name ' . $accountReport->campaign_id;
             $campaignReportCost->account = $accountReport->account;
-            $campaignReportCost->avgCPC = $campaignReportCost->cost / $campaignReportCost->clicks;
-            $campaignReportCost->ctr = ($accountReport->clicks / $accountReport->impressions) * 100;
+
+            if ($campaignReportCost->clicks === 0) {
+                $campaignReportCost->avgCPC = 0;
+            } else {
+                $campaignReportCost->avgCPC = $campaignReportCost->cost / $campaignReportCost->clicks;
+            }
+
+            if ($accountReport->impressions === 0) {
+                $campaignReportCost->ctr = 0;
+            } else {
+                $campaignReportCost->ctr = ($accountReport->clicks / $accountReport->impressions) * 100;
+            }
+
             $campaignReportCost->day = $accountReport->day;
             $campaignReportCost->dayOfWeek = $accountReport->dayOfWeek;
             $campaignReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];

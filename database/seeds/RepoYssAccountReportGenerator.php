@@ -27,13 +27,12 @@ class RepoYssAccountReportGenerator extends Seeder
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
     const MIN_CTR = 1000000;
     const MAX_CTR = 7344032456345;
     const MIN_AVERAGE_CPC = 1000000;
     const MAX_AVERAGE_CPC = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_INVALID_CLICKS = 0;
     const MAX_INVALID_CLICKS = 89489;
     const MIN_INVALID_CLICK_RATE = 1000000;
@@ -126,17 +125,26 @@ class RepoYssAccountReportGenerator extends Seeder
         );
         $report->clicks = mt_rand(
             self::MIN_CLICKS,
-            self::MAX_CLICKS
+            $report->impressions
         );
-        $report->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
-        $report->averageCpc = mt_rand(
-            self::MIN_AVERAGE_CPC,
-            self::MAX_AVERAGE_CPC
-        ) / mt_getrandmax();
+
+        if ($report->impressions === 0) {
+            $report->ctr = 0;
+        } else {
+            $report->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
+        }
+
+        if ($report->clicks === 0) {
+            $report->averageCpc = 0;
+        } else {
+            $report->averageCpc = $report->cost / $report->clicks;
+        }
+
         $report->averagePosition = mt_rand(
-            self::MIN_AVERAGE_POSITION,
-            self::MAX_AVERAGE_POSITION
-        ) / mt_getrandmax();
+            self::MIN_AVERAGE_POSITION * 100000,
+            self::MAX_AVERAGE_POSITION * 100000
+        ) / 100000;
+
         $report->invalidClicks = mt_rand(
             self::MIN_INVALID_CLICKS,
             self::MAX_INVALID_CLICKS

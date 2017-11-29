@@ -10,12 +10,12 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MIN_NUMBER_OF_KEYWORD = 1;
     const MAX_NUMBER_OF_KEYWORD = 2;
     const KEYWORD = 'Keyword ';
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MIN_CLICKS = 1;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 894894374;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_CONV_RATE = 100;
     const MAX_CONV_RATE = 89489437;
     const MIN_CONVERSIONS = 1000000;
@@ -77,12 +77,24 @@ class RepoAdwKeywordReportGenerator extends Seeder
                     self::MIN_CLICKS,
                     $keywordReportCost->impressions
                 );
-                $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
-                $keywordReportCost->avgCPC = $keywordReportCost->cost / $keywordReportCost->clicks;
+
+                if ($keywordReportCost->impressions === 0) {
+                    $keywordReportCost->ctr = 0;
+                } else {
+                    $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
+                }
+
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->avgCPC = 0;
+                } else {
+                    $keywordReportCost->avgCPC = $keywordReportCost->cost / $keywordReportCost->clicks;
+                }
+
                 $keywordReportCost->avgPosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $keywordReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     self::MAX_CONVERSIONS

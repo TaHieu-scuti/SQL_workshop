@@ -17,8 +17,8 @@ class RepoYssPrefectureReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 10000;
     const MAX_CONV_RATE = 20374;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 2037400000;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 10000;
     const MAX_CONVERSIONS = 20374;
     const MIN_CONV_VALUE = 10000;
@@ -163,9 +163,10 @@ class RepoYssPrefectureReportGenerator extends Seeder
                 }
 
                 $prefecture->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $prefecture->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     self::MAX_CONVERSIONS

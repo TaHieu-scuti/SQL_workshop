@@ -17,8 +17,8 @@ class RepoYssAdReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 1000;
     const MAX_CONV_RATE = 1437437880;
-    const MIN_AVERAGE_POSITION = 1000;
-    const MAX_AVERAGE_POSITION = 1437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const TRACKING_URL = 'http://we.track.people/';
     const DISPLAY_URL = 'http://we.track.displayURL/';
     const DESTINATION_URL = 'http://we.track.destinationURL/';
@@ -139,9 +139,9 @@ class RepoYssAdReportGenerator extends Seeder
 
                 $adReportConv->landingPageURL = self::LOADING_PAGE_URL;
                 $adReportCost->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
 
                 $adReportConv->landingPageURLSmartphone = self::LOADING_PAGE_URL_SMART_PHONE;
                 $adReportCost->description2 = $adReportConv->description2;

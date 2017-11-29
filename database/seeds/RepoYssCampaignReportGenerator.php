@@ -17,8 +17,8 @@ class RepoYssCampaignReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_CONV_RATE = 1000000;
     const MAX_CONV_RATE = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_IMPRESSION_SHARE = 1000000;
     const MAX_IMPRESSION_SHARE = 89489437437880;
     const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
@@ -128,10 +128,12 @@ class RepoYssCampaignReportGenerator extends Seeder
             } else {
                 $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
             }
+
             $campaignReportCost->averagePosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+                self::MIN_AVERAGE_POSITION * 100000,
+                self::MAX_AVERAGE_POSITION * 100000
+            ) / 100000;
+
             $campaignReportCost->impressionShare = mt_rand(
                 self::MIN_IMPRESSION_SHARE,
                 self::MAX_IMPRESSION_SHARE
