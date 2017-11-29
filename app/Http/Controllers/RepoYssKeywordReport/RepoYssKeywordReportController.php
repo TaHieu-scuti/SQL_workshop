@@ -66,6 +66,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         ResponseFactory $responseFactory,
         RepoYssKeywordReportCost $model
     ) {
+        $this->middleware('engine');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }

@@ -67,6 +67,7 @@ class RepoYssAdReportController extends AbstractReportController
         ResponseFactory $responseFactory,
         RepoYssAdReportCost $model
     ) {
+        $this->middleware('engine');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
