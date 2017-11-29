@@ -110,7 +110,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
             $this->writeLine($fieldNames);
         } else {
             foreach ($this->aliases as $key => $alias) {
-                $this->aliases[$key] = mb_convert_encoding($alias,"Shift-JIS","UTF-8");
+                $this->aliases[$key] = mb_convert_encoding($alias, "Shift-JIS", "UTF-8");
             }
             $this->writeLine($this->aliases);
         }
