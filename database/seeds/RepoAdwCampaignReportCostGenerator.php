@@ -24,6 +24,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
     const MIN_COST = 0;
+    const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
