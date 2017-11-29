@@ -179,9 +179,17 @@ class RepoYssKeywordReportGenerator extends Seeder
                     $keywordReportCost->impressions
                 );
 
-                $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
+                if ($keywordReportCost->impressions === 0) {
+                    $keywordReportCost->ctr = 0;
+                } else {
+                    $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
+                }
 
-                $keywordReportCost->averageCpc = $keywordReportCost->cost / $keywordReportCost->clicks;
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->averageCpc = 0;
+                } else {
+                    $keywordReportCost->averageCpc = $keywordReportCost->cost / $keywordReportCost->clicks;
+                }
 
                 $keywordReportCost->averagePosition = mt_rand(
                     self::MIN_AVERAGE_POSITION,
