@@ -88,7 +88,11 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::GROUPED_BY_FIELD
+            || session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::ADW_GROUPED_BY_FIELD
+        ) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }

@@ -49,7 +49,7 @@
                             <span id="username" class="username" value="{{ Auth::user()->username }}">
                                 {{Auth::user()->username}}
                             </span>
-                            <b class="caret"></b> 
+                            <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
@@ -298,7 +298,7 @@
                                             <p>Results per page</p>
                                             <div class="form-group">
                                                 <input type="radio" name="resultPerPage" value="20" {{(int)$keyPagination === 20 ? 'checked' : ''}} > 20<br>
-                                            </div> 
+                                            </div>
 
                                             <div class="form-group">
                                                 <input type="radio" name="resultPerPage" value="50" {{(int)$keyPagination === 50 ? 'checked' : ''}}> 50<br>
