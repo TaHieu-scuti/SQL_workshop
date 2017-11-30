@@ -147,7 +147,7 @@ class RepoYssAdReportGenerator extends Seeder
 
                 $adReportConv->conversions =  mt_rand(
                     self::MIN_CONVERSIONS,
-                        $adReportConv->clicks
+                    $adReportConv->clicks
                 );
 
                 $adReportCost->trackingURL = $adReportConv->trackingURL;
