@@ -25,7 +25,7 @@ return [
     'Columns' => 'Columns',
     'CSV' => 'CSV',
     'Excel' => 'Excel',
-    'Search_query_to_CSV' => 'Search query tos CSV',
+    'Search_query_to_CSV' => 'Search query to CSV',
     'Search_query_to_Excel' => 'Search query to Excel',
     'Total_all_networks' => 'Total - all networks',
     'clicks' => 'clicks',

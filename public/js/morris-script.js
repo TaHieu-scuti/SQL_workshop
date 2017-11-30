@@ -165,7 +165,6 @@ var Script = function () {
 
         $('ul .dropdown-menu').on('click', function() {
             let columnName = $('#selectpickerGraph').find("option:selected").data('column');
-            console.log($('ul .inner').attr('aria-expanded'));
             if($('ul .inner').attr('aria-expanded') === "true"){
                 $('a[data-tokens = "' + columnName + '"]').parent().addClass('active');
                 $('a[data-tokens = "' + columnName + '"]').parent().addClass('selected');
