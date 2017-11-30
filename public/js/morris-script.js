@@ -10,8 +10,6 @@ var Script = function () {
             var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
             var columnName = $(this).data('name');
-            $('#selectpickerGraph').find("option:selected").attr('selected', false);
-            $('#selectpickerGraph option[data-column="'+ columnName +'"]').attr('selected');
             updateMorris(columnName);
             //remove and add blue dot in summary boxes
             if (!$(this).hasClass('active')) {
