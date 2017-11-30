@@ -86,6 +86,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
+        // update group by field's session based on engine's session
+        // on changing account
+        // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
+        // normal report type
         if (session()->has('oldEngine') && session('oldEngine') !== $engine) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
