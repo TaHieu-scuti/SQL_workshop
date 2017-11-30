@@ -18,11 +18,6 @@
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body normal-report">
-            @if (session('engine') === 'adw')
-                <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-            @else
-                <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-            @endif
             <a href="javascript:void(0)">
                 @lang('language.campaign')
             </a>
