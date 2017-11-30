@@ -32,6 +32,9 @@
                         @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
                             @continue
                         @endif
+                        @if($fieldName === 'accountName')
+                            <th></th>
+                        @endif
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
@@ -58,12 +61,15 @@
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID")
                         @continue
                     @endif
-                    @if ($fieldName === 'accountName')
-                        <td> @if ($report['engine'] === 'adw') <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" > @else <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" > @endif<a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a></td>
+                    @if($fieldName === 'accountName')
+                        <td>@if ($report['engine'] === 'adw') <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" > @else <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" > @endif</td>
+                    @endif
+                    @if($fieldName === 'accountName')
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'campaignName')
-                        <td>@if ($report['engine'] === 'adw') <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" > @else <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" > @endif <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a></td>
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a></td>
                     @elseif ($fieldName === 'adgroupName')
-                        <td>@if ($report['engine'] === 'adw') <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" > @else <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" > @endif <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a></td>
+                        <td><a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a></td>
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif (is_float($report[$fieldName]))
@@ -75,6 +81,9 @@
             </tr>
             @endforeach
             <tr>
+                @if (in_array('accountName', $fieldNames))
+                    <td></td>
+                @endif
                 <td>@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField
