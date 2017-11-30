@@ -12,21 +12,12 @@ class RepoYssPrefectureReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_BIDADJUSTMENT = 1;
     const MAX_BIDADJUSTMENT = 1000;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 2037400000;
-    const MIN_CONV_RATE = 10000;
-    const MAX_CONV_RATE = 20374;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 2037400000;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 2037400000;
-    const MIN_CONVERSIONS = 10000;
-    const MAX_CONVERSIONS = 20374;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 10000;
     const MAX_CONV_VALUE = 20374;
     const MIN_COST_PER_CONV = 10000;
@@ -149,32 +140,41 @@ class RepoYssPrefectureReportGenerator extends Seeder
                 );
                 $prefecture->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
                 $prefecture->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $prefecture->impressions
                 );
-                $prefecture->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
-                $prefecture->averageCpc = mt_rand(
-                    self::MIN_AVERAGE_CPC,
-                    self::MAX_AVERAGE_CPC
-                ) / mt_getrandmax();
+
+                if ($prefecture->impressions === 0) {
+                    $prefecture->ctr = 0;
+                } else {
+                    $prefecture->ctr = ($prefecture->clicks / $prefecture->impressions) * 100;
+                }
+
+                if ($prefecture->clicks === 0) {
+                    $prefecture->averageCpc = 0;
+                } else {
+                    $prefecture->averageCpc = $prefecture->cost / $prefecture->clicks;
+                }
+
                 $prefecture->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $prefecture->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $prefecture->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $prefecture->clicks
+                );
+
+                if ($prefecture->clicks === 0) {
+                    $prefecture->convRate = 0;
+                } else {
+                    $prefecture->convRate = ($prefecture->conversions / $prefecture->clicks) * 100;
+                }
+
                 $prefecture->convValue = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

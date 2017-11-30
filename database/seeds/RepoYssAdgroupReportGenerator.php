@@ -20,17 +20,9 @@ class RepoYssAdgroupReportGenerator extends Seeder
     const MIN_ADGROUP_BID = 1;
     const MAX_ADGROUP_BID = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_IMPRESSION_SHARE = 1000000;
     const MAX_IMPRESSION_SHARE = 89489437437880;
     const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
@@ -41,8 +33,7 @@ class RepoYssAdgroupReportGenerator extends Seeder
     const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
     const TRACKING_URL = 'http://we.track.people/';
     const CUSTOM_PARAMETERS = 'Custom Parameters';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -126,24 +117,30 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 );
                 $adgroupReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $campaignReport->impressions
                 );
                 $adgroupReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $adgroupReportCost->impressions
                 );
-                $adgroupReportCost->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
-                $adgroupReportCost->averageCpc = mt_rand(
-                    self::MIN_AVERAGE_CPC,
-                    self::MAX_AVERAGE_CPC
-                ) / mt_getrandmax();
+
+                if ($adgroupReportCost->impressions === 0) {
+                    $adgroupReportCost->ctr = 0;
+                } else {
+                    $adgroupReportCost->ctr = ($adgroupReportCost->clicks / $adgroupReportCost->impressions) * 100;
+                }
+
+                if ($adgroupReportCost->clicks === 0) {
+                    $adgroupReportCost->averageCpc = 0;
+                } else {
+                    $adgroupReportCost->averageCpc = $adgroupReportCost->cost / $adgroupReportCost->clicks;
+                }
+
                 $adgroupReportCost->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $adgroupReportCost->impressionShare = mt_rand(
                     self::MIN_IMPRESSION_SHARE,
                     self::MAX_IMPRESSION_SHARE
@@ -159,15 +156,20 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->trackingURL = self::TRACKING_URL;
                 $adgroupReportConv->trackingURL = self::TRACKING_URL;
                 $adgroupReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
+
                 $adgroupReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
+                    $adgroupReportCost->clicks
+                );
+
                 $adgroupReportConv->conversions = $adgroupReportCost->conversions;
-                $adgroupReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+
+                if ($adgroupReportCost->clicks === 0) {
+                    $adgroupReportCost->convRate = 0;
+                } else {
+                    $adgroupReportCost->convRate = ($adgroupReportCost->conversions / $adgroupReportCost->clicks) * 100;
+                }
+
                 $adgroupReportCost->convValue = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

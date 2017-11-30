@@ -12,21 +12,12 @@ class DayOfWeeksGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_BIDADJUSTMENT = 1;
     const MAX_BIDADJUSTMENT = 1000;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 2032456345;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 2037437880;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 2037437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 2037437880;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 2037437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 2037437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -82,38 +73,48 @@ class DayOfWeeksGenerator extends Seeder
                 );
                 $dayOfWeek->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $campaignReport->impressions
                 );
                 $dayOfWeek->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $dayOfWeek->impressions
                 );
-                $dayOfWeek->ctr = mt_rand(
-                    self::MIN_CTR,
-                    self::MAX_CTR
-                ) / mt_getrandmax();
-                $dayOfWeek->averageCpc = mt_rand(
-                    self::MIN_AVERAGE_CPC,
-                    self::MAX_AVERAGE_CPC
-                ) / mt_getrandmax();
+
+                if ($dayOfWeek->impressions === 0) {
+                    $dayOfWeek->ctr = 0;
+                } else {
+                    $dayOfWeek->ctr = ($dayOfWeek->clicks / $dayOfWeek->impressions) * 100;
+                }
+
+                if ($dayOfWeek->clicks === 0) {
+                    $dayOfWeek->averageCpc = 0;
+                } else {
+                    $dayOfWeek->averageCpc = $dayOfWeek->cost / $dayOfWeek->clicks;
+                }
+
                 $dayOfWeek->averagePosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $dayOfWeek->bidAdjustment = mt_rand(
                     self::MIN_BIDADJUSTMENT,
                     self::MAX_BIDADJUSTMENT
                 );
                 $dayOfWeek->targetScheduleID = $i + 1;
                 $dayOfWeek->targetSchedule = self::TARGET_SCHEDULE[mt_rand(0, count(self::TARGET_SCHEDULE) - 1)];
+
                 $dayOfWeek->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $dayOfWeek->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $dayOfWeek->clicks
+                );
+
+                if ($dayOfWeek->clicks === 0) {
+                    $dayOfWeek->convRate = 0;
+                } else {
+                    $dayOfWeek->convRate = ($dayOfWeek->conversions / $dayOfWeek->clicks) * 100;
+                }
+
                 $dayOfWeek->convValue = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

@@ -24,14 +24,14 @@ class RepoYdnReportGenerator extends Seeder
     const MAX_NUMBER_OF_ADGROUP = 5;
     const MIN_NUMBER_OF_AD_REPORT = 1;
     const MAX_NUMBER_OF_AD_REPORT = 5;
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
+    const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
-    const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_CONVERSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const PREFECTURE = [
         'Hokkaido',
@@ -134,24 +134,32 @@ class RepoYdnReportGenerator extends Seeder
                 self::MAX_COST
             );
 
-            $costReport->clicks = mt_rand(
-                self::MIN_CLICKS,
-                self::MAX_CLICKS
-            );
-
-            $costReport->averageCpc = $costReport->cost / $costReport->clicks;
-
-            $costReport->averagePosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
-
             $costReport->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
                 self::MAX_IMPRESSIONS
             );
 
-            $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+            $costReport->clicks = mt_rand(
+                self::MIN_CLICKS,
+                $costReport->impressions
+            );
+
+            if ($costReport->clicks === 0) {
+                $costReport->averageCpc = 0;
+            } else {
+                $costReport->averageCpc = $costReport->cost / $costReport->clicks;
+            }
+
+            $costReport->averagePosition = mt_rand(
+                self::MIN_AVERAGE_POSITION * 100000,
+                self::MAX_AVERAGE_POSITION * 100000
+            ) / 100000;
+
+            if ($costReport->impressions === 0) {
+                $costReport->ctr = 0;
+            } else {
+                $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+            }
 
             $costReport->accountid = $account->accountId;
 
@@ -192,6 +200,17 @@ class RepoYdnReportGenerator extends Seeder
             $costReport->startDate = $day->format('Y-m-d');
 
             $costReport->endDate = $day->format('Y-m-d');
+
+            $costReport->conversions = mt_rand(
+                self::MIN_CONVERSIONS,
+                $costReport->clicks
+            );
+
+            if ($costReport->clicks === 0) {
+                $costReport->convRate = 0;
+            } else {
+                $costReport->convRate = ($costReport->conversions / $costReport->clicks) * 100;
+            }
 
             $costReport->saveOrFail();
         }

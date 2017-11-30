@@ -14,17 +14,9 @@ class RepoYssCampaignReportGenerator extends Seeder
     const MIN_COST = 1;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
-    const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_IMPRESSION_SHARE = 1000000;
     const MAX_IMPRESSION_SHARE = 89489437437880;
     const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
@@ -35,8 +27,7 @@ class RepoYssCampaignReportGenerator extends Seeder
     const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
     const TRACKING_URL = 'http://we.track.people/';
     const CUSTOM_PARAMETERS = 'Custom Parameters';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -116,21 +107,30 @@ class RepoYssCampaignReportGenerator extends Seeder
             );
             $campaignReportCost->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
-                self::MAX_IMPRESSIONS
+                $accountReport->impressions
             );
             $campaignReportCost->clicks = mt_rand(
                 self::MIN_CLICKS,
-                self::MAX_CLICKS
+                $campaignReportCost->impressions
             );
-            $campaignReportCost->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
-            $campaignReportCost->averageCpc = mt_rand(
-                self::MIN_AVERAGE_CPC,
-                self::MAX_AVERAGE_CPC
-            ) / mt_getrandmax();
+
+            if ($campaignReportCost->impressions === 0) {
+                $campaignReportCost->ctr = 0;
+            } else {
+                $campaignReportCost->ctr = ($campaignReportCost->clicks / $campaignReportCost->impressions) * 100;
+            }
+
+            if ($campaignReportCost->clicks === 0) {
+                $campaignReportCost->averageCpc = 0;
+            } else {
+                $campaignReportCost->averageCpc = $campaignReportCost->cost / $campaignReportCost->clicks;
+            }
+
             $campaignReportCost->averagePosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
+                self::MIN_AVERAGE_POSITION * 100000,
+                self::MAX_AVERAGE_POSITION * 100000
+            ) / 100000;
+
             $campaignReportCost->impressionShare = mt_rand(
                 self::MIN_IMPRESSION_SHARE,
                 self::MAX_IMPRESSION_SHARE
@@ -153,15 +153,20 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $accountReport->campaign_id;
             $campaignReportCost->campaignTrackingID = $accountReport->campaign_id;
             $campaignReportConv->campaignTrackingID = $accountReport->campaign_id;
+
             $campaignReportCost->conversions = mt_rand(
                 self::MIN_CONVERSIONS,
-                self::MAX_CONVERSIONS
-            ) / mt_getrandmax();
+                $campaignReportCost->clicks
+            );
+
             $campaignReportConv->conversions = $campaignReportCost->conversions;
-            $campaignReportCost->convRate = mt_rand(
-                self::MIN_CONV_RATE,
-                self::MAX_CONV_RATE
-            ) / mt_getrandmax();
+
+            if ($campaignReportCost->clicks === 0) {
+                $campaignReportCost->convRate = 0;
+            } else {
+                $campaignReportCost->convRate = ($campaignReportCost->conversions / $campaignReportCost->clicks) * 100;
+            }
+
             $campaignReportCost->convValue = mt_rand(
                 self::MIN_CONV_VALUE,
                 self::MAX_CONV_VALUE

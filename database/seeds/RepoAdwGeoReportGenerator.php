@@ -9,18 +9,13 @@ class RepoAdwGeoReportGenerator extends Seeder
 {
     const MIN_NUMBER_OF_PREFECTURE = 1;
     const MAX_NUMBER_OF_PREFECTURE = 2;
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 4096;
-    const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
-    const MIN_CONV_RATE = 10000;
-    const MAX_CONV_RATE = 20374;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 2037400000;
-    const MIN_CONVERSIONS = 10000;
-    const MAX_CONVERSIONS = 20374;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
+    const MIN_CONVERSIONS = 0;
     const MIN_ALL_CONV = 10000;
     const MAX_ALL_CONV = 20374;
     const MIN_ALL_CONV_VALUE = 10000;
@@ -64,26 +59,41 @@ class RepoAdwGeoReportGenerator extends Seeder
                 );
                 $geoReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
                 $geoReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $geoReportCost->impressions
                 );
-                $geoReportCost->ctr = ($geoReportCost->clicks / $geoReportCost->impressions) * 100;
-                $geoReportCost->avgCPC = $geoReportCost->cost / $geoReportCost->clicks;
+
+                if ($geoReportCost->impressions === 0) {
+                    $geoReportCost->ctr = 0;
+                } else {
+                    $geoReportCost->ctr = ($geoReportCost->clicks / $geoReportCost->impressions) * 100;
+                }
+
+                if ($geoReportCost->clicks === 0) {
+                    $geoReportCost->avgCPC = 0;
+                } else {
+                    $geoReportCost->avgCPC = $geoReportCost->cost / $geoReportCost->clicks;
+                }
+
                 $geoReportCost->avgPosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $geoReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $geoReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $geoReportCost->clicks
+                );
+
+                if ($geoReportCost->clicks === 0) {
+                    $geoReportCost->convRate = 0;
+                } else {
+                    $geoReportCost->convRate = ($geoReportCost->conversions / $geoReportCost->clicks) * 100;
+                }
+
                 $geoReportCost->allConv = mt_rand(
                     self::MIN_ALL_CONV,
                     self::MAX_ALL_CONV
