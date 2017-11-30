@@ -46,11 +46,7 @@
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>
-                    @if (ctype_digit($summaryReport['cost']))
-                        <td>{{ number_format($summaryReport['cost'], 0, '', ',') }}</td>
-                    @else
-                        <td>{{ $summaryReport['cost'] }}</td>
-                    @endif
+                    <td>{{ number_format($summaryReport['cost'], 0, '', ',') }}</td>
                     <br>
                 </span>
             </div>
