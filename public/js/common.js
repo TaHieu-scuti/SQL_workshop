@@ -67,6 +67,7 @@ $(window).on('hashchange', function() {
 });
 
 function sendingRequestTable() {
+    $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
     setTimeout(function() {
         $('.loading-gif-on-table').show();
