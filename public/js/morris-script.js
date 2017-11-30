@@ -5,6 +5,7 @@ var Script = function () {
         var lineChart;
         initMorris();
         getMorris();
+       
         $('.summary_report .fields').click(function() {
             var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
@@ -17,8 +18,27 @@ var Script = function () {
                 $(this).find('.small-blue-stuff').addClass('fa fa-circle');
                 $active.find('.small-blue-stuff').removeClass('fa fa-circle');
             }
-
+            //remove and add class active,selected in dropdown select option
+            $('li.active').removeClass('active');
+            $('li.selected').removeClass('selected');
+            if(!$('a[data-tokens = "' + columnName + '"]').parent().hasClass('active')){
+                $('a[data-tokens = "' + columnName + '"]').parent().addClass('active');
+                $('a[data-tokens = "' + columnName + '"]').parent().addClass('selected');
+            }
         });
+        /*
+        *
+        * reload  pages
+        * update blue dot in summary boxes same graph
+        */
+        $(document).ready(function(){
+            let columnName = $('#selectpickerGraph').find("option:selected").data('column');
+            updateMorris(columnName);
+            $('.summary_report .fields').removeClass('active');
+            $('.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
+            $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
+            $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
+        })
 
         $('.date-option li:not(.custom-li, .custom-date)').click(function() {
             var option = $(this).data('date');
@@ -142,6 +162,14 @@ var Script = function () {
             $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
             $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
         });
+
+        $('ul .dropdown-menu').on('click', function() {
+            let columnName = $('#selectpickerGraph').find("option:selected").data('column');
+            if($('ul .inner').attr('aria-expanded') === "true"){
+                $('a[data-tokens = "' + columnName + '"]').parent().addClass('active');
+                $('a[data-tokens = "' + columnName + '"]').parent().addClass('selected');
+            }
+        });
         // initialise graph
         function initMorris()
         {
@@ -160,7 +188,7 @@ var Script = function () {
             });
         }
 
-        $(window).on('resize', function() { 
+        $(window).on('resize', function() {
             lineChart.redraw();
         });
 
@@ -227,6 +255,9 @@ var Script = function () {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
                     $('.summary_report fields active').removeClass('active');
+                    $('#selectpickerGraph').find("option:selected").attr('selected', false);
+                    $('#selectpickerGraph option[data-column="'+ columnName +'"]').attr('selected',true);
+                    $('button[data-id=selectpickerGraph] span.filter-option').text(columnName);
                 },
                 error : function (response) {
                     alert('Something went wrong!');

@@ -231,7 +231,7 @@ class RepoYssAccountReportController extends AbstractReportController
                             'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                             'timePeriodLayout' => $timePeriodLayout,
                             'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
             ]
         );
     }
