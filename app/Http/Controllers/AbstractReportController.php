@@ -215,6 +215,7 @@ abstract class AbstractReportController extends Controller
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
+        session(['oldEngine' => session(self::SESSION_KEY_ENGINE)]);
     }
 
     public function checkoutSessionFieldName()
@@ -349,6 +350,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
+        if (session()->has(self::SESSION_KEY_ENGINE)) {
+            session()->put(['oldEngine' => session(self::SESSION_KEY_ENGINE)]);
+        }
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
