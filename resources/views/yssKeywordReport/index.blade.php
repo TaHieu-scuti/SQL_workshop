@@ -6,11 +6,6 @@
 
 @section('filter-list')
     <ul class="panel">
-        @if (session('engine') === 'adw')
-            <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-        @else
-            <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-        @endif
         <li class="panel-body">
             <a href="{{ route('ad-report') }}">
                 @lang('language.ADS')
