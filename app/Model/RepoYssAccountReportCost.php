@@ -171,7 +171,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             }
         }
-
         return $arrayCalculate;
     }
 
