@@ -29,6 +29,9 @@ class RepoAdwGeoReportGenerator extends Seeder
     const MAX_ALL_CONV_RATE = 14374;
     const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const SMALLEST_REGION_CRITERIA_ID = 20624;
+    const LARGEST_REGION_CRITERIA_ID = 20670;
+
     /**
      * Run the database seeds.
      *
@@ -103,6 +106,8 @@ class RepoAdwGeoReportGenerator extends Seeder
                 $geoReportCost->week = $adgroupReport->week;
                 $geoReportCost->countryTerritory = rand(0, 10000);
                 $geoReportCost->city = $geoReportCost->countryTerritory;
+                $geoReportCost->region = rand(self::SMALLEST_REGION_CRITERIA_ID, self::LARGEST_REGION_CRITERIA_ID);
+
                 $geoReportCost->saveOrFail();
             }
         }

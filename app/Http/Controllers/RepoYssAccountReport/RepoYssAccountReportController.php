@@ -97,7 +97,6 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         $this->checkoutSessionFieldName();
-        // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
 
         if (isset($request->page)) {
@@ -232,7 +231,7 @@ class RepoYssAccountReportController extends AbstractReportController
                             'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                             'timePeriodLayout' => $timePeriodLayout,
                             'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
             ]
         );
     }
