@@ -214,10 +214,6 @@ class RepoYssAccountReportController extends AbstractReportController
         $statusLayout = view('layouts.status-title')
                         ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
                         ->render();
-        $graphItemLayout = view('layouts.graph_items')
-                        ->with(self::COLUMNS_FOR_LIVE_SEARCH, self::DEFAULT_COLUMNS)
-                        ->with(self::GRAPH_COLUMN_NAME, session(self::SESSION_KEY_GRAPH_COLUMN_NAME))
-                        ->render();
         try {
             $data = $this->getDataForGraph();
         } catch (Exception $exception) {
@@ -237,7 +233,6 @@ class RepoYssAccountReportController extends AbstractReportController
                             'timePeriodLayout' => $timePeriodLayout,
                             'statusLayout' => $statusLayout,
                             'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
-                            'graphItemLayout' => $graphItemLayout
             ]
         );
     }
