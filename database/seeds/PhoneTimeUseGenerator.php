@@ -24,7 +24,7 @@ class PhoneTimeUseGenerator extends Seeder
         $adgroupID = null,
         $keyword = null,
         $keywordMatchType = null
-    ){
+    ) {
         $phoneTimeUse = new PhoneTimeUse;
         $phoneTimeUse->unique_call_id = uniqid();
 
