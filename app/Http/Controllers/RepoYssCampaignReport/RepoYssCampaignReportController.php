@@ -50,6 +50,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
+    const OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -88,7 +89,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        if (session()->has('oldEngine') && session('oldEngine') !== $engine) {
+        if (session()->has(self::OLD_ENGINE) && session(self::OLD_ENGINE) !== $engine) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {

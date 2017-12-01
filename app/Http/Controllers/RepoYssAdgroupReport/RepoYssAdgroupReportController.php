@@ -49,6 +49,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'adGroup';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
+    const OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -90,7 +91,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         // on changing account
         // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
         // normal report type
-        if (session()->has('oldEngine') && session('oldEngine') !== $engine) {
+        if (session()->has(self::OLD_ENGINE) && session(self::OLD_ENGINE) !== $engine) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
