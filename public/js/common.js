@@ -417,7 +417,7 @@ $(document).ready(function(){
     }
     if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
         if (pageInformation.title == 'Client') {
-            $('.site-information-guess-annotation').append('クライエント');
+            $('.site-information-guess-annotation').append('クライアント');
         }
         else if(pageInformation.title == 'Account'){
             $('.site-information-guess-annotation').append('アカウント名');
