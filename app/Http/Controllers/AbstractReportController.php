@@ -352,7 +352,7 @@ abstract class AbstractReportController extends Controller
     public function updateSessionEngine($engine)
     {
         if (session()->has(self::SESSION_KEY_ENGINE)) {
-            session()->put([self::OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
