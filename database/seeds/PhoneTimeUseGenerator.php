@@ -50,25 +50,8 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->caller_city = '';
         $phoneTimeUse->caller_zip = '';
 
-        if ($keyword !== null) {
-            $phoneTimeUse->keyword = $keyword;
-            $phoneTimeUse->ch_keyword = $keyword;
-            $phoneTimeUse->j_keyword = $keyword;
-            $phoneTimeUse->k_keyword = $keyword;
-            $phoneTimeUse->typed_keyword = $keyword;
-        } else {
-            $phoneTimeUse->keyword = '';
-            $phoneTimeUse->ch_keyword = '';
-            $phoneTimeUse->j_keyword = '';
-            $phoneTimeUse->k_keyword = '';
-            $phoneTimeUse->typed_keyword = '';
-        }
-
-        if ($keywordMatchType !== null) {
-            $phoneTimeUse->matchtype = $keywordMatchType;
-        } else {
-            $phoneTimeUse->matchtype = '';
-        }
+        $phoneTimeUse = $this->addKeywords($phoneTimeUse, $keyword);
+        $phoneTimeUse = $this->addKeywordMatchType($phoneTimeUse, $keywordMatchType);
 
         $phoneTimeUse->network = '';
         $phoneTimeUse->searchTerm = '';
@@ -195,6 +178,36 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->update_key = '';
 
         $phoneTimeUse->saveOrFail();
+    }
+
+    private function addKeywords(PhoneTimeUse $phoneTimeUse, $keyword)
+    {
+        if ($keyword !== null) {
+            $phoneTimeUse->keyword = $keyword;
+            $phoneTimeUse->ch_keyword = $keyword;
+            $phoneTimeUse->j_keyword = $keyword;
+            $phoneTimeUse->k_keyword = $keyword;
+            $phoneTimeUse->typed_keyword = $keyword;
+        } else {
+            $phoneTimeUse->keyword = '';
+            $phoneTimeUse->ch_keyword = '';
+            $phoneTimeUse->j_keyword = '';
+            $phoneTimeUse->k_keyword = '';
+            $phoneTimeUse->typed_keyword = '';
+        }
+
+        return $phoneTimeUse;
+    }
+
+    private function addKeywordMatchType(PhoneTimeUse $phoneTimeUse, $keywordMatchType)
+    {
+        if ($keywordMatchType !== null) {
+            $phoneTimeUse->matchtype = $keywordMatchType;
+        } else {
+            $phoneTimeUse->matchtype = '';
+        }
+
+        return $phoneTimeUse;
     }
 
     private function processYssKeywordReports()
