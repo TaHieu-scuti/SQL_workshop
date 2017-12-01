@@ -143,7 +143,6 @@ class RepoYssCampaignReportController extends AbstractReportController
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
             'layouts.table_data',

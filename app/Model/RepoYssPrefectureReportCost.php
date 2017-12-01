@@ -101,6 +101,24 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->union($yssPrefectureData)
                 ->get();
         }
+
+        return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $pagination,
+            $columnSort,
+            $sort,
+            $groupedByField,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
     }
 
     public function calculateData(
@@ -168,6 +186,21 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->union($yssPrefectureData)
                 ->first();
         }
+
+        return $this->calculateTotalWhenCurrentPageIsNotAccountReport(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
     }
 
     public function calculateSummaryData(
@@ -234,6 +267,20 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->union($yssPrefectureData)
                 ->first();
         }
+
+        return $this->calculateSummaryDataWhenCurrentPageIsNotAccountReport(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
     }
 
     private function getAggregatedForPrefectureGoogle(array $fieldNames)
@@ -267,5 +314,173 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             }
         }
         return $adwAggregations;
+    }
+
+    private function calculateTotalWhenCurrentPageIsNotAccountReport(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
+
+        $aggregations = $this->getAggregated($fieldNames);
+        $data = self::select($aggregations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            );
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->first();
+        }
+        if ($data === null) {
+            $data = [];
+        }
+
+        return $data;
+    }
+
+    private function calculateSummaryDataWhenCurrentPageIsNotAccountReport(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $arrayCalculate = $this->getAggregated($fieldNames);
+        $data = self::select($arrayCalculate)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId
+                    );
+                }
+            );
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                ->first();
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $data = $data->first();
+        }
+        if ($data === null) {
+            $data = [
+                'clicks' => 0,
+                'impressions' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
+        } else {
+            $data = $data->toArray();
+        }
+        return $data;
+    }
+
+    private function getPrefectureReportsWhenCurrentPageIsNotAccountReport(
+        $engine,
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $pagination,
+        $columnSort,
+        $sort,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $aggregations = $this->getAggregated($fieldNames);
+        $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            )
+            ->groupBy($groupedByField)
+            ->orderBy($columnSort, $sort);
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
+                ->paginate($pagination);
+        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
+            $paginatedData = $paginatedData->paginate($pagination);
+        }
+        return $paginatedData;
     }
 }
