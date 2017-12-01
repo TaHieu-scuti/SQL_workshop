@@ -134,22 +134,7 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->goal9_time = '2019-01-01';
         $phoneTimeUse->goal10_time = '2019-01-01';
 
-        $campaign = new Campaign;
-        $customFields = $campaign->select([
-            'camp_custom1',
-            'camp_custom2',
-            'camp_custom3',
-            'camp_custom4',
-            'camp_custom5',
-            'camp_custom6',
-            'camp_custom7',
-            'camp_custom8',
-            'camp_custom9',
-            'camp_custom10',
-        ])
-            ->where('campaign_id', '=', $campaign_id)
-            ->where('account_id', '=', $account_id)
-            ->firstOrFail();
+        $customFields = $this->getCustomFields($campaign_id, $account_id);
 
         if ($adgroupID !== null) {
             for ($i = 1; $i < 11; $i++) {
@@ -178,6 +163,26 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->update_key = '';
 
         $phoneTimeUse->saveOrFail();
+    }
+
+    private function getCustomFields($campaign_id, $account_id)
+    {
+        $campaign = new Campaign;
+        return $campaign->select([
+            'camp_custom1',
+            'camp_custom2',
+            'camp_custom3',
+            'camp_custom4',
+            'camp_custom5',
+            'camp_custom6',
+            'camp_custom7',
+            'camp_custom8',
+            'camp_custom9',
+            'camp_custom10',
+        ])
+            ->where('campaign_id', '=', $campaign_id)
+            ->where('account_id', '=', $account_id)
+            ->firstOrFail();
     }
 
     private function addKeywords(PhoneTimeUse $phoneTimeUse, $keyword)
