@@ -173,8 +173,7 @@ var Script = function () {
         $('.normal-report').click(function () {
             $('.specific-filter-item').removeClass('active');
             $('.panel .normal-report').addClass('active');
-            $('.panel .grayed-out').removeClass('active');
-        })
+        });
 
         // initialise graph
         function initMorris()

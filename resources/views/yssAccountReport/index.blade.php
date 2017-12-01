@@ -6,8 +6,10 @@
 
 @section('filter-list')
     <ul class="panel">
-        <li class="panel-body grayed-out normal-report">
-            @lang('language.engineAccount')
+        <li class="panel-body normal-report">
+            <a href="javascript:void(0)">
+                @lang('language.engineAccount')
+            </a>
         </li>
         <li class="panel-body grayed-out">
             @lang('language.campaign')
