@@ -101,6 +101,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        //add more columns higher layer to fieldnames
         $tableColumns = [];
         $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
         if (!empty($dataReports[0]->campaignName)) {
