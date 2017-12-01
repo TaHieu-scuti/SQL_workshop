@@ -18,16 +18,18 @@ class RepoYssKeywordReportCost extends AbstractReportModel
     const ALL_HIGHER_LAYERS =
     [
         [
-            'name' => 'campaignName',
-            'table' => 'repo_yss_campaign_report_cost',
-            'id' => 'campaignID',
-            'alias' => 'campaignID'
+            'columnName' => 'campaignName',
+            'tableJoin' => 'repo_yss_campaign_report_cost',
+            'columnId' => 'campaignID',
+            'aliasId' => 'campaignID',
+            'aliasName' => 'campaignName'
         ],
         [
-            'name' => 'adgroupName',
-            'table' => 'repo_yss_adgroup_report_cost',
-            'id' => 'adgroupID',
-            'alias' => 'adgroupID'
+            'columnName' => 'adgroupName',
+            'tableJoin' => 'repo_yss_adgroup_report_cost',
+            'columnId' => 'adgroupID',
+            'aliasId' => 'adgroupID',
+            'aliasName' => 'adgroupName',
         ]
     ];
     /**

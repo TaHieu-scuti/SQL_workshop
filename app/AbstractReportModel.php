@@ -114,16 +114,24 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME
-                || $fieldName === self::DEVICE
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+                if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
+                    $arrayCalculate[] = static::PAGE_ID;
+                    $this->groupBy[] = static::PAGE_ID;
+                }
+                $arrayCalculate[] = $fieldName;
+                if (!empty($higherLayerSelections)) {
+                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+                }
+                continue;
+            }
+
+            if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
             ) {
                 $arrayCalculate[] = $fieldName;
-                if ($fieldName === static::GROUPED_BY_FIELD_NAME && !empty($higherLayerSelections)) {
-                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
-                }
                 continue;
             }
 
@@ -412,11 +420,9 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $higherLayerSelections = $this->higherLayerSelections($accountId, $campaignId, $adGroupId);
+        $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         array_push($this->groupBy, $groupedByField);
-        // dd($this->groupBy);
-        DB::connection()->enableQueryLog();
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -450,8 +456,6 @@ abstract class AbstractReportModel extends Model
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $paginatedData = $paginatedData->paginate($pagination);
         }
-        // dd(DB::getQueryLog());
-        // dd($paginatedData);
         return $paginatedData;
     }
 
@@ -626,29 +630,33 @@ abstract class AbstractReportModel extends Model
         return $column;
     }
 
-    public function higherLayerSelections (
-        $accountId = null,
+    public function higherLayerSelections(
         $campaignId = null,
         $adGroupId = null
     ) {
         $table = $this->getTable();
         $arrayAlias = [];
         $arraySelections = [];
-        if (!empty($accountId)) array_push($arrayAlias, 'accountID');
-        if (!empty($campaignId)) array_push($arrayAlias, 'campaignID');
-        if (!empty($adGroupId)) array_push($arrayAlias, 'adgroupID');
+
+        if (!empty($campaignId)) {
+            array_push($arrayAlias, 'campaignID');
+        }
+        if (!empty($adGroupId)) {
+            array_push($arrayAlias, 'adgroupID');
+        }
 
         $all_higher_layers = static::ALL_HIGHER_LAYERS;
         foreach ($all_higher_layers as $key => $value) {
-            if (in_array($value['alias'], $arrayAlias)) {
+            if (in_array($value['aliasId'], $arrayAlias)) {
                 unset($all_higher_layers[$key]);
             }
         }
 
         foreach ($all_higher_layers as $key => $value) {
-            $query = DB::raw('(SELECT ' . $value['name'] .' FROM '. $value['table'] . ' WHERE '. $table .'.'.$value['id'].' = '.$value['table'].'.'.$value['id'].' LIMIT 1) AS '.$value['name']);
-            array_push($arraySelections, $query);
-            array_push($this->groupBy, $value['id']);
+            $querySelectId = $value['columnId'];
+            $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin'] . ' WHERE '. $table .'.'.$value['columnId'].' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
+            array_push($arraySelections, $querySelectId, $querySelectName);
+            array_push($this->groupBy, $value['columnId']);
         }
         return $arraySelections;
     }
