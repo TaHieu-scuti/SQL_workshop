@@ -393,6 +393,5 @@
     <script src="/js/common-function.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/morris-script.js"></script>
-    <script src="/js/navigationActiveScroll.js"></script>
 </body>
 </html>
