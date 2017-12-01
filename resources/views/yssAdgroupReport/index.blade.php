@@ -11,16 +11,30 @@
                 @lang('language.AD_GROUPS')
             </a>
         </li>
-        <li class="panel-body">
-            <a href="{{ route('keyword-report') }}">
+        {{--YDN has no keywords report--}}
+        @if(session('engine') !== null && session('engine') === 'ydn')
+            <li class="panel-body grayed-out">
                 @lang('language.keywords')
-            </a>
-        </li>
-        <li class="panel-body">
-            <a href="{{ route('ad-report') }}">
+            </li>
+        @else
+            <li class="panel-body">
+                <a href="{{ route('keyword-report') }}">
+                    @lang('language.keywords')
+                </a>
+            </li>
+        @endif
+        {{--YSS has no ads report--}}
+        @if(session('engine') !== null && session('engine') === 'yss')
+            <li class="panel-body grayed-out">
                 @lang('language.ADS')
-            </a>
-        </li>
+            </li>
+        @else
+            <li class="panel-body">
+                <a href="{{ route('ad-report') }}">
+                    @lang('language.ADS')
+                </a>
+            </li>
+        @endif
         <li class="panel-body separator">
         </li>
         <li class="panel-body specific-filter-item" data-value="prefecture">
