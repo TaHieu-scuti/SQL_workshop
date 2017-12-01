@@ -261,7 +261,7 @@
                     @include('layouts.summary_report')
                 </div>
 
-                <div class="row csv-file">
+                <div class="row csv-file" id="active-scroll">
                     <div class="col-md-1 col-xs-6 icon dropdown">
                         <div class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <div class="glyphicon glyphicon-download-alt"></div>

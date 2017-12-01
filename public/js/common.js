@@ -315,6 +315,9 @@ $('.specific-filter-item').click(function() {
             'specificItem' : $(this).data('value'),
         },
         beforeSend : function () {
+            $('html, body').animate({
+                scrollTop: $('#active-scroll').offset().top
+            }, 1000)
             sendingRequestTable();
         },
         success : function (response) {
