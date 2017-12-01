@@ -10,18 +10,13 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MIN_NUMBER_OF_KEYWORD = 1;
     const MAX_NUMBER_OF_KEYWORD = 2;
     const KEYWORD = 'Keyword ';
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 1004;
-    const MIN_CLICKS = 1;
-    const MAX_CLICKS = 1004;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 894894374;
-    const MIN_CONV_RATE = 100;
-    const MAX_CONV_RATE = 89489437;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 894894374;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 894894374;
     const MIN_ALL_CONV_RATE = 100;
@@ -73,26 +68,41 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 );
                 $keywordReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
                 $keywordReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $keywordReportCost->impressions
                 );
-                $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
-                $keywordReportCost->avgCPC = $keywordReportCost->const / $keywordReportCost->clicks;
+
+                if ($keywordReportCost->impressions === 0) {
+                    $keywordReportCost->ctr = 0;
+                } else {
+                    $keywordReportCost->ctr = ($keywordReportCost->clicks / $keywordReportCost->impressions) * 100;
+                }
+
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->avgCPC = 0;
+                } else {
+                    $keywordReportCost->avgCPC = $keywordReportCost->cost / $keywordReportCost->clicks;
+                }
+
                 $keywordReportCost->avgPosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $keywordReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $keywordReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $keywordReportCost->clicks
+                );
+
+                if ($keywordReportCost->clicks === 0) {
+                    $keywordReportCost->convRate = 0;
+                } else {
+                    $keywordReportCost->convRate = ($keywordReportCost->conversions / $keywordReportCost->clicks) * 100;
+                }
+
                 $keywordReportCost->valueConv = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

@@ -24,15 +24,64 @@ class RepoYdnReportGenerator extends Seeder
     const MAX_NUMBER_OF_ADGROUP = 5;
     const MIN_NUMBER_OF_AD_REPORT = 1;
     const MAX_NUMBER_OF_AD_REPORT = 5;
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
+    const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
-    const MIN_CLICKS = 1;
-    const MAX_CLICKS = 9001;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_CONVERSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const PREFECTURE = [
+        'Hokkaido',
+        'Aomori',
+        'Iwate',
+        'Miyagi',
+        'Akita',
+        'Yamagata',
+        'Fukushima',
+        'Ibaraki',
+        'Tochigi',
+        'Gunma',
+        'Saitama',
+        'Chiba',
+        'Tokyo',
+        'Kanagawa',
+        'Niigata',
+        'Toyama',
+        'Ishikawa',
+        'Fukui',
+        'Yamanashi',
+        'Nagano',
+        'Gifu',
+        'Shizuoka',
+        'Aichi',
+        'Mie',
+        'Shiga',
+        'Kyoto',
+        'Osaka',
+        'Hyogo',
+        'Nara',
+        'Wakayama',
+        'Tottori',
+        'Shimane',
+        'Okayama',
+        'Hiroshima',
+        'Yamaguchi',
+        'Tokushima',
+        'Kagawa',
+        'Ehime',
+        'Kochi',
+        'Fukuoka',
+        'Saga',
+        'Nagasaki',
+        'Kumamoto',
+        'Oita',
+        'Miyazaki',
+        'Kagoshima',
+        'Okinawa'
+    ];
 
     private function processDay(DateTime $day)
     {
@@ -85,24 +134,32 @@ class RepoYdnReportGenerator extends Seeder
                 self::MAX_COST
             );
 
-            $costReport->clicks = mt_rand(
-                self::MIN_CLICKS,
-                self::MAX_CLICKS
-            );
-
-            $costReport->averageCpc = $costReport->cost / $costReport->clicks;
-
-            $costReport->averagePosition = mt_rand(
-                self::MIN_AVERAGE_POSITION,
-                self::MAX_AVERAGE_POSITION
-            ) / mt_getrandmax();
-
             $costReport->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
                 self::MAX_IMPRESSIONS
             );
 
-            $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+            $costReport->clicks = mt_rand(
+                self::MIN_CLICKS,
+                $costReport->impressions
+            );
+
+            if ($costReport->clicks === 0) {
+                $costReport->averageCpc = 0;
+            } else {
+                $costReport->averageCpc = $costReport->cost / $costReport->clicks;
+            }
+
+            $costReport->averagePosition = mt_rand(
+                self::MIN_AVERAGE_POSITION * 100000,
+                self::MAX_AVERAGE_POSITION * 100000
+            ) / 100000;
+
+            if ($costReport->impressions === 0) {
+                $costReport->ctr = 0;
+            } else {
+                $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+            }
 
             $costReport->accountid = $account->accountId;
 
@@ -114,19 +171,19 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->campaignID = $campaignNumber + 1;
 
-            $costReport->campaignName = 'Campaign ' . ($campaignNumber + 1);
+            $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
 
             $costReport->adgroupID = $adGroupNumber + 1;
 
-            $costReport->adgroupName = 'AdGroup ' . ($adGroupNumber + 1);
+            $costReport->adgroupName = 'YDN AdGroup ' . ($adGroupNumber + 1);
 
             $costReport->adID = $adReportNumber + 1;
 
-            $costReport->adName = 'Ad Report ' . ($adReportNumber + 1);
+            $costReport->adName = 'YDN Ad Report ' . ($adReportNumber + 1);
 
             $costReport->prefectureID = $adReportNumber + 1;
 
-            $costReport->prefecture = 'Prefecture ' . ($adReportNumber + 1);
+            $costReport->prefecture = self::PREFECTURE[mt_rand(0, count(self::PREFECTURE) - 1)];
 
             $costReport->hourofday = rand(0, 23);
 
@@ -143,6 +200,17 @@ class RepoYdnReportGenerator extends Seeder
             $costReport->startDate = $day->format('Y-m-d');
 
             $costReport->endDate = $day->format('Y-m-d');
+
+            $costReport->conversions = mt_rand(
+                self::MIN_CONVERSIONS,
+                $costReport->clicks
+            );
+
+            if ($costReport->clicks === 0) {
+                $costReport->convRate = 0;
+            } else {
+                $costReport->convRate = ($costReport->conversions / $costReport->clicks) * 100;
+            }
 
             $costReport->saveOrFail();
         }

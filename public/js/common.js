@@ -67,6 +67,7 @@ $(window).on('hashchange', function() {
 });
 
 function sendingRequestTable() {
+    $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
     setTimeout(function() {
         $('.loading-gif-on-table').show();
@@ -314,6 +315,9 @@ $('.specific-filter-item').click(function() {
             'specificItem' : $(this).data('value'),
         },
         beforeSend : function () {
+            $('html, body').animate({
+                scrollTop: $('#active-scroll').offset().top
+            }, 1000)
             sendingRequestTable();
         },
         success : function (response) {
@@ -413,7 +417,7 @@ $(document).ready(function(){
     }
     if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
         if (pageInformation.title == 'Client') {
-            $('.site-information-guess-annotation').append('クライエント');
+            $('.site-information-guess-annotation').append('クライアント');
         }
         else if(pageInformation.title == 'Account'){
             $('.site-information-guess-annotation').append('アカウント名');

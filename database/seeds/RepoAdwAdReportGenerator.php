@@ -9,18 +9,13 @@ class RepoAdwAdReportGenerator extends Seeder
 {
     const MIN_NUMBER_OF_AD = 1;
     const MAX_NUMBER_OF_AD = 2;
-    const MIN_COST = 1;
+    const MIN_COST = 0;
     const MAX_COST = 1004;
-    const MIN_IMPRESSIONS = 1;
-    const MAX_IMPRESSIONS = 1004;
-    const MIN_CLICKS = 1;
-    const MAX_CLICKS = 1004;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 894894374;
-    const MIN_CONV_RATE = 100;
-    const MAX_CONV_RATE = 89489437;
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 894894374;
+    const MIN_IMPRESSIONS = 0;
+    const MIN_CLICKS = 0;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 894894374;
     const MIN_ALL_CONV_RATE = 100;
@@ -80,26 +75,41 @@ class RepoAdwAdReportGenerator extends Seeder
                 );
                 $adReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
-                    self::MAX_IMPRESSIONS
+                    $adgroupReport->impressions
                 );
                 $adReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
-                    self::MAX_CLICKS
+                    $adReportCost->impressions
                 );
-                $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
-                $adReportCost->avgCPC = $adReportCost->const / $adReportCost->clicks;
+
+                if ($adReportCost->impressions === 0) {
+                    $adReportCost->ctr = 0;
+                } else {
+                    $adReportCost->ctr = ($adReportCost->clicks / $adReportCost->impressions) * 100;
+                }
+
+                if ($adReportCost->clicks === 0) {
+                    $adReportCost->avgCPC = 0;
+                } else {
+                    $adReportCost->avgCPC = $adReportCost->cost / $adReportCost->clicks;
+                }
+
                 $adReportCost->avgPosition = mt_rand(
-                    self::MIN_AVERAGE_POSITION,
-                    self::MAX_AVERAGE_POSITION
-                ) / mt_getrandmax();
+                    self::MIN_AVERAGE_POSITION * 100000,
+                    self::MAX_AVERAGE_POSITION * 100000
+                ) / 100000;
+
                 $adReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
-                    self::MAX_CONVERSIONS
-                ) / mt_getrandmax();
-                $adReportCost->convRate = mt_rand(
-                    self::MIN_CONV_RATE,
-                    self::MAX_CONV_RATE
-                ) / mt_getrandmax();
+                    $adReportCost->clicks
+                );
+
+                if ($adReportCost->clicks === 0) {
+                    $adReportCost->convRate = 0;
+                } else {
+                    $adReportCost->convRate = ($adReportCost->conversions / $adReportCost->clicks) * 100;
+                }
+
                 $adReportCost->valueConv = mt_rand(
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE

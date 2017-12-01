@@ -28,13 +28,8 @@ class RepoYssAccountReportCoGenerator extends Seeder
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
     const MIN_CLICKS = 0;
-    const MAX_CLICKS = 9001;
-    const MIN_CTR = 1000000;
-    const MAX_CTR = 7344032456345;
-    const MIN_AVERAGE_CPC = 1000000;
-    const MAX_AVERAGE_CPC = 89489437437880;
-    const MIN_AVERAGE_POSITION = 1000000;
-    const MAX_AVERAGE_POSITION = 89489437437880;
+    const MIN_AVERAGE_POSITION = 1;
+    const MAX_AVERAGE_POSITION = 20;
     const MIN_IMPRESSION_SHARE = 1000000;
     const MAX_IMPRESSION_SHARE = 89489437437880;
     const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
@@ -44,10 +39,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
     const MIN_QUALITY_LOST_IMPRESSION_SHARE = 1000000;
     const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
     const TRACKING_URL = 'http://we.track.people/';
-    const MIN_CONVERSIONS = 1000000;
-    const MAX_CONVERSIONS = 89489437437880;
-    const MIN_CONV_RATE = 1000000;
-    const MAX_CONV_RATE = 89489437437880;
+    const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
     const MIN_COST_PER_CONV = 1000000;
@@ -133,20 +125,25 @@ class RepoYssAccountReportCoGenerator extends Seeder
 
         $costReport->clicks = mt_rand(
             self::MIN_CLICKS,
-            self::MAX_CLICKS
+            $costReport->impressions
         );
 
-        $costReport->ctr = mt_rand(self::MIN_CTR, self::MAX_CTR) / mt_getrandmax();
+        if ($costReport->impressions === 0) {
+            $costReport->ctr = 0;
+        } else {
+            $costReport->ctr = ($costReport->clicks / $costReport->impressions) * 100;
+        }
 
-        $costReport->averageCpc = mt_rand(
-            self::MIN_AVERAGE_CPC,
-            self::MAX_AVERAGE_CPC
-        ) / mt_getrandmax();
+        if ($costReport->clicks === 0) {
+            $costReport->averageCpc = 0;
+        } else {
+            $costReport->averageCpc = $costReport->cost / $costReport->clicks;
+        }
 
         $costReport->averagePosition = mt_rand(
-            self::MIN_AVERAGE_POSITION,
-            self::MAX_AVERAGE_POSITION
-        ) / mt_getrandmax();
+            self::MIN_AVERAGE_POSITION * 100000,
+            self::MAX_AVERAGE_POSITION * 100000
+        ) / 100000;
 
         $costReport->impressionShare = mt_rand(
             self::MIN_IMPRESSION_SHARE,
@@ -173,14 +170,16 @@ class RepoYssAccountReportCoGenerator extends Seeder
 
         $costReport->conversions = mt_rand(
             self::MIN_CONVERSIONS,
-            self::MAX_CONVERSIONS
-        ) / mt_getrandmax();
+            $costReport->clicks
+        );
+
         $convReport->conversions = $costReport->conversions;
 
-        $costReport->convRate = mt_rand(
-            self::MIN_CONV_RATE,
-            self::MAX_CONV_RATE
-        ) / mt_getrandmax();
+        if ($costReport->clicks === 0) {
+            $costReport->convRate = 0;
+        } else {
+            $costReport->convRate = ($costReport->conversions / $costReport->clicks) * 100;
+        }
 
         $costReport->convValue = mt_rand(
             self::MIN_CONV_VALUE,
@@ -247,6 +246,8 @@ class RepoYssAccountReportCoGenerator extends Seeder
 
         $costReport->endDate = $day->format('Y-m-d');
         $convReport->endDate = $costReport->endDate;
+
+        $costReport->hourofday = rand(0, 23);
 
         $costReport->saveOrFail();
         $convReport->saveOrFail();

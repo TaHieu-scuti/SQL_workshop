@@ -31,6 +31,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ACCOUNT_ID = "accountID";
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
+    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -160,7 +161,7 @@ abstract class AbstractReportController extends Controller
         $timePeriodTitle = "Last 90 days";
         $accountStatus = "showZero";
         $statusTitle = "Show 0";
-        $graphColumnName = "clicks";
+        $graphColumnName = "impressions";
         $summaryReport = [
             'clicks',
             'impressions',
@@ -215,6 +216,7 @@ abstract class AbstractReportController extends Controller
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
+        session([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_OLD_ENGINE)]);
     }
 
     public function checkoutSessionFieldName()
@@ -349,6 +351,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
+        if (session()->has(self::SESSION_KEY_ENGINE)) {
+            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        }
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
@@ -482,12 +487,8 @@ abstract class AbstractReportController extends Controller
         );
 
         if ($data->isEmpty()) {
-            if (session(static::SESSION_KEY_END_DAY) === session(static::SESSION_KEY_START_DAY)) {
-                $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
-            } else {
                 $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => null];
                 $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
-            }
         }
 
         return $data;

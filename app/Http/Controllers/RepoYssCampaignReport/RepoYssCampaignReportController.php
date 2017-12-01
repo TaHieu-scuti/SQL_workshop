@@ -50,6 +50,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
+    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -70,6 +71,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         ResponseFactory $responseFactory,
         RepoYssCampaignReportCost $model
     ) {
+        $this->middleware('engine');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
@@ -87,7 +89,9 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }

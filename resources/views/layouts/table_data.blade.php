@@ -32,6 +32,9 @@
                         @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
                             @continue
                         @endif
+                        @if($fieldName === 'accountName')
+                            <th></th>
+                        @endif
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
@@ -65,6 +68,8 @@
                             @else
                                 <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
                             @endif
+                        </td>
+                        <td>
                             <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'campaignName')
@@ -87,6 +92,8 @@
                         </td>
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
+                    @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
+                            <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif (is_float($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
@@ -105,6 +112,9 @@
                         }
                     }
                 ?>
+                @if (in_array('accountName', $fieldNames))
+                    <td></td>
+                @endif
                 <td colspan="{{ $totalColspan }}">@lang('language.Total_all_networks')</td>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField
@@ -117,6 +127,8 @@
                     @endif
                     @if(isset($totalDataArray->$fieldName))
                         @if (ctype_digit($totalDataArray->$fieldName))
+                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                        @elseif ($fieldName === 'cost' && is_float($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif (is_float($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>

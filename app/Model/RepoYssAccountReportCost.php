@@ -171,7 +171,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             }
         }
-
         return $arrayCalculate;
     }
 
@@ -243,7 +242,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         }
 
         $data = $data->union($dataForGoogle)->union($ydnAccountDataForGraph);
-        $sql = $this->getBinddingSql($data);
+        $sql = $this->getBindingSql($data);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
             ->select(DB::raw('day, sum(data) as data'))
             ->groupBy('day');
@@ -310,7 +309,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         }
         $data = $data->union($adwAccountReport)->union($ydnAccountCalculate);
 
-        $sql = $this->getBinddingSql($data);
+        $sql = $this->getBindingSql($data);
         $rawExpression = $this->getRawExpression($fieldNames);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
@@ -366,7 +365,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $data->union($adwAccountReport)->union($ydnAccountCalculate);
 
-        $sql = $this->getBinddingSql($data);
+        $sql = $this->getBindingSql($data);
         Event::listen(StatementPrepared::class, function ($event) {
             $event->statement->setFetchMode(PDO::FETCH_ASSOC);
         });
@@ -425,9 +424,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $aggregations = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
 
-        $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = RepoAdwAccountReportCost::select(
-            array_merge([DB::raw("'adw' as engine")], $adwAggreations)
+            array_merge([DB::raw("'adw' as engine")], $adwAggregations)
         )
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -480,7 +479,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             });
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
 
-            $sql = $this->getBinddingSql($datas);
+            $sql = $this->getBindingSql($datas);
             $rawExpressions = $this->getRawExpression($fieldNames);
             array_unshift($rawExpressions, DB::raw($groupedByField));
             return DB::table(DB::raw("({$sql}) as tbl"))
@@ -490,7 +489,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort)->get();
         }
-
         return $datas->orderBy($columnSort, $sort)->get();
     }
 
@@ -500,8 +498,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $endDay,
         $adgainerId = null
     ) {
-        $adwAggreations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggreations))
+        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);

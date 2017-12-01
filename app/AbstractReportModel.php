@@ -37,25 +37,19 @@ abstract class AbstractReportModel extends Model
 
     const AVERAGE_FIELDS = [
         'averageCpc',
-        'averagePosition'
-    ];
-
-    const AVERAGE_FIELDS_ADW = [
-        'avgCPC',
-        'avgPosition'
+        'averagePosition',
+        'ctr'
     ];
 
     const SUM_FIELDS = [
         'clicks',
         'impressions',
-        'cost',
-        'ctr'
+        'cost'
     ];
 
     const SUMMARY_FIELDS = [
         'impressions',
         'clicks',
-        'ctr',
         'cost'
     ];
 
@@ -162,7 +156,7 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    protected function getBinddingSql($data)
+    protected function getBindingSql($data)
     {
         $sql = $data->toSql();
         foreach ($data->getBindings() as $binding) {

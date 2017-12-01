@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(UsersTableSeeder::class);
-        $this->call(RepoYssAccountReportTable::class);
+        $this->call(CriteriaTableSeeder::class);
+
         $this->call(RepoYssAccountsTable::class);
         $this->call(RepoYssAccountReportsCostTable::class);
         $this->call(RepoYssAccountReportsConvTable::class);
@@ -39,6 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYdnAccountsTable::class);
 
         $this->call(CampaignsGenerator::class);
-        $this->call(PhoneTimeUseTable::class); // TODO: make generator and update resource
+        $this->call(PhoneTimeUseTable::class);
     }
 }
