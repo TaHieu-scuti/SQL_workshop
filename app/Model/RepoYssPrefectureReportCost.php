@@ -97,9 +97,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
                     }
                 )
-                ->groupBy('criteria.Name')
-                ->orderBy($columnSort, $sort);
-            return $data->orderBy($columnSort, $sort)->get();
+                ->groupBy('criteria.Name');
+            return $data->union($yssPrefectureData)->orderBy($columnSort, $sort)->get();
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
