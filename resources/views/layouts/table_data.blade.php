@@ -1,7 +1,7 @@
 <?php
-    if (!isset($export)) {
-        $export = false;
-    }
+if (!isset($export)) {
+    $export = false;
+}
 ?>
 <div class="loading-gif-on-table hidden-table"></div>
 @if($reports->total() !== 0)
@@ -70,15 +70,24 @@
                             @endif
                         </td>
                         <td>
-                            <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}" data-table="account_report">{{ $report[$fieldName] }}</a>
+                            <a href="javascript:void(0)" class="table-redirect"
+                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
+                            data-table="account_report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'campaignName')
                         <td>
-                            <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['campaignID']) ? $report['campaignID'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a>
+                            <a href="javascript:void(0)" class="table-redirect"
+                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-id = "{{isset($report['campaignID']) ? $report['campaignID'] : ''}}"
+                            data-table="campaign-report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'adgroupName')
                         <td>
-                            <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['adgroupID']) ? $report['adgroupID'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a>
+                            <a href="javascript:void(0)" class="table-redirect"
+                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-id = "{{isset($report['adgroupID']) ? $report['adgroupID'] : ''}}"
+                            data-table="adgroup-report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
@@ -94,13 +103,13 @@
             @endforeach
             <tr>
                 <?php
-                    $columnNames = ['accountName', 'campaignName', 'adgroupName', 'keyword', 'adName'];
-                    $totalColspan = 0;
-                    foreach ($fieldNames as $value) {
-                        if (in_array($value, $columnNames)) {
-                            $totalColspan ++;
-                        }
+                $columnNames = ['accountName', 'campaignName', 'adgroupName', 'keyword', 'adName'];
+                $totalColspan = 0;
+                foreach ($fieldNames as $value) {
+                    if (in_array($value, $columnNames)) {
+                        $totalColspan ++;
                     }
+                }
                 ?>
                 @if (in_array('accountName', $fieldNames))
                     <td></td>

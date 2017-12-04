@@ -648,7 +648,9 @@ abstract class AbstractReportModel extends Model
 
         foreach ($all_higher_layers as $key => $value) {
             $querySelectId = $value['columnId'];
-            $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin'] . ' WHERE '. $table .'.'.$value['columnId'].' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
+            $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin']
+                . ' WHERE '. $table .'.'.$value['columnId']
+                .' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
             array_push($arraySelections, $querySelectId, $querySelectName);
             array_push($this->groupBy, $value['columnId']);
         }
