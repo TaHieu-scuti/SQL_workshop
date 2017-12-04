@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class CreateAccountsTable extends Migration
 {
     /**
@@ -86,7 +87,6 @@ class CreateAccountsTable extends Migration
             $table->text('adw_refresh_token');
             $table->text('ds_access_token');
             $table->text('ds_refresh_token');
-
         });
     }
 
