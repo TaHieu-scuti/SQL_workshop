@@ -274,8 +274,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $adgainerId,
             $campaignId,
             $adGroupId,
-            $adReportId,
-            $keywordId
+            $adReportId
         );
     }
 
@@ -376,8 +375,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adgainerId = null,
         $campaignId = null,
         $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $adReportId = null
     ) {
         $arrayCalculate = $this->getAggregated($fieldNames);
         $data = self::select($arrayCalculate)
