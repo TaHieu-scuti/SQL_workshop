@@ -74,20 +74,10 @@
                         </td>
                     @elseif ($fieldName === 'campaignName')
                         <td>
-                            @if ($report['engine'] === 'adw')
-                                <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-                            @else
-                                <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-                            @endif
                             <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['campaignID']) ? $report['campaignID'] : ''}}" data-table="campaign-report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'adgroupName')
                         <td>
-                            @if ($report['engine'] === 'adw')
-                                <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-                            @else
-                                <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-                            @endif
                             <a href="javascript:void(0)" class="table-redirect" data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}" data-id = "{{isset($report['adgroupID']) ? $report['adgroupID'] : ''}}" data-table="adgroup-report">{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif (ctype_digit($report[$fieldName]))
