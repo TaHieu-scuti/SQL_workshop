@@ -103,7 +103,7 @@ class RepoYssKeywordReportController extends AbstractReportController
             'yssKeywordReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $tableColumns, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
