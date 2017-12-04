@@ -86,7 +86,7 @@ class RepoAdwGeoReportCost extends AbstractReportModel
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-        $data = RepoAdwGeoReportCost::select($adwAggregations)
+        return RepoAdwGeoReportCost::select($adwAggregations)
             ->join(
                 self::ADW_JOIN_TABLE_NAME,
                 'repo_adw_geo_report_cost.region',
@@ -103,7 +103,6 @@ class RepoAdwGeoReportCost extends AbstractReportModel
                 }
             )
             ->first();
-        return $data;
     }
 
     public function calculateSummaryData(
@@ -120,7 +119,7 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-        $data = RepoAdwGeoReportCost::select($adwAggregations)
+        return RepoAdwGeoReportCost::select($adwAggregations)
             ->join(
                 self::ADW_JOIN_TABLE_NAME,
                 'repo_adw_geo_report_cost.region',
@@ -137,7 +136,6 @@ class RepoAdwGeoReportCost extends AbstractReportModel
                 }
             )
             ->first();
-        return $data;
     }
 
     private function getAggregatedForPrefectureGoogle(array $fieldNames)
