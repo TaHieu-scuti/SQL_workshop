@@ -52,6 +52,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         if (request()->is('account_report/*') || request()->is('account_report')) {
+            DB::connection()->enableQueryLog();
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
             $yssAggregations = $this->getAggregated($fieldNames);
             $yssPrefectureData = self::select($yssAggregations)
@@ -81,7 +82,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 )
                 ->groupBy($groupedByField);
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            return RepoAdwGeoReportCost::select($adwAggregations)
+            $data = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -98,8 +99,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy('criteria.Name')
-                ->union($yssPrefectureData)
-                ->get();
+                ->orderBy($columnSort, $sort);
+            return $data->orderBy($columnSort, $sort)->get();
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
