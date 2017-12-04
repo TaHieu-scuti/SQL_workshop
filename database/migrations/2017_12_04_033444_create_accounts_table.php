@@ -14,80 +14,85 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('account_id', 50);
-            $table->string('account_subsidiary', 50);
-            $table->string('account_language', 50);
-            $table->string('account_time_zone', 150)->default('America/Los_Angeles');
-            $table->string('ftp_user', 200);
-            $table->string('ftp_pass', 200);
-            $table->text('ftp_folder');
-            $table->integer('sftp')->default(0);
-            $table->integer('show_number', 5)->default(1);
-            $table->string('api_key', 50);
-            $table->integer('api_limit')->default(500);
-            $table->float('api_limit')->default(55);
-            $table->string('super_agent_id', 40);
-            $table->string('agent_id', 100);
-            $table->string('accountName');
-            $table->string('dept', 10);
-            $table->string('username');
-            $table->string('password');
-            $table->integer('account_owner')->default(1);
-            $table->integer('account_pin');
-            $table->integer('account_code');
-            $table->integer('account_view_ppc_all')->default(0);
-            $table->integer('account_view_keywords')->default(1);
-            $table->integer('track_email')->default(1);
-            $table->string('email');
-            $table->string('tel', 20);
-            $table->string('companyName');
-            $table->string('address');
-            $table->string('address2');
-            $table->string('city', 100);
-            $table->string('state', 100);
-            $table->string('zip', 20);
-            $table->string('country');
-            $table->string('contact');
-            $table->integer('active')->default(0);
-            $table->integer('access_only')->default(0);
-            $table->integer('api_active')->default(0);
-            $table->integer('level');
-            $table->string('status', 20);
-            $table->string('account_mgr');
-            $table->integer('phone_data_level')->default(0);
-            $table->integer('demograph_data_level')->default(0);
-            $table->string('super_id', 50);
-            $table->string('marin_id', 60);
-            $table->string('billing_type', 50);
-            $table->integer('billing_date');
-            $table->string('billing_address_1');
-            $table->string('billing_address_2');
-            $table->string('billing_city', 150);
-            $table->string('billing_state', 100);
-            $table->string('billing_zip', 50);
-            $table->string('billing_country');
-            $table->string('card_number', 20);
-            $table->string('cvv', 10);
-            $table->integer('exp_m', 10);
-            $table->integer('exp_y');
-            $table->string('name_on_card');
-            $table->timestamp('date_created');
-            $table->string('logo')->default('ad-gainer-logo-v1.1-250x54px-white-bkgd-flat.png');
-            $table->string('color', 100)->default('dodgerBlue');
-            $table->text('wallpaper');
-            $table->string('subdomain');
-            $table->text('slogan');
-            $table->string('offline_img', 50)->default('OfflineButton.png');
-            $table->string('online_img', 50)->default('OfflineButton.png');
-            $table->dateTime('last_login');
-            $table->string('last_edited');
-            $table->string('adw_client_id', 100);
-            $table->text('adw_refresh_token');
-            $table->text('ds_access_token');
-            $table->text('ds_refresh_token');
-        });
+        DB::statement(
+            "CREATE TABLE `accounts` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `account_id` varchar(50) NOT NULL,
+                `account_subsidiary` varchar(50) NOT NULL,
+                `account_language` varchar(50) NOT NULL DEFAULT 'en-US',
+                `account_currency` varchar(20) NOT NULL DEFAULT 'USD',
+                `account_time_zone` varchar(150) NOT NULL DEFAULT 'America/Los_Angeles',
+                `ftp_user` varchar(200) NOT NULL,
+                `ftp_pass` varchar(200) NOT NULL,
+                `ftp_folder` text NOT NULL,
+                `sftp` int(11) NOT NULL DEFAULT '0',
+                `show_number` int(5) NOT NULL DEFAULT '1',
+                `api_key` varchar(50) NOT NULL,
+                `api_limit` int(11) NOT NULL DEFAULT '500',
+                `ppc_markup` float NOT NULL DEFAULT '55',
+                `super_agent_id` varchar(40) NOT NULL,
+                `agent_id` varchar(100) NOT NULL,
+                `accountName` varchar(255) NOT NULL,
+                `dept` varchar(10) NOT NULL,
+                `username` varchar(255) NOT NULL,
+                `password` varchar(255) NOT NULL,
+                `account_owner` int(11) NOT NULL DEFAULT '1',
+                `account_pin` int(11) NOT NULL,
+                `account_code` int(11) NOT NULL,
+                `account_view_ppc_all` int(11) NOT NULL DEFAULT '0',
+                `account_view_keywords` int(11) NOT NULL DEFAULT '1',
+                `track_email` int(11) NOT NULL DEFAULT '1',
+                `email` varchar(255) NOT NULL,
+                `tel` varchar(20) NOT NULL,
+                `companyName` varchar(255) NOT NULL,
+                `address` varchar(255) NOT NULL,
+                `address2` varchar(255) NOT NULL,
+                `city` varchar(100) NOT NULL,
+                `state` varchar(100) NOT NULL,
+                `zip` varchar(20) NOT NULL,
+                `country` varchar(255) NOT NULL,
+                `contact` varchar(255) NOT NULL,
+                `active` int(11) NOT NULL DEFAULT '0',
+                `access_only` int(11) NOT NULL DEFAULT '0',
+                `api_active` int(11) NOT NULL DEFAULT '0',
+                `level` int(11) NOT NULL,
+                `status` varchar(20) NOT NULL DEFAULT 'TRIAL',
+                `account_mgr` varchar(255) NOT NULL,
+                `phone_data_level` int(11) NOT NULL DEFAULT '0',
+                `demograph_data_level` int(11) NOT NULL DEFAULT '0',
+                `super_id` varchar(50) NOT NULL,
+                `marin_id` varchar(60) DEFAULT NULL,
+                `billing_type` varchar(50) NOT NULL,
+                `billing_date` int(11) NOT NULL,
+                `billing_address_1` varchar(255) NOT NULL,
+                `billing_address_2` varchar(255) NOT NULL,
+                `billing_city` varchar(150) NOT NULL,
+                `billing_state` varchar(100) NOT NULL,
+                `billing_zip` varchar(50) NOT NULL,
+                `billing_country` varchar(255) NOT NULL,
+                `card_number` varchar(20) NOT NULL,
+                `cvv` varchar(10) NOT NULL,
+                `exp_m` int(10) NOT NULL,
+                `exp_y` int(11) NOT NULL,
+                `name_on_card` varchar(255) NOT NULL,
+                `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                `logo` varchar(255) NOT NULL DEFAULT 'ad-gainer-logo-v1.1-250x54px-white-bkgd-flat.png     ',
+                `color` varchar(100) NOT NULL DEFAULT 'dodgerBlue',
+                `wallpaper` text NOT NULL,
+                `subdomain` varchar(255) NOT NULL,
+                `slogan` text NOT NULL,
+                `offline_img` varchar(50) NOT NULL DEFAULT 'OfflineButton.png',
+                `online_img` varchar(50) NOT NULL DEFAULT 'OnlineButton.png',
+                `last_login` datetime NOT NULL,
+                `last_edited` varchar(255) NOT NULL,
+                `adw_client_id` varchar(100) NOT NULL,
+                `adw_refresh_token` text NOT NULL,
+                `ds_access_token` text NOT NULL,
+                `ds_refresh_token` text NOT NULL,
+                PRIMARY KEY (`id`),
+                KEY `account_id` (`account_id`)
+            )"
+        );
     }
 
     /**
