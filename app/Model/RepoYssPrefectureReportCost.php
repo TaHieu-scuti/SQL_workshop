@@ -103,7 +103,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
-            $engine,
             $fieldNames,
             $accountStatus,
             $startDay,
@@ -188,7 +187,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         }
 
         return $this->calculateTotalWhenCurrentPageIsNotAccountReport(
-            $engine,
             $fieldNames,
             $accountStatus,
             $startDay,
@@ -269,7 +267,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         }
 
         return $this->calculateSummaryDataWhenCurrentPageIsNotAccountReport(
-            $engine,
             $fieldNames,
             $accountStatus,
             $startDay,
@@ -317,7 +314,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
     }
 
     private function calculateTotalWhenCurrentPageIsNotAccountReport(
-        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -373,7 +369,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
     }
 
     private function calculateSummaryDataWhenCurrentPageIsNotAccountReport(
-        $engine,
         $fieldNames,
         $accountStatus,
         $startDay,
@@ -431,7 +426,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
     }
 
     private function getPrefectureReportsWhenCurrentPageIsNotAccountReport(
-        $engine,
         array $fieldNames,
         $accountStatus,
         $startDay,
