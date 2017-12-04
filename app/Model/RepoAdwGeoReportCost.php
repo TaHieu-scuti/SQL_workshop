@@ -140,7 +140,8 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         return $data;
     }
 
-    private function getAggregatedForPrefectureGoogle(array $fieldNames) {
+    private function getAggregatedForPrefectureGoogle(array $fieldNames)
+    {
         $adwAggregations = [];
         $joinTableName = 'criteria';
         $tableName = 'repo_adw_geo_report_cost';
