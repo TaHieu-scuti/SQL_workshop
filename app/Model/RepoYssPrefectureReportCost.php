@@ -52,7 +52,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $keywordId = null
     ) {
         if (request()->is('account_report/*') || request()->is('account_report')) {
-            DB::connection()->enableQueryLog();
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
             $yssAggregations = $this->getAggregated($fieldNames);
             $yssPrefectureData = self::select($yssAggregations)
