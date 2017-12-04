@@ -7,6 +7,7 @@ use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
+use App\Model\RepoYdnPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 

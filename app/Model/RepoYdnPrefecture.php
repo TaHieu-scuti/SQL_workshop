@@ -3,11 +3,11 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\AbstractReportModel;
+use App\AbstractReportModel;
 
 class RepoYdnPrefecture extends AbstractReportModel
 {
     protected $table = 'repo_ydn_reports';
 
-    protected $timestamps = 'false';
+    public $timestamps = 'false';
 }
