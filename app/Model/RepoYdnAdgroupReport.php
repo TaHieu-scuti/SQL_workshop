@@ -9,6 +9,16 @@ class RepoYdnAdgroupReport extends AbstractReportModel
 {
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
     const PAGE_ID = 'adgroupID';
+    const ALL_HIGHER_LAYERS =
+    [
+        [
+            'columnName' => 'campaignName',
+            'tableJoin' => 'repo_ydn_reports',
+            'columnId' => 'campaignID',
+            'aliasId' => 'campaignID',
+            'aliasName' => 'campaignName'
+        ]
+    ];
 
     protected $table = 'repo_ydn_reports';
     public $timestamps = false;
