@@ -122,6 +122,9 @@ abstract class AbstractReportController extends Controller
     public function exportToExcel()
     {
         $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
@@ -153,6 +156,9 @@ abstract class AbstractReportController extends Controller
     public function exportToCsv()
     {
         $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
