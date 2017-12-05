@@ -77,6 +77,8 @@ abstract class AbstractReportModel extends Model
         'adGroup' => 'adgroupName'
     ];
 
+    const ALL_HIGHER_LAYERS = [];
+
     protected $groupByFieldName = [
         'device',
         'hourofday',
@@ -84,11 +86,13 @@ abstract class AbstractReportModel extends Model
         'prefecture',
     ];
 
+    protected $groupBy = [];
+
     /**
      * @param string[] $fieldNames
      * @return Expression[]
      */
-    protected function getAggregated(array $fieldNames)
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $fieldNames = $this->updateFieldNames($fieldNames);
         $tableName = $this->getTable();
@@ -104,8 +108,19 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME
-                || $fieldName === self::DEVICE
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+                if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
+                    $arrayCalculate[] = static::PAGE_ID;
+                    $this->groupBy[] = static::PAGE_ID;
+                }
+                $arrayCalculate[] = $fieldName;
+                if (!empty($higherLayerSelections)) {
+                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+                }
+                continue;
+            }
+
+            if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
@@ -399,7 +414,9 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $aggregations = $this->getAggregated($fieldNames);
+        $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
+        array_push($this->groupBy, $groupedByField);
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -425,7 +442,7 @@ abstract class AbstractReportModel extends Model
                     );
                 }
             )
-            ->groupBy($groupedByField)
+            ->groupBy($this->groupBy)
             ->orderBy($columnSort, $sort);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
@@ -623,5 +640,38 @@ abstract class AbstractReportModel extends Model
         }
 
         return $rawExpression;
+    }
+
+    public function higherLayerSelections(
+        $campaignId = null,
+        $adGroupId = null
+    ) {
+        $table = $this->getTable();
+        $arrayAlias = [];
+        $arraySelections = [];
+
+        if (!empty($campaignId)) {
+            array_push($arrayAlias, 'campaignID');
+        }
+        if (!empty($adGroupId)) {
+            array_push($arrayAlias, 'adgroupID');
+        }
+
+        $all_higher_layers = static::ALL_HIGHER_LAYERS;
+        foreach ($all_higher_layers as $key => $value) {
+            if (in_array($value['aliasId'], $arrayAlias)) {
+                unset($all_higher_layers[$key]);
+            }
+        }
+
+        foreach ($all_higher_layers as $key => $value) {
+            $querySelectId = $value['columnId'];
+            $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin']
+                . ' WHERE '. $table .'.'.$value['columnId']
+                .' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
+            array_push($arraySelections, $querySelectId, $querySelectName);
+            array_push($this->groupBy, $value['columnId']);
+        }
+        return $arraySelections;
     }
 }
