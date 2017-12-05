@@ -21,6 +21,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
+    const MEDIA_ID = 'keywordID';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'keywordReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -152,46 +153,6 @@ class RepoYssKeywordReportController extends AbstractReportController
                             'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
-    }
-
-    public function displayGraph(Request $request)
-    {
-        $this->updateModel();
-        $this->updateSessionData($request);
-        $timePeriodLayout = view('layouts.time-period')
-                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                        ->render();
-        $statusLayout = view('layouts.status-title')
-                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
-                        ->render();
-        try {
-            $data = $this->getDataForGraph();
-        } catch (Exception $exception) {
-            return $this->generateJSONErrorResponse($exception);
-        }
-        foreach ($data as $value) {
-            // if data !== null, display on graph
-            // else, display "no data found" image
-            if ($value['data'] !== null) {
-                $this->displayNoDataFoundMessageOnGraph = false;
-            }
-        }
-        return $this->responseFactory->json(
-            [
-                        'data' => $data,
-                        'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                        'timePeriodLayout' => $timePeriodLayout,
-                        'statusLayout' => $statusLayout,
-                        'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-            ]
-        );
-    }
-
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
     }
 
     public function updateModel()

@@ -191,9 +191,9 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'summaryReportLayout' => $summaryReportLayout,
-                            'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
     }
@@ -236,11 +236,6 @@ class RepoYssAccountReportController extends AbstractReportController
         );
     }
 
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
-    }
-
     /**
      * @return \Illuminate\Http\Response
      */
@@ -253,7 +248,6 @@ class RepoYssAccountReportController extends AbstractReportController
         $collection = $this->getDataForTable();
 
         $aliases = $this->translateFieldNames($fieldNames);
-
         $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
 

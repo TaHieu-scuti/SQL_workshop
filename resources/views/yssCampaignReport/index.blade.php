@@ -17,7 +17,7 @@
 
 @section('filter-list')
     <ul class="panel">
-        <li class="panel-body normal-report">
+        <li class="panel-body normal-report active">
             <a href="javascript:void(0)">
                 @lang('language.campaign')
             </a>
