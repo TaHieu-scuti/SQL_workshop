@@ -4,7 +4,7 @@ namespace App\Export\Native;
 
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 use DateTime;
 
@@ -59,7 +59,11 @@ class NativePHPCsvExporter implements CSVExporterInterface
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->exportData->first()->getTable();
+        if (is_array($this->exportData->first())) {
+            $tableName = 'account_list';
+        } else {
+            $tableName = $this->exportData->first()->getTable();
+        }
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
@@ -117,6 +121,9 @@ class NativePHPCsvExporter implements CSVExporterInterface
 
         $this->exportData->each(
             function ($value) use ($fieldNames) {
+                if (is_array($value)) {
+                    $value = json_decode(json_encode($value));
+                }
                 $array = [];
                 foreach ($fieldNames as $fieldName) {
                     $array[$fieldName] = $value->$fieldName;

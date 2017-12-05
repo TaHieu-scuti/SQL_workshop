@@ -245,8 +245,10 @@ class RepoYssAccountReportController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $collection = $this->getDataForTable();
-
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
