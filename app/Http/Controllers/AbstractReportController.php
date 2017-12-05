@@ -83,16 +83,16 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToExcel()
     {
+        $this->updateModel();
         $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
 
-        $fieldNames = $this->translateFieldNames(
-            array_keys($collection->first()->getAttributes())
-        );
-
-        $exporter = new SpoutExcelExporter($collection, $fieldNames);
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -114,16 +114,15 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToCsv()
     {
+        $this->updateModel();
         $data = $this->getDataForTable();
-
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
 
-        $fieldNames = $this->translateFieldNames(
-            array_keys($collection->first()->getAttributes())
-        );
-
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames);
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(

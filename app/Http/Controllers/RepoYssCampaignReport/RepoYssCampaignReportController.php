@@ -24,6 +24,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const CAMPAIGN_ID = 'campaignID';
+    const MEDIA_ID = self::CAMPAIGN_ID;
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';

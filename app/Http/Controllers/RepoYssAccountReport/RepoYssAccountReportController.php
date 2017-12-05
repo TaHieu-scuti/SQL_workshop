@@ -253,7 +253,6 @@ class RepoYssAccountReportController extends AbstractReportController
         $collection = $this->getDataForTable();
 
         $aliases = $this->translateFieldNames($fieldNames);
-
         $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
 

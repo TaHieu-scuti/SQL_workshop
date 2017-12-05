@@ -22,6 +22,7 @@ class RepoYssAdReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
+    const MEDIA_ID = 'adID';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';

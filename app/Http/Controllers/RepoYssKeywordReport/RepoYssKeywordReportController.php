@@ -21,6 +21,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
+    const MEDIA_ID = 'keywordID';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'keywordReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';

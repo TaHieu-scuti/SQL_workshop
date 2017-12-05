@@ -23,6 +23,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const ADGROUP_ID = "adgroupID";
+    const MEDIA_ID = self::ADGROUP_ID;
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
