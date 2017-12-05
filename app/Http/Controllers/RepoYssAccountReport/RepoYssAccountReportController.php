@@ -243,11 +243,10 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoYssPrefectureReportCost;
         }
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
@@ -274,7 +273,9 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
 
