@@ -93,11 +93,11 @@ class RepoYssAdReportController extends AbstractReportController
         //add more columns higher layer to fieldnames
         $tableColumns = [];
         $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
         if (!empty($dataReports[0]->adgroupName)) {
             array_unshift($tableColumns, 'adgroupName');
+        }
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
         }
         return view(
             'yssAdReport.index',

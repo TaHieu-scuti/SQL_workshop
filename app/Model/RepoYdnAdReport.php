@@ -13,14 +13,14 @@ class RepoYdnAdReport extends AbstractReportModel
     [
         [
             'columnName' => 'campaignName',
-            'tableJoin' => 'repo_ydn_report_cost',
+            'tableJoin' => 'repo_ydn_reports',
             'columnId' => 'campaignID',
             'aliasId' => 'campaignID',
             'aliasName' => 'campaignName'
         ],
         [
             'columnName' => 'adgroupName',
-            'tableJoin' => 'repo_ydn_report_cost',
+            'tableJoin' => 'repo_ydn_reports',
             'columnId' => 'adgroupID',
             'aliasId' => 'adgroupID',
             'aliasName' => 'adgroupName',

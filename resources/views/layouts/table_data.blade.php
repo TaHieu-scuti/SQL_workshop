@@ -75,14 +75,14 @@ if (!isset($export)) {
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="account_report">{{ $report[$fieldName] }}</a>
                         </td>
-                    @elseif ($fieldName === 'campaignName')
+                    @elseif ($fieldName === 'campaignName' || $fieldName === 'campaign')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-id = "{{isset($report['campaignID']) ? $report['campaignID'] : ''}}"
                             data-table="campaign-report">{{ $report[$fieldName] }}</a>
                         </td>
-                    @elseif ($fieldName === 'adgroupName')
+                    @elseif ($fieldName === 'adgroupName' || $fieldName === 'adGroup')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
@@ -134,8 +134,6 @@ if (!isset($export)) {
                         @else
                     <td>{{ $totalDataArray->$fieldName }}</td>
                         @endif
-                    @else
-                    <td></td>
                     @endif
                 @endforeach
             </tr>
