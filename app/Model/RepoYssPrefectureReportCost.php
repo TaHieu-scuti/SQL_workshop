@@ -27,6 +27,18 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         'adgroupName' => 'adGroup'
     ];
 
+    const YDN_FIELDS_MAP = [
+        //'alias' => 'columns'
+        'impressions' => 'impressions',
+        'clicks' => 'clicks',
+        'cost' => 'cost',
+        'ctr' => 'ctr',
+        'averageCpc' => 'averageCpc',
+        'averagePosition' => 'averagePosition',
+        'campaignName' => 'campaignName',
+        'adgroupName' => 'adgroupName'
+    ];
+
     protected $table = 'repo_yss_prefecture_report_cost';
 
     /**
@@ -80,8 +92,20 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy($groupedByField);
+            $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
+            $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use ($adgainerId) {
+                        $query->where('account_id', '=', $adgainerId);
+                    }
+                )
+                ->groupBy($groupedByField);
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            $data = RepoAdwGeoReportCost::select($adwAggregations)
+            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -98,7 +122,17 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )
                 ->groupBy('criteria.Name');
-            return $data->union($yssPrefectureData)->orderBy($columnSort, $sort)->get();
+            $data = $adwPrefectureData->union($yssPrefectureData)->union($ydnPrefectureData);
+            $sql = $this->getBindingSql($data);
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(PDO::FETCH_ASSOC);
+            });
+            $rawExpressions = $this->getRawExpression($fieldNames);
+            $test = DB::table(DB::raw("({$sql}) as tbl"))
+                ->select($rawExpressions)
+                ->groupBy('prefecture')
+                ->orderBy($columnSort, $sort)->get();
+            return $test;
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
@@ -164,8 +198,21 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         );
                     }
                 );
+
+            $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
+            $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
+                ->where(
+                    function (Builder $query) use ($startDay, $endDay) {
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )->where(
+                    function (Builder $query) use ($adgainerId) {
+                        $query->where('repo_ydn_reports.account_id', '=', $adgainerId);
+                    }
+                );
+
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            return RepoAdwGeoReportCost::select($adwAggregations)
+            $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
                     'repo_adw_geo_report_cost.region',
@@ -180,9 +227,12 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     function (Builder $query) use ($adgainerId) {
                         $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
                     }
-                )
-                ->union($yssPrefectureData)
-                ->first();
+                );
+            $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
+            $sql = $this->getBindingSql($data);
+            $rawExpression = $this->getRawExpression($fieldNames);
+            return DB::table(DB::raw("({$sql}) as tbl"))
+            ->select($rawExpression)->first();
         }
 
         return $this->calculateTotalWhenCurrentPageIsNotAccountReport(
@@ -244,25 +294,43 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         );
                     }
                 );
-            $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            return RepoAdwGeoReportCost::select($adwAggregations)
-                ->join(
-                    self::ADW_JOIN_TABLE_NAME,
-                    'repo_adw_geo_report_cost.region',
-                    '=',
-                    self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
-                )
-                ->where(
-                    function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
-                    }
-                )->where(
-                    function (Builder $query) use ($adgainerId) {
-                        $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
-                    }
-                )
-                ->union($yssPrefectureData)
-                ->first();
+                $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
+                $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
+                    ->where(
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )->where(
+                        function (Builder $query) use ($adgainerId) {
+                            $query->where('repo_ydn_reports.account_id', '=', $adgainerId);
+                        }
+                    );
+
+                $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
+                $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+                    ->join(
+                        self::ADW_JOIN_TABLE_NAME,
+                        'repo_adw_geo_report_cost.region',
+                        '=',
+                        self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
+                    )
+                    ->where(
+                        function (Builder $query) use ($startDay, $endDay) {
+                            $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        }
+                    )->where(
+                        function (Builder $query) use ($adgainerId) {
+                            $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                        }
+                    );
+                Event::listen(StatementPrepared::class, function ($event) {
+                    $event->statement->setFetchMode(PDO::FETCH_ASSOC);
+                });
+                $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
+                $sql = $this->getBindingSql($data);
+                $rawExpression = $this->getRawExpression($fieldNames);
+                return DB::table(DB::raw("({$sql}) as tbl"))
+                ->select($rawExpression)->first();
         }
 
         return $this->calculateSummaryDataWhenCurrentPageIsNotAccountReport(
@@ -309,6 +377,38 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             }
         }
         return $adwAggregations;
+    }
+
+    private function getAggregatedForPrefectureYdn(array $fieldNames)
+    {
+        $ydnAggregations = [];
+        $tableName = 'repo_ydn_reports';
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === 'prefecture') {
+                $ydnAggregations[] = DB::raw($fieldName);
+                continue;
+            }
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $ydnAggregations[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.' . self::YDN_FIELDS_MAP[$fieldName] . '), 2) AS ' . $fieldName
+                );
+            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                                    ->getType()
+                                    ->getName()
+                    === self::FIELD_TYPE
+                ) {
+                    $ydnAggregations[] = DB::raw(
+                        'ROUND(SUM(' . $tableName . '.' . self::YDN_FIELDS_MAP[$fieldName] . '), 2) AS ' . $fieldName
+                    );
+                } else {
+                    $ydnAggregations[] = DB::raw(
+                        'SUM( ' . $tableName . '.' . self::YDN_FIELDS_MAP[$fieldName] . ' ) AS ' . $fieldName
+                    );
+                }
+            }
+        }
+        return $ydnAggregations;
     }
 
     private function calculateTotalWhenCurrentPageIsNotAccountReport(
