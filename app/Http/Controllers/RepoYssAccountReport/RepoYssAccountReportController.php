@@ -191,9 +191,9 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'summaryReportLayout' => $summaryReportLayout,
-                            'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
     }
@@ -234,11 +234,6 @@ class RepoYssAccountReportController extends AbstractReportController
                             'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
             ]
         );
-    }
-
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
     }
 
     /**

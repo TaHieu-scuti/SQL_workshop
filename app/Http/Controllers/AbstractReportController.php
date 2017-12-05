@@ -78,6 +78,41 @@ abstract class AbstractReportController extends Controller
         $this->page = $page;
     }
 
+    public function displayGraph(Request $request)
+    {
+        $this->updateModel();
+        $this->updateSessionData($request);
+        try {
+            $data = $this->getDataForGraph();
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
+        }
+        $timePeriodLayout = view('layouts.time-period')
+                        ->with(static::START_DAY, session(static::SESSION_KEY_START_DAY))
+                        ->with(static::END_DAY, session(static::SESSION_KEY_END_DAY))
+                        ->with(static::TIME_PERIOD_TITLE, session(static::SESSION_KEY_TIME_PERIOD_TITLE))
+                        ->render();
+        $statusLayout = view('layouts.status-title')
+                        ->with(static::STATUS_TITLE, session(static::SESSION_KEY_STATUS_TITLE))
+                        ->render();
+        foreach ($data as $value) {
+            // if data !== null, display on graph
+            // else, display "no data found" message
+            if ($value['data'] !== null) {
+                $this->displayNoDataFoundMessageOnGraph = false;
+            }
+        }
+        return $this->responseFactory->json(
+            [
+                'data' => $data,
+                'field' => session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+            ]
+        );
+    }
+
     /**
      * @return \Illuminate\Http\Response
      */
@@ -362,6 +397,11 @@ abstract class AbstractReportController extends Controller
         $array[0] = static::GROUPED_BY_FIELD;
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+    }
+
+    public function updateSessionID(Request $request)
+    {
+        $this->updateSessionData($request);
     }
 
     public function updateSessionData(Request $request)
