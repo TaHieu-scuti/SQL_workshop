@@ -169,7 +169,7 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 
-            $costReport->campaignID = $campaignNumber + 1;
+            $costReport->campaignID = ($costReport->account_id * 10) + $campaignNumber + 1;
 
             $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
 
