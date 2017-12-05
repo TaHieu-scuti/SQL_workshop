@@ -1,4 +1,4 @@
-<?php
+a<?php
 
 namespace App;
 
@@ -624,7 +624,7 @@ abstract class AbstractReportModel extends Model
         return $column;
     }
 
-    protected function getRawExpression($fieldNames)
+    protected function getRawExpressions($fieldNames)
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {

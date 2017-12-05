@@ -127,7 +127,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             Event::listen(StatementPrepared::class, function ($event) {
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
-            $rawExpressions = $this->getRawExpression($fieldNames);
+            $rawExpressions = $this->getRawExpressions($fieldNames);
             return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select($rawExpressions)
                 ->groupBy('prefecture')
@@ -229,7 +229,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 );
             $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
             $sql = $this->getBindingSql($data);
-            $rawExpression = $this->getRawExpression($fieldNames);
+            $rawExpression = $this->getRawExpressions($fieldNames);
             return DB::table(DB::raw("({$sql}) as tbl"))
             ->select($rawExpression)->first();
         }
@@ -327,7 +327,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 });
                 $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
                 $sql = $this->getBindingSql($data);
-                $rawExpression = $this->getRawExpression($fieldNames);
+                $rawExpression = $this->getRawExpressions($fieldNames);
                 return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select($rawExpression)->first();
         }
