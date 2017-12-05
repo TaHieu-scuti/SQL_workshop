@@ -35,6 +35,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
         'Click Type 1', 'Click Type 2',
         'Click Type 3', 'Click Type 4'
     ];
+    const MATCH_TYPE = 'Match type';
     /**
      * Run the database seeds.
      *
@@ -57,7 +58,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->account = $adgroupReport->account;
                 $keywordReportCost->campaign_id = $adgroupReport->campaign_id;
                 $keywordReportCost->adGroupID = $adgroupReport->adGroupID;
-                $keywordReportCost->adGroup = $adgroupReport->adgroup;
+                $keywordReportCost->adGroup = $adgroupReport->adGroup;
                 $keywordReportCost->campaignID = $adgroupReport->campaignID;
                 $keywordReportCost->campaign = $adgroupReport->campaign;
                 $keywordReportCost->keywordID = $i;
@@ -136,6 +137,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->month = $adgroupReport->month;
                 $keywordReportCost->week = $adgroupReport->week;
                 $keywordReportCost->accountid = $adgroupReport->accountid;
+                $keywordReportCost->matchType = self::MATCH_TYPE;
 
                 $keywordReportCost->saveOrFail();
             }
