@@ -128,11 +128,10 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
             $rawExpressions = $this->getRawExpression($fieldNames);
-            $test = DB::table(DB::raw("({$sql}) as tbl"))
+            return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select($rawExpressions)
                 ->groupBy('prefecture')
                 ->orderBy($columnSort, $sort)->get();
-            return $test;
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
