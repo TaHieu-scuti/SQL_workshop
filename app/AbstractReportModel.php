@@ -624,6 +624,24 @@ abstract class AbstractReportModel extends Model
         return $column;
     }
 
+    protected function getRawExpressions($fieldNames)
+    {
+        $rawExpression = [];
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->groupByFieldName)) {
+                $rawExpression[] = DB::raw($fieldName);
+                continue;
+            }
+            if (in_array($fieldName, static::SUM_FIELDS)) {
+                $rawExpression[] = DB::raw('sum(' .$fieldName. ') as ' . $fieldName);
+            } else {
+                $rawExpression[] = DB::raw('avg(' .$fieldName. ') as ' . $fieldName);
+            }
+        }
+
+        return $rawExpression;
+    }
+
     public function higherLayerSelections(
         $campaignId = null,
         $adGroupId = null
