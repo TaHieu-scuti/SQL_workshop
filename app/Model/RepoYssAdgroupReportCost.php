@@ -39,10 +39,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
 
     public function getAllAdgroup(
         $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $campaignId = null
     ) {
         $arrAdgroups = [];
         $adgroups = null;
@@ -50,37 +47,30 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
                 ->where(
-                    function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
+                    function ($query) use ($accountId, $campaignId) {
                         $this->addQueryConditions(
                             $query,
                             Auth::user()->account_id,
                             $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId,
-                            $keywordId
+                            $campaignId
                         );
                     }
                 )
-                ->get();
+                ->groupBy('adgroupID', 'adgroupName')->get();
         } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
             $modelAdwAdgroup = new RepoAdwAdgroupReportCost();
             $adgroups = $modelAdwAdgroup->getAllAdwAdgroup(
                 $accountId = null,
-                $campaignId = null,
-                $adGroupId = null,
-                $adReportId = null,
-                $keywordId = null
+                $campaignId = null
             );
         } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'ydn') {
             $modelYdnAdgroup = new RepoYdnAdgroupReport();
             $adgroups = $modelYdnAdgroup->getAllYdnAdgroup(
                 $accountId = null,
-                $campaignId = null,
-                $adGroupId = null,
-                $adReportId = null
+                $campaignId = null
             );
         }
+
         if (!is_null($adgroups)) {
             foreach ($adgroups as $key => $adgroup) {
                 $arrAdgroups[$adgroup->adgroupID] = $adgroup->adgroupName;

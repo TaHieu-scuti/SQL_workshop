@@ -19,26 +19,18 @@ class RepoAdwCampaignReportCost extends AbstractReportModel
     public $timestamps = false;
 
     public function getAllAdwCampaign(
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $accountId = null
     ) {
         return self::select('campaignID', 'campaign as campaignName')
             ->where(
-                function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
+                function ($query) use ($accountId) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
-                        $accountId,
-                        $campaignId,
-                        $adGroupId,
-                        $adReportId,
-                        $keywordId
+                        $accountId
                     );
                 }
             )
-            ->get();
+            ->groupBy('campaignID', 'campaignName')->get();
     }
 }

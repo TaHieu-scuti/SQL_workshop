@@ -46,10 +46,6 @@ Route::prefix('account_report')->group(function () {
         '/update-table',
         'RepoYssAccountReport\RepoYssAccountReportController@updateTable'
     );
-    Route::get(
-        '/display-graph',
-        'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
-    );
     Route::post(
         '/display-graph',
         'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
@@ -75,10 +71,6 @@ Route::prefix('campaign-report')->group(function () {
         '/',
         'RepoYssCampaignReport\RepoYssCampaignReportController@index'
     )->name('campaign-report');
-    Route::get(
-        '/display-graph',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
-    );
     Route::post(
         '/display-graph',
         'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
@@ -106,10 +98,6 @@ Route::prefix('adgroup-report')->group(function () {
         '/',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
     )->name('adgroup-report');
-    Route::get(
-        '/display-graph',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
-    );
     Route::post(
         '/display-graph',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
@@ -137,10 +125,6 @@ Route::prefix('ad-report')->group(function () {
         '/',
         'RepoYssAdReport\RepoYssAdReportController@index'
     )->name('ad-report');
-    Route::get(
-        '/display-graph',
-        'RepoYssAdReport\RepoYssAdReportController@displayGraph'
-    );
     Route::post(
         '/display-graph',
         'RepoYssAdReport\RepoYssAdReportController@displayGraph'
@@ -169,10 +153,6 @@ Route::prefix('keyword-report')->group(function () {
         '/',
         'RepoYssKeywordReport\RepoYssKeywordReportController@index'
     )->name('keyword-report');
-    Route::get(
-        '/display-graph',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
-    );
     Route::post(
         '/display-graph',
         'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
@@ -195,7 +175,7 @@ Route::prefix('keyword-report')->group(function () {
     );
 });
 
-Route::get('language/{locale}', function($locale) {
-    Session::put('locale',$locale);
+Route::get('language/{locale}', function ($locale) {
+    Session::put('locale', $locale);
     return redirect()->back();
 });

@@ -4,8 +4,7 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
-        getMorris();
-       
+
         $('.summary_report .fields').click(function() {
             var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
@@ -124,6 +123,7 @@ var Script = function () {
                     status = 'hideZero';
                     break;
             }
+
             $.ajax({
                 url : prefixRoute + "/display-graph",
                 type : "POST",
@@ -201,27 +201,6 @@ var Script = function () {
         {
             lineChart.setData(data);
             lineChart.options.labels = [fieldName];
-        }
-        // set graph with `clicks` for y-axis
-        function getMorris()
-        {
-            $.ajax({
-                url : prefixRoute + '/display-graph',
-                type : 'GET',
-                beforeSend : function () {
-                    sendingRequest();
-                },
-                success: function(response) {
-                    processData(response);
-                    $('#time-period').html(response.timePeriodLayout);
-                },
-                error : function () {
-                    alert('Something went wrong!');
-                },
-                complete : function () {
-                    completeRequest();
-                }
-            });
         }
 
         function processData(response)

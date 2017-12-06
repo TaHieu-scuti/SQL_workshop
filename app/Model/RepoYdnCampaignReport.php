@@ -14,24 +14,18 @@ class RepoYdnCampaignReport extends AbstractReportModel
     public $timestamps = false;
 
     public function getAllYdnCampaign(
-        $accountId = null,
-        $campaignID = null,
-        $adgroupID = null,
-        $adID = null
+        $accountId = null
     ) {
         return self::select('campaignID', 'campaignName')
             ->where(
-                function ($query) use ($accountId, $campaignID, $adgroupID, $adID) {
+                function ($query) use ($accountId) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
-                        $accountId,
-                        $campaignID,
-                        $adgroupID,
-                        $adID
+                        $accountId
                     );
                 }
             )
-            ->get();
+            ->groupBy('campaignID', 'campaignName')->get();
     }
 }
