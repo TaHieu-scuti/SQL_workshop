@@ -32,7 +32,6 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
-    const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     /**
      * Run the database seeds.
@@ -95,6 +94,8 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             } else {
                 $campaignReportCost->ctr = ($accountReport->clicks / $accountReport->impressions) * 100;
             }
+
+            $campaignReportCost->network = $accountReport->network;
 
             $campaignReportCost->day = $accountReport->day;
             $campaignReportCost->dayOfWeek = $accountReport->dayOfWeek;
