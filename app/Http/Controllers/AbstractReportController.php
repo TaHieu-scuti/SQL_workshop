@@ -6,6 +6,9 @@ use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use Illuminate\Http\Request;
+use App\Model\RepoAdwGeoReportCost;
+use App\Model\RepoYdnPrefecture;
+use App\Model\RepoYssPrefectureReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -119,6 +122,9 @@ abstract class AbstractReportController extends Controller
     public function exportToExcel()
     {
         $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
@@ -150,6 +156,9 @@ abstract class AbstractReportController extends Controller
     public function exportToCsv()
     {
         $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
@@ -587,5 +596,16 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+    }
+
+    public function updateModelForPrefecture()
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssPrefectureReportCost;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $this->model = new RepoYdnPrefecture;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwGeoReportCost;
+        }
     }
 }

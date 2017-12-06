@@ -310,7 +310,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $data = $data->union($adwAccountReport)->union($ydnAccountCalculate);
 
         $sql = $this->getBindingSql($data);
-        $rawExpression = $this->getRawExpression($fieldNames);
+        $rawExpression = $this->getRawExpressions($fieldNames);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
         $data = $data->first();
@@ -480,7 +480,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
 
             $sql = $this->getBindingSql($datas);
-            $rawExpressions = $this->getRawExpression($fieldNames);
+            $rawExpressions = $this->getRawExpressions($fieldNames);
             array_unshift($rawExpressions, DB::raw($groupedByField));
             return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select(
@@ -511,23 +511,5 @@ class RepoYssAccountReportCost extends AbstractReportModel
             );
 
         return $adwAccountReport;
-    }
-
-    private function getRawExpression($fieldNames)
-    {
-        $rawExpression = [];
-        foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->groupByFieldName)) {
-                $rawExpression[] = DB::raw($fieldName);
-                continue;
-            }
-            if (in_array($fieldName, static::SUM_FIELDS)) {
-                $rawExpression[] = DB::raw('sum(' .$fieldName. ') as ' . $fieldName);
-            } else {
-                $rawExpression[] = DB::raw('avg(' .$fieldName. ') as ' . $fieldName);
-            }
-        }
-
-        return $rawExpression;
     }
 }

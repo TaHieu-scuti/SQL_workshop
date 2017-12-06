@@ -7,7 +7,7 @@ use App\Export\ExcelExporterInterface;
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\WriterFactory;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 use DateTime;
 use Exception;
@@ -53,7 +53,11 @@ class SpoutExcelExporter implements ExcelExporterInterface
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->exportData->first()->getTable();
+        if (is_array($this->exportData->first())) {
+            $tableName = 'account_list';
+        } else {
+            $tableName = $this->exportData->first()->getTable();
+        }
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
@@ -99,6 +103,9 @@ class SpoutExcelExporter implements ExcelExporterInterface
             $collections = $this->exportData->chunk(1000);
             foreach ($collections as $collection) {
                 foreach ($collection as $value) {
+                    if (is_array($value)) {
+                        $value = json_decode(json_encode($value));
+                    }
                     $array = [];
                     foreach ($fieldNames as $fieldName) {
                         $array[$fieldName] = $value->$fieldName;

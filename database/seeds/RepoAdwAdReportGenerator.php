@@ -28,7 +28,7 @@ class RepoAdwAdReportGenerator extends Seeder
     const MAX_VALUE_ALL_CONV = 894894374;
     const MIN_TOTAL_CONV_VALUE = 1000000;
     const MAX_TOTAL_CONV_VALUE = 894894374;
-    const NETWORKS = ['network1', 'network2', 'network3'];
+    const NETWORKS = ['CONTENT'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const CLICK_TYPE = [
         'Click Type 1', 'Click Type 2',
@@ -56,7 +56,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->account = $adgroupReport->account;
                 $adReportCost->campaign_id = $adgroupReport->campaign_id;
                 $adReportCost->adGroupID = $adgroupReport->adGroupID;
-                $adReportCost->adGroup = $adgroupReport->adgroup;
+                $adReportCost->adGroup = $adgroupReport->adGroup;
                 $adReportCost->campaignID = $adgroupReport->campaignID;
                 $adReportCost->campaign = $adgroupReport->campaign;
 

@@ -96,17 +96,23 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        //add more columns higher layer to fieldnames
+        $tableColumns = [];
+        $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
         return view(
             'yssAdgroupReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $tableColumns, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -137,12 +143,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $this->updateSessionData($request);
 
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         $reports = $this->getDataForTable();
