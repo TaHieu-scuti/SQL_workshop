@@ -92,14 +92,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = [];
-        $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
+        $tableColumns = $this->updateTableColumns($dataReports);
         return view(
             'yssKeywordReport.index',
             [
@@ -138,11 +131,12 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $tableColumns = $this->updateTableColumns($reports);
         $tableDataLayout = view(
             'layouts.table_data',
             [
             self::REPORTS => $reports,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::FIELD_NAMES => $tableColumns,
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -173,5 +167,17 @@ class RepoYssKeywordReportController extends AbstractReportController
             $this->model = new RepoAdwKeywordReportCost;
         }
         return $engine;
+    }
+
+    public function updateTableColumns($dataReports)
+    {
+        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
+        if (!empty($dataReports[0]->adgroupName)) {
+            array_unshift($tableColumns, 'adgroupName');
+        }
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
+        return $tableColumns;
     }
 }
