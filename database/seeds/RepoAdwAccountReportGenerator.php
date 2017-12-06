@@ -31,7 +31,7 @@ class RepoAdwAccountReportGenerator extends Seeder
     const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
-    const NETWORKS = ['network1', 'network2', 'network3'];
+    const NETWORKS = ['CONTENT', 'SEARCH'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
 
     private function processDay(DateTime $day)
