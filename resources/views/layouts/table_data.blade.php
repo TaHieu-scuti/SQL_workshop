@@ -103,7 +103,16 @@ if (!isset($export)) {
             @endforeach
             <tr>
                 <?php
-                $columnNames = ['accountName', 'campaignName', 'adgroupName', 'keyword', 'adName'];
+                $columnNames = [
+                    'accountName',
+                    'campaignName',
+                    'campaign',
+                    'adgroupName',
+                    'adGroup',
+                    'keyword',
+                    'adName',
+                    'ad'
+                ];
                 $totalColspan = 0;
                 foreach ($fieldNames as $value) {
                     if (in_array($value, $columnNames)) {

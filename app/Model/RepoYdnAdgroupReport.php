@@ -25,23 +25,19 @@ class RepoYdnAdgroupReport extends AbstractReportModel
 
     public function getAllYdnAdgroup(
         $accountId = null,
-        $campaignId = null,
-        $adgroupId = null,
-        $adReportId = null
+        $campaignId = null
     ) {
         return self::select('adgroupID', 'adgroupName')
             ->where(
-                function ($query) use ($accountId, $campaignId, $adgroupId, $adReportId) {
+                function ($query) use ($accountId, $campaignId) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
                         $accountId,
-                        $campaignId,
-                        $adgroupId,
-                        $adReportId
+                        $campaignId
                     );
                 }
             )
-            ->get();
+            ->groupBy('adgroupID', 'adgroupName')->get();
     }
 }
