@@ -65,11 +65,7 @@ class User extends Authenticatable
                 $model = new RepoYssCampaignReportCost;
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllCampaign(
-                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID),
-                    session(AbstractReportController::SESSION_KEY_CAMPAIGNID),
-                    session(AbstractReportController::SESSION_KEY_AD_GROUP_ID),
-                    session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
-                    session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
+                    session(AbstractReportController::SESSION_KEY_ACCOUNT_ID)
                 );
                 if (session(AbstractReportController::SESSION_KEY_CAMPAIGNID) === null) {
                     $array['flag'] = 'all';
@@ -85,10 +81,7 @@ class User extends Authenticatable
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllAdgroup(
                     session(AbstractReportController::SESSION_KEY_ACCOUNT_ID),
-                    session(AbstractReportController::SESSION_KEY_CAMPAIGNID),
-                    session(AbstractReportController::SESSION_KEY_AD_GROUP_ID),
-                    session(AbstractReportController::SESSION_KEY_AD_REPORT_ID),
-                    session(AbstractReportController::SESSION_KEY_KEYWORD_ID)
+                    session(AbstractReportController::SESSION_KEY_CAMPAIGNID)
                 );
                 if (session(AbstractReportController::SESSION_KEY_AD_GROUP_ID) === null) {
                     $array['flag'] = 'all';

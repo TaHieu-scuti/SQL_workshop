@@ -27,25 +27,19 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
 
     public function getAllAdwAdgroup(
         $accountId = null,
-        $campaignId = null,
-        $adgroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $campaignId = null
     ) {
-        return self::select('adGroupID as adgroupID', 'adGroup')
+        return self::select('adGroupID as adgroupID', 'adGroup as adgroupName')
             ->where(
-                function ($query) use ($accountId, $campaignId, $adgroupId, $adReportId, $keywordId) {
+                function ($query) use ($accountId, $campaignId) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
                         $accountId,
-                        $campaignId,
-                        $adgroupId,
-                        $adReportId,
-                        $keywordId
+                        $campaignId
                     );
                 }
             )
-            ->get();
+            ->groupBy('adgroupID', 'adgroupName')->get();
     }
 }

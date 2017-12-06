@@ -30,11 +30,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     protected $table = 'repo_yss_campaign_report_cost';
 
     public function getAllCampaign(
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $accountId = null
     ) {
         $arrCampaigns = [];
         $campaigns = null;
@@ -42,35 +38,24 @@ class RepoYssCampaignReportCost extends AbstractReportModel
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
                 ->where(
-                    function ($query) use ($accountId, $campaignId, $adGroupId, $adReportId, $keywordId) {
+                    function ($query) use ($accountId) {
                         $this->addQueryConditions(
                             $query,
                             Auth::user()->account_id,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId,
-                            $keywordId
+                            $accountId
                         );
                     }
                 )
-                ->get();
+                ->groupBy('campaignID', 'campaignName')->get();
         } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'adw') {
             $modelAdwCampaign = new RepoAdwCampaignReportCost;
             $campaigns = $modelAdwCampaign->getAllAdwCampaign(
-                $accountId = null,
-                $campaignId = null,
-                $adGroupId = null,
-                $adReportId = null,
-                $keywordId = null
+                $accountId = null
             );
         } elseif (session(AbstractReportController::SESSION_KEY_ENGINE) === 'ydn') {
             $modelYdnCampaign = new RepoYdnCampaignReport;
             $campaigns = $modelYdnCampaign->getAllYdnCampaign(
-                $accountId = null,
-                $campaignId = null,
-                $adGroupId = null,
-                $adReportId = null
+                $accountId = null
             );
         }
         if (!is_null($campaigns)) {
