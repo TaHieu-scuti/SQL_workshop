@@ -29,7 +29,6 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MAX_VALUE_ALL_CONV = 894894374;
     const MIN_TOTAL_CONV_VALUE = 1000000;
     const MAX_TOTAL_CONV_VALUE = 894894374;
-    const NETWORKS = ['SEARCH'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const CLICK_TYPE = [
         'Click Type 1', 'Click Type 2',
@@ -43,7 +42,10 @@ class RepoAdwKeywordReportGenerator extends Seeder
      */
     public function run()
     {
-        $adgroupReports = RepoAdwAdgroupReportCost::all();
+        $adgroupReports = RepoAdwAdgroupReportCost::select()
+            ->where('network', 'LIKE', 'SEARCH')
+            ->get();
+
         foreach ($adgroupReports as $adgroupReport) {
             $ammountOfKeyword = rand(
                 self::MIN_NUMBER_OF_KEYWORD,
@@ -61,8 +63,8 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->adGroup = $adgroupReport->adGroup;
                 $keywordReportCost->campaignID = $adgroupReport->campaignID;
                 $keywordReportCost->campaign = $adgroupReport->campaign;
-                $keywordReportCost->keywordID = $i;
-                $keywordReportCost->keyword = self::KEYWORD . $i;
+                $keywordReportCost->keywordID = $i + 1;
+                $keywordReportCost->keyword = self::KEYWORD . ($i + 1);
                 $keywordReportCost->cost = mt_rand(
                     self::MIN_COST,
                     self::MAX_COST
@@ -128,7 +130,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                     self::MIN_TOTAL_CONV_VALUE,
                     self::MAX_TOTAL_CONV_VALUE
                 ) / mt_getrandmax();
-                $keywordReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                $keywordReportCost->network = $adgroupReport->network;
                 $keywordReportCost->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                 $keywordReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                 $keywordReportCost->day = $adgroupReport->day;

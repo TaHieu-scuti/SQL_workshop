@@ -22,7 +22,6 @@ class RepoAdwGeoReportGenerator extends Seeder
     const MAX_ALL_CONV_VALUE = 20374;
     const MIN_ALL_CONV_RATE = 1000;
     const MAX_ALL_CONV_RATE = 14374;
-    const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const SMALLEST_REGION_CRITERIA_ID = 20624;
     const LARGEST_REGION_CRITERIA_ID = 20670;
@@ -107,7 +106,7 @@ class RepoAdwGeoReportGenerator extends Seeder
                     self::MAX_ALL_CONV_VALUE
                 ) / mt_getrandmax();
                 $geoReportCost->totalConvValue = $geoReportCost->allConvValue;
-                $geoReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                $geoReportCost->network = $adgroupReport->network;
                 $geoReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                 $geoReportCost->day = $adgroupReport->day;
                 $geoReportCost->dayOfWeek = $adgroupReport->dayOfWeek;
