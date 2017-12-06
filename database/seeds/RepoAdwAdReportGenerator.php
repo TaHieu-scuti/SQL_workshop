@@ -60,7 +60,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->campaignID = $adgroupReport->campaignID;
                 $adReportCost->campaign = $adgroupReport->campaign;
 
-                $adReportCost->adID = $i;
+                $adReportCost->adID = $i + 1;
 
                 if ($i % 2 === 0) {
                     $adReportCost->ad = 'Some text advertisement';
