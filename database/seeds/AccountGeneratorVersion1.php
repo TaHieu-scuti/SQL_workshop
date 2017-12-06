@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\Account;
 
+// @codingStandardsIgnoreLine
 class AccountGeneratorVersion1 extends Seeder
 {
     const NUMBER_OF_ACCOUNTS = 12;
@@ -13,7 +14,8 @@ class AccountGeneratorVersion1 extends Seeder
      * @return void
      */
 
-    public function processAccounts($account_id) {
+    public function processAccounts($account_id)
+    {
         $account = new Account();
         $account->account_id = $account_id;
         $account->account_subsidiary = '';
