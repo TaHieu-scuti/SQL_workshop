@@ -41,5 +41,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CampaignsGenerator::class);
         $this->call(PhoneTimeUseTable::class);
+        $this->call(AccountsTableSeeder::class);
     }
 }
