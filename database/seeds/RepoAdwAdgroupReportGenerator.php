@@ -20,7 +20,6 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MIN_CONVERSIONS = 0;
     const MIN_ALL_CONV_VALUE = 1000000;
     const MAX_ALL_CONV_VALUE = 894894374;
-    const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     /**
      * Run the database seeds.
@@ -43,8 +42,8 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->account_id = $campaignReport->account_id;
                 $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->account = $campaignReport->account;
-                $adgroupReportCost->adGroupID = $i;
-                $adgroupReportCost->adGroup = 'ADW Adgroup Name ' . $i;
+                $adgroupReportCost->adGroupID = $i + 1;
+                $adgroupReportCost->adGroup = 'ADW Adgroup Name ' . ($i + 1);
                 $adgroupReportCost->campaignID = $campaignReport->campaignID;
                 $adgroupReportCost->campaign = $campaignReport->campaign;
                 $adgroupReportCost->cost = mt_rand(
@@ -89,7 +88,9 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 }
 
                 $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-                $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+
+                $adgroupReportCost->network = $campaignReport->network;
+
                 $adgroupReportCost->day = $campaignReport->day;
                 $adgroupReportCost->dayOfWeek = $campaignReport->dayOfWeek;
                 $adgroupReportCost->quarter = $campaignReport->quarter;
