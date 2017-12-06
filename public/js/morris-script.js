@@ -202,7 +202,6 @@ var Script = function () {
             lineChart.setData(data);
             lineChart.options.labels = [fieldName];
         }
-        // set graph with `clicks` for y-axis
 
         function processData(response)
         {
