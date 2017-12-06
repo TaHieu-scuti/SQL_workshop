@@ -91,11 +91,20 @@ class RepoYssKeywordReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        //add more columns higher layer to fieldnames
+        $tableColumns = [];
+        $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
+        if (!empty($dataReports[0]->adgroupName)) {
+            array_unshift($tableColumns, 'adgroupName');
+        }
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
         return view(
             'yssKeywordReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $tableColumns, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),

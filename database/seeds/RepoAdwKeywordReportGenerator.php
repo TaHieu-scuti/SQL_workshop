@@ -29,12 +29,13 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MAX_VALUE_ALL_CONV = 894894374;
     const MIN_TOTAL_CONV_VALUE = 1000000;
     const MAX_TOTAL_CONV_VALUE = 894894374;
-    const NETWORKS = ['network1', 'network2', 'network3'];
+    const NETWORKS = ['SEARCH'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const CLICK_TYPE = [
         'Click Type 1', 'Click Type 2',
         'Click Type 3', 'Click Type 4'
     ];
+    const MATCH_TYPE = 'Match type';
     /**
      * Run the database seeds.
      *
@@ -57,7 +58,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->account = $adgroupReport->account;
                 $keywordReportCost->campaign_id = $adgroupReport->campaign_id;
                 $keywordReportCost->adGroupID = $adgroupReport->adGroupID;
-                $keywordReportCost->adGroup = $adgroupReport->adgroup;
+                $keywordReportCost->adGroup = $adgroupReport->adGroup;
                 $keywordReportCost->campaignID = $adgroupReport->campaignID;
                 $keywordReportCost->campaign = $adgroupReport->campaign;
                 $keywordReportCost->keywordID = $i;
@@ -136,6 +137,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->month = $adgroupReport->month;
                 $keywordReportCost->week = $adgroupReport->week;
                 $keywordReportCost->accountid = $adgroupReport->accountid;
+                $keywordReportCost->matchType = self::MATCH_TYPE;
 
                 $keywordReportCost->saveOrFail();
             }

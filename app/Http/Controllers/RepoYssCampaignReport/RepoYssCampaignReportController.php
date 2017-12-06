@@ -94,7 +94,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
@@ -136,18 +136,17 @@ class RepoYssCampaignReportController extends AbstractReportController
         $this->updateSessionData($request);
 
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
             'layouts.table_data',
