@@ -8,6 +8,7 @@ use App\Model\RepoAdwKeywordReportCost;
 use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use DateTime;
 use Exception;
@@ -169,7 +170,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         return $engine;
     }
 
-    public function updateTableColumns($dataReports)
+    private function updateTableColumns(LengthAwarePaginator $dataReports)
     {
         $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
         if (!empty($dataReports[0]->adgroupName)) {

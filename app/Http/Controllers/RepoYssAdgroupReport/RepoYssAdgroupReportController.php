@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\RepoYssAdgroupReport;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAdgroupReportCost;
 use App\Model\RepoAdwAdgroupReportCost;
@@ -192,7 +193,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         return $engine;
     }
 
-    public function updateTableColumns($dataReports)
+    private function updateTableColumns(LengthAwarePaginator $dataReports)
     {
         $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
         if (!empty($dataReports[0]->campaignName)) {

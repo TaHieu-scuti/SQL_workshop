@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RepoYssAdReport;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use App\Model\RepoYssPrefectureReportCost;
 use App\Http\Controllers\AbstractReportController;
@@ -171,7 +172,7 @@ class RepoYssAdReportController extends AbstractReportController
         return $engine;
     }
 
-    public function updateTableColumns($dataReports)
+    private function updateTableColumns(LengthAwarePaginator $dataReports)
     {
         $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
         if (!empty($dataReports[0]->adgroupName)) {
