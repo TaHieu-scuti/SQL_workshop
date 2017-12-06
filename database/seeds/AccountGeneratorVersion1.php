@@ -7,7 +7,8 @@ use App\Model\Account;
 class AccountGeneratorVersion1 extends Seeder
 {
     const NUMBER_OF_ACCOUNTS = 12;
-    const LEVEL = [1, 2, 3, 5];
+    const LEVEL = [1, 3];
+    private $agentId = [''];
     /**
      * Run the database seeds.
      *
@@ -26,7 +27,11 @@ class AccountGeneratorVersion1 extends Seeder
         $account->ftp_folder = '';
         $account->api_key = '';
         $account->super_agent_id = '';
+        $account->level = self::LEVEL[mt_rand(0, count(self::LEVEL) - 1)];
         $account->agent_id = '';
+        if ((int)$account->level !== 1) {
+            $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
+        }
         $account->accountName = str_random(10);
         $account->dept = '';
         $account->username = 'admin'.$account_id;
@@ -43,7 +48,6 @@ class AccountGeneratorVersion1 extends Seeder
         $account->zip = '';
         $account->country = '';
         $account->contact = '';
-        $account->level = self::LEVEL[mt_rand(0, count(self::LEVEL) - 1)];
         $account->account_mgr = '';
         $account->super_id = '';
         $account->billing_type = '';
@@ -75,6 +79,7 @@ class AccountGeneratorVersion1 extends Seeder
     public function run()
     {
         for ($account_id = 1; $account_id < self::NUMBER_OF_ACCOUNTS + 1; $account_id++) {
+            array_push($this->agentId, $account_id);
             $this->processAccounts($account_id);
         }
     }
