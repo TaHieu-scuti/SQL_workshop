@@ -28,7 +28,6 @@ class RepoAdwAdReportGenerator extends Seeder
     const MAX_VALUE_ALL_CONV = 894894374;
     const MIN_TOTAL_CONV_VALUE = 1000000;
     const MAX_TOTAL_CONV_VALUE = 894894374;
-    const NETWORKS = ['CONTENT'];
     const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
     const CLICK_TYPE = [
         'Click Type 1', 'Click Type 2',
@@ -41,7 +40,10 @@ class RepoAdwAdReportGenerator extends Seeder
      */
     public function run()
     {
-        $adgroupReports = RepoAdwAdgroupReportCost::all();
+        $adgroupReports = RepoAdwAdgroupReportCost::select()
+            ->where('network', 'LIKE', 'CONTENT')
+            ->get();
+
         foreach ($adgroupReports as $adgroupReport) {
             $ammountOfKeyword = rand(
                 self::MIN_NUMBER_OF_AD,
@@ -134,7 +136,7 @@ class RepoAdwAdReportGenerator extends Seeder
                     self::MIN_TOTAL_CONV_VALUE,
                     self::MAX_TOTAL_CONV_VALUE
                 ) / mt_getrandmax();
-                $adReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
+                $adReportCost->network = $adgroupReport->network;
                 $adReportCost->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
                 $adReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
                 $adReportCost->day = $adgroupReport->day;
