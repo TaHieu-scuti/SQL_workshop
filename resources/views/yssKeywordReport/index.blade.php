@@ -6,35 +6,51 @@
 
 @section('filter-list')
     <ul class="panel">
-        @if (session('engine') === 'adw')
-            <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-        @else
-            <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-        @endif
-        <li class="panel-body">
-            <a href="{{ route('ad-report') }}">
-                @lang('language.ADS')
+        <li class="panel-body campaign-navigation">
+            <a href="{{ route('campaign-report') }}">
+                @lang('language.campaign')
             </a>
         </li>
+        <li class="panel-body adgroup-navigation">
+            <a href="javascript:void(0)">
+                @lang('language.AD_GROUPS')
+            </a>
+        </li>
+        {{--YDN has no keywords report--}}
+        @if(session('engine') !== null && session('engine') === 'ydn')
+            <li class="panel-body grayed-out">
+                @lang('language.keywords')
+            </li>
+        @else
+            <li class="panel-body active">
+                <a href="{{ route('keyword-report') }}">
+                    @lang('language.keywords')
+                </a>
+            </li>
+        @endif
+        {{--YSS has no ads report--}}
+        @if(session('engine') !== null && session('engine') === 'yss')
+            <li class="panel-body grayed-out">
+                @lang('language.ADS')
+            </li>
+        @else
+            <li class="panel-body">
+                <a href="{{ route('ad-report') }}">
+                    @lang('language.ADS')
+                </a>
+            </li>
+        @endif
         <li class="panel-body separator">
-        <li class="panel-body">
-            <p style="color: lightgrey">
-                @lang('language.PREFECTURES')
-            </p>
+        <li class="panel-body grayed-out">
+            @lang('language.PREFECTURES')
         </li>
-        <li class="panel-body">
-            <p style="color: lightgrey">
-                @lang('language.BY_TIME_ZONE')
-            </p>
-        <li class="panel-body">
-            <p style="color: lightgrey">
-                @lang('language.BY_DAYS_OF_THE_WEEK')
-            </p>
+        <li class="panel-body grayed-out">
+            @lang('language.BY_TIME_ZONE')
+        <li class="panel-body grayed-out">
+            @lang('language.BY_DAYS_OF_THE_WEEK')
         </li>
-        <li class="panel-body">
-            <p style="color: lightgrey">
-                @lang('language.DEVICES')
-            </p>
+        <li class="panel-body grayed-out">
+            @lang('language.DEVICES')
         </li>
     </ul>
 @stop

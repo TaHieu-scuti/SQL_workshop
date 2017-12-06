@@ -72,5 +72,5 @@ return [
     'adreport' => '広告レポート',
     'ad' => '広告レポート',
     'all_adreports' => 'すべての広告',
-    'client' => 'クライエント',
+    'client' => 'クライアント',
 ];

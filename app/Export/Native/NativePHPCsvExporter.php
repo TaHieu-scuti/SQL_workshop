@@ -4,7 +4,7 @@ namespace App\Export\Native;
 
 use App\Export\CSVExporterInterface;
 use App\Export\Native\Exceptions\CsvException;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 use DateTime;
 
@@ -59,24 +59,15 @@ class NativePHPCsvExporter implements CSVExporterInterface
     private function generateFilename()
     {
         // get table name
-        $tableName = $this->exportData->first()->getTable();
+        if (is_array($this->exportData->first())) {
+            $tableName = 'account_list';
+        } else {
+            $tableName = $this->exportData->first()->getTable();
+        }
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"
             . '.csv';
-    }
-
-    /**
-     * @throws CsvException
-     */
-    private function writeBOM()
-    {
-        $bytesWritten = fputs($this->fileHandle, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        if ($bytesWritten === false) {
-            throw new CsvException('Failed to write Byte Order Mark!');
-        }
-
-        $this->fileSize += $bytesWritten;
     }
 
     /**
@@ -113,8 +104,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
             throw new CsvException('Unable to open temporary file!');
         }
 
-        $this->writeBOM();
-
         // get fields' names
         $fieldNames = $this->fieldNames;
         if ($fieldNames === null) {
@@ -124,11 +113,17 @@ class NativePHPCsvExporter implements CSVExporterInterface
         if ($this->aliases === null) {
             $this->writeLine($fieldNames);
         } else {
+            foreach ($this->aliases as $key => $alias) {
+                $this->aliases[$key] = mb_convert_encoding($alias, "Shift-JIS", "UTF-8");
+            }
             $this->writeLine($this->aliases);
         }
 
         $this->exportData->each(
             function ($value) use ($fieldNames) {
+                if (is_array($value)) {
+                    $value = json_decode(json_encode($value));
+                }
                 $array = [];
                 foreach ($fieldNames as $fieldName) {
                     $array[$fieldName] = $value->$fieldName;

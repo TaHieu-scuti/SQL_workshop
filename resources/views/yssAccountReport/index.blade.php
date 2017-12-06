@@ -6,30 +6,22 @@
 
 @section('filter-list')
     <ul class="panel">
-        <li class="panel-body normal-report ">
+        <li class="panel-body normal-report">
             <a href="javascript:void(0)">
                 @lang('language.engineAccount')
             </a>
         </li>
-        <li class="panel-body">
-            <a href="javascript:void(0)">
-                @lang('language.campaign')
-            </a>
+        <li class="panel-body grayed-out">
+            @lang('language.campaign')
         </li>
-        <li class="panel-body">
-            <a href="javascript:void(0)">
-                @lang('language.AD_GROUPS')
-            </a>
+        <li class="panel-body grayed-out">
+            @lang('language.AD_GROUPS')
         </li>
-        <li class="panel-body">
-            <a href="javascript:void(0)">
-                @lang('language.keywords')
-            </a>
+        <li class="panel-body grayed-out">
+            @lang('language.keywords')
         </li>
-        <li class="panel-body">
-            <a href="javascript:void(0)">
-                @lang('language.ADS')
-            </a>
+        <li class="panel-body grayed-out">
+            @lang('language.ADS')
         </li>
         <li class="panel-body separator">
         </li>

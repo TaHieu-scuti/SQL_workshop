@@ -24,6 +24,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const CAMPAIGN_ID = 'campaignID';
+    const MEDIA_ID = self::CAMPAIGN_ID;
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -50,6 +51,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
+    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -88,9 +90,11 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
@@ -132,18 +136,17 @@ class RepoYssCampaignReportController extends AbstractReportController
         $this->updateSessionData($request);
 
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
             'layouts.table_data',
@@ -169,46 +172,6 @@ class RepoYssCampaignReportController extends AbstractReportController
                 'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
-    }
-
-    public function displayGraph(Request $request)
-    {
-        $this->updateModel();
-        $this->updateSessionData($request);
-        $timePeriodLayout = view('layouts.time-period')
-            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-            ->render();
-        $statusLayout = view('layouts.status-title')
-            ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
-            ->render();
-        try {
-            $data = $this->getDataForGraph();
-        } catch (Exception $exception) {
-            return $this->generateJSONErrorResponse($exception);
-        }
-        foreach ($data as $value) {
-            // if data !== null, display on graph
-            // else, display "no data found" image
-            if ($value['data'] !== null) {
-                $this->displayNoDataFoundMessageOnGraph = false;
-            }
-        }
-        return $this->responseFactory->json(
-            [
-                'data' => $data,
-                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                'timePeriodLayout' => $timePeriodLayout,
-                'statusLayout' => $statusLayout,
-                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-            ]
-        );
-    }
-
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
     }
 
     public function updateModel()

@@ -16,6 +16,16 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
     const KEY_ID = "adgroupID";
+    const ALL_HIGHER_LAYERS =
+    [
+        [
+            'columnName' => 'campaignName',
+            'tableJoin' => 'repo_yss_campaign_report_cost',
+            'columnId' => 'campaignID',
+            'aliasId' => 'campaignID',
+            'aliasName' => 'campaignName'
+        ]
+    ];
 
     /**
      * @var bool

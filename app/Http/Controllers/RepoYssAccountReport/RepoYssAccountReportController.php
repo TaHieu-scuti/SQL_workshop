@@ -97,7 +97,6 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         $this->checkoutSessionFieldName();
-        // display data on the table with current session of date, status and column
         $dataReports = $this->getDataForTable();
 
         if (isset($request->page)) {
@@ -192,9 +191,9 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'summaryReportLayout' => $summaryReportLayout,
-                            'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
     }
@@ -232,14 +231,9 @@ class RepoYssAccountReportController extends AbstractReportController
                             'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                             'timePeriodLayout' => $timePeriodLayout,
                             'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
             ]
         );
-    }
-
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
     }
 
     /**
@@ -249,12 +243,12 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
-
         $aliases = $this->translateFieldNames($fieldNames);
-
         $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
@@ -279,7 +273,9 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
 

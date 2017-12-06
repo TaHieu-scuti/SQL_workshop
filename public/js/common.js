@@ -67,6 +67,7 @@ $(window).on('hashchange', function() {
 });
 
 function sendingRequestTable() {
+    $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
     setTimeout(function() {
         $('.loading-gif-on-table').show();
@@ -314,6 +315,9 @@ $('.specific-filter-item').click(function() {
             'specificItem' : $(this).data('value'),
         },
         beforeSend : function () {
+            $('html, body').animate({
+                scrollTop: $('#active-scroll').offset().top
+            }, 1000)
             sendingRequestTable();
         },
         success : function (response) {
@@ -413,25 +417,33 @@ $(document).ready(function(){
     }
     if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
         if (pageInformation.title == 'Client') {
-            $('.site-information-guess-annotation').append('クライエント');
+            $('.site-information-guess-annotation').append('クライアント');
         }
         else if(pageInformation.title == 'Account'){
             $('.site-information-guess-annotation').append('アカウント名');
         }
         else if(pageInformation.title == 'Campaign'){
             $('.site-information-guess-annotation').append('キャンペーン');
-        }
-        else if(pageInformation.title == 'Keyword'){
-            $('.site-information-guess-annotation').append('キーワード');
+            $('.campaign-navigation').hide();
         }
         else if(pageInformation.title == 'Adgroup'){
             $('.site-information-guess-annotation').append('広告グループ');
+            $('.campaign-navigation').hide();
+            $('.adgroup-navigation').hide();
         }
-        else if(pageInformation.title == 'Ad'){
-            $('.site-information-guess-annotation').append('広告');
+    } else {
+        if(pageInformation.title == 'Campaign'){
+            $('.site-information-guess-annotation').append(pageInformation.title);
+            $('.campaign-navigation').hide();
         }
-    }else{
-        $('.site-information-guess-annotation').append(pageInformation.title);
+        else if(pageInformation.title == 'Adgroup'){
+            $('.site-information-guess-annotation').append(pageInformation.title);
+            $('.campaign-navigation').hide();
+            $('.adgroup-navigation').hide();
+        }
+        else {
+            $('.site-information-guess-annotation').append(pageInformation.title);
+        }
     }
     $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })

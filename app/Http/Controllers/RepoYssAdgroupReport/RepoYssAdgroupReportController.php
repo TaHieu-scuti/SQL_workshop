@@ -23,6 +23,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const ADGROUP_ID = "adgroupID";
+    const MEDIA_ID = self::ADGROUP_ID;
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -49,6 +50,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'adGroup';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
+    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -86,19 +88,31 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
         }
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        // update group by field's session based on engine's session
+        // on changing account
+        // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
+        // normal report type
+        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        //add more columns higher layer to fieldnames
+        $tableColumns = [];
+        $tableColumns = array_merge($tableColumns, session(self::SESSION_KEY_FIELD_NAME));
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
         return view(
             'yssAdgroupReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $tableColumns, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -119,41 +133,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
         );
     }
 
-    public function displayGraph(Request $request)
-    {
-        $this->updateModel();
-        $this->updateSessionData($request);
-        try {
-            $data = $this->getDataForGraph();
-        } catch (Exception $exception) {
-            return $this->generateJSONErrorResponse($exception);
-        }
-        $timePeriodLayout = view('layouts.time-period')
-                        ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-                        ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                        ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                        ->render();
-        $statusLayout = view('layouts.status-title')
-                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
-                        ->render();
-        foreach ($data as $value) {
-            // if data !== null, display on graph
-            // else, display "no data found" message
-            if ($value['data'] !== null) {
-                $this->displayNoDataFoundMessageOnGraph = false;
-            }
-        }
-        return $this->responseFactory->json(
-            [
-                            'data' => $data,
-                            'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                            'timePeriodLayout' => $timePeriodLayout,
-                            'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
-            ]
-        );
-    }
-
     public function updateTable(Request $request)
     {
         $this->updateModel();
@@ -164,12 +143,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $this->updateSessionData($request);
 
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->updateModelForPrefecture();
         }
 
         $reports = $this->getDataForTable();
@@ -201,11 +180,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
-    }
-
-    public function updateSessionID(Request $request)
-    {
-        $this->updateSessionData($request);
     }
 
     public function updateModel()

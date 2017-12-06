@@ -6,6 +6,9 @@ use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use Illuminate\Http\Request;
+use App\Model\RepoAdwGeoReportCost;
+use App\Model\RepoYdnPrefecture;
+use App\Model\RepoYssPrefectureReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -31,6 +34,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ACCOUNT_ID = "accountID";
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
+    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -77,21 +81,59 @@ abstract class AbstractReportController extends Controller
         $this->page = $page;
     }
 
+    public function displayGraph(Request $request)
+    {
+        $this->updateModel();
+        $this->updateSessionData($request);
+        try {
+            $data = $this->getDataForGraph();
+        } catch (Exception $exception) {
+            return $this->generateJSONErrorResponse($exception);
+        }
+        $timePeriodLayout = view('layouts.time-period')
+                        ->with(static::START_DAY, session(static::SESSION_KEY_START_DAY))
+                        ->with(static::END_DAY, session(static::SESSION_KEY_END_DAY))
+                        ->with(static::TIME_PERIOD_TITLE, session(static::SESSION_KEY_TIME_PERIOD_TITLE))
+                        ->render();
+        $statusLayout = view('layouts.status-title')
+                        ->with(static::STATUS_TITLE, session(static::SESSION_KEY_STATUS_TITLE))
+                        ->render();
+        foreach ($data as $value) {
+            // if data !== null, display on graph
+            // else, display "no data found" message
+            if ($value['data'] !== null) {
+                $this->displayNoDataFoundMessageOnGraph = false;
+            }
+        }
+        return $this->responseFactory->json(
+            [
+                'data' => $data,
+                'field' => session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+            ]
+        );
+    }
+
     /**
      * @return \Illuminate\Http\Response
      */
     public function exportToExcel()
     {
+        $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
 
-        $fieldNames = $this->translateFieldNames(
-            array_keys($collection->first()->getAttributes())
-        );
-
-        $exporter = new SpoutExcelExporter($collection, $fieldNames);
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -113,16 +155,18 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToCsv()
     {
+        $this->updateModel();
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
+            $this->updateModelForPrefecture();
+        }
         $data = $this->getDataForTable();
-
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
 
-        $fieldNames = $this->translateFieldNames(
-            array_keys($collection->first()->getAttributes())
-        );
-
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames);
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -160,7 +204,7 @@ abstract class AbstractReportController extends Controller
         $timePeriodTitle = "Last 90 days";
         $accountStatus = "showZero";
         $statusTitle = "Show 0";
-        $graphColumnName = "clicks";
+        $graphColumnName = "impressions";
         $summaryReport = [
             'clicks',
             'impressions',
@@ -215,6 +259,7 @@ abstract class AbstractReportController extends Controller
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
+        session([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_OLD_ENGINE)]);
     }
 
     public function checkoutSessionFieldName()
@@ -349,6 +394,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
+        if (session()->has(self::SESSION_KEY_ENGINE)) {
+            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        }
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
@@ -358,6 +406,11 @@ abstract class AbstractReportController extends Controller
         $array[0] = static::GROUPED_BY_FIELD;
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+    }
+
+    public function updateSessionID(Request $request)
+    {
+        $this->updateSessionData($request);
     }
 
     public function updateSessionData(Request $request)
@@ -543,5 +596,16 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+    }
+
+    public function updateModelForPrefecture()
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssPrefectureReportCost;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $this->model = new RepoYdnPrefecture;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwGeoReportCost;
+        }
     }
 }
