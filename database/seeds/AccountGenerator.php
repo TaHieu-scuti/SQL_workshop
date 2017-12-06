@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\Account;
 
 // @codingStandardsIgnoreLine
-class AccountGeneratorVersion1 extends Seeder
+class AccountGenerator extends Seeder
 {
     const NUMBER_OF_ACCOUNTS = 12;
     const LEVEL = [1, 3];
