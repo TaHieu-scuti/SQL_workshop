@@ -8,7 +8,6 @@ use App\AbstractReportModel;
 
 class RepoAdwAdgroupReportCost extends AbstractReportModel
 {
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adGroup';
     const PAGE_ID = "adgroupID";
     const ALL_HIGHER_LAYERS =

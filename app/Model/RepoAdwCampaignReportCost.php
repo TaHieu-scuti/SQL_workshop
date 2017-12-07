@@ -7,7 +7,6 @@ use App\AbstractReportModel;
 
 class RepoAdwCampaignReportCost extends AbstractReportModel
 {
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'campaign';
     const PAGE_ID = "campaignID";
 

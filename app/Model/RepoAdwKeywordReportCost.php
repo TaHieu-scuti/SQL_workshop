@@ -7,7 +7,6 @@ use App\AbstractReportModel;
 
 class RepoAdwKeywordReportCost extends AbstractReportModel
 {
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'keyword';
     const PAGE_ID = "keywordID";
     const ALL_HIGHER_LAYERS =

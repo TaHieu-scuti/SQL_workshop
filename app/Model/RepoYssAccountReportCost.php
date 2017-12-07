@@ -30,7 +30,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
     // constant
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
-    const FIELD_TYPE = 'float';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
     const CLICKS = 'clicks';

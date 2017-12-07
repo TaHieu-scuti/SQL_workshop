@@ -15,7 +15,6 @@ class RepoAdwAccountReportCost extends AbstractReportModel
     public $timestamps = false;
 
     // constant
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'account';
     const PAGE_ID = 'accountid';
 }

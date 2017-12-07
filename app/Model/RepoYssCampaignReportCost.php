@@ -15,7 +15,6 @@ use Auth;
 class RepoYssCampaignReportCost extends AbstractReportModel
 {
     // constant
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'campaignName';
     const PAGE_ID = 'campaignID';
 
