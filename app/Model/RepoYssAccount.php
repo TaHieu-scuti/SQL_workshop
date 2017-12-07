@@ -37,9 +37,9 @@ class RepoYssAccount extends Model
 
         $accounts->union($adwAccounts)->union($ydnAccounts);
         $arr = ['all' => 'All Account'];
-        $datas = $accounts->get();
-        $datas = $datas->toArray();
+        $data = $accounts->get();
+        $data = $data->toArray();
 
-        return $arr + $datas;
+        return $arr + $data;
     }
 }
