@@ -93,7 +93,13 @@ class RepoYssAdgroupReportController extends AbstractReportController
         // on changing account
         // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
         // normal report type
-        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+        if (session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID)
+            || session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) === $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID)
+        ) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
