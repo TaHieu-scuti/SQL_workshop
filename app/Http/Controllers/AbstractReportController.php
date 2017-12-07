@@ -251,7 +251,6 @@ abstract class AbstractReportController extends Controller
 
     public function updateGroupByFieldWhenSessionEngineChange(array $columns)
     {
-
         if (session(self::SESSION_KEY_ENGINE) === 'yss'
             || session(self::SESSION_KEY_ENGINE) === 'ydn'
             || session(self::SESSION_KEY_ENGINE) === null
