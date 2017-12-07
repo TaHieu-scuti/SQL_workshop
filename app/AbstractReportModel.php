@@ -416,7 +416,11 @@ abstract class AbstractReportModel extends Model
     ) {
         $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
+
         array_push($this->groupBy, $groupedByField);
+        // merge static::FIELDS in order to display ad as requested
+        $this->groupBy = array_merge($this->groupBy, static::FIELDS);
+
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -444,12 +448,14 @@ abstract class AbstractReportModel extends Model
             )
             ->groupBy($this->groupBy)
             ->orderBy($columnSort, $sort);
+
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $paginatedData = $paginatedData->paginate($pagination);
         }
+
         return $paginatedData;
     }
 

@@ -58,6 +58,7 @@ if (!isset($export)) {
             @foreach($reports as $report)
             <tr>
                 @foreach($fieldNames as $fieldName)
+
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID")
                         @continue
                     @endif
@@ -88,6 +89,20 @@ if (!isset($export)) {
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-id = "{{isset($report['adgroupID']) ? $report['adgroupID'] : ''}}"
                             data-table="adgroup-report">{{ $report[$fieldName] }}</a>
+                        </td>
+                    <!-- display ad for YDN -->
+                    @elseif ($fieldName === 'adName')
+                        <td>
+                            <span class="ad-name"> {{ $report['adName'] }}</span><br>
+                            <span class="display-url"> {{ $report['displayURL'] }}</span><br>
+                            <span> {{ $report['description1'] }}</span>
+                        </td>
+                    <!-- display ad for Google -->
+                    @elseif ($fieldName === 'ad')
+                        <td>
+                            <span class="ad-name">{{ $report['ad'] }}</span><br>
+                            <span class="display-url">{{ $report['displayURL'] }}</span><br>
+                            <span> {{ $report['description'] }}</span>
                         </td>
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>

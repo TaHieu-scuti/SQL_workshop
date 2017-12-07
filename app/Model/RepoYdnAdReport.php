@@ -27,6 +27,11 @@ class RepoYdnAdReport extends AbstractReportModel
         ]
     ];
 
+    const FIELDS = [
+        'displayURL',
+        'description1'
+    ];
+
     protected $table = 'repo_ydn_reports';
     public $timestamps = false;
 }

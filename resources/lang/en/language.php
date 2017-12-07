@@ -68,7 +68,7 @@ return [
     'conversions' => 'Conversions',
     'all_ads' => 'All Ads',
     'keyword_name' => 'Keyword name',
-    'adname' => 'Ad name',
+    'adname' => 'Ad',
     'adreport' => 'Ad Report',
     'ad' => 'Ad',
     'all_adreports' => 'All Adreports',

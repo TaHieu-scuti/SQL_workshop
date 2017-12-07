@@ -807,6 +807,13 @@ a, a:hover, a:focus {
 .wrapper .row.report-table .paginator a {
     color: #797979;
 }
+.wrapper .row.report-table .ad-name {
+    text-decoration: underline;
+    color: #0000ff;
+}
+.wrapper .row.report-table .display-url {
+    color: #357535;
+}
 .modal.fade.in {
     z-index: 20000;
 }

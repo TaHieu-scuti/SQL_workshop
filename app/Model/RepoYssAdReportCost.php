@@ -35,7 +35,6 @@ class RepoYssAdReportCost extends AbstractReportModel
             'aliasName' => 'adgroupName'
         ]
     ];
-
     /**
      * @var bool
      */
