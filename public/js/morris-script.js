@@ -293,7 +293,11 @@ var Script = function () {
                     obj['id_adgroup'] = requestId;
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
-                    sendRequestData(obj, url, 'adgroup-report');
+                    if (engine === 'yss' || engine === 'adw') {
+                        sendRequestData(obj, url, 'keyword-report');
+                    } else if (engine === 'ydn') {
+                        sendRequestData(obj, url, 'ad-report');
+                    }
                     break;
                 case 'ad-report' :
                     var obj = new Object();
@@ -338,6 +342,9 @@ var Script = function () {
         $('table a.table-redirect').click(function() {
             let tableName = $(this).attr('data-table');
             let engine = $(this).data('engine');
+            if (!engine) {
+                engine = $('select.id_Account').find(':selected').attr('data-engine');
+            }
             let requestId = $(this).data('id');
             processRequestBreadcrumbs(tableName, requestId, engine);
         })
