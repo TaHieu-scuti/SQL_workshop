@@ -33,9 +33,28 @@ Route::get(
 Route::get(
     '/home',
     function () {
-        return redirect('account_report');
+        return redirect('agency-report');
     }
 );
+
+Route::prefix('agency-report')->group(function () {
+    Route::get(
+        '/',
+        'AgencyController\AgencyController@index'
+    );
+    Route::post(
+        '/update-table',
+        'AgencyController\AgencyController@updateTable'
+    );
+    Route::post(
+        '/display-graph',
+        'AgencyController\AgencyController@displayGraph'
+    );
+    Route::post(
+        '/updateSession',
+        'AgencyController\AgencyController@updateSessionID'
+    );
+});
 
 Route::prefix('account_report')->group(function () {
     Route::get(
