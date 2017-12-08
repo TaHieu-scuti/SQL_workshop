@@ -342,6 +342,29 @@ var Script = function () {
             processRequestBreadcrumbs(tableName, requestId, engine);
         })
 
+        $('.breadcrumb-item-detail .title a').click(function() {
+            let title = $(this).attr('data-title');
+            let url = '';
+            let requestId = 'all';
+            let engine = '';
+            switch (title) {
+                case 'Account' :
+                    url = 'account_report';
+                    break;
+                case 'Campaign' :
+                    url = 'account_report';
+                    requestId = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+                    break;
+                case 'AdGroup' :
+                    url = 'campaign-report';
+                    requestId = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
+                    break;
+                default:
+                    break;
+            }
+            processRequestBreadcrumbs(url, requestId, engine);
+        });
+
     });
 
 }();
