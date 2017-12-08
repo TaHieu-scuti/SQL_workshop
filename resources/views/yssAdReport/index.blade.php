@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\AbstractReportController;
+?>
+
 @extends('layouts.master')
 
 @section('title')
