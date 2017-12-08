@@ -1,7 +1,7 @@
 SELECT
 	`repo_yss_keyword_report_cost`.`account_id`,
 	`repo_yss_keyword_report_cost`.`campaign_id`,
-	#`repo_yss_keyword_report_cost`.`customerID`,
+	`repo_yss_keyword_report_cost`.`accountid`,
 	`repo_yss_keyword_report_cost`.`campaignID`,
 	`repo_yss_keyword_report_cost`.`adGroupId`,
 	`repo_yss_keyword_report_cost`.`keyword`,
@@ -88,9 +88,9 @@ FROM
 			AND
 				`phone_time_use`.`utm_campaign` = `repo_yss_keyword_report_cost`.`campaignID`
 			AND
-				`phone_time_use`.`time_of_call` >= '2017-04-01'
+				`phone_time_use`.`time_of_call` >= '2017-01-01'
 			AND
-				`phone_time_use`.`time_of_call` <= '2017-07-01'
+				`phone_time_use`.`time_of_call` <= '2017-12-01'
 			AND
 				`phone_time_use`.`source` = 'yss'
 			AND
@@ -103,15 +103,17 @@ WHERE
 AND
 	`repo_yss_keyword_report_cost`.`campaign_id` = 11
 AND
+	`repo_yss_keyword_report_cost`.`accountid` = 11
+AND
 	`repo_yss_keyword_report_cost`.`campaignID` = 11
 AND
-	`repo_yss_keyword_report_cost`.`day` >= '2017-04-01'
+	`repo_yss_keyword_report_cost`.`day` >= '2017-01-01'
 AND
-	`repo_yss_keyword_report_cost`.`day` <= '2017-07-01'
+	`repo_yss_keyword_report_cost`.`day` <= '2017-12-01'
 GROUP BY
 	`repo_yss_keyword_report_cost`.`account_id`,
 	`repo_yss_keyword_report_cost`.`campaign_id`,
-	#`repo_yss_keyword_report_cost`.`customerID`,
+	`repo_yss_keyword_report_cost`.`accountid`,
 	`repo_yss_keyword_report_cost`.`campaignID`,
 	`repo_yss_keyword_report_cost`.`adGroupId`,
 	`repo_yss_keyword_report_cost`.`keyword`
