@@ -16,7 +16,7 @@ SELECT
 	AVG(`repo_adw_campaign_report_cost`.`avgPosition`) AS avgPosition
 FROM
 	`repo_adw_campaign_report_cost`
-		LEFT JOIN (`campaigns`, `phone_time_use`)
+		LEFT JOIN `phone_time_use`
 		ON
 		(
 			`phone_time_use`.`utm_campaign` = `repo_adw_campaign_report_cost`.`campaignID`
