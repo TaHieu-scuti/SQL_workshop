@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\AbstractReportController;
+?>
+
 @extends('layouts.master')
 
 @section('title')
@@ -12,7 +16,7 @@
         </a>
     </li>
     <li class="panel-body adgroup-navigation">
-        <a href="javascript:void(0)">
+        <a href="{{session(AbstractReportController::SESSION_KEY_AD_GROUP_ID) !== null ? 'javascript:void(0)' : route('adgroup-report') }}">
             @lang('language.AD_GROUPS')
         </a>
     </li>
