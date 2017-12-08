@@ -107,6 +107,8 @@ AND
 AND
 	`repo_adw_keywords_report_cost`.`campaignID` = 11
 AND
+	`repo_adw_keywords_report_cost`.`adGroupID` = 3
+AND
 	`repo_adw_keywords_report_cost`.`day` >= '2017-04-01'
 AND
 	`repo_adw_keywords_report_cost`.`day` <= '2017-07-01'
