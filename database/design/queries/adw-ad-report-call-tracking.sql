@@ -99,6 +99,8 @@ WHERE
 	`repo_adw_ad_report_cost`.`account_id` = 1
 AND
 	`repo_adw_ad_report_cost`.`campaign_id` = 11
+#AND
+	#`repo_adw_ad_report_cost`.`customerID` = 1
 AND
 	`repo_adw_ad_report_cost`.`campaignID` = 11
 AND
