@@ -17,11 +17,23 @@
 
 @section('filter-list')
     <ul class="panel">
-        <li class="panel-body normal-report active">
-            <a href="javascript:void(0)">
-                @lang('language.campaign')
-            </a>
-        </li>
+        @if (session('campaignReport.groupedByField') === 'device'
+            || session('campaignReport.groupedByField') === 'hourofday'
+            || session('campaignReport.groupedByField') === 'dayOfWeek'
+            || session('campaignReport.groupedByField') === 'prefecture'
+        )    
+            <li class="panel-body normal-report">
+                <a href="javascript:void(0)">
+                    @lang('language.campaign')
+                </a>
+            </li>
+        @else
+            <li class="panel-body normal-report active">
+                <a href="javascript:void(0)">
+                    @lang('language.campaign')
+                </a>
+            </li>        
+        @endif
         <li class="panel-body">
             <a href="{{ route('adgroup-report') }}">
                 @lang('language.AD_GROUPS')
@@ -53,21 +65,30 @@
         @endif
         <li class="panel-body separator">
         </li>
-        <li class="panel-body specific-filter-item" data-value="prefecture">
+        <li class="panel-body specific-filter-item
+            @if (session('campaignReport.groupedByField') === 'prefecture') active @endif"
+            data-value="prefecture">
             <a href="javascript:void(0)">
                 @lang('language.PREFECTURES')
             </a>
         </li>
-        <li class="panel-body specific-filter-item" data-value="hourofday">
+        <li class="panel-body specific-filter-item 
+            @if (session('campaignReport.groupedByField') === 'hourofday') active @endif" 
+            data-value="hourofday">
             <a href="javascript:void(0)">
                 @lang('language.BY_TIME_ZONE')
-
-        <li class="panel-body specific-filter-item" data-value="dayOfWeek">
+            </a>
+        </li>
+        <li class="panel-body specific-filter-item 
+            @if (session('campaignReport.groupedByField') === 'dayOfWeek') active @endif" 
+            data-value="dayOfWeek">
             <a href="javascript:void(0)">
                 @lang('language.BY_DAYS_OF_THE_WEEK')
             </a>
         </li>
-        <li class="panel-body specific-filter-item" data-value="device">
+        <li class="panel-body specific-filter-item 
+            @if (session('campaignReport.groupedByField') === 'device') active @endif" 
+            data-value="device">
             <a href="javascript:void(0)">
                 @lang('language.DEVICES')
             </a>

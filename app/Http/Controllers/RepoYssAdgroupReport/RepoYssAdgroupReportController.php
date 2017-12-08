@@ -52,6 +52,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ID = 'oldid';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -96,9 +97,11 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
+
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
         }
+        $this->checkOldId();
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
@@ -200,5 +203,19 @@ class RepoYssAdgroupReportController extends AbstractReportController
             array_unshift($tableColumns, 'campaignName');
         }
         return $tableColumns;
+    }
+    
+    public function checkOldId()
+    {
+        if (session(static::SESSION_KEY_OLD_ID) || session(static::SESSION_KEY_OLD_ID) === null) {
+            session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_OLD_ID)]);
+        } else {
+            session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_CAMPAIGNID)]);
+        }
+
+        if (session(self::SESSION_KEY_OLD_ID) !==  session(static::SESSION_KEY_CAMPAIGNID)) {
+            $this->updateNormalReport();
+            session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_CAMPAIGNID)]);
+        }
     }
 }
