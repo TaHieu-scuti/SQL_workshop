@@ -54,6 +54,15 @@ Route::prefix('agency-report')->group(function () {
         '/updateSession',
         'AgencyController\AgencyController@updateSessionID'
     );
+    Route::get(
+        '/export_excel',
+        'AgencyController\AgencyController@exportToExcel'
+    );
+
+    Route::get(
+        '/export_csv',
+        'AgencyController\AgencyController@exportToCsv'
+    );
 });
 
 Route::prefix('account_report')->group(function () {

@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-class Agency extends Model
+class Agency extends AbstractReportModel
 {
     /** @var bool */
     public $timestamps = false;
