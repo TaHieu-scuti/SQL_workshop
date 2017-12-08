@@ -12,7 +12,7 @@
             </a>
         </li>
         <li class="panel-body adgroup-navigation">
-            <a href="javascript:void(0)">
+            <a href="{{session('adgroupId') !== null ? 'javascript:void(0)' : route('adgroup-report') }}">
                 @lang('language.AD_GROUPS')
             </a>
         </li>
