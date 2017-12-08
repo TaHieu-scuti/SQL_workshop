@@ -48,11 +48,6 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
                 self::MAX_AVERAGE_POSITION * 100000
             ) / 100000;
 
-            $campaignReportCost->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                $campaignReportCost->clicks
-            );
-
             $campaignReportCost->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST
@@ -66,6 +61,11 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->clicks = mt_rand(
                 self::MIN_CLICKS,
                 $campaignReportCost->impressions
+            );
+
+            $campaignReportCost->conversions = mt_rand(
+                self::MIN_CONVERSIONS,
+                $campaignReportCost->clicks
             );
 
             $campaignReportCost->month = $accountReport->month;
