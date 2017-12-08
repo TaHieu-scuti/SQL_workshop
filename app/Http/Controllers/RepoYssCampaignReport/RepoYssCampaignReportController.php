@@ -90,13 +90,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        if (session()->has(self::SESSION_KEY_OLD_ENGINE)
-            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
-            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID)
-            || session()->has(self::SESSION_KEY_OLD_ENGINE)
-            && session(self::SESSION_KEY_OLD_ENGINE) === $engine
-            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID)
-        ) {
+        if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
