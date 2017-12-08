@@ -624,8 +624,8 @@ abstract class AbstractReportController extends Controller
             && session(self::SESSION_KEY_OLD_ENGINE) === $engine
             && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
             || (session()->has(self::SESSION_KEY_OLD_ENGINE)
-                && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
-                && session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID))
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID))
         ) {
             return true;
         }
