@@ -94,6 +94,8 @@ FROM
 			AND
 				`phone_time_use`.`source` = 'adw'
 			AND
+				`phone_time_use`.`traffic_type` = 'AD'
+			AND
 				`phone_time_use`.`matchtype` = `repo_adw_keywords_report_cost`.`matchType`
 			AND
 				`phone_time_use`.`j_keyword` = `repo_adw_keywords_report_cost`.`keyword`

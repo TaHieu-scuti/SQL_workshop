@@ -112,6 +112,8 @@ FROM
 					`phone_time_use`.`time_of_call` <= '2017-12-01'
 				AND
 					`phone_time_use`.`source` = 'adw'
+				AND
+					`phone_time_use`.`traffic_type` = 'AD'
 				)
 		WHERE
 			`repo_adw_ad_report_cost`.`account_id` = 1
@@ -230,6 +232,8 @@ FROM
 						`phone_time_use`.`time_of_call` <= '2017-12-01'
 					AND
 						`phone_time_use`.`source` = 'adw'
+					AND
+						`phone_time_use`.`traffic_type` = 'AD'
 				)
 		WHERE
 			`repo_adw_adgroup_report_cost`.`account_id` = 1

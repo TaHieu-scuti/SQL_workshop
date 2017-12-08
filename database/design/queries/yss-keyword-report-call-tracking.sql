@@ -97,6 +97,8 @@ FROM
 				`phone_time_use`.`matchtype` = `repo_yss_keyword_report_cost`.`keywordMatchType`
 			AND
 				`phone_time_use`.`j_keyword` = `repo_yss_keyword_report_cost`.`keyword`
+			AND
+				`phone_time_use`.`traffic_type` = 'AD'
 		)
 WHERE
 	`repo_yss_keyword_report_cost`.`account_id` = 1

@@ -92,6 +92,8 @@ FROM
 				`phone_time_use`.`time_of_call` <= '2017-12-01'
 			AND
 				`phone_time_use`.`source` = 'yss'
+			AND
+				`phone_time_use`.`traffic_type` = 'AD'
 		)
 WHERE
 	`repo_yss_adgroup_report_cost`.`account_id` = 1

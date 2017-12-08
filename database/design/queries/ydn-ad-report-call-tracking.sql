@@ -93,6 +93,8 @@ FROM
 			`phone_time_use`.`time_of_call` <= '2017-12-01'
 		AND
 			`phone_time_use`.`source` = 'ydn'
+		AND
+			`phone_time_use`.`traffic_type` = 'AD'
 	)
 WHERE
 	`repo_ydn_reports`.`account_id` = 1
