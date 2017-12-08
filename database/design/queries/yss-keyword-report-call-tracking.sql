@@ -107,6 +107,8 @@ AND
 AND
 	`repo_yss_keyword_report_cost`.`campaignID` = 11
 AND
+	`repo_yss_keyword_report_cost`.`adGroupID` = 3
+AND
 	`repo_yss_keyword_report_cost`.`day` >= '2017-01-01'
 AND
 	`repo_yss_keyword_report_cost`.`day` <= '2017-12-01'
