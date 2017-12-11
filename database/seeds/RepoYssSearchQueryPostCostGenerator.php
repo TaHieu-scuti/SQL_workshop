@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoYssKeywordReportCost;
 use App\Model\RepoYssSearchqueryReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoYssSearchQueryPostCostGenerator extends Seeder
 {
     const SEARCH_QUERY = [

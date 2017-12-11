@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwKeywordReportCost;
 use App\Model\RepoAdwDisplayKeywordReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoAdwDisplayKeywordReportCostGenerator extends Seeder
 {
     /**
