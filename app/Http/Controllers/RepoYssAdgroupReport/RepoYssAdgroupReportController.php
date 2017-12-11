@@ -207,7 +207,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     /* Keep the Devices/Timezone/Prefectures/DayOfWeek after reloading adgroup list
         *Display normal report after:
-
             * 1. Select Devices/Timezone/Prefectures/DayOfWeek,
             * 2. Transit to campaign list
             * 3. Transit back to adgroup list.
