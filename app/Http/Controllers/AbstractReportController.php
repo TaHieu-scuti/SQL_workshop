@@ -408,7 +408,11 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
-        if (session(static::SESSION_KEY_ENGINE) === 'yss' || session(static::SESSION_KEY_ENGINE) === 'ydn') {
+
+        if (session(static::SESSION_KEY_ENGINE) === 'yss'
+            || session(static::SESSION_KEY_ENGINE) === 'ydn'
+            || session(static::SESSION_KEY_ENGINE) === null
+        ) {
             $array[0] = static::GROUPED_BY_FIELD;
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
