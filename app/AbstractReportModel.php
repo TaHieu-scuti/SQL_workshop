@@ -30,6 +30,7 @@ abstract class AbstractReportModel extends Model
     const HOUR_OF_DAY = "hourofday";
     const SESSION_KEY_ENGINE = 'engine';
     const YSS_SEARCH_QUERY = 'searchQuery';
+    const ADW_KEYWORD = 'keyword';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -126,6 +127,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
                 || $fieldName === self::YSS_SEARCH_QUERY
+                || $fieldName === self::ADW_KEYWORD
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;

@@ -622,7 +622,11 @@ abstract class AbstractReportController extends Controller
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwDisplayKeywordReportCost;
+            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
+            // so I will unset it in here
             $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
         $data = $this->getDataForTable();
         $collection = $data->getCollection();
@@ -653,6 +657,11 @@ abstract class AbstractReportController extends Controller
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwDisplayKeywordReportCost;
+            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
+            // so I will unset it in here
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
         $data = $this->getDataForTable();
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
