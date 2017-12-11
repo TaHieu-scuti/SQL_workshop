@@ -261,7 +261,6 @@ abstract class AbstractReportController extends Controller
         }
 
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
     }
 
@@ -409,9 +408,18 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
-        $array[0] = static::GROUPED_BY_FIELD;
+
+        if (session(static::SESSION_KEY_ENGINE) === 'yss'
+            || session(static::SESSION_KEY_ENGINE) === 'ydn'
+            || session(static::SESSION_KEY_ENGINE) === null
+        ) {
+            $array[0] = static::GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $array[0] = static::ADW_GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
-        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
     }
 
     public function updateSessionID(Request $request)
