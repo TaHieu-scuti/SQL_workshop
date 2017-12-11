@@ -204,7 +204,14 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
         return $tableColumns;
     }
-    
+
+    /* Keep the Devices/Timezone/Prefectures/DayOfWeek after reloading adgroup list
+        *Display normal report after:
+
+            * 1. Select Devices/Timezone/Prefectures/DayOfWeek,
+            * 2. Transit to campaign list
+            * 3. Transit back to adgroup list.
+    */
     public function checkOldId()
     {
         if (session(self::SESSION_KEY_OLD_ID) !==  session(static::SESSION_KEY_CAMPAIGNID)
