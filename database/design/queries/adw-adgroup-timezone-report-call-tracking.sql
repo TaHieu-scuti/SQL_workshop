@@ -16,74 +16,8 @@ SELECT
 	AVG(`repo_adw_adgroup_report_cost`.`avgPosition`) AS avgPosition
 FROM
 	`repo_adw_adgroup_report_cost`
-		LEFT JOIN (`campaigns`, `phone_time_use`)
+		LEFT JOIN `phone_time_use`
 		ON (
-				`campaigns`.`account_id` = `repo_adw_adgroup_report_cost`.`account_id`
-			AND
-				`campaigns`.`campaign_id` = `repo_adw_adgroup_report_cost`.`campaign_id`
-			AND
-				(
-					(
-						`campaigns`.`camp_custom1` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom1` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom2` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom2` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom3` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom3` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom4` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom4` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom5` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom5` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom6` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom6` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom7` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom7` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom8` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom8` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom9` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom9` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				OR
-					(
-						`campaigns`.`camp_custom10` = 'adgroupid'
-					AND
-						`phone_time_use`.`custom10` = `repo_adw_adgroup_report_cost`.`adGroupID`
-					)
-				)
-			AND
 				`phone_time_use`.`account_id` = `repo_adw_adgroup_report_cost`.`account_id`
 			AND
 				`phone_time_use`.`campaign_id` = `repo_adw_adgroup_report_cost`.`campaign_id`
