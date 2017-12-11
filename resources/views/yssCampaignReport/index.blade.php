@@ -24,7 +24,7 @@ use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
             || session(RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday'
             || session(RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek'
             || session(RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture'
-        )    
+        )
             <li class="panel-body normal-report">
                 <a href="javascript:void(0)">
                     @lang('language.campaign')
@@ -35,7 +35,7 @@ use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
                 <a href="javascript:void(0)">
                     @lang('language.campaign')
                 </a>
-            </li>        
+            </li>
         @endif
         <li class="panel-body">
             <a href="{{ route('adgroup-report') }}">

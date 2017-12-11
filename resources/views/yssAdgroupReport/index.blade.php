@@ -23,13 +23,13 @@ use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
                 <a href="javascript:void(0)">
                     @lang('language.AD_GROUPS')
                 </a>
-            </li>        
+            </li>
         @else
             <li class="panel-body normal-report active">
                 <a href="javascript:void(0)">
                     @lang('language.AD_GROUPS')
                 </a>
-            </li>        
+            </li>
         @endif
         {{--YDN has no keywords report--}}
         @if(session('engine') !== null && session('engine') === 'ydn')
