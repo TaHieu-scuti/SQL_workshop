@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Model\RepoAdwAdReportCost;
 
+// @codingStandardsIgnoreLine
 class AddAdTypeForAdwAdTable extends Seeder
 {
     /**
@@ -12,7 +13,7 @@ class AddAdTypeForAdwAdTable extends Seeder
      */
     public function run()
     {
-        RepoAdwAdReportCost::chunk(1000, function($adReports) {
+        RepoAdwAdReportCost::chunk(1000, function ($adReports) {
             foreach ($adReports as $adReport) {
                 if ($adReport->ad === 'Some text advertisement') {
                     $adReport->adType = 'TEXT_AD';
