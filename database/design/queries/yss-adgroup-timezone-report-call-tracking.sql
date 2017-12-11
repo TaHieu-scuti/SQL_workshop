@@ -93,6 +93,8 @@ FROM
 				`phone_time_use`.`source` = 'yss'
 			AND
 				`phone_time_use`.`traffic_type` = 'AD'
+			AND
+				HOUR(`phone_time_use`.`time_of_call`) = `repo_yss_adgroup_report_cost`.`hourofday`
 		)
 WHERE
 	`repo_yss_adgroup_report_cost`.`account_id` = 1
