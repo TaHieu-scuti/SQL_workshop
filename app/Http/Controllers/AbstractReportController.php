@@ -37,6 +37,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -261,8 +262,10 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
+
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_OLD_ENGINE)]);
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
     }
 
     public function checkoutSessionFieldName()
@@ -328,6 +331,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_ACCOUNT_ID => $accountId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_ACCOUNT_ID)) {
+            session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
+        }
     }
 
     public function updateSessionAdReportId($adReportId)
@@ -397,10 +403,10 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
-        if (session()->has(self::SESSION_KEY_ENGINE)) {
+        session()->put([self::SESSION_KEY_ENGINE => $engine]);
+        if (!session()->has(self::SESSION_KEY_OLD_ENGINE)) {
             session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
-        session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
     public function updateNormalReport()
@@ -686,5 +692,22 @@ abstract class AbstractReportController extends Controller
             'Pragma' => 'public'
             ]
         );
+    }
+
+    public function checkoutConditionForUpdateColumn($engine)
+    {
+        if ((session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
+            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) === $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
+            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID))
+        ) {
+            return true;
+        }
+        return false;
     }
 }

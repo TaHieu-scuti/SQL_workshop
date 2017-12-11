@@ -293,7 +293,11 @@ var Script = function () {
                     obj['id_adgroup'] = requestId;
                     obj['id_adReport'] = 'all';
                     obj['id_keyword'] = 'all';
-                    sendRequestData(obj, url, 'adgroup-report');
+                    if (engine === 'yss' || engine === 'adw') {
+                        sendRequestData(obj, url, 'keyword-report');
+                    } else if (engine === 'ydn') {
+                        sendRequestData(obj, url, 'ad-report');
+                    }
                     break;
                 case 'ad-report' :
                     var obj = new Object();
@@ -338,9 +342,35 @@ var Script = function () {
         $('table a.table-redirect').click(function() {
             let tableName = $(this).attr('data-table');
             let engine = $(this).data('engine');
+            if (!engine) {
+                engine = $('select.id_Account').find(':selected').attr('data-engine');
+            }
             let requestId = $(this).data('id');
             processRequestBreadcrumbs(tableName, requestId, engine);
         })
+
+        $('.breadcrumb-item-detail .title a').click(function() {
+            let title = $(this).attr('data-title');
+            let url = '';
+            let requestId = 'all';
+            let engine = '';
+            switch (title) {
+                case 'Account' :
+                    url = 'account_report';
+                    break;
+                case 'Campaign' :
+                    url = 'account_report';
+                    requestId = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+                    break;
+                case 'AdGroup' :
+                    url = 'campaign-report';
+                    requestId = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
+                    break;
+                default:
+                    break;
+            }
+            processRequestBreadcrumbs(url, requestId, engine);
+        });
 
     });
 

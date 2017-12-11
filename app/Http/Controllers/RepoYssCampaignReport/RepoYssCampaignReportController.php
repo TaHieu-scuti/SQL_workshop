@@ -90,7 +90,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+        if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
@@ -184,6 +184,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         } elseif ($engine === 'ydn') {
             $this->model = new RepoYdnCampaignReport;
         }
+
         return $engine;
     }
 }

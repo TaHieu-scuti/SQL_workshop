@@ -390,7 +390,7 @@ $(document).ready(function(){
 
     objectAdgroup['title'] = 'Adgroup';
     objectAdgroup['name'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
-    objectAdgroup['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectAdgroup['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
     objectAdgroup['engine'] = iconEngine;
     array.push(objectAdgroup);
 
