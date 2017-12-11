@@ -28,7 +28,7 @@ FROM
 			AND
 				`phone_time_use`.`time_of_call` <= '2017-12-01'
 			AND
-				`phone_time_use`.`source` = 'yss'
+				`phone_time_use`.`source` = 'adw'
 			AND
 				`phone_time_use`.`traffic_type` = 'AD'
 			AND
