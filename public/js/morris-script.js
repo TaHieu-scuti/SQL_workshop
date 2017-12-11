@@ -5,7 +5,7 @@ var Script = function () {
         var lineChart;
         initMorris();
 
-        $('.summary_report .fields').click(function() {
+        $('.summary_report').delegate('.fields', 'click', function() {
             var $active = $('.statistic .fields.active');
             labels = $(this).data('name');
             var columnName = $(this).data('name');
@@ -339,7 +339,7 @@ var Script = function () {
             });
         }
 
-        $('table a.table-redirect').click(function() {
+        $('.table_data_report').delegate('.table-redirect', 'click', function() {
             let tableName = $(this).attr('data-table');
             let engine = $(this).data('engine');
             if (!engine) {
