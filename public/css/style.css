@@ -6083,3 +6083,11 @@ a.guest-on i {
     max-height: 200px!important;
     min-height: 100px!important;
 }
+
+li.panel-body {
+    cursor: pointer;
+}
+
+li.panel-body.grayed-out {
+    cursor: default;
+}
