@@ -1,7 +1,6 @@
 SELECT
 	`repo_adw_campaign_report_cost`.`account_id`,
 	`repo_adw_campaign_report_cost`.`campaign_id`,
-	#`repo_adw_campaign_report_cost`.`customerID`,
 	`repo_adw_campaign_report_cost`.`hourOfDay` AS timezone,
 	SUM(`repo_adw_campaign_report_cost`.`impressions`) AS impressions,
 	SUM(`repo_adw_campaign_report_cost`.`clicks`) AS clicks,
