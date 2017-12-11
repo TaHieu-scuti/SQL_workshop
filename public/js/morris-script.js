@@ -163,7 +163,7 @@ var Script = function () {
             $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
             $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
         });
-        
+
         $('.specific-filter-item').click(function(){
             var value = $(this).data('value');
             $('.panel .panel-body').removeClass('active');
