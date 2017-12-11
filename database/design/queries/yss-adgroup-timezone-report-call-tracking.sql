@@ -2,7 +2,6 @@ SELECT
 	`repo_yss_adgroup_report_cost`.`account_id`,
 	`repo_yss_adgroup_report_cost`.`campaign_id`,
 	`repo_yss_adgroup_report_cost`.`accountid`,
-	`repo_yss_adgroup_report_cost`.`campaignID`,
 	`repo_yss_adgroup_report_cost`.`hourofday` AS timezone,
 	SUM(`repo_yss_adgroup_report_cost`.`impressions`) AS impressions,
 	SUM(`repo_yss_adgroup_report_cost`.`clicks`) AS clicks,
