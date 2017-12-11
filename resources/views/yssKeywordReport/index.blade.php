@@ -58,4 +58,6 @@
 @section('export')
     <li><a href="{{ url('/keyword-report/export_csv') }}">CSV</a></li>
     <li><a href="{{ url('/keyword-report/export_excel') }}">Excel</a></li>
+    <li><a href="{{ url('/keyword-report/export_search_query_csv') }}">Search Query CSV</a></li>
+    <li><a href="{{ url('/keyword-report/export_search_query_excel') }}">Search Query Excel</a></li>
 @stop

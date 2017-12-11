@@ -1,6 +1,7 @@
 <?php
 return [
     'account' => 'アカウント名',
+    'searchquery' => '検索クエリ',
     'Search_for_account' => 'アカウント名で検索',
     'engineAccount' => 'エンジンアカウント',
     'campaign' => 'キャンペーン',

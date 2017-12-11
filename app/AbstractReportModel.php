@@ -29,6 +29,7 @@ abstract class AbstractReportModel extends Model
     const PREFECTURE ="prefecture";
     const HOUR_OF_DAY = "hourofday";
     const SESSION_KEY_ENGINE = 'engine';
+    const YSS_SEARCH_QUERY = 'searchQuery';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -124,6 +125,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
+                || $fieldName === self::YSS_SEARCH_QUERY
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
@@ -416,7 +418,6 @@ abstract class AbstractReportModel extends Model
     ) {
         $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
-
         array_push($this->groupBy, $groupedByField);
         // merge static::FIELDS in order to display ad as requested
         $this->groupBy = array_merge($this->groupBy, static::FIELDS);

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAdwDisplayKeywordReportCost;
+use App\Model\RepoYssSearchqueryReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -160,6 +162,7 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
+
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
@@ -607,5 +610,72 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }
+    }
+
+    public function exportSearchQueryToCsv()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwDisplayKeywordReportCost;
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
+        }
+        $data = $this->getDataForTable();
+        $collection = $data->getCollection();
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $csvData = $exporter->export();
+        return $this->responseFactory->make(
+            $csvData,
+            200,
+            [
+            'Content-Type' => 'application/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function exportSearchQueryToExcel()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwDisplayKeywordReportCost;
+        }
+        $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $excelData = $exporter->export();
+
+        return $this->responseFactory->make(
+            $excelData,
+            200,
+            [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
     }
 }
