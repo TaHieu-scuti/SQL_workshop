@@ -20,7 +20,7 @@ if (!isset($export)) {
             <tr>
                 @if($export)
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
                             @continue
                         @endif
                         <th>
@@ -29,7 +29,7 @@ if (!isset($export)) {
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
                             @continue
                         @endif
                         @if($fieldName === 'accountName')
@@ -59,7 +59,7 @@ if (!isset($export)) {
             <tr>
                 @foreach($fieldNames as $fieldName)
 
-                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID")
+                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
                         @continue
                     @endif
                     @if ($fieldName === 'accountName')
@@ -99,11 +99,19 @@ if (!isset($export)) {
                         </td>
                     <!-- display ad for Google -->
                     @elseif ($fieldName === 'ad')
+                        @if($report['adType'] === 'TEXT_AD')
                         <td>
                             <span class="ad-name">{{ $report['ad'] }}</span><br>
                             <span class="display-url">{{ $report['displayURL'] }}</span><br>
                             <span> {{ $report['description'] }}</span>
                         </td>
+                        @elseif($report['adType'] === 'IMAGE_AD')
+                        <td>
+                            <img class="ad-name" src="{{ $report['ad'] }}" style="width: 50px;height: 20px;"><br>
+                            <span class="display-url">{{ $report['displayURL'] }}</span><br>
+                            <span> {{ $report['description'] }}</span>
+                        </td>
+                        @endif
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
