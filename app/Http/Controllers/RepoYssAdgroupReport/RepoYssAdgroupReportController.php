@@ -207,15 +207,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
     
     public function checkOldId()
     {
-        if (session(static::SESSION_KEY_OLD_ID) || session(static::SESSION_KEY_OLD_ID) === null) {
-            session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_OLD_ID)]);
-        } else {
-            session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_CAMPAIGNID)]);
-        }
-
-        if (session(self::SESSION_KEY_OLD_ID) !==  session(static::SESSION_KEY_CAMPAIGNID)) {
+        if (session(self::SESSION_KEY_OLD_ID) !==  session(static::SESSION_KEY_CAMPAIGNID)
+            || session(self::SESSION_KEY_OLD_ENGINE) !== session(self::SESSION_KEY_ENGINE)
+        ) {
             $this->updateNormalReport();
             session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_CAMPAIGNID)]);
+            session()->put([self::SESSION_KEY_OLD_ENGINE => session(static::SESSION_KEY_ENGINE)]);
         }
     }
 }
