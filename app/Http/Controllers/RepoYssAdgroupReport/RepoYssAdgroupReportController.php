@@ -52,7 +52,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
-    const SESSION_KEY_OLD_ID = 'oldid';
+    const SESSION_KEY_OLD_ID = 'oldId';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
