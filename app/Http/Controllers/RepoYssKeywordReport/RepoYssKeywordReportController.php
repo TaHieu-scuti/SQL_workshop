@@ -82,7 +82,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
         }
-        
+
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }
