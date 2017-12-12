@@ -174,6 +174,7 @@ abstract class AbstractReportModel extends Model
     protected function addQueryConditions(
         Builder $query,
         $adgainerId,
+        $engine = null,
         $accountId = null,
         $campaignId = null,
         $adGroupId = null,
@@ -181,7 +182,11 @@ abstract class AbstractReportModel extends Model
         $keywordId = null
     ) {
         if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.accountid', '=', $accountId);
+            if ($engine === 'adw') {
+                $query->where($this->getTable().'.customerID', '=', $accountId);
+            } else {
+                $query->where($this->getTable().'.accountid', '=', $accountId);
+            }
         }
         if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
             $query->where($this->getTable().'.campaignID', '=', $campaignId);
@@ -266,11 +271,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -317,11 +324,13 @@ abstract class AbstractReportModel extends Model
                     $accountId,
                     $campaignId,
                     $adGroupId,
-                    $adReportId
+                    $adReportId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -441,11 +450,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -514,11 +525,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
