@@ -145,7 +145,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->quarter = $adgroupReport->quarter;
                 $adReportCost->month = $adgroupReport->month;
                 $adReportCost->week = $adgroupReport->week;
-                $adReportCost->accountid = $adgroupReport->accountid;
+                $adReportCost->customerID = $adgroupReport->customerID;
 
                 $adReportCost->saveOrFail();
             }

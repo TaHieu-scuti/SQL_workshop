@@ -44,7 +44,7 @@ class RepoAdwGeoReportGenerator extends Seeder
                 $geoReportCost->exeDate = $adgroupReport->exeDate;
                 $geoReportCost->startDate = $adgroupReport->startDate;
                 $geoReportCost->endDate = $adgroupReport->endDate;
-                $geoReportCost->accountid = $adgroupReport->accountid;
+                $geoReportCost->customerID = $adgroupReport->customerID;
                 $geoReportCost->account = $adgroupReport->account;
                 $geoReportCost->account_id = $adgroupReport->account_id;
                 $geoReportCost->campaign_id = $adgroupReport->campaign_id;
