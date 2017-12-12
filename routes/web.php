@@ -183,6 +183,41 @@ Route::prefix('keyword-report')->group(function () {
     );
 });
 
+Route::prefix('accounts')->group(function () {
+    Route::get(
+        '/',
+        'Accounts\AccountsController@index'
+    )->name('keyword-report');
+    Route::post(
+        '/display-graph',
+        'Accounts\AccountsController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'Accounts\AccountsController@updateTable'
+    );
+    Route::get(
+        '/export_excel',
+        'Accounts\AccountsController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'Accounts\AccountsController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'Accounts\AccountsController@updateSessionID'
+    );
+    Route::get(
+        '/export_search_query_csv',
+        'Accounts\AccountsController@exportSearchQueryToCsv'
+    );
+    Route::get(
+        '/export_search_query_excel',
+        'Accounts\AccountsController@exportSearchQueryToExcel'
+    );
+});
+
 Route::get('language/{locale}', function ($locale) {
     Session::put('locale', $locale);
     return redirect()->back();
