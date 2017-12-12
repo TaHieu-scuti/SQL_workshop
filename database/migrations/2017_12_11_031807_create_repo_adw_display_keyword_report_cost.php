@@ -34,8 +34,12 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                 $table->double('activeViewAvgCPM')->nullable()->comment('視認可能インプレッションの平均費用（ActiveViewImpressions）。');
                 $table->double('activeViewViewableCTR')->nullable()->comment('広告が表示された後にユーザーが広告をクリックした頻度');
                 $table->bigInteger('activeViewViewableImpressions')->nullable()->comment('広告が表示された後にユーザーが広告をクリックした頻度');
-                $table->double('activeViewMeasurableImprImpr')->nullable()->comment('アクティブビューで計測されたインプレッション数と配信済みインプレッション数の比。');
-                $table->double('activeViewMeasurableCost')->nullable()->comment('Active Viewで測定可能なインプレッションの費用。');
+                $table->double('activeViewMeasurableImprImpr')->nullable()->comment(
+                    'アクティブビューで計測されたインプレッション数と配信済みインプレッション数の比。'
+                );
+                $table->double('activeViewMeasurableCost')->nullable()->comment(
+                    'Active Viewで測定可能なインプレッションの費用。'
+                );
                 $table->integer('activeViewMeasurableImpr')->nullable()->comment('広告が表示されているプレースメントに広告が表示された回数。');
                 $table->double('activeViewViewableImprMeasurableImpr')->nullable()->comment(
                     '広告がアクティブビュー対応サイトに表示された時間
@@ -49,15 +53,23 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                 $table->double('allConvRate')->nullable()->comment(
                     'AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。'
                 );
-                $table->double('allConv')->nullable()->comment('AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。');
+                $table->double('allConv')->nullable()->comment(
+                    'AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。'
+                );
                 $table->double('allConvValue')->nullable()->comment('推定されたものを含む、すべてのコンバージョンの合計値。');
                 $table->double('avgCost')->nullable()->comment('インタラクションごとに支払う平均金額。この金額は、広告の合計費用を合計インタラクション数で割ったものです。');
                 $table->double('avgCPC')->nullable()->comment('すべてのクリックの総コストを、受け取った総クリック数で割った値。');
                 $table->double('avgCPE')->nullable()->comment('広告掲載に費やされた平均金額。この金額は、すべての広告契約の総費用を広告契約の総数で割ったものです。');
                 $table->double('avgCPM')->nullable()->comment('平均インプレッション単価（CPM）。');
-                $table->double('avgCPV')->nullable()->comment('ユーザーが広告を表示するたびに支払う平均金額。平均CPVは、すべての広告ビューの総コストをビュー数で割った値で定義されます。');
-                $table->bigInteger('baseAdGroupID')->nullable()->comment('試用広告グループの基本広告グループのID。通常の広告グループの場合、これはAdGroupIdと同じです。');
-                $table->bigInteger('baseCampaignID')->nullable()->comment('試用キャンペーンの基本キャンペーンのID。通常のキャンペーンの場合、これはCampaignIdと同じです。');
+                $table->double('avgCPV')->nullable()->comment(
+                    'ユーザーが広告を表示するたびに支払う平均金額。平均CPVは、すべての広告ビューの総コストをビュー数で割った値で定義されます。'
+                );
+                $table->bigInteger('baseAdGroupID')->nullable()->comment(
+                    '試用広告グループの基本広告グループのID。通常の広告グループの場合、これはAdGroupIdと同じです。'
+                );
+                $table->bigInteger('baseCampaignID')->nullable()->comment(
+                    '試用キャンペーンの基本キャンペーンのID。通常のキャンペーンの場合、これはCampaignIdと同じです。'
+                );
                 $table->string('conversionOptimizerBidType', 50)->nullable()->comment('入札タイプ。');
                 $table->bigInteger('campaignID')->nullable()->comment('キャンペーンのID。');
                 $table->text('campaign')->nullable()->comment('キャンペーンの名前。');
@@ -96,7 +108,9 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                 $table->date('day')->nullable()->comment('日付はyyyy-MM-ddの形式になります。');
                 $table->string('dayOfWeek', 50)->nullable()->comment('曜日の名前です（例：「月曜日」）。');
                 $table->string('device', 50)->nullable()->comment('インプレッションが表示されたデバイスの種類。');
-                $table->double('engagementRate')->nullable()->comment('広告が表示された後、ユーザーが広告にどのくらいの頻度で関与するか。 広告の表示回数を広告の表示回数で割ったものです。');
+                $table->double('engagementRate')->nullable()->comment(
+                    '広告が表示された後、ユーザーが広告にどのくらいの頻度で関与するか。 広告の表示回数を広告の表示回数で割ったものです。'
+                );
                 $table->bigInteger('engagements')->nullable()->comment(
                     '約束の数。 視聴者がライトボックス広告を展開するとエンゲージメントが発生します。
                     また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。'
@@ -107,13 +121,17 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                     「android-app：」（Androidアプリの場合）またはb）「os-app：」
                     （iOSアプリの場合）のいずれかで始まります。 AppUrlList要素はJSONリスト形式で返されます。'
                 );
-                $table->text('mobileFinalURL')->nullable()->comment('この行のメインオブジェクトの最終的なモバイルURLのリスト。 UrlList要素はJSONリスト形式で返されます。');
+                $table->text('mobileFinalURL')->nullable()->comment(
+                    'この行のメインオブジェクトの最終的なモバイルURLのリスト。 UrlList要素はJSONリスト形式で返されます。'
+                );
                 $table->text('finalURL')->nullable()->comment('この行の主要オブジェクトの最終的なURLのリスト。 UrlList要素はJSONリスト形式で返されます。');
                 $table->bigInteger('gmailForwards')->nullable()->comment('広告が誰かにメッセージとして転送された回数。');
                 $table->bigInteger('gmailSaves')->nullable()->comment('Gmail広告をメッセージとして受信トレイに保存した回数。');
                 $table->bigInteger('gmailClicksToWebsite')->nullable()->comment('Gmail広告の展開状態でのリンク先ページへのクリック数。');
                 $table->bigInteger('keywordID')->nullable()->comment('この行の主オブジェクトのID。');
-                $table->bigInteger('impressions')->nullable()->comment('Googleネットワークの検索結果ページやウェブサイトに広告が表示された回数をカウントします。');
+                $table->bigInteger('impressions')->nullable()->comment(
+                    'Googleネットワークの検索結果ページやウェブサイトに広告が表示された回数をカウントします。'
+                );
                 $table->double('interactionRate')->nullable()->comment(
                     '広告が表示された後にユーザーがどのくらい頻繁に広告を操作するか。
                     これはインタラクションの数を広告の表示回数で割ったものです。'
