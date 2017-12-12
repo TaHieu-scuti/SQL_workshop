@@ -29,12 +29,14 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
+        $engine = session('engine');
         return self::select('adGroupID as adgroupID', 'adGroup as adgroupName')
             ->where(
-                function ($query) use ($accountId, $campaignId) {
+                function ($query) use ($accountId, $campaignId, $engine) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
+                        $engine,
                         $accountId,
                         $campaignId
                     );

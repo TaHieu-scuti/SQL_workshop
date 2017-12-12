@@ -27,12 +27,14 @@ class RepoYdnAdgroupReport extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
+        $engine = session('engine');
         return self::select('adgroupID', 'adgroupName')
             ->where(
                 function ($query) use ($accountId, $campaignId) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
+                        $engine,
                         $accountId,
                         $campaignId
                     );
