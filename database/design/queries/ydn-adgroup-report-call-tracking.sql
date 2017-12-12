@@ -85,6 +85,10 @@ FROM
 				)
 			)
 		AND
+			`phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
+		AND
+			`phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+		AND
 			`phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
 		AND
 			`phone_time_use`.`time_of_call` >= '2017-01-01'
