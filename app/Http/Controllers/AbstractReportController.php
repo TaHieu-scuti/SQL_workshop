@@ -561,6 +561,9 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
+            session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+        }
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
