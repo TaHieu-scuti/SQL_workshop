@@ -100,9 +100,9 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->day = $accountReport->day;
             $campaignReportCost->dayOfWeek = $accountReport->dayOfWeek;
             $campaignReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-            $campaignReportCost->hourofday = $accountReport->hourofday;
-            $campaignReportCost->timeZone = $accountReport->hourofday;
-            $campaignReportCost->accountid = $accountReport->accountid;
+            $campaignReportCost->hourOfDay = $accountReport->hourOfDay;
+            $campaignReportCost->timeZone = $accountReport->hourOfDay;
+            $campaignReportCost->customerID = $accountReport->customerID;
             $campaignReportCost->saveOrFail();
         }
     }

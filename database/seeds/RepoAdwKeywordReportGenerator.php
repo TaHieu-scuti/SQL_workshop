@@ -138,7 +138,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->quarter = $adgroupReport->quarter;
                 $keywordReportCost->month = $adgroupReport->month;
                 $keywordReportCost->week = $adgroupReport->week;
-                $keywordReportCost->accountid = $adgroupReport->accountid;
+                $keywordReportCost->customerID = $adgroupReport->customerID;
                 $keywordReportCost->matchType = self::MATCH_TYPE;
 
                 $keywordReportCost->saveOrFail();
