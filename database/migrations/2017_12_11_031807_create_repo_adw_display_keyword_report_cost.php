@@ -162,7 +162,6 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                 );
                 $table->date('week')->comment('yyyy-MM-ddの形式の月曜日の日付。');
                 $table->bigInteger('year')->comment('年はyyyyの形式です。');
-                $table->bigInteger('accountid')->comment('media id');
 
                 $table->unique('id', 'id_UNIQUE');
                 $table->index('exeDate', 'repo_adw_display_keyword_report_cost1');
@@ -200,7 +199,6 @@ class CreateRepoAdwDisplayKeywordReportCost extends Migration
                 $table->index('keywordState', 'repo_adw_display_keyword_report_cost33');
                 $table->index('week', 'repo_adw_display_keyword_report_cost34');
                 $table->index('year', 'repo_adw_display_keyword_report_cost35');
-                $table->index('accountid', 'repo_adw_display_keyword_report_cost36');
             }
         );
     }
