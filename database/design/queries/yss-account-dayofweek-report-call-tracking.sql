@@ -1,7 +1,7 @@
 SELECT
 	`repo_yss_account_report_cost`.`account_id`,
 	`repo_yss_account_report_cost`.`campaign_id`,
-	`repo_yss_account_report_cost`.`dayOfWeek` AS timezone,
+	`repo_yss_account_report_cost`.`dayOfWeek` AS dayOfWeek,
 	SUM(`repo_yss_account_report_cost`.`impressions`) AS impressions,
 	SUM(`repo_yss_account_report_cost`.`clicks`) AS clicks,
 	SUM(`repo_yss_account_report_cost`.`cost`) AS cost,
