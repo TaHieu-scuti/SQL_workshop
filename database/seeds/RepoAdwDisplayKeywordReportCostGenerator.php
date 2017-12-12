@@ -93,7 +93,7 @@ class RepoAdwDisplayKeywordReportCostGenerator extends Seeder
             $adwSearchQuery->valueConv = $adwKeyword->valueConv;
             $adwSearchQuery->week = $adwKeyword->week;
             $adwSearchQuery->year = $adwKeyword->year;
-            $adwSearchQuery->accountid = $adwKeyword->accountid;
+            $adwSearchQuery->customerID = $adwKeyword->customerID;
             $adwSearchQuery->saveOrFail();
         }
     }
