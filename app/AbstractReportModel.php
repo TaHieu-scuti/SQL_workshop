@@ -430,7 +430,14 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        $higherLayerSelections = [];
+        if ($groupedByField !== self::DEVICE
+            && $groupedByField !== self::HOUR_OF_DAY
+            && $groupedByField !== self::DAY_OF_WEEK
+            && $groupedByField !== self::PREFECTURE
+        ) {
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         array_push($this->groupBy, $groupedByField);
         if ($groupedByField === 'ad' || $groupedByField === 'adName') {
