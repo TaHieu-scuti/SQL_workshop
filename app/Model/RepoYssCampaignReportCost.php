@@ -32,7 +32,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     public function getAllCampaign(
         $accountId = null
     ) {
-        $engine = session('engine');
+        $engine = session(static::SESSION_KEY_ENGINE);
         $arrCampaigns = [];
         $campaigns = null;
         $arrCampaigns['all'] = 'All Campaigns';

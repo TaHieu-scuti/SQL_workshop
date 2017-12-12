@@ -41,7 +41,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
-        $engine = session('engine');
+        $engine = session(static::SESSION_KEY_ENGINE);
         $arrAdgroups = [];
         $adgroups = null;
         $arrAdgroups['all'] = 'All Adgroup';

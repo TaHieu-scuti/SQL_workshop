@@ -21,7 +21,7 @@ class RepoAdwCampaignReportCost extends AbstractReportModel
     public function getAllAdwCampaign(
         $accountId = null
     ) {
-        $engine = session('engine');
+        $engine = session(static::SESSION_KEY_ENGINE);
         return self::select('campaignID', 'campaign as campaignName')
             ->where(
                 function ($query) use ($accountId, $engine) {
