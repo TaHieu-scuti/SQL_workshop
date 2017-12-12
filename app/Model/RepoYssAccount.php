@@ -28,7 +28,7 @@ class RepoYssAccount extends Model
         $adwAccounts = RepoAdwAccountReportCost::select(
             DB::raw('"adw" as engine'),
             'account AS accountNAme',
-            'accountid'
+            'customerID'
         )
             ->where('account_id', '=', Auth::user()->account_id);
 
