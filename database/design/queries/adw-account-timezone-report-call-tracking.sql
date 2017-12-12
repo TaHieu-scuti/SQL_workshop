@@ -48,5 +48,4 @@ AND
 GROUP BY
 	`repo_adw_account_report_cost`.`account_id`,
 	`repo_adw_account_report_cost`.`campaign_id`,
-	#`repo_adw_account_report_cost`.`customerID`,
 	`repo_adw_account_report_cost`.`hourOfDay`
