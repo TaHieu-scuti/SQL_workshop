@@ -664,10 +664,10 @@ abstract class AbstractReportModel extends Model
         $arrayAlias = [];
         $arraySelections = [];
 
-        if (!empty($campaignId)) {
+        if (isset($campaignId)) {
             array_push($arrayAlias, 'campaignID');
         }
-        if (!empty($adGroupId)) {
+        if (isset($adGroupId)) {
             array_push($arrayAlias, 'adgroupID');
         }
 

@@ -372,6 +372,13 @@ var Script = function () {
             processRequestBreadcrumbs(url, requestId, engine);
         });
 
+        $('li.panel-body').click(function() {
+            let url = $(this).find('a').attr('href');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+
     });
 
 }();
