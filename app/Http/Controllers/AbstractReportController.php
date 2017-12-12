@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAdwDisplayKeywordReportCost;
+use App\Model\RepoYssSearchqueryReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -35,6 +37,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -160,6 +163,7 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
+
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
@@ -258,8 +262,9 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
+
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_OLD_ENGINE)]);
+        session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
     }
 
     public function checkoutSessionFieldName()
@@ -325,6 +330,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_ACCOUNT_ID => $accountId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_ACCOUNT_ID)) {
+            session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
+        }
     }
 
     public function updateSessionAdReportId($adReportId)
@@ -394,18 +402,27 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
-        if (session()->has(self::SESSION_KEY_ENGINE)) {
+        session()->put([self::SESSION_KEY_ENGINE => $engine]);
+        if (!session()->has(self::SESSION_KEY_OLD_ENGINE)) {
             session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
-        session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
-        $array[0] = static::GROUPED_BY_FIELD;
+
+        if (session(static::SESSION_KEY_ENGINE) === 'yss'
+            || session(static::SESSION_KEY_ENGINE) === 'ydn'
+            || session(static::SESSION_KEY_ENGINE) === null
+        ) {
+            $array[0] = static::GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $array[0] = static::ADW_GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
-        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
     }
 
     public function updateSessionID(Request $request)
@@ -607,5 +624,98 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }
+    }
+
+    public function exportSearchQueryToCsv()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwDisplayKeywordReportCost;
+            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
+            // so I will unset it in here
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $collection = $data->getCollection();
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $csvData = $exporter->export();
+        return $this->responseFactory->make(
+            $csvData,
+            200,
+            [
+            'Content-Type' => 'application/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function exportSearchQueryToExcel()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwDisplayKeywordReportCost;
+            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
+            // so I will unset it in here
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $excelData = $exporter->export();
+
+        return $this->responseFactory->make(
+            $excelData,
+            200,
+            [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function checkoutConditionForUpdateColumn($engine)
+    {
+        if ((session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
+            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) === $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
+            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
+            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
+            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID))
+        ) {
+            return true;
+        }
+        return false;
     }
 }

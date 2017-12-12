@@ -1,6 +1,7 @@
 <?php
 return [
     'account' => 'アカウント名',
+    'searchquery' => '検索クエリ',
     'Search_for_account' => 'アカウント名で検索',
     'engineAccount' => 'エンジンアカウント',
     'campaign' => 'キャンペーン',
@@ -35,7 +36,7 @@ return [
     'AvgCPC' => '平均CPC',
     'Avg_pos' => '平均掲載順位',
     'impression_Share' => 'インプレッション',
-    'yesterday' => '過去7日間',
+    'yesterday' => '昨日',
     'last_7_days' => '過去7日間',
     'including_today' => '今日を含む',
     'excluding_today' => '今日を除く',
