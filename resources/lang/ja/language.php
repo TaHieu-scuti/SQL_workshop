@@ -74,4 +74,5 @@ return [
     'ad' => '広告',
     'all_adreports' => 'すべての広告',
     'client' => 'クライアント',
+    'searchterm' => '検索クエリー',
 ];
