@@ -24,7 +24,7 @@ class AccountsController extends AbstractReportController
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
     const SUMMARY_REPORT = "summaryReport";
-    const SESSION_KEY_PREFIX = 'accounts.';
+    const SESSION_KEY_PREFIX = 'client.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
@@ -36,7 +36,7 @@ class AccountsController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
-    const SESSION_KEY_PREFIX_ROUTE = '/account_report';
+    const SESSION_KEY_PREFIX_ROUTE = '/client-list';
     const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
 
     const REPORTS = 'reports';
@@ -83,23 +83,23 @@ class AccountsController extends AbstractReportController
     {
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
-        if (!session('accounts')) {
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ACCOUNT_ID);
+        if (!session('client')) {
             $this->initializeSession($defaultColumns);
         }
         session([self::SESSION_KEY_ACCOUNT_ID => null]);
         $dataReports = $this->getDataForTable();
-
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
+            array_slice($dataReports, ($this->page - 1) * 20, 20),
             count($dataReports),
             20,
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
+
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(
@@ -135,7 +135,7 @@ class AccountsController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        if (!session('accounts')) {
+        if (!session('client')) {
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
@@ -145,7 +145,7 @@ class AccountsController extends AbstractReportController
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
+            array_slice($reports, ($this->page - 1) * 20, 20),
             count($reports),
             20,
             $this->page,

@@ -25,3 +25,9 @@ Breadcrumbs::register(
         $breadcrumbs->push('AdGroup', route('adgroup-report'));
     }
 );
+Breadcrumbs::register(
+    'client-list',
+    function ($breadcrumbs) {
+        $breadcrumbs->push('Client', route('client-list'));
+    }
+);

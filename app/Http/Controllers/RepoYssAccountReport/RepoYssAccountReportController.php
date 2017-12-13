@@ -98,7 +98,6 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
-
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }

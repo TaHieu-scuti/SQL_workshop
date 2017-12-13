@@ -172,10 +172,11 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    protected function getAggregatedAngency (array $fieldNames)
+    protected function getAggregatedAgency (array $fieldNames)
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
+        $arrayCalculate[] = DB::raw($tableName.'.account_id AS account_id');
         foreach ($fieldNames as  $fieldName) {
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(

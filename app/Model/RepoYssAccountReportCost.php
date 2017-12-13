@@ -85,7 +85,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $arrSelect;
     }
 
-    private function getAggregatedGraph($column)
+    public function getAggregatedGraph($column)
     {
         $arrSelect = [];
         $tableName = $this->getTable();
@@ -515,5 +515,33 @@ class RepoYssAccountReportCost extends AbstractReportModel
             );
 
         return $adwAccountReport;
+    }
+
+    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay)
+    {
+        $getAggregatedYssAccounts = $this->getAggregatedAgency($fieldNames);
+
+        $accounts = self::select($getAggregatedYssAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        return $accounts;
+    }
+
+    public function getGraphForAgencyYss($column, $startDay, $endDay, $arrAccountsAgency)
+    {
+        $getAggregatedYssAccounts = $this->getAggregatedGraph($column);
+        return self::select($getAggregatedYssAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->whereIn('account_id', $arrAccountsAgency)
+            ->groupBy('day');
     }
 }

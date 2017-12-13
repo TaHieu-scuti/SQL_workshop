@@ -183,11 +183,11 @@ Route::prefix('keyword-report')->group(function () {
     );
 });
 
-Route::prefix('accounts')->group(function () {
+Route::prefix('client-list')->group(function () {
     Route::get(
         '/',
         'Accounts\AccountsController@index'
-    )->name('keyword-report');
+    )->name('client-list');
     Route::post(
         '/display-graph',
         'Accounts\AccountsController@displayGraph'
