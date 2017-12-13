@@ -285,6 +285,10 @@ abstract class AbstractReportModel extends Model
                         $keywordId
                     );
                 }
+            )->where(
+                function (Builder $query) use ($engine) {
+                    $this->addConditionNetworkQueryForADW($engine, $query);
+                }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
@@ -336,6 +340,10 @@ abstract class AbstractReportModel extends Model
                         $adGroupId,
                         $adReportId
                     );
+                }
+            )->where(
+                function (Builder $query) use ($engine) {
+                    $this->addConditionNetworkQueryForADW($engine, $query);
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -471,6 +479,10 @@ abstract class AbstractReportModel extends Model
                         $keywordId
                     );
                 }
+            )->where(
+                function (Builder $query) use ($engine) {
+                    $this->addConditionNetworkQueryForADW($engine, $query);
+                }
             )
             ->groupBy($this->groupBy)
             ->orderBy($columnSort, $sort);
@@ -545,6 +557,10 @@ abstract class AbstractReportModel extends Model
                         $adReportId,
                         $keywordId
                     );
+                }
+            )->where(
+                function (Builder $query) use ($engine) {
+                    $this->addConditionNetworkQueryForADW($engine, $query);
                 }
             )
             ->groupBy('day')
@@ -707,5 +723,16 @@ abstract class AbstractReportModel extends Model
             array_push($this->groupBy, $value['columnId']);
         }
         return $arraySelections;
+    }
+
+    private function addConditionNetworkQueryForADW($engine, Builder $query)
+    {
+        if ($engine === 'adw') {
+            if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
+                $query->where('network', 'SEARCH');
+            } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                $query->where('network', 'CONTENT');
+            }
+        }
     }
 }
