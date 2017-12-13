@@ -14,6 +14,55 @@ class PhoneTimeUseGenerator extends Seeder
 {
     const START_DATE = '2017-01-01 00:00:00';
     const END_DATE = '2018-02-03 00:00:00';
+    const PREFECTURE = [
+        'Hokkaido',
+        'Aomori',
+        'Iwate',
+        'Miyagi',
+        'Akita',
+        'Yamagata',
+        'Fukushima',
+        'Ibaraki',
+        'Tochigi',
+        'Gunma',
+        'Saitama',
+        'Chiba',
+        'Tokyo',
+        'Kanagawa',
+        'Niigata',
+        'Toyama',
+        'Ishikawa',
+        'Fukui',
+        'Yamanashi',
+        'Nagano',
+        'Gifu',
+        'Shizuoka',
+        'Aichi',
+        'Mie',
+        'Shiga',
+        'Kyoto',
+        'Osaka',
+        'Hyogo',
+        'Nara',
+        'Wakayama',
+        'Tottori',
+        'Shimane',
+        'Okayama',
+        'Hiroshima',
+        'Yamaguchi',
+        'Tokushima',
+        'Kagawa',
+        'Ehime',
+        'Kochi',
+        'Fukuoka',
+        'Saga',
+        'Nagasaki',
+        'Kumamoto',
+        'Oita',
+        'Miyazaki',
+        'Kagoshima',
+        'Okinawa'
+    ];
 
     private function newRecord(
         $account_id,
@@ -41,7 +90,11 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->dblclick_advertiser_id = '';
         $phoneTimeUse->dblclick_conv_id_calls = '';
         $phoneTimeUse->dblclick_conv_id_goals = '';
-        $phoneTimeUse->visitor_city_state = '';
+
+        $phoneTimeUse->visitor_city_state = 'aabbcc - '
+            . self::PREFECTURE[rand(0, count(self::PREFECTURE) - 1)]
+            . ' (Japan)';
+
         $phoneTimeUse->visitor_country = '';
         $phoneTimeUse->visitor_country_code = '';
         $phoneTimeUse->caller_name = '';
