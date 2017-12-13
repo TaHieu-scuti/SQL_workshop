@@ -78,18 +78,23 @@
                             <th>Action</th>
                         </thead>
                         <tbody>
-                        @foreach ($Authaccounts as $Authaccount)
-                            <tr>
-                                <td>{{$Authaccount->id}}</td>
-                                <td>{{$Authaccount->account_id}}</td>
-                                <td>{{$Authaccount->userAgent}}</td>
-                                <td>
-                                    <a href="{{ route('edit-account',$Authaccount->id) }}" class="btn btn-warning">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
+                            @foreach ($Authaccounts as $Authaccount)
+                                <tr>
+                                    <td>{{$Authaccount->id}}</td>
+                                    <td>{{$Authaccount->account_id}}</td>
+                                    <td>{{$Authaccount->userAgent}}</td>
+                                    <td>
+                                        <a href="{{ route('edit-account',$Authaccount->id) }}" class="btn btn-warning">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            @if (!empty($Authaccounts))
+                                <tr class="paginator">
+                                    <td>{{$Authaccounts->links('pagination')}}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                     </div>
