@@ -6,6 +6,10 @@ use App\Model\RepoAdwSearchQueryPerformanceReport;
 
 class RepoAdwSearchQueryPerformanceReportGenerator extends Seeder
 {
+    const SEARCH_TERM = [
+        'SEARCH 1', 'SEARCH 2',
+        'SEARCH 3', 'SEARCH 4'
+    ];
     /**
      * Run the database seeds.
      *
@@ -70,6 +74,7 @@ class RepoAdwSearchQueryPerformanceReportGenerator extends Seeder
             $adwSearchQuery->valueConv = $keyword->valueConv;
             $adwSearchQuery->week = $keyword->week;
             $adwSearchQuery->week = $keyword->year;
+            $adwSearchQuery->searchTerm = self::SEARCH_TERM[mt_rand(0, count(self::SEARCH_TERM) -1)];
             $adwSearchQuery->saveOrFail();
         }
     }
