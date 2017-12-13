@@ -30,7 +30,7 @@ abstract class AbstractReportModel extends Model
     const HOUR_OF_DAY = "hourofday";
     const SESSION_KEY_ENGINE = 'engine';
     const YSS_SEARCH_QUERY = 'searchQuery';
-    const ADW_KEYWORD = 'keyword';
+    const ADW_KEYWORD = 'searchTerm';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -174,6 +174,7 @@ abstract class AbstractReportModel extends Model
     protected function addQueryConditions(
         Builder $query,
         $adgainerId,
+        $engine = null,
         $accountId = null,
         $campaignId = null,
         $adGroupId = null,
@@ -181,7 +182,11 @@ abstract class AbstractReportModel extends Model
         $keywordId = null
     ) {
         if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.accountid', '=', $accountId);
+            if ($engine === 'adw') {
+                $query->where($this->getTable().'.customerID', '=', $accountId);
+            } else {
+                $query->where($this->getTable().'.accountid', '=', $accountId);
+            }
         }
         if ($campaignId !== null && $adGroupId === null && $adReportId === null) {
             $query->where($this->getTable().'.campaignID', '=', $campaignId);
@@ -266,11 +271,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -317,11 +324,13 @@ abstract class AbstractReportModel extends Model
                     $accountId,
                     $campaignId,
                     $adGroupId,
-                    $adReportId
+                    $adReportId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -421,7 +430,14 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        $higherLayerSelections = [];
+        if ($groupedByField !== self::DEVICE
+            && $groupedByField !== self::HOUR_OF_DAY
+            && $groupedByField !== self::DAY_OF_WEEK
+            && $groupedByField !== self::PREFECTURE
+        ) {
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         array_push($this->groupBy, $groupedByField);
         if ($groupedByField === 'ad' || $groupedByField === 'adName') {
@@ -441,11 +457,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -514,11 +532,13 @@ abstract class AbstractReportModel extends Model
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
                     $this->addQueryConditions(
                         $query,
                         $adgainerId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
