@@ -30,7 +30,7 @@ abstract class AbstractReportModel extends Model
     const HOUR_OF_DAY = "hourofday";
     const SESSION_KEY_ENGINE = 'engine';
     const YSS_SEARCH_QUERY = 'searchQuery';
-    const ADW_KEYWORD = 'keyword';
+    const ADW_KEYWORD = 'searchTerm';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
