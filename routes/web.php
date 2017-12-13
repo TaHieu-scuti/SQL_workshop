@@ -173,6 +173,14 @@ Route::prefix('keyword-report')->group(function () {
         '/updateSession',
         'RepoYssKeywordReport\RepoYssKeywordReportController@updateSessionID'
     );
+    Route::get(
+        '/export_search_query_csv',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToCsv'
+    );
+    Route::get(
+        '/export_search_query_excel',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToExcel'
+    );
 });
 
 Route::get('language/{locale}', function ($locale) {

@@ -124,7 +124,7 @@ class RepoAdwAccountReportGenerator extends Seeder
             self::MAX_CONV_VALUE
         ) / mt_getrandmax();
 
-        $costReport->accountid = $mediaAccountNumber + 1;
+        $costReport->customerID = $mediaAccountNumber + 1;
 
         $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 

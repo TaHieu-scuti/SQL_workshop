@@ -74,9 +74,17 @@ function sendingRequestTable() {
     }, 10);
 }
 
+function showLoadingImageOnTopGraph() {
+    $('.loading-gif-on-top-graph').removeClass('hidden-graph');
+    setTimeout(function() {
+        $('.loading-gif-on-top-graph').show();
+    }, 10);
+}
+
 function completeRequestTable()
 {
     $('.loading-gif-on-table').addClass('hidden-table');
+    $('.loading-gif-on-top-graph').addClass('hidden-graph');
 }
 /*
 *
@@ -315,10 +323,8 @@ $('.specific-filter-item').click(function() {
             'specificItem' : $(this).data('value'),
         },
         beforeSend : function () {
-            $('html, body').animate({
-                scrollTop: $('#active-scroll').offset().top
-            }, 1000)
             sendingRequestTable();
+            showLoadingImageOnTopGraph();
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);

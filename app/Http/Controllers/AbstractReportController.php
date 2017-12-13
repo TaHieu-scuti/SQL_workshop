@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAdwSearchQueryPerformanceReport;
+use App\Model\RepoYssSearchqueryReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -161,6 +163,7 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
+
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
@@ -261,7 +264,6 @@ abstract class AbstractReportController extends Controller
         }
 
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
     }
 
@@ -409,9 +411,18 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
-        $array[0] = static::GROUPED_BY_FIELD;
+
+        if (session(static::SESSION_KEY_ENGINE) === 'yss'
+            || session(static::SESSION_KEY_ENGINE) === 'ydn'
+            || session(static::SESSION_KEY_ENGINE) === null
+        ) {
+            $array[0] = static::GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $array[0] = static::ADW_GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
-        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
     }
 
     public function updateSessionID(Request $request)
@@ -550,6 +561,9 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
+            session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+        }
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -613,6 +627,78 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }
+    }
+
+    public function exportSearchQueryToCsv()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $collection = $data->getCollection();
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $csvData = $exporter->export();
+        return $this->responseFactory->make(
+            $csvData,
+            200,
+            [
+            'Content-Type' => 'application/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function exportSearchQueryToExcel()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $excelData = $exporter->export();
+
+        return $this->responseFactory->make(
+            $excelData,
+            200,
+            [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
     }
 
     public function checkoutConditionForUpdateColumn($engine)

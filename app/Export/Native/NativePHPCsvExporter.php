@@ -126,7 +126,16 @@ class NativePHPCsvExporter implements CSVExporterInterface
                 }
                 $array = [];
                 foreach ($fieldNames as $fieldName) {
-                    $array[$fieldName] = $value->$fieldName;
+                    $data = $value->$fieldName;
+                    if (ctype_digit($data)) {
+                        $array[$fieldName] = number_format($data, 0, '', ',');
+                    } elseif ($fieldName === 'cost' && is_float($data)) {
+                        $array[$fieldName] = number_format($data, 0, '', ',');
+                    } elseif (is_float($data)) {
+                        $array[$fieldName] = number_format($data, 2, '.', ',');
+                    } else {
+                        $array[$fieldName] = $data;
+                    }
                 }
                 $this->writeLine($array);
             }

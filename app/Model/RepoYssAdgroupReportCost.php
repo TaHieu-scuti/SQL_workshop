@@ -41,16 +41,18 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         $arrAdgroups = [];
         $adgroups = null;
         $arrAdgroups['all'] = 'All Adgroup';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $adgroups = self::select('adgroupID', 'adgroupName')
                 ->where(
-                    function ($query) use ($accountId, $campaignId) {
+                    function ($query) use ($accountId, $campaignId, $engine) {
                         $this->addQueryConditions(
                             $query,
                             Auth::user()->account_id,
+                            $engine,
                             $accountId,
                             $campaignId
                         );
