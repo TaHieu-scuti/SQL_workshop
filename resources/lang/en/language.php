@@ -73,5 +73,6 @@ return [
     'adreport' => 'Ad Report',
     'ad' => 'Ad',
     'all_adreports' => 'All Adreports',
-    'client' => 'Client'
+    'client' => 'Client',
+    'searchterm' => 'Search Query'
 ];
