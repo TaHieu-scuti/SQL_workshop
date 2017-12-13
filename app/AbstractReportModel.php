@@ -732,6 +732,8 @@ abstract class AbstractReportModel extends Model
                 $query->where('network', 'SEARCH');
             } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
                 $query->where('network', 'CONTENT');
+            } else {
+                $query->where('network', 'SEARCH')->orWhere('network', 'CONTENT');
             }
         }
     }
