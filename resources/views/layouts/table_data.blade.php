@@ -134,7 +134,8 @@ if (!isset($export)) {
                     'adGroup',
                     'keyword',
                     'adName',
-                    'ad'
+                    'ad',
+                    'matchType'
                 ];
                 $totalColspan = 0;
                 foreach ($fieldNames as $value) {

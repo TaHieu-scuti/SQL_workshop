@@ -51,6 +51,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
+        'matchType',
         'impressions',
         'clicks',
         'cost',
