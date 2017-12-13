@@ -44,5 +44,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AccountsTableSeeder::class);
         $this->call(RepoAdwDisplayKeywordReportCost::class);
         $this->call(RepoYssSearchQueryPostCost::class);
+        $this->call(RepoAdwSearchQueryPerformanceReportCost::class);
     }
 }

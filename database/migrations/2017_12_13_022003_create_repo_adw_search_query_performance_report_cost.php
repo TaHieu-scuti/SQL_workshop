@@ -228,7 +228,6 @@ class CreateRepoAdwSearchQueryPerformanceReportCost extends Migration
                 $table->index('currency', 'repo_adw_search_query_performance_report_cost6');
                 $table->index('timeZone', 'repo_adw_search_query_performance_report_cost7');
                 $table->index('adType', 'repo_adw_search_query_performance_report_cost8');
-                $table->index('adType', 'repo_adw_search_query_performance_report_cost8');
                 $table->index('adGroupID', 'repo_adw_search_query_performance_report_cost9');
                 $table->index('adGroupState', 'repo_adw_search_query_performance_report_cost10');
                 $table->index('network', 'repo_adw_search_query_performance_report_cost11');
