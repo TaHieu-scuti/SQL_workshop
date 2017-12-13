@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwKeywordReportCost;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 
+// @codingStandardsIgnoreLine
 class RepoAdwSearchQueryPerformanceReportGenerator extends Seeder
 {
     const SEARCH_TERM = [
