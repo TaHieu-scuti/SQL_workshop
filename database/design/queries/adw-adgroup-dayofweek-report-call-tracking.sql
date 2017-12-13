@@ -1,7 +1,7 @@
 SELECT
 	`repo_adw_adgroup_report_cost`.`account_id`,
 	`repo_adw_adgroup_report_cost`.`campaign_id`,
-	#`repo_adw_adgroup_report_cost`.`customerID`,
+	`repo_adw_adgroup_report_cost`.`customerID`,
 	`repo_adw_adgroup_report_cost`.`dayOfWeek` AS dayOfWeek,
 	SUM(`repo_adw_adgroup_report_cost`.`impressions`) AS impressions,
 	SUM(`repo_adw_adgroup_report_cost`.`clicks`) AS clicks,
@@ -38,8 +38,8 @@ WHERE
 	`repo_adw_adgroup_report_cost`.`account_id` = 1
 AND
 	`repo_adw_adgroup_report_cost`.`campaign_id` = 11
-#AND
-	#`repo_adw_adgroup_report_cost`.`customerID` = 11
+AND
+	`repo_adw_adgroup_report_cost`.`customerID` = 11
 AND
 	`repo_adw_adgroup_report_cost`.`campaignID` = 11
 AND
@@ -55,6 +55,6 @@ AND
 GROUP BY
 	`repo_adw_adgroup_report_cost`.`account_id`,
 	`repo_adw_adgroup_report_cost`.`campaign_id`,
-	#`repo_adw_adgroup_report_cost`.`customerID`,
+	`repo_adw_adgroup_report_cost`.`customerID`,
 	`repo_adw_adgroup_report_cost`.`campaignID`,
 	`repo_adw_adgroup_report_cost`.`dayOfWeek`
