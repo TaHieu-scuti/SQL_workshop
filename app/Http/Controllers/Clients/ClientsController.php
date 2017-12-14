@@ -7,6 +7,7 @@ use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\Account;
+use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -228,7 +229,7 @@ class ClientsController extends AbstractReportController
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -257,7 +258,7 @@ class ClientsController extends AbstractReportController
 
         $aliases = $this->translateFieldNames($fieldNames);
 
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter(collect($collection), $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
