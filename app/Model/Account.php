@@ -215,7 +215,6 @@ class Account extends AbstractReportModel
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
-//        var_dump($arrAccountsAgency->toSql());
         $datas = [];
         foreach ($arrAccountsAgency->get() as $report) {
             $datas[] = (array)$report;
