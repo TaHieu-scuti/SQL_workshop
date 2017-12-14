@@ -186,35 +186,35 @@ Route::prefix('keyword-report')->group(function () {
 Route::prefix('client-list')->group(function () {
     Route::get(
         '/',
-        'Accounts\AccountsController@index'
+        'Clients\ClientsController@index'
     )->name('client-list');
     Route::post(
         '/display-graph',
-        'Accounts\AccountsController@displayGraph'
+        'Clients\ClientsController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'Accounts\AccountsController@updateTable'
+        'Clients\ClientsController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'Accounts\AccountsController@exportToExcel'
+        'Clients\ClientsController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'Accounts\AccountsController@exportToCsv'
+        'Clients\ClientsController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'Accounts\AccountsController@updateSessionID'
+        'Clients\ClientsController@updateSessionID'
     );
     Route::get(
         '/export_search_query_csv',
-        'Accounts\AccountsController@exportSearchQueryToCsv'
+        'Clients\ClientsController@exportSearchQueryToCsv'
     );
     Route::get(
         '/export_search_query_excel',
-        'Accounts\AccountsController@exportSearchQueryToExcel'
+        'Clients\ClientsController@exportSearchQueryToExcel'
     );
 });
 

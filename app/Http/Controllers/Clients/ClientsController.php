@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Accounts;
+namespace App\Http\Controllers\Clients;
 
 use Illuminate\Http\Request;
 use App\Export\Native\NativePHPCsvExporter;
@@ -10,7 +10,7 @@ use App\Model\Account;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
-class AccountsController extends AbstractReportController
+class ClientsController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
@@ -103,7 +103,7 @@ class AccountsController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(
-            'yssAccountReport.index',
+            'clients.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
@@ -225,9 +225,6 @@ class AccountsController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
         $aliases = $this->translateFieldNames($fieldNames);
@@ -255,9 +252,6 @@ class AccountsController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
 

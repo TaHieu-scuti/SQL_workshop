@@ -87,12 +87,11 @@ use App\Http\Controllers\AbstractReportController;
                                             $checkClient = true;
                                         }
                                         $account = $account['accountName'];
-
                                     } elseif ($account !== 'All Account') {
                                         $engine = isset($titleBreadCumbs['engine']) ? $titleBreadCumbs['engine'] : '';
                                     }
                                     ?>
-                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
+                                    <option data-breadcumbs="{{$key !== null ? $key : '' }}" data-tokens="{{$account}}"
                                         @if ($account !== 'All Account')
                                             data-engine = "{{  $engine }}"
                                         @endif
