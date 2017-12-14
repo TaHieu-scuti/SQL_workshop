@@ -50,8 +50,6 @@ class RepoYdnReport extends AbstractReportModel
             }
         }
         $tableName = $this->getTable();
-        // var_dump($fieldNames);
-        // exit();
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
