@@ -64,7 +64,17 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -98,7 +108,17 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -143,7 +163,17 @@ var Script = function () {
                     $('#status-label').html(response.statusLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -244,7 +274,17 @@ var Script = function () {
                     $('button[data-id=selectpickerGraph] span.filter-option').text(columnName);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -334,7 +374,17 @@ var Script = function () {
                     window.location = redirect;
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
             });
         }
