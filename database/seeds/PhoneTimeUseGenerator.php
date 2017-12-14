@@ -331,7 +331,7 @@ class PhoneTimeUseGenerator extends Seeder
         $adwKeywordReports = $adwKeywordReport->select([
             'account_id',
             'campaign_id',
-            'accountid',
+            'customerID',
             'campaignID',
             'adgroupID',
             'keyword',
@@ -360,7 +360,7 @@ class PhoneTimeUseGenerator extends Seeder
         $adwAdReports = $adwAdReport->select([
             'account_id',
             'campaign_id',
-            'accountid',
+            'customerID',
             'campaignID',
             'adID'
         ])
