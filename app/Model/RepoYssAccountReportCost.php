@@ -22,6 +22,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const GROUPED_BY_FIELD_NAME = 'accountName';
     const GROUPED_BY_FIELD_NAME_ADW = 'account';
     const PAGE_ID = 'accountid';
+    const ADW_CUSTOMER_ID = 'customerID';
 
     /**
      * @var bool
@@ -143,6 +144,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
+            if ($fieldName === self::PAGE_ID) {
+                $arrayCalculate[] = self::ADW_CUSTOMER_ID.' as accountid';
+                continue;
+            }
             if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
@@ -445,7 +450,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             ->orderBy($columnSort, $sort);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
-            $adwAccountReport = $adwAccountReport->groupBy('accountid');
+            $adwAccountReport = $adwAccountReport->groupBy(self::ADW_CUSTOMER_ID);
         }
 
         $datas = $this->select(array_merge([DB::raw("'yss' as engine")], $aggregations))

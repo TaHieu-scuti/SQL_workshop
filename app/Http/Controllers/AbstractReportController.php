@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYssPrefectureReportCost;
-use App\Model\RepoAdwDisplayKeywordReportCost;
+use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -582,6 +582,9 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
+            session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+        }
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -656,11 +659,9 @@ abstract class AbstractReportController extends Controller
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
-            $this->model = new RepoAdwDisplayKeywordReportCost;
-            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
-            // so I will unset it in here
-            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
         $data = $this->getDataForTable();
@@ -691,11 +692,9 @@ abstract class AbstractReportController extends Controller
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
-            $this->model = new RepoAdwDisplayKeywordReportCost;
-            // Right now, repo_adw_display_keyword_report_cost table doesnt have average position column,
-            // so I will unset it in here
-            $fieldNames = $this->model->unsetColumns($fieldNames, ['averagePosition']);
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'keyword']);
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
             session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
         $data = $this->getDataForTable();

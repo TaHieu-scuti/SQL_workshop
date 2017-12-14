@@ -96,12 +96,12 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->quarter = $campaignReport->quarter;
                 $adgroupReportCost->month = $campaignReport->month;
                 $adgroupReportCost->week = $campaignReport->week;
-                $adgroupReportCost->hourofday = $campaignReport->hourofday;
+                $adgroupReportCost->hourOfDay = $campaignReport->hourOfDay;
                 $adgroupReportCost->totalConvValue = mt_rand(
                     self::MIN_ALL_CONV_VALUE,
                     self::MAX_ALL_CONV_VALUE
                 );
-                $adgroupReportCost->accountid = $campaignReport->accountid;
+                $adgroupReportCost->customerID = $campaignReport->customerID;
                 $adgroupReportCost->saveOrFail();
             }
         }

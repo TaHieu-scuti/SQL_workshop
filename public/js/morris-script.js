@@ -163,7 +163,7 @@ var Script = function () {
             $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
             $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
         });
-        
+
         $('.specific-filter-item').click(function(){
             var value = $(this).data('value');
             $('.panel .panel-body').removeClass('active');
@@ -398,6 +398,13 @@ var Script = function () {
                     break;
             }
             processRequestBreadcrumbs(url, requestId, engine);
+        });
+
+        $('li.panel-body').click(function() {
+            let url = $(this).find('a').attr('href');
+            if (url) {
+                window.location.href = url;
+            }
         });
 
     });

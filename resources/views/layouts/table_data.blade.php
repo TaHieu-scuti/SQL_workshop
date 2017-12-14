@@ -20,7 +20,7 @@
             <tr>
                 @if($export)
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id")
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
                             @continue
                         @endif
                         <th>
@@ -29,7 +29,7 @@
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id")
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
                             @continue
                         @endif
                         @if($fieldName === 'accountName')
@@ -58,7 +58,7 @@
             @foreach($reports as $report)
                 <tr>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id')
+                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
                         @continue
                     @endif
                     @if ($fieldName === 'accountName')
@@ -106,12 +106,19 @@
                         </td>
                     <!-- display ad for Google -->
                     @elseif ($fieldName === 'ad')
+                        @if($report['adType'] === 'TEXT_AD')
                         <td>
                             <span class="ad-name">{{ $report['ad'] }}</span><br>
                             <span class="display-url">{{ $report['displayURL'] }}</span><br>
                             <span> {{ $report['description'] }}</span>
                         </td>
-
+                        @elseif($report['adType'] === 'IMAGE_AD')
+                        <td>
+                            <img class="ad-name" src="{{ $report['ad'] }}" style="width: 50px;height: 20px;"><br>
+                            <span class="display-url">{{ $report['displayURL'] }}</span><br>
+                            <span> {{ $report['description'] }}</span>
+                        </td>
+                        @endif
                     @elseif (ctype_digit($report[$fieldName]))
 
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
@@ -135,7 +142,8 @@
                     'adGroup',
                     'keyword',
                     'adName',
-                    'ad'
+                    'ad',
+                    'matchType'
                 ];
                 $totalColspan = 0;
                 foreach ($fieldNames as $value) {

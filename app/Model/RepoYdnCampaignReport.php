@@ -16,12 +16,14 @@ class RepoYdnCampaignReport extends AbstractReportModel
     public function getAllYdnCampaign(
         $accountId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         return self::select('campaignID', 'campaignName')
             ->where(
-                function ($query) use ($accountId) {
+                function ($query) use ($accountId, $engine) {
                     $this->addQueryConditions(
                         $query,
                         Auth::user()->account_id,
+                        $engine,
                         $accountId
                     );
                 }
