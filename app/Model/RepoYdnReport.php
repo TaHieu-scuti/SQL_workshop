@@ -50,6 +50,8 @@ class RepoYdnReport extends AbstractReportModel
             }
         }
         $tableName = $this->getTable();
+        // var_dump($fieldNames);
+        // exit();
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
@@ -68,10 +70,13 @@ class RepoYdnReport extends AbstractReportModel
             if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 ||$fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
             ) {
                 $arrayCalculate[] = $fieldName;
+                continue;
+            }
+            if ($fieldName === self::DAY_OF_WEEK) {
+                $arrayCalculate[] = DB::raw('DAYNAME(day) AS ' . $fieldName);
                 continue;
             }
             if ($fieldName === self::PAGE_ID) {
