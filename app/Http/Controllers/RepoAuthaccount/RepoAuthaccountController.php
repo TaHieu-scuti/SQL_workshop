@@ -6,16 +6,25 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\RepoAuthaccount;
 use App\Http\Requests\AuthAccountRequest;
+use App\Http\Requests\UpdateAuthAccountRequest;
+use Auth;
 
 class RepoAuthaccountController extends Controller
 {
+    private $model;
+
+    public function __construct(RepoAuthaccount $model)
+    {
+        $this->model = $model;
+    }
     /**
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $Authaccounts = RepoAuthaccount::orderby('id', 'desc')->paginate(5);
-        return view('authAccount.index', ['Authaccounts' => $Authaccounts]);
+
+        $authAccounts = $this->model::where('account_id', Auth::user()->account_id)->paginate(5);
+        return view('authAccount.index', ['authAccounts' => $authAccounts]);
     }
 
     /**
@@ -27,13 +36,13 @@ class RepoAuthaccountController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\AuthAccountRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(AuthAccountRequest $request)
     {
         $data = $request->all();
-        RepoAuthaccount::create($data);
+        $this->model::create($data);
         return redirect()->route('auth-account');
     }
 
@@ -43,19 +52,19 @@ class RepoAuthaccountController extends Controller
      */
     public function edit($id)
     {
-        $Authaccount = RepoAuthaccount::find($id);
-        return view('authAccount.EditAuthAccount', ['Authaccount' => $Authaccount]);
+        $authAccount = $this->model::find($id);
+        return view('authAccount.EditAuthAccount', ['authAccount' => $authAccount]);
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UpdateAuthAccountRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(AuthAccountRequest $request)
+    public function update(UpdateAuthAccountRequest $request, $id)
     {
-        $Authaccount = RepoAuthaccount::where('id', $id);
+        $authAccount = $this->model::where('id', $id);
 
-        $Authaccount->update([
+        $authAccount->update([
             'license' => $request->license,
             'apiAccountId' => $request->apiAccountId,
             'apiAccountPassword' => $request->apiAccountPassword,

@@ -16,7 +16,9 @@ class CreateRepoAuthaccountsTable extends Migration
     {
         Schema::create('repo_authaccounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('account_id', 50)->comment('ADgainerシステムのアカウントID');
+            $table->string('account_id', 50)
+                ->comment('ADgainerシステムのアカウントID')
+                ->index('repo_authaccounts_idx1');
             $table->string('license', 19)
                 ->nullable()
                 ->comment('Yahoo! JAPANが発行するライセンス番号です。\n「xxxx-xxxx-xxxx-xxxx」の形式で入力ください。');

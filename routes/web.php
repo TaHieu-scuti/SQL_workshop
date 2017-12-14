@@ -206,7 +206,7 @@ Route::prefix('auth-account')->group(function () {
         'RepoAuthaccount\RepoAuthaccountController@edit'
     )->name('edit-account');
     Route::post(
-        '/update-account',
+        '/update-account/{id}',
         'RepoAuthaccount\RepoAuthaccountController@update'
     )->name('update-account');
 });
