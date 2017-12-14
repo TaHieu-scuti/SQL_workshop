@@ -27,6 +27,8 @@ FROM
           AND
             `phone_time_use`.`utm_campaign` = `repo_adw_geo_report_cost`.`campaignID`
           AND
+            STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_geo_report_cost`.`day`
+          AND
             `phone_time_use`.`time_of_call` >= '2017-01-01'
           AND
             `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -51,9 +53,6 @@ FROM
       )
     GROUP BY
       `repo_adw_geo_report_cost`.`account_id`,
-      `repo_adw_geo_report_cost`.`campaign_id`,
-      `repo_adw_geo_report_cost`.`customerID`,
-      `repo_adw_geo_report_cost`.`campaignID`,
       `criteria`.`Name`
   ) AS adw,
   (
@@ -146,6 +145,8 @@ FROM
         AND
           `phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
         AND
+          STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
+        AND
           `phone_time_use`.`time_of_call` >= '2017-01-01'
         AND
           `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -162,9 +163,6 @@ FROM
       `repo_ydn_reports`.`day` <= '2017-12-01'
     GROUP BY
       `repo_ydn_reports`.`account_id`,
-      `repo_ydn_reports`.`campaign_id`,
-      `repo_ydn_reports`.`accountId`,
-      `repo_ydn_reports`.`campaignID`,
       `repo_ydn_reports`.`prefecture`
   ) AS ydn,
   (
@@ -257,6 +255,8 @@ FROM
           AND
             `phone_time_use`.`utm_campaign` = `repo_yss_prefecture_report_cost`.`campaignID`
           AND
+            STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_prefecture_report_cost`.`day`
+          AND
             `phone_time_use`.`time_of_call` >= '2017-01-01'
           AND
             `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -275,9 +275,6 @@ FROM
       `repo_yss_prefecture_report_cost`.`day` <= '2017-12-01'
     GROUP BY
       `repo_yss_prefecture_report_cost`.`account_id`,
-      `repo_yss_prefecture_report_cost`.`campaign_id`,
-      `repo_yss_prefecture_report_cost`.`accountid`,
-      `repo_yss_prefecture_report_cost`.`campaignID`,
       `repo_yss_prefecture_report_cost`.`prefecture`
   ) AS yss
 WHERE
