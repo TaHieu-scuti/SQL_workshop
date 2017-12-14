@@ -65,8 +65,7 @@ class Account extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         try {
             new DateTime($startDay);
             new DateTime($endDay);
@@ -187,18 +186,19 @@ class Account extends AbstractReportModel
         $getAgreatedAgency = $this->getAgreatedAgency($fieldNames);
         $arrAccountsAgency = DB::query()->select($getAgreatedAgency)
             ->from(
-                DB::raw('accounts,' .
+                DB::raw(
+                    'accounts,' .
                     '(Select '. implode(',', $getAggregatedYssAccounts) .' from repo_yss_account_report_cost 
                         WHERE `repo_yss_account_report_cost`.`day` >= "'.$startDay.'"
                         AND `repo_yss_account_report_cost`.`day` <= "'.$endDay.'"
                         GROUP BY `repo_yss_account_report_cost`.`account_id`
                     ) AS yss,
-                    (Select '. implode(',',$getAggregatedYdnAccounts) .' from repo_ydn_reports 
+                    (Select '. implode(',', $getAggregatedYdnAccounts) .' from repo_ydn_reports 
                         WHERE `repo_ydn_reports`.`day` >= "'.$startDay.'"
                         AND `repo_ydn_reports`.`day` <= "'.$endDay.'"
                         GROUP BY `repo_ydn_reports`.`account_id`
                     ) AS ydn,
-                    (Select '. implode(',',$getAggregatedAdwAccounts) .' from repo_adw_account_report_cost 
+                    (Select '. implode(',', $getAggregatedAdwAccounts) .' from repo_adw_account_report_cost 
                         WHERE `repo_adw_account_report_cost`.`day` >= "'.$startDay.'"
                         AND `repo_adw_account_report_cost`.`day` <= "'.$endDay.'"
                         GROUP BY `repo_adw_account_report_cost`.`account_id`
@@ -274,7 +274,7 @@ class Account extends AbstractReportModel
     {
         $arrayCalculate = [];
         $tableName = $this->getTable();
-        foreach ($fieldNames as  $fieldName) {
+        foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'accountName') {
                 $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName .' AS '.$fieldName);
             }
@@ -282,9 +282,13 @@ class Account extends AbstractReportModel
                 $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw('(adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.')/3 AS '.$fieldName);
+                $arrayCalculate[] = DB::raw(
+                    '(adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.')/3 AS '.$fieldName
+                );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                $arrayCalculate[] = DB::raw('adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.' AS '.$fieldName);
+                $arrayCalculate[] = DB::raw(
+                    'adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.' AS '.$fieldName
+                );
             }
         }
         return $arrayCalculate;

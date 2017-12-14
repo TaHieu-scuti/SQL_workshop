@@ -33,4 +33,3 @@ Breadcrumbs::register(
         $breadcrumbs->push('AdGroup', route('adgroup-report'));
     }
 );
-

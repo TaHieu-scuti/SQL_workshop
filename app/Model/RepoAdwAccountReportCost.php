@@ -45,7 +45,8 @@ class RepoAdwAccountReportCost extends AbstractReportModel
         return $accounts;
     }
 
-    public function getDataForGraphAdw($column) {
+    public function getDataForGraphAdw($column)
+    {
         $arrSelect = [];
         $tableName = $this->getTable();
         $arrSelect[] = DB::raw('DATE(day) as day');
