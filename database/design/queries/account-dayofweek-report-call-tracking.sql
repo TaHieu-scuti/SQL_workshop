@@ -25,6 +25,8 @@ FROM
           AND
             `phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`
           AND
+            STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_account_report_cost`.`day`
+          AND
             `phone_time_use`.`time_of_call` >= '2017-01-01'
           AND
             `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -146,6 +148,8 @@ FROM
         AND
           `phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
         AND
+          STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
+        AND
           `phone_time_use`.`time_of_call` >= '2017-01-01'
         AND
           `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -192,6 +196,8 @@ FROM
             `phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`
           AND
             `phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`
+          AND
+            STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`
           AND
             `phone_time_use`.`time_of_call` >= '2017-01-01'
           AND
