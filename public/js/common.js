@@ -130,7 +130,17 @@ $(".apply-button").click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -183,7 +193,17 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -217,7 +237,17 @@ $('.apply-custom-period').click(function() {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -263,7 +293,17 @@ $('.status-option li').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -453,3 +493,12 @@ $(document).ready(function(){
     }
     $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })
+
+function isJson(obj) {
+    try {
+        JSON.parse(obj);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
