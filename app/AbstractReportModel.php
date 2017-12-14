@@ -64,7 +64,8 @@ abstract class AbstractReportModel extends Model
         'averageCpc' => 'averageCpc',
         'averagePosition' => 'averagePosition',
         'campaignName' => 'campaignName',
-        'adgroupName' => 'adgroupName'
+        'adgroupName' => 'adgroupName',
+        'keywordMatchType' => 'matchType'
     ];
 
     const ADW_FIELDS_MAP = [
@@ -76,10 +77,13 @@ abstract class AbstractReportModel extends Model
         'avgCPC' => 'averageCpc',
         'avgPosition' => 'averagePosition',
         'campaign' => 'campaignName',
-        'adGroup' => 'adgroupName'
+        'adGroup' => 'adgroupName',
+        'matchType' => 'matchType'
     ];
 
     const ALL_HIGHER_LAYERS = [];
+    const ADW = 'adw';
+    const YSS = 'yss';
 
     protected $groupByFieldName = [
         'device',
@@ -110,6 +114,9 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
+            if ($fieldName === 'matchType') {
+                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+            }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
                 if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
                     $arrayCalculate[] = static::PAGE_ID;
@@ -255,6 +262,9 @@ abstract class AbstractReportModel extends Model
     ) {
         if ($groupedByField === 'ad' || $groupedByField === 'adName') {
             $fieldNames = $this->unsetColumns($fieldNames, ['adType']);
+        }
+        if ($groupedByField === 'keyword') {
+            $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
         }
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
@@ -443,6 +453,14 @@ abstract class AbstractReportModel extends Model
         if ($groupedByField === 'ad' || $groupedByField === 'adName') {
             array_push($this->groupBy, 'adType');
         }
+
+        if ($groupedByField === 'keyword') {
+            if ($engine === self::ADW) {
+                array_push($this->groupBy, 'matchType');
+            } elseif ($engine === self::YSS) {
+                array_push($this->groupBy, 'keywordMatchType');
+            }
+        }
         // merge static::FIELDS in order to display ad as requested
         $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
@@ -474,14 +492,12 @@ abstract class AbstractReportModel extends Model
             )
             ->groupBy($this->groupBy)
             ->orderBy($columnSort, $sort);
-
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->paginate($pagination);
         } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
             $paginatedData = $paginatedData->paginate($pagination);
         }
-
         return $paginatedData;
     }
 

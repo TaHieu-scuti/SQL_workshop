@@ -75,4 +75,5 @@ return [
     'all_adreports' => 'すべての広告',
     'client' => 'クライアント',
     'searchterm' => '検索クエリー',
+    'matchtype' => 'マッチタイプ'
 ];
