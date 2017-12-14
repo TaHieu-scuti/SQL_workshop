@@ -64,6 +64,7 @@ return [
     'campaignname' => 'Campaign name',
     'all_campaigns' => 'All Campaigns',
     'all_adgroup' => 'All Adgroup',
+    'all_client' => 'All Client',
     'all_keywords' => 'All Keywords',
     'adgroupname' => 'Ad group name',
     'conversions' => 'Conversions',

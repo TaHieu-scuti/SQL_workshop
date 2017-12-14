@@ -38,6 +38,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
+    const SESSION_KEY_ADGAINER_ID = 'adgainerId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -323,6 +324,15 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
     }
 
+    public function updateSessionAdgainerId($adgainerId)
+    {
+        session()->put(
+            [
+                self::SESSION_KEY_ADGAINER_ID => $adgainerId
+            ]
+        );
+    }
+
     public function updateSessionAccountId($accountId)
     {
         session()->put(
@@ -472,6 +482,17 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionAccountId($request->id_account);
         }
 
+        //get id adgainer if avaiable
+        if ($request->id_adgainer === 'all') {
+            session()->put(
+                [
+                    self::SESSION_KEY_ADGAINER_ID => null
+                ]
+            );
+        } elseif ($request->id_adgainer !== "all" && $request->id_adgainer !== null) {
+            $this->updateSessionAdgainerId($request->id_adgainer);
+        }
+
         //get id campaign if avaiable
         if ($request->id_campaign === 'all') {
             session()->put(
@@ -544,7 +565,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -572,7 +593,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -589,7 +610,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
@@ -607,7 +628,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),

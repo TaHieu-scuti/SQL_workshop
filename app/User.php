@@ -56,10 +56,10 @@ class User extends Authenticatable
                 $model = new Account();
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllClient();
-                if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
+                if (session(AbstractReportController::SESSION_KEY_ADGAINER_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ADGAINER_ID);
                 }
                 break;
             case 'Account':

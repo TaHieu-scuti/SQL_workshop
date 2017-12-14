@@ -24,11 +24,15 @@ use App\Http\Controllers\AbstractReportController;
                                     @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
                                     if (is_array($account)) {
-                                        $key = $account['accountid'];
-                                        $engine = $account['engine'];
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                        $checkClient = false;
+                                        if (isset($account['account_id'])) {
+                                            $checkClient = true;
+                                        }
                                         $account = $account['accountName'];
                                     } elseif ($account !== 'All Account') {
-                                        $engine = $titleBreadCumbs['engine'];
+                                        $engine = isset($titleBreadCumbs['engine']) ? $titleBreadCumbs['engine'] : '';
                                     }
                                     ?>
                                         <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
@@ -40,6 +44,7 @@ use App\Http\Controllers\AbstractReportController;
                                             @else
                                                 {{ (int)$key === (int)$titleBreadCumbs['flag']
                                                 && $engine === session(AbstractReportController::SESSION_KEY_ENGINE)
+                                                || (int)$key === (int)$titleBreadCumbs['flag'] && $checkClient
                                                 ? "selected" : ""}}
                                             @endif
                                         data-url= "{{ $breadcrumb->url }}" >
@@ -49,7 +54,8 @@ use App\Http\Controllers\AbstractReportController;
                                                         || $account === 'All Campaigns'
                                                         || $account === 'All Adgroup'
                                                         || $account === 'All Keywords'
-                                                        || $account === 'All Adreports')
+                                                        || $account === 'All Adreports'
+                                                        || $account === 'All Client')
                                                         {{__('language.' .str_slug($account,'_'))}}
                                                     @else
                                                         {{$account}}
@@ -74,23 +80,29 @@ use App\Http\Controllers\AbstractReportController;
                                 @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
                                     if (is_array($account)) {
-                                        $key = $account['accountid'];
-                                        $engine = $account['engine'];
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                        $checkClient = false;
+                                        if (isset($account['account_id'])) {
+                                            $checkClient = true;
+                                        }
                                         $account = $account['accountName'];
+
                                     } elseif ($account !== 'All Account') {
-                                        $engine = $titleBreadCumbs['engine'];
+                                        $engine = isset($titleBreadCumbs['engine']) ? $titleBreadCumbs['engine'] : '';
                                     }
                                     ?>
                                     <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
-                                            @if ($account !== 'All Account')
+                                        @if ($account !== 'All Account')
                                             data-engine = "{{  $engine }}"
-                                            @endif
-                                            data-url= "{{ $breadcrumb->url }}"
+                                        @endif
+                                        data-url= "{{ $breadcrumb->url }}"
                                         @if ( $titleBreadCumbs['flag'] === 'all')
                                             {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                         @else
                                             {{ (int)$key === (int)$titleBreadCumbs['flag']
                                             && $engine === session(AbstractReportController::SESSION_KEY_ENGINE)
+                                            || (int)$key === (int)$titleBreadCumbs['flag'] && $checkClient
                                             ? "selected" : ""}}
                                         @endif >
                                     <a href="#">
@@ -99,7 +111,8 @@ use App\Http\Controllers\AbstractReportController;
                                                 || $account === 'All Campaigns'
                                                 || $account === 'All Adgroup'
                                                 || $account === 'All Keywords'
-                                                || $account === 'All Adreports')
+                                                || $account === 'All Adreports'
+                                                || $account === 'All Client')
                                                 {{__('language.' .str_slug($account,'_'))}}
                                             @else
                                                 {{$account}}

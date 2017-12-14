@@ -33,7 +33,7 @@ Route::get(
 Route::get(
     '/home',
     function () {
-        return redirect('account_report');
+        return redirect('client-list');
     }
 );
 
