@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Account Report
+    Agency Report
 @stop
 
 @section('filter-list')

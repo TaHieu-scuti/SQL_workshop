@@ -628,13 +628,13 @@ abstract class AbstractReportModel extends Model
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->groupByFieldName)) {
+            if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
                 $rawExpression[] = DB::raw($fieldName);
                 continue;
             }
             if (in_array($fieldName, static::SUM_FIELDS)) {
                 $rawExpression[] = DB::raw('sum(' .$fieldName. ') as ' . $fieldName);
-            } else {
+            } elseif (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $rawExpression[] = DB::raw('avg(' .$fieldName. ') as ' . $fieldName);
             }
         }

@@ -9,5 +9,5 @@ class RepoYdnPrefecture extends AbstractReportModel
 {
     protected $table = 'repo_ydn_reports';
 
-    public $timestamps = 'false';
+    public $timestamps = false;
 }
