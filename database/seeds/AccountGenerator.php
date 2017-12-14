@@ -7,7 +7,7 @@ use App\Model\Account;
 class AccountGenerator extends Seeder
 {
     const NUMBER_OF_ACCOUNTS = 12;
-    const LEVEL = [1, 3];
+    const LEVEL = 3;
     private $agentId = [''];
     /**
      * Run the database seeds.
@@ -17,6 +17,9 @@ class AccountGenerator extends Seeder
 
     public function processAccounts($account_id)
     {
+        if ($account_id !== 1) {
+            array_push($this->agentId, $account_id);
+        }
         $account = new Account();
         $account->account_id = $account_id;
         $account->account_subsidiary = '';
@@ -27,10 +30,18 @@ class AccountGenerator extends Seeder
         $account->ftp_folder = '';
         $account->api_key = '';
         $account->super_agent_id = '';
-        $account->level = self::LEVEL[mt_rand(0, count(self::LEVEL) - 1)];
-        $account->agent_id = '';
-        if ((int)$account->level !== 1) {
-            $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
+        $account->level = self::LEVEL;
+        if ((int)$account_id < 4) {
+            $account->level = 3;
+        } elseif ((int)$account_id === 4) {
+            $account->level = 1;
+        }
+        $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
+        if ((int)$account_id === 3 || (int)$account_id === 1 || (int)$account_id === 4) {
+            $account->agent_id = '';
+        }
+        elseif ((int)$account_id === 2) {
+            $account->agent_id = $account_id + 1;
         }
         $account->accountName = str_random(10);
         $account->dept = '';
@@ -79,7 +90,6 @@ class AccountGenerator extends Seeder
     public function run()
     {
         for ($account_id = 1; $account_id < self::NUMBER_OF_ACCOUNTS + 1; $account_id++) {
-            array_push($this->agentId, $account_id);
             $this->processAccounts($account_id);
         }
     }
