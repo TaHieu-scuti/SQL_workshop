@@ -38,6 +38,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
+    const SESSION_KEY_ADGAINER_ID = 'adgainerId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -323,6 +324,15 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
     }
 
+    public function updateSessionAdgainerId($adgainerId)
+    {
+        session()->put(
+            [
+                self::SESSION_KEY_ADGAINER_ID => $adgainerId
+            ]
+        );
+    }
+
     public function updateSessionAccountId($accountId)
     {
         session()->put(
@@ -402,10 +412,11 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
+        // the first time we did not have value for session key engine, so old engine will be null
+        // the second time session key engine already exist, so we need to update old engine first,
+        // after that we will update session key engine.
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
-        if (!session()->has(self::SESSION_KEY_OLD_ENGINE)) {
-            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
-        }
     }
 
     public function updateNormalReport()
@@ -470,6 +481,17 @@ abstract class AbstractReportController extends Controller
             );
         } elseif ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
+        }
+
+        //get id adgainer if avaiable
+        if ($request->id_adgainer === 'all') {
+            session()->put(
+                [
+                    self::SESSION_KEY_ADGAINER_ID => null
+                ]
+            );
+        } elseif ($request->id_adgainer !== "all" && $request->id_adgainer !== null) {
+            $this->updateSessionAdgainerId($request->id_adgainer);
         }
 
         //get id campaign if avaiable
@@ -544,7 +566,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -575,7 +597,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -592,7 +614,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
@@ -610,7 +632,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -703,17 +725,15 @@ abstract class AbstractReportController extends Controller
 
     public function checkoutConditionForUpdateColumn($engine)
     {
-        if ((session()->has(self::SESSION_KEY_OLD_ENGINE)
-            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
-            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
-            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
-            && session(self::SESSION_KEY_OLD_ENGINE) === $engine
-            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) !== session(self::SESSION_KEY_ACCOUNT_ID))
-            || (session()->has(self::SESSION_KEY_OLD_ENGINE)
-            && session(self::SESSION_KEY_OLD_ENGINE) !== $engine
-            && session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID))
-        ) {
-            return true;
+        if (session()->has(self::SESSION_KEY_OLD_ENGINE)) {
+            if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+                if (session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID)) {
+                    return false; // same campaign => no update
+                }
+                return true; // same engine, different account id => update back to normal report
+            } else {
+                return true; // different engine => update back to normal report
+            }
         }
         return false;
     }

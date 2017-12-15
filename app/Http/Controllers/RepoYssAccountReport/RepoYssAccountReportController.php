@@ -98,7 +98,6 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
-
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
@@ -221,7 +220,7 @@ class RepoYssAccountReportController extends AbstractReportController
         foreach ($data as $value) {
             // if data !== null, display on graph
             // else, display "no data found" image
-            if ($value->data !== null) {
+            if (isset($value->data)) {
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }

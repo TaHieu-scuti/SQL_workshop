@@ -64,6 +64,7 @@ return [
     'campaignname' => 'Campaign name',
     'all_campaigns' => 'All Campaigns',
     'all_adgroup' => 'All Adgroup',
+    'all_client' => 'All Client',
     'all_keywords' => 'All Keywords',
     'adgroupname' => 'Ad group name',
     'conversions' => 'Conversions',
@@ -76,5 +77,7 @@ return [
     'client' => 'Client',
     'searchterm' => 'Search Query',
     'all_client' => 'All Client',
-    'all_agency' => 'All Agency'
+    'all_agency' => 'All Agency',
+    'matchtype' => 'Match Type',
+    'call_tracking' => 'Call CV'
 ];

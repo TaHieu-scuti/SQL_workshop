@@ -76,5 +76,7 @@ return [
     'client' => 'クライアント',
     'searchterm' => '検索クエリー',
     'all_client' => 'すべての広告主',
-    'all_agency' => 'すべての代理店'
+    'all_agency' => 'すべての代理店',
+    'matchtype' => 'マッチタイプ',
+    'call_tracking' => 'コール数'
 ];

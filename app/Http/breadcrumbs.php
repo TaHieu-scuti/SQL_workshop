@@ -1,9 +1,17 @@
 <?php
+//Client
+Breadcrumbs::register(
+    'client-list',
+    function ($breadcrumbs) {
+        $breadcrumbs->push('Client', route('client-list'));
+    }
+);
 
-//Account
+//Client->Account
 Breadcrumbs::register(
     'account_report',
     function ($breadcrumbs) {
+        $breadcrumbs->parent('client-list');
         $breadcrumbs->push('Account', route('account_report'));
     }
 );
