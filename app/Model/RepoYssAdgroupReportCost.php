@@ -51,7 +51,7 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
                     function ($query) use ($accountId, $campaignId, $engine) {
                         $this->addQueryConditions(
                             $query,
-                            Auth::user()->account_id,
+                            session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
                             $engine,
                             $accountId,
                             $campaignId

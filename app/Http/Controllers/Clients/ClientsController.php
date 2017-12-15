@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAccountReport;
+namespace App\Http\Controllers\Clients;
 
+use Illuminate\Http\Request;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
-use App\Model\RepoYssAccountReportCost;
-use App\Model\RepoYssPrefectureReportCost;
+use App\Model\Account;
+use DateTime;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Request;
 
-use DateTime;
-use Exception;
-use Auth;
-
-class RepoYssAccountReportController extends AbstractReportController
+class ClientsController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
@@ -29,7 +25,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
     const SUMMARY_REPORT = "summaryReport";
-    const SESSION_KEY_PREFIX = 'accountReport.';
+    const SESSION_KEY_PREFIX = 'client.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
@@ -41,7 +37,7 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
-    const SESSION_KEY_PREFIX_ROUTE = '/account_report';
+    const SESSION_KEY_PREFIX_ROUTE = '/client-list';
     const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
 
     const REPORTS = 'reports';
@@ -71,11 +67,11 @@ class RepoYssAccountReportController extends AbstractReportController
      * RepoYssAccountReportController constructor.
      *
      * @param ResponseFactory          $responseFactory
-     * @param RepoYssAccountReportCost $model
+     * @param Account $model
      */
     public function __construct(
         ResponseFactory $responseFactory,
-        RepoYssAccountReportCost $model
+        Account $model
     ) {
         parent::__construct($responseFactory, $model);
         $this->model = $model;
@@ -88,30 +84,27 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
-        if (!session('accountReport')) {
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ACCOUNT_ID);
+        if (!session('client')) {
             $this->initializeSession($defaultColumns);
         }
         session([self::SESSION_KEY_ACCOUNT_ID => null]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
-        $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
+            array_slice($dataReports, ($this->page - 1) * 20, 20),
             count($dataReports),
             20,
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
+
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(
-            'yssAccountReport.index',
+            'clients.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
@@ -143,26 +136,17 @@ class RepoYssAccountReportController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        if (!session('accountReport')) {
+        if (!session('client')) {
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
-
-        if ($request->specificItem === self::PREFECTURE) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
-        }
 
         $reports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
+            array_slice($reports, ($this->page - 1) * 20, 20),
             count($reports),
             20,
             $this->page,
@@ -205,13 +189,13 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $this->updateSessionData($request);
         $timePeriodLayout = view('layouts.time-period')
-                    ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
-                    ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                    ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
-                    ->render();
+            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->render();
         $statusLayout = view('layouts.status-title')
-                        ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
-                        ->render();
+            ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
+            ->render();
         try {
             $data = $this->getDataForGraph();
         } catch (Exception $exception) {
@@ -226,11 +210,11 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'data' => $data,
-                            'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                            'timePeriodLayout' => $timePeriodLayout,
-                            'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'data' => $data,
+                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
             ]
         );
     }
@@ -242,13 +226,10 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -272,15 +253,12 @@ class RepoYssAccountReportController extends AbstractReportController
     {
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
 
         $aliases = $this->translateFieldNames($fieldNames);
 
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter(collect($collection), $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(

@@ -1,8 +1,8 @@
-<?php
-if (!isset($export)) {
-    $export = false;
-}
-?>
+@php
+    if (!isset($export)) {
+        $export = false;
+    }
+@endphp
 <div class="loading-gif-on-table hidden-table"></div>
 @if($reports->total() !== 0)
     <div class="no-data-found-table hidden-no-data-found-message-table">
@@ -20,7 +20,7 @@ if (!isset($export)) {
             <tr>
                 @if($export)
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
                             @continue
                         @endif
                         <th>
@@ -29,7 +29,7 @@ if (!isset($export)) {
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
+                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
                             @continue
                         @endif
                         @if($fieldName === 'accountName')
@@ -56,25 +56,32 @@ if (!isset($export)) {
         </thead>
         <tbody>
             @foreach($reports as $report)
-            <tr>
+                <tr>
                 @foreach($fieldNames as $fieldName)
-
-                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'adType')
+                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
                         @continue
                     @endif
                     @if ($fieldName === 'accountName')
                         <td>
-                            @if ($report['engine'] === 'adw')
-                                <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-                            @else
-                                <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
+                            @if (isset($report['engine']))
+                                @if ($report['engine'] === 'adw')
+                                    <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
+                                @else
+                                    <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
+                                @endif
                             @endif
                         </td>
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                            data-table="account_report">{{ $report[$fieldName] }}</a>
+                            @if (Route::current()->getName() === 'client-list')
+                            data-table="client-list"
+                            @else
+                            data-table="account_report"
+                            @endif
+                            >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'campaignName' || $fieldName === 'campaign')
                         <td>
@@ -113,6 +120,7 @@ if (!isset($export)) {
                         </td>
                         @endif
                     @elseif (ctype_digit($report[$fieldName]))
+
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
                             <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
@@ -151,6 +159,7 @@ if (!isset($export)) {
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField
                         || $fieldName === "accountid"
+                        || $fieldName === "account_id"
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
                         || $fieldName === "campaignName"

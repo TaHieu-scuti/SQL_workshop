@@ -30,7 +30,19 @@ abstract class AbstractReportModel extends Model
     const HOUR_OF_DAY = "hourofday";
     const SESSION_KEY_ENGINE = 'engine';
     const YSS_SEARCH_QUERY = 'searchQuery';
-    const ADW_KEYWORD = 'searchTerm';
+    const CLICKS = 'clicks';
+    const COST = 'cost';
+    const IMPRESSIONS = 'impressions';
+    const CTR = 'ctr';
+    const AVERAGE_POSITION = 'averagePosition';
+    const AVERAGE_CPC = 'averageCpc';
+    const ADW_AVERAGE_CPC = 'avgCPC';
+    const ADW_AVERAGE_POSITION = 'avgPosition';
+    const ADW_CAMPAIGN_NAME = 'campaign';
+    const YSS_CAMPAIGN_NAME = 'campaignName';
+    const ADW_ADGROUP_NAME = 'adGroup';
+    const YSS_ADGROUP_NAME = 'adgroupName';
+    const ADW_SEARCH_QUERY = 'searchTerm';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -38,46 +50,46 @@ abstract class AbstractReportModel extends Model
     ];
 
     const AVERAGE_FIELDS = [
-        'averageCpc',
-        'averagePosition',
-        'ctr'
+        self::AVERAGE_CPC,
+        self::AVERAGE_POSITION,
+        self::CTR
     ];
 
     const SUM_FIELDS = [
-        'clicks',
-        'impressions',
-        'cost'
+        self::CLICKS,
+        self::IMPRESSIONS,
+        self::COST
     ];
 
     const SUMMARY_FIELDS = [
-        'impressions',
-        'clicks',
-        'cost'
+        self::CLICKS,
+        self::IMPRESSIONS,
+        self::COST
     ];
 
     const YSS_FIELDS_MAP = [
 //      'columns' => 'alias'
-        'impressions' => 'impressions',
-        'clicks' => 'clicks',
-        'cost' => 'cost',
-        'ctr' => 'ctr',
-        'averageCpc' => 'averageCpc',
-        'averagePosition' => 'averagePosition',
-        'campaignName' => 'campaignName',
-        'adgroupName' => 'adgroupName',
+        self::IMPRESSIONS => self::IMPRESSIONS,
+        self::CLICKS => self::CLICKS,
+        self::COST => self::COST,
+        self::CTR => self::CTR,
+        self::AVERAGE_CPC => self::AVERAGE_CPC,
+        self::AVERAGE_POSITION => self::AVERAGE_POSITION,
+        self::YSS_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
+        self::YSS_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
         'keywordMatchType' => 'matchType'
     ];
 
     const ADW_FIELDS_MAP = [
 //      'columns' => 'alias'
-        'impressions' => 'impressions',
-        'clicks' => 'clicks',
-        'cost' => 'cost',
-        'ctr' => 'ctr',
-        'avgCPC' => 'averageCpc',
-        'avgPosition' => 'averagePosition',
-        'campaign' => 'campaignName',
-        'adGroup' => 'adgroupName',
+        self::IMPRESSIONS => self::IMPRESSIONS,
+        self::CLICKS => self::CLICKS,
+        self::COST => self::COST,
+        self::CTR => self::CTR,
+        self::ADW_AVERAGE_CPC => self::AVERAGE_CPC,
+        self::ADW_AVERAGE_POSITION => self::AVERAGE_POSITION,
+        self::ADW_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
+        self::ADW_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
         'matchType' => 'matchType'
     ];
 
@@ -86,10 +98,10 @@ abstract class AbstractReportModel extends Model
     const YSS = 'yss';
 
     protected $groupByFieldName = [
-        'device',
-        'hourofday',
-        'dayOfWeek',
-        'prefecture',
+        self::DEVICE,
+        self::HOUR_OF_DAY,
+        self::DAY_OF_WEEK,
+        self::PREFECTURE,
     ];
 
     protected $groupBy = [];
@@ -135,7 +147,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::PREFECTURE
                 || $fieldName === 'adType'
                 || $fieldName === self::YSS_SEARCH_QUERY
-                || $fieldName === self::ADW_KEYWORD
+                || $fieldName === self::ADW_SEARCH_QUERY
             ) {
                 $arrayCalculate[] = $fieldName;
                 continue;
@@ -161,6 +173,35 @@ abstract class AbstractReportModel extends Model
                 } else {
                     $arrayCalculate[] = DB::raw(
                         'SUM( ' . $tableName . '.' . $key . ' ) AS ' . $fieldName
+                    );
+                }
+            }
+        }
+        return $arrayCalculate;
+    }
+
+    protected function getAggregatedAgency(array $fieldNames)
+    {
+        $arrayCalculate = [];
+        $tableName = $this->getTable();
+        $arrayCalculate[] = DB::raw($tableName.'.account_id AS account_id');
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                );
+            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                        ->getType()
+                        ->getName()
+                    === self::FIELD_TYPE
+                ) {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(SUM(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                    );
+                } else {
+                    $arrayCalculate[] = DB::raw(
+                        'SUM( ' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . ' ) AS ' . $fieldName
                     );
                 }
             }
