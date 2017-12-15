@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class UpdateColumnsForRepoAdwAccountReportCostTable extends Migration
 {
     /**
@@ -16,9 +17,6 @@ class UpdateColumnsForRepoAdwAccountReportCostTable extends Migration
         Schema::table(
             'repo_adw_account_report_cost',
             function (Blueprint $table) {
-                $table->boolean('canManageClients')->nullable()->comment(
-                    'アカウントがクライアントセンターアカウント（true）か通常のAdWordsアカウント（false）かを示します。'
-                );
                 $table->double('contentLostISBudget')->nullable()->comment(
                     '広告がディスプレイネットワークに表示されていたものの、予算が低すぎたためではなかった推定回数。'
                 );
@@ -34,12 +32,6 @@ class UpdateColumnsForRepoAdwAccountReportCostTable extends Migration
                 $table->bigInteger('engagements')->nullable()->comment(
                     'エンゲージメントの数。視聴者がライトボックス広告を展開するとエンゲージメントが発生します。
                     また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。'
-                );
-                $table->boolean('autoTaggingEnabled')->nullable()->comment(
-                    'アカウントで自動タグ設定が有効になっているかどうかを示します。'
-                );
-                $table->boolean('testAccount')->nullable()->comment(
-                    'アカウントがテストアカウントかどうかを示します。'
                 );
                 $table->double('searchExactMatchIS')->nullable()->comment(
                     '受け取ったインプレッションを、キーワードマッチタイプに関係なく、キーワードと正確に一致する検索キーワード
@@ -69,13 +61,10 @@ class UpdateColumnsForRepoAdwAccountReportCostTable extends Migration
         Schema::table(
             'repo_adw_account_report_cost',
             function (Blueprint $table) {
-                $table->dropColumn('canManageClients');
                 $table->dropColumn('contentLostISBudget');
                 $table->dropColumn('contentImprShare');
                 $table->dropColumn('contentLostISRank');
                 $table->dropColumn('engagementRate');
-                $table->dropColumn('autoTaggingEnabled');
-                $table->dropColumn('testAccount');
                 $table->dropColumn('searchExactMatchIS');
                 $table->dropColumn('searchImprShare');
                 $table->dropColumn('searchLostISRank');
