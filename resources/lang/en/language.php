@@ -80,5 +80,7 @@ return [
     'all_agency' => 'All Agency',
     'matchtype' => 'Match Type',
     'call_tracking' => 'Call CV',
-    'impressionshare' => 'Impression Share'
+    'call_cvr' => 'Call CVR',
+    'call_cpa' => 'Call CPA',
+    'impressionshare' => 'Impression Share',
 ];

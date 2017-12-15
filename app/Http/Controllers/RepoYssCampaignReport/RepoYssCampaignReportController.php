@@ -107,6 +107,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($engine === 'ydn') {
             $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
         }
         return view(
             'yssCampaignReport.index',
@@ -158,6 +160,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($engine === 'ydn') {
             $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
         }
         $tableDataLayout = view(
             'layouts.table_data',

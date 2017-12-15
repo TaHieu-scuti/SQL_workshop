@@ -93,7 +93,15 @@ class AbstractYdnReportModel extends AbstractReportModel
     protected function getAggregatedForTable()
     {
         return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking')
+            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
+            DB::raw(
+                '((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`)) '
+                . '/ SUM(`repo_ydn_reports`.`clicks`)) * 100 AS call_cvr'
+            ),
+            DB::raw(
+                'SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) '
+                . '+ COUNT(`phone_time_use`.`id`)) AS call_cpa'
+            )
         ];
     }
 
