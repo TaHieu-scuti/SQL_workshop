@@ -281,6 +281,11 @@ abstract class AbstractReportModel extends Model
         return DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
     }
 
+    protected function getAggregatedForTable()
+    {
+        return [];
+    }
+
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -306,6 +311,7 @@ abstract class AbstractReportModel extends Model
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
+        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
             array_push($this->groupBy, DB::raw('DAYNAME(day)'));
         } else {
@@ -365,7 +371,7 @@ abstract class AbstractReportModel extends Model
         return $builder;
     }
 
-    public function calculateData(
+    protected function getBuilderForCalculateData(
         $engine,
         $fieldNames,
         $accountStatus,
@@ -387,6 +393,7 @@ abstract class AbstractReportModel extends Model
         }
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
+        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -420,11 +427,43 @@ abstract class AbstractReportModel extends Model
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                ->first();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->first();
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
+
+        return $data;
+    }
+
+    public function calculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $data = $this->getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        $data = $data->first();
+
         if ($data === null) {
             $data = [];
         }
