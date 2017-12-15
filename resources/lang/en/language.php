@@ -76,5 +76,6 @@ return [
     'all_adreports' => 'All Adreports',
     'client' => 'Client',
     'searchterm' => 'Search Query',
-    'matchtype' => 'Match Type'
+    'matchtype' => 'Match Type',
+    'call_tracking' => 'Call CV'
 ];
