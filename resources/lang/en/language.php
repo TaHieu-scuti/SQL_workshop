@@ -76,8 +76,11 @@ return [
     'all_adreports' => 'All Adreports',
     'client' => 'Client',
     'searchterm' => 'Search Query',
+    'all_client' => 'All Client',
+    'all_agency' => 'All Agency',
     'matchtype' => 'Match Type',
     'call_tracking' => 'Call CV',
     'call_cvr' => 'Call CVR',
-    'call_cpa' => 'Call CPA'
+    'call_cpa' => 'Call CPA',
+    'impressionshare' => 'Impression Share',
 ];

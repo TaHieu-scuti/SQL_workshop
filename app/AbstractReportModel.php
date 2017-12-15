@@ -44,6 +44,7 @@ abstract class AbstractReportModel extends Model
     const ADW_ADGROUP_NAME = 'adGroup';
     const YSS_ADGROUP_NAME = 'adgroupName';
     const ADW_SEARCH_QUERY = 'searchTerm';
+    const YSS_IMPRESSION_SHARE = 'impressionShare';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -53,7 +54,8 @@ abstract class AbstractReportModel extends Model
     const AVERAGE_FIELDS = [
         self::AVERAGE_CPC,
         self::AVERAGE_POSITION,
-        self::CTR
+        self::CTR,
+        self::YSS_IMPRESSION_SHARE
     ];
 
     const SUM_FIELDS = [
@@ -70,6 +72,7 @@ abstract class AbstractReportModel extends Model
 
     const YSS_FIELDS_MAP = [
 //      'columns' => 'alias'
+        self::YSS_IMPRESSION_SHARE => self::YSS_IMPRESSION_SHARE,
         'keywordMatchType' => 'matchType'
     ];
 
@@ -120,6 +123,22 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
+            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                continue;
+            }
+            if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+                if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
+                    );
+                    continue;
+                } else {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(AVG('. $tableName .'.searchImprShare) + AVG('. $tableName .'.contentImprShare), 2) AS ' .$fieldName
+                    );
+                    continue;
+                }
+            }
             if ($fieldName === 'matchType') {
                 $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
             }

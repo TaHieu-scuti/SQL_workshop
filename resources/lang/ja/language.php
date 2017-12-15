@@ -75,5 +75,9 @@ return [
     'all_adreports' => 'すべての広告',
     'client' => 'クライアント',
     'searchterm' => '検索クエリー',
-    'matchtype' => 'マッチタイプ'
+    'all_client' => 'すべての広告主',
+    'all_agency' => 'すべての代理店',
+    'matchtype' => 'マッチタイプ',
+    'call_tracking' => 'コール数',
+    'impressionshare' => 'インプレッションシェア'
 ];
