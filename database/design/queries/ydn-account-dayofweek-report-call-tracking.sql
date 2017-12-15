@@ -106,5 +106,4 @@ AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
 GROUP BY
   `repo_ydn_reports`.`account_id`,
-  `repo_ydn_reports`.`accountId`,
   DAYNAME(`repo_ydn_reports`.`day`)
