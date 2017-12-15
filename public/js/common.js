@@ -116,12 +116,8 @@ $(".apply-button").click(function () {
             'fieldName' : array['fieldName'],
         },
         beforeSend : function () {
-            setTimeout(function() {
-                $('#columnsModal').modal('hide');
-            }, 1);
-            setTimeout(function() {
-                sendingRequestTable();
-            }, 200);
+            $('#columnsModal').modal('hide');
+            sendingRequestTable();
         },
         success: function(response) {
             $('.table_data_report').html(response.tableDataLayout);
