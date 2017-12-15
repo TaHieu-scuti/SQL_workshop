@@ -220,7 +220,7 @@ class RepoYssAccountReportController extends AbstractReportController
         foreach ($data as $value) {
             // if data !== null, display on graph
             // else, display "no data found" image
-            if ($value->data !== null) {
+            if (isset($value->data)) {
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }

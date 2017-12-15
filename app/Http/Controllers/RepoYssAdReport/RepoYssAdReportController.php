@@ -94,6 +94,7 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
+        $tableColumns[] = 'call_tracking';
         return view(
             'yssAdReport.index',
             [
@@ -129,10 +130,12 @@ class RepoYssAdReportController extends AbstractReportController
         }
 
         $reports = $this->getDataForTable();
+
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
+        $tableColumns[] = 'call_tracking';
         $tableDataLayout = view(
             'layouts.table_data',
             [
@@ -145,6 +148,7 @@ class RepoYssAdReportController extends AbstractReportController
             'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
+
         // if no data found
         // display no data found message on table
         if ($reports->total() !== 0) {
