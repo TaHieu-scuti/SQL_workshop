@@ -134,7 +134,8 @@ abstract class AbstractReportModel extends Model
                     continue;
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG('. $tableName .'.searchImprShare) + AVG('. $tableName .'.contentImprShare), 2) AS ' .$fieldName
+                        'ROUND(AVG('. $tableName .'.searchImprShare) + AVG('.
+                        $tableName .'.contentImprShare), 2) AS ' .$fieldName
                     );
                     continue;
                 }
