@@ -123,8 +123,12 @@
 
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
-                            <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
-                    @elseif (is_float($report[$fieldName]))
+                        <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
+                    @elseif ($fieldName === 'averageCpc')
+                        <td><i class="fa fa-rmb"></i>{{ $report[$fieldName] }}</td>
+                    @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
+                        <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
+                    @elseif ($fieldName === 'averagePosition')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $report[$fieldName] }}</td>
@@ -170,7 +174,11 @@
                         @if (ctype_digit($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'cost' && is_float($totalDataArray->$fieldName))
-                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                    <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                        @elseif ($fieldName === 'averageCpc')
+                    <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
+                        @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
+                    <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}%</td>
                         @elseif (is_float($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
                         @else
