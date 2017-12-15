@@ -80,16 +80,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function index()
     {
-        return $this->responseFactory->view(
-            'yssAdgroupReport.index',
-            [
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
-            ]
-        );
-    }
-
-    public function getDataForLayouts(Request $request)
-    {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
@@ -113,6 +103,16 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
         $this->checkOldId();
         $this->checkoutSessionFieldName();
+        return $this->responseFactory->view(
+            'yssAdgroupReport.index',
+            [
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+            ]
+        );
+    }
+
+    public function getDataForLayouts(Request $request)
+    {
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();

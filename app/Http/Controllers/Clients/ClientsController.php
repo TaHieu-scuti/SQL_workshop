@@ -83,6 +83,12 @@ class ClientsController extends AbstractReportController
     public function index()
     {
         session()->forget(self::SESSION_KEY_ENGINE);
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ACCOUNT_ID);
+        if (!session('client')) {
+            $this->initializeSession($defaultColumns);
+        }
+        session([self::SESSION_KEY_ACCOUNT_ID => null]);
 
         return $this->responseFactory->view(
             'clients.index',
@@ -97,12 +103,6 @@ class ClientsController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
-        $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ACCOUNT_ID);
-        if (!session('client')) {
-            $this->initializeSession($defaultColumns);
-        }
-        session([self::SESSION_KEY_ACCOUNT_ID => null]);
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);

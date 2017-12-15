@@ -3,7 +3,6 @@
         $export = false;
     }
 @endphp
-<div class="loading-gif-on-table hidden-table"></div>
 @if($reports->total() !== 0)
     <div class="no-data-found-table hidden-no-data-found-message-table">
         <span class="no-data-found-message-table">No data found for table</span>
@@ -125,7 +124,7 @@
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
-                        <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
+                        <td><i class="fa fa-rmb"></i>{{ $report[$fieldName] }}</td>
                     @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif ($fieldName === 'averagePosition')

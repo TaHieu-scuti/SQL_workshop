@@ -87,6 +87,16 @@ class RepoYssAccountReportController extends AbstractReportController
     public function index(Request $request)
     {
         session()->forget(self::SESSION_KEY_ENGINE);
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
+        if (!session('accountReport')) {
+            $this->initializeSession($defaultColumns);
+        }
+        session([self::SESSION_KEY_ACCOUNT_ID => null]);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
+        $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
@@ -100,16 +110,6 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
-        $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
-        if (!session('accountReport')) {
-            $this->initializeSession($defaultColumns);
-        }
-        session([self::SESSION_KEY_ACCOUNT_ID => null]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
-        $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);

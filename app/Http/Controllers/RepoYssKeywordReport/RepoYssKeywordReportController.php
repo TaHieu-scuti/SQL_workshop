@@ -76,16 +76,6 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function index()
     {
-        return $this->responseFactory->view(
-            'yssKeywordReport.index',
-            [
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
-            ]
-        );
-    }
-
-    public function getDataForLayouts(Request $request)
-    {
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === null || $engine === 'yss') {
@@ -100,6 +90,16 @@ class RepoYssKeywordReportController extends AbstractReportController
         //update column fieldnames and grouped by field when change engine
         $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         $this->checkoutSessionFieldName();
+        return $this->responseFactory->view(
+            'yssKeywordReport.index',
+            [
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+            ]
+        );
+    }
+
+    public function getDataForLayouts()
+    {
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();

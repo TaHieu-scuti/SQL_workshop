@@ -4,8 +4,10 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
+        setTimeout(function() {
+            getDataForLayouts();
+        }, 500);
 
-        getDataForLayouts();
         function getDataForLayouts() {
             $.ajax({
                 url: prefixRoute + "/getDataForLayouts",
@@ -14,9 +16,7 @@ var Script = function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend : function () {
-                    setTimeout(function() {
-                        sendingRequestTable();
-                    }, 200);
+                    sendingRequestTable();
                 },
                 success: function(response) {
                     $('.table_data_report').html(response.tableDataLayout);
@@ -499,5 +499,21 @@ var Script = function () {
         });
 
     });
+
+    function sendingRequestTable() {
+        $('.selectpickerBreadCrumbs').attr('disabled', true);
+        $('.report-table').css('display', 'none');
+        $('.loading-gif-on-table').removeClass('hidden-table');
+        setTimeout(function() {
+            $('.loading-gif-on-table').show();
+        }, 10);
+    }
+
+    function completeRequestTable()
+    {
+        $('.loading-gif-on-table').addClass('hidden-table');
+        $('.loading-gif-on-top-graph').addClass('hidden-graph');
+        $('.selectpickerBreadCrumbs').attr('disabled', false);
+    }
 
 }();

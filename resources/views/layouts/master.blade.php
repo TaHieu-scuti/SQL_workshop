@@ -312,7 +312,11 @@
                         </div><!-- /.modal -->
                     </div>
                 </div>
-                <div class="table_data_report" style="position: relative;">
+                <div style="position: relative;">
+                    <div class="loading-gif-on-table hidden-table"></div>
+                    <div class="table_data_report">
+
+                    </div>
                 </div>
         </section>
     </section>
