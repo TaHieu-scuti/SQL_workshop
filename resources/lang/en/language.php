@@ -77,5 +77,7 @@ return [
     'client' => 'Client',
     'searchterm' => 'Search Query',
     'matchtype' => 'Match Type',
-    'call_tracking' => 'Call CV'
+    'call_tracking' => 'Call CV',
+    'call_cvr' => 'Call CVR',
+    'call_cpa' => 'Call CPA'
 ];
