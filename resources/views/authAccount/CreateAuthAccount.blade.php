@@ -1,14 +1,33 @@
 @extends('authAccount.auth_layout')
 @section('filter-layout')
+<?php
+$error_of_yahoo = false;
+if ($errors->has('license')
+    || $errors->has('accountId')
+    || $errors->has('apiAccountId')
+    || $errors->has('apiAccountPassword')
+) {
+    $error_of_yahoo = true;
+}
+?>
     <div class="container">
         <div class="menu_left col-lg-2">
             <select id="myselect" class="form-control">
                 <option value="google">Google</option>
-                <option value="yahoo">Yahoo</option>
+                @if ($error_of_yahoo)
+                    <option value="yahoo" selected="selected">Yahoo</option>
+                @else
+                    <option value="yahoo">Yahoo</option>
+                @endif
             </select>
         </div>
         <div class="menu_right col-lg-10">
-            <form action="{{route('store-account')}}" method="POST" class="form-horizontal form-auth" role="form" id="google" name="google" >
+            <form action="{{route('store-account')}}" method="POST"
+            class="form-horizontal form-auth" role="form" id="google" name="google"
+            @if ($error_of_yahoo)
+                style="display: none"
+            @endif
+            >
                 {{csrf_field()}}
                 <h2 class="form-auth-heading">Google</h2>
                 <div class="form-warp">
@@ -35,9 +54,9 @@
                         </div>
                     </div>
 
-                    @if ($errors->has('ClientCustomerId'))
+                    @if ($errors->has('clientCustomerId'))
                         <div class="alert alert-danger">
-                            <strong>{{$errors->first('ClientCustomerId')}}</strong>
+                            <strong>{{$errors->first('clientCustomerId')}}</strong>
                         </div>
                     @endif
 
@@ -48,9 +67,9 @@
                         </div>
                     </div>
 
-                    @if ($errors->has('OnBehalfOfAccountId'))
+                    @if ($errors->has('onBehalfOfAccountId'))
                         <div class="alert alert-danger">
-                            <strong>{{$errors->first('OnBehalfOfAccountId')}}</strong>
+                            <strong>{{$errors->first('onBehalfOfAccountId')}}</strong>
                         </div>
                     @endif
 
@@ -74,12 +93,16 @@
                 </div>
             </form>
 
-            <form action="{{route('store-account')}}" method="POST" class="form-horizontal form-auth" role="form" id="yahoo" name="yahoo">
+            <form action="{{route('store-account')}}" method="POST" class="form-horizontal form-auth" role="form" id="yahoo" name="yahoo"
+            @if (!$error_of_yahoo)
+                style="display: none"
+            @endif
+            >
                 {{csrf_field()}}
                 <h2 class="form-auth-heading">Yahoo</h2>
                 <div class="form-warp">
                     <input type="hidden" class="form-control" value="{{ Auth::user()->id }}" id="account_id" name="account_id">
-                    <input type="hidden" class="form-control" value="yahoo_yss" id="userAgent" name="userAgent">
+                    <input type="hidden" class="form-control" value="yahoo" id="userAgent" name="userAgent">
                     <div class="form-group">
                         <label class="control-label col-sm-4" for="">License</label>
                         <div class="col-sm-8">

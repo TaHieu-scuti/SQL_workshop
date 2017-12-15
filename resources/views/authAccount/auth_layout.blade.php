@@ -86,13 +86,8 @@
         $("#myselect").on("change", function() {
             $("#" + $(this).val()).show().siblings().hide();
         });
-
-        $(document).ready(function (){
-            var value = $("#myselect").find("option:selected").val();
-            console.log(value);
-            $("#" + value).show().siblings().hide();
-        })
     </script>
+
     <script src="/js/common-function.js"></script>
 <!-- s -->
 </body>

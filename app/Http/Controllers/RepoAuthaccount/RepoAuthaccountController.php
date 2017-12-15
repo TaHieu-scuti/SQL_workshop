@@ -41,6 +41,23 @@ class RepoAuthAccountController extends Controller
      */
     public function store(AuthAccountRequest $request)
     {
+        if ($request->userAgent === 'google') {
+            $this->validate($request, [
+                'account_id' => 'required|max:50',
+                'developerToken' => 'required|max:22',
+                'clientCustomerId' => 'required|max:12',
+                'onBehalfOfAccountId' => 'required|max:20',
+                'onBehalfOfPassword' => 'required|max:255',
+            ]);
+        } else {
+            $this->validate($request, [
+                'account_id' => 'required|max:50',
+                'license' => 'required|max:19',
+                'accountId' => 'required|max:20',
+                'apiAccountId' => 'required|max:19',
+                'apiAccountPassword' => 'required|max:255',
+            ]);
+        }
         $data = $request->all();
         RepoAuthAccount::create($data);
         return redirect()->route('auth-account');

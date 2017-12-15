@@ -74,5 +74,7 @@ return [
     'ad' => 'Ad',
     'all_adreports' => 'All Adreports',
     'client' => 'Client',
-    'searchterm' => 'Search Query'
+    'searchterm' => 'Search Query',
+    'all_client' => 'All Client',
+    'all_agency' => 'All Agency'
 ];
