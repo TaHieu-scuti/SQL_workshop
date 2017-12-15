@@ -1,6 +1,5 @@
 SELECT
   `repo_adw_account_report_cost`.`account_id`,
-  `repo_adw_account_report_cost`.`campaign_id`,
   `repo_adw_account_report_cost`.`customerID`,
   SUM(`repo_adw_account_report_cost`.`impressions`) AS impressions,
   SUM(`repo_adw_account_report_cost`.`clicks`) AS clicks,
@@ -21,6 +20,8 @@ FROM
       AND
         `phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`
       AND
+        STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_account_report_cost`.`day`
+      AND
         `phone_time_use`.`time_of_call` >= '2017-01-01'
       AND
         `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -28,13 +29,9 @@ FROM
         `phone_time_use`.`source` = 'adw'
       AND
         `phone_time_use`.`traffic_type` = 'AD'
-      AND
-        DAYNAME(`phone_time_use`.`time_of_call`) = `repo_adw_account_report_cost`.`dayOfWeek`
     )
 WHERE
   `repo_adw_account_report_cost`.`account_id` = 1
-AND
-  `repo_adw_account_report_cost`.`campaign_id` = 11
 AND
   `repo_adw_account_report_cost`.`day` >= '2017-01-01'
 AND
@@ -47,20 +44,19 @@ AND
   )
 GROUP BY
   `repo_adw_account_report_cost`.`account_id`,
-  `repo_adw_account_report_cost`.`campaign_id`,
   `repo_adw_account_report_cost`.`customerID`
 
 UNION
 
+/* CONFIRMED TO BE WORKING START: */
 SELECT
   `repo_ydn_reports`.`account_id`,
-  `repo_ydn_reports`.`campaign_id`,
-  `repo_ydn_reports`.`accountid`,
+  `repo_ydn_reports`.`accountId`,
   SUM(`repo_ydn_reports`.`impressions`) AS impressions,
   SUM(`repo_ydn_reports`.`clicks`) AS clicks,
   SUM(`repo_ydn_reports`.`cost`) AS cost,
   AVG(`repo_ydn_reports`.`ctr`) AS ctr,
-  AVG(`repo_ydn_reports`.`averageCPC`) AS avgCPC,
+  AVG(`repo_ydn_reports`.`averageCpc`) AS avgCPC,
   COUNT(`phone_time_use`.`id`) AS call_tracking,
   SUM(`repo_ydn_reports`.`conversions`) AS webcv,
   SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`) AS cv,
@@ -143,6 +139,8 @@ FROM
     AND
       `phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
     AND
+      STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
+    AND
       `phone_time_use`.`time_of_call` >= '2017-01-01'
     AND
       `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -154,27 +152,24 @@ FROM
 WHERE
   `repo_ydn_reports`.`account_id` = 1
 AND
-  `repo_ydn_reports`.`campaign_id` = 11
-AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
 GROUP BY
   `repo_ydn_reports`.`account_id`,
-  `repo_ydn_reports`.`campaign_id`,
-  `repo_ydn_reports`.`accountid`
+  `repo_ydn_reports`.`accountId`
+/* CONFIRMED TO BE WORKING END */
 
 UNION
 
 SELECT
   `repo_yss_account_report_cost`.`account_id`,
-  `repo_yss_account_report_cost`.`campaign_id`,
   `repo_yss_account_report_cost`.`accountid`,
   SUM(`repo_yss_account_report_cost`.`impressions`) AS impressions,
   SUM(`repo_yss_account_report_cost`.`clicks`) AS clicks,
   SUM(`repo_yss_account_report_cost`.`cost`) AS cost,
   AVG(`repo_yss_account_report_cost`.`ctr`) AS ctr,
-  AVG(`repo_yss_account_report_cost`.`averageCPC`) AS avgCPC,
+  AVG(`repo_yss_account_report_cost`.`averageCpc`) AS avgCPC,
   COUNT(`phone_time_use`.`id`) AS call_tracking,
   SUM(`repo_yss_account_report_cost`.`conversions`) AS webcv,
   SUM(`repo_yss_account_report_cost`.`conversions`) + COUNT(`phone_time_use`.`id`) AS cv,
@@ -189,6 +184,8 @@ FROM
       AND
         `phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`
       AND
+        STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`
+      AND
         `phone_time_use`.`time_of_call` >= '2017-01-01'
       AND
         `phone_time_use`.`time_of_call` <= '2017-12-01'
@@ -200,12 +197,9 @@ FROM
 WHERE
   `repo_yss_account_report_cost`.`account_id` = 1
 AND
-  `repo_yss_account_report_cost`.`campaign_id` = 11
-AND
   `repo_yss_account_report_cost`.`day` >= '2017-01-01'
 AND
   `repo_yss_account_report_cost`.`day` <= '2017-12-01'
 GROUP BY
   `repo_yss_account_report_cost`.`account_id`,
-  `repo_yss_account_report_cost`.`campaign_id`,
   `repo_yss_account_report_cost`.`accountid`
