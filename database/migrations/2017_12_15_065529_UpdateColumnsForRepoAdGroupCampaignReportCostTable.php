@@ -14,7 +14,7 @@ class UpdateColumnsForRepoAdGroupCampaignReportCostTable extends Migration
     public function up()
     {
         Schema::table(
-            'repo_adw_campaign_report_cost',
+            'repo_adw_adgroup_report_cost',
             function (Blueprint $table) {
                 $table->double('contentImprShare')->nullable()->comment(
                     'ディスプレイネットワークで獲得したインプレッションを、表示された推定インプレッション数で割ったものです。'
@@ -31,7 +31,7 @@ class UpdateColumnsForRepoAdGroupCampaignReportCostTable extends Migration
                     また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。'
                 );
                 $table->double('searchExactMatchIS')->nullable()->comment(
-                    '受け取ったインプレッションを、キーワードマッチタイプに関係なく、キーワードと正確に一致する検索語
+                    '受け取ったインプ dレッションを、キーワードマッチタイプに関係なく、キーワードと正確に一致する検索語
                     （またはキーワードの類似したもの）で、検索ネットワークで表示される見込みインプレッション数で割ったものです。'
                 );
                 $table->double('searchImprShare')->nullable()->comment(

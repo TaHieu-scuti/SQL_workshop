@@ -27,25 +27,25 @@ class UpdateColumnsForRepoAdwCampaignReportCostTable extends Migration
                     '広告ランクが低いために広告が表示されなかったディスプレイネットワークのインプレッションの推定割合。'
                 );
                 $table->double('engagementRate')->nullable()->comment(
-                    '広告が表示された後、ユーザーが広告にどのくらいの頻度で関与するか。
-                    広告の表示回数を広告の表示回数で割ったものです。'
+                    '広告が表示された後、ユーザーが広告にどのくらいの頻度で関与するか。広告の表示回数を広告の表示回数で割ったものです。'
                 );
                 $table->bigInteger('engagements')->nullable()->comment(
-                    '約束の数。視聴者がライトボックス広告を展開するとエンゲージメントが発生します。
+                    'エンゲージメントの数。視聴者がライトボックス広告を展開するとエンゲージメントが発生します。
                     また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。'
                 );
-                $table->double('searchLostISBudget')->nullable()->comment(
-                    '広告が検索ネットワークに表示されていたものの、予算が低すぎたためではなかった推定割合。'
-                );
                 $table->double('searchExactMatchIS')->nullable()->comment(
-                    '受け取ったインプレッションを、キーワードマッチタイプに関係なく、キーワードと正確に一致する検索語
+                    '受け取ったインプレッションを、キーワードマッチタイプに関係なく、キーワードと正確に一致する検索キーワード
                     （またはキーワードの類似したもの）で、検索ネットワークで表示される見込みインプレッション数で割ったものです。'
                 );
                 $table->double('searchImprShare')->nullable()->comment(
                     '検索ネットワークで受け取ったインプレッションを、表示された推定インプレッション数で割ったものです。'
                 );
                 $table->double('searchLostISRank')->nullable()->comment(
-                    '広告ランクが低いために広告が表示されなかった検索ネットワークのインプレッションの推定パーセンテージ。 '
+                    '広告ランクが低いために広告が表示されなかった検索ネットワークのインプレッションの推定パーセンテージ。'
+                );
+                $table->bigInteger('viewThroughConv')->nullable()->comment(
+                    'ビュースルーコンバージョンの合計数。これは、ディスプレイネットワーク広告が表示された後、後で他の広告とやり取り
+                    （クリックなど）せずにサイトのコンバージョンを達成した場合に発生します。'
                 );
             }
         );
@@ -65,11 +65,11 @@ class UpdateColumnsForRepoAdwCampaignReportCostTable extends Migration
                 $table->dropColumn('contentImprShare');
                 $table->dropColumn('contentLostISRank');
                 $table->dropColumn('engagementRate');
-                $table->dropColumn('engagements');
-                $table->dropColumn('searchLostISBudget');
                 $table->dropColumn('searchExactMatchIS');
                 $table->dropColumn('searchImprShare');
                 $table->dropColumn('searchLostISRank');
+                $table->dropColumn('viewThroughConv');
+                $table->dropColumn('engagements');
             }
         );
     }
