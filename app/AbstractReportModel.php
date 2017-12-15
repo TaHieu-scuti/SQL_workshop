@@ -70,28 +70,21 @@ abstract class AbstractReportModel extends Model
 
     const YSS_FIELDS_MAP = [
 //      'columns' => 'alias'
-        self::IMPRESSIONS => self::IMPRESSIONS,
-        self::CLICKS => self::CLICKS,
-        self::COST => self::COST,
-        self::CTR => self::CTR,
-        self::AVERAGE_CPC => self::AVERAGE_CPC,
-        self::AVERAGE_POSITION => self::AVERAGE_POSITION,
-        self::YSS_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
-        self::YSS_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
         'keywordMatchType' => 'matchType'
     ];
 
     const ADW_FIELDS_MAP = [
 //      'columns' => 'alias'
-        self::IMPRESSIONS => self::IMPRESSIONS,
-        self::CLICKS => self::CLICKS,
-        self::COST => self::COST,
-        self::CTR => self::CTR,
         self::ADW_AVERAGE_CPC => self::AVERAGE_CPC,
         self::ADW_AVERAGE_POSITION => self::AVERAGE_POSITION,
         self::ADW_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
         self::ADW_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
-        'matchType' => 'matchType'
+    ];
+
+    const YDN_FIELDS_MAP = [
+//      'columns' => 'alias'
+        'keywordMatchType' => 'matchType',
+        'DAYNAME(day)' => 'dayOfWeek'
     ];
 
     const ALL_HIGHER_LAYERS = [];
@@ -150,7 +143,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::YSS_SEARCH_QUERY
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
                 continue;
             }
 
@@ -499,7 +492,11 @@ abstract class AbstractReportModel extends Model
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
-        array_push($this->groupBy, $groupedByField);
+        if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
+            array_push($this->groupBy, DB::raw('DAYNAME(day)'));
+        } else {
+            array_push($this->groupBy, $groupedByField);
+        }
         if ($groupedByField === 'ad' || $groupedByField === 'adName') {
             array_push($this->groupBy, 'adType');
         }
@@ -689,13 +686,12 @@ abstract class AbstractReportModel extends Model
     {
         $resultFieldNames = [];
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss'
-            || $engine === 'ydn'
-            || $engine === null
-        ) {
+        if ($engine === 'yss' || $engine === null) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
         } elseif ($engine === 'adw') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
+        } elseif ($engine === 'ydn') {
+            $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YDN_FIELDS_MAP);
         }
         return $resultFieldNames;
     }
