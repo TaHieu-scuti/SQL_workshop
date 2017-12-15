@@ -175,8 +175,7 @@ class RepoYdnAdReport extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
