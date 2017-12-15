@@ -19,6 +19,7 @@ class AgencyController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
     const PREFIX_ROUTE = 'prefixRoute';
+    const GROUPED_BY_FIELD = 'accountName';
     const SORT = 'sort';
     const GRAPH_COLUMN_NAME = "graphColumnName";
     const SUMMARY_REPORT = "summaryReport";
@@ -81,7 +82,7 @@ class AgencyController extends AbstractReportController
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, 'accountName');
-        
+
         if (!session('agencyReport')) {
             $this->initializeSession($defaultColumns);
         }
@@ -130,19 +131,10 @@ class AgencyController extends AbstractReportController
     public function updateTable(Request $request)
     {
         $columns = $this->model->getColumnNames();
-        if (!session('accountReport')) {
+        if (!session('agencyReport')) {
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
-
-        if ($request->specificItem === self::PREFECTURE) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
-        }
 
         $reports = $this->getDataForTable();
         if (isset($request->page)) {
@@ -191,6 +183,7 @@ class AgencyController extends AbstractReportController
     public function displayGraph(Request $request)
     {
         $this->updateSessionData($request);
+
         $timePeriodLayout = view('layouts.time-period')
                     ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
                     ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))

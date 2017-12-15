@@ -511,4 +511,16 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         return $adwAccountReport;
     }
+
+    public function yssAccountDataForGraphOfAgencyList($column, $startDay, $endDay)
+    {
+        $aggreations = $this->getAggregatedGraph($column);
+        return self::select($aggreations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy('day');
+    }
 }

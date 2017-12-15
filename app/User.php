@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
+
+use App\Model\Agency;
 use App\Model\RepoYssAccount;
 use App\Model\RepoYssCampaignReportCost;
 use App\Http\Controllers\AbstractReportController;
@@ -51,6 +53,16 @@ class User extends Authenticatable
 
         $array = [];
         switch ($title) {
+            case 'Agency':
+                $model = new Agency;
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllAgencies();
+                // if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
+                //     $array['flag'] = 'all';
+                // } else {
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
+                // }
+                break;
             case 'Account':
                 $model = new RepoYssAccount;
                 $array['title'] = $title;

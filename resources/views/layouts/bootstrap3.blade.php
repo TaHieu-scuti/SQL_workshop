@@ -1,6 +1,5 @@
 <?php
 use App\Http\Controllers\AbstractReportController;
-
 ?>
 @if ($breadcrumbs)
     <ul class="breadcrumb">
@@ -11,18 +10,31 @@ use App\Http\Controllers\AbstractReportController;
 
                     <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}"><a href="{{ $breadcrumb->url }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}</a><br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        <span class="title"
+                        data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">
+                            <a href="javascript:void(0)"
+                            data-title="{{ $breadcrumb->title }}">
+                            {{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}
+                            </a>
+                            <br>
+                        </span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}"
+                        data-live-search="true" id="dropdownBreadcrumbs">
                         @if (count($titleBreadCumbs['contents']) > 0)
                                     @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
-                                        if (is_array($account)) {
-                                            $key = $account['accountid'];
-                                            $engine = $account['engine'];
-                                            $account = $account['accountName'];
-                                        } elseif ($account !== 'All Account') {
-                                            $engine = $titleBreadCumbs['engine'];
-                                        } ?>
+                                    if (is_array($account)) {
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                        $checkClient = false;
+                                        if (isset($account['account_id'])) {
+                                            $checkClient = true;
+                                        }
+                                        $account = $account['accountName'];
+                                    } elseif ($account !== 'All Account') {
+                                        $engine = isset($titleBreadCumbs['engine']) ? $titleBreadCumbs['engine'] : '';
+                                    }
+                                    ?>
                                         <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
                                             @if ($account !== 'All Account')
                                                 data-engine = "{{  $engine }}"
@@ -30,7 +42,10 @@ use App\Http\Controllers\AbstractReportController;
                                             @if ( $titleBreadCumbs['flag'] === 'all')
                                                 {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                             @else
-                                                {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
+                                                {{ (int)$key === (int)$titleBreadCumbs['flag']
+                                                && $engine === session(AbstractReportController::SESSION_KEY_ENGINE)
+                                                || (int)$key === (int)$titleBreadCumbs['flag'] && $checkClient
+                                                ? "selected" : ""}}
                                             @endif
                                         data-url= "{{ $breadcrumb->url }}" >
                                             <a href="#">
@@ -39,7 +54,9 @@ use App\Http\Controllers\AbstractReportController;
                                                         || $account === 'All Campaigns'
                                                         || $account === 'All Adgroup'
                                                         || $account === 'All Keywords'
-                                                        || $account === 'All Adreports')
+                                                        || $account === 'All Adreports'
+                                                        || $account === 'All Client'
+                                                        || $account === 'All Agencies')
                                                         {{__('language.' .str_slug($account,'_'))}}
                                                     @else
                                                         {{$account}}
@@ -55,27 +72,39 @@ use App\Http\Controllers\AbstractReportController;
             @else
                 <li class="breadcrumb-item active">
                     <div class="breadcrumb-item-detail">
-                        <span class="title" data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}<br></span>
-                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}" data-live-search="true" id="dropdownBreadcrumbs">
+                        <span class="title"
+                        data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">
+                        {{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}<br></span>
+                        <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}"
+                        data-live-search="true" id="dropdownBreadcrumbs">
                             @if (count($titleBreadCumbs['contents']) > 0)
                                 @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
-                                        if (is_array($account)) {
-                                            $key = $account['accountid'];
-                                            $engine = $account['engine'];
-                                            $account = $account['accountName'];
-                                        } elseif ( $account !== 'All Account' ) {
-                                            $engine = $titleBreadCumbs['engine'];
-                                        } ?>
-                                    <option data-breadcumbs="{{$key}}" data-tokens="{{$account}}"
-                                            @if ($account !== 'All Account')
+                                    $checkClient = false;
+                                    if (is_array($account)) {
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                        
+                                        if (isset($account['account_id'])) {
+                                            $checkClient = true;
+                                        }
+                                        $account = $account['accountName'];
+                                    } elseif ($account !== 'All Account') {
+                                        $engine = isset($titleBreadCumbs['engine']) ? $titleBreadCumbs['engine'] : '';
+                                    }
+                                    ?>
+                                    <option data-breadcumbs="{{$key !== null ? $key : '' }}" data-tokens="{{$account}}"
+                                        @if ($account !== 'All Account')
                                             data-engine = "{{  $engine }}"
-                                            @endif
-                                            data-url= "{{ $breadcrumb->url }}"
+                                        @endif
+                                        data-url= "{{ $breadcrumb->url }}"
                                         @if ( $titleBreadCumbs['flag'] === 'all')
                                             {{ $key === $titleBreadCumbs['flag'] ? "selected" : ""}}
                                         @else
-                                            {{ (int)$key === (int)$titleBreadCumbs['flag'] && $engine === session(AbstractReportController::SESSION_KEY_ENGINE) ? "selected" : ""}}
+                                            {{ (int)$key === (int)$titleBreadCumbs['flag']
+                                            && $engine === session(AbstractReportController::SESSION_KEY_ENGINE)
+                                            || (int)$key === (int)$titleBreadCumbs['flag'] && $checkClient
+                                            ? "selected" : ""}}
                                         @endif >
                                     <a href="#">
                                         <div class="desc" >
@@ -83,7 +112,9 @@ use App\Http\Controllers\AbstractReportController;
                                                 || $account === 'All Campaigns'
                                                 || $account === 'All Adgroup'
                                                 || $account === 'All Keywords'
-                                                || $account === 'All Adreports')
+                                                || $account === 'All Adreports'
+                                                || $account === 'All Client'
+                                                || $account === 'All Agencies')
                                                 {{__('language.' .str_slug($account,'_'))}}
                                             @else
                                                 {{$account}}

@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
+use DateTime;
+use Exception;
+
 use \App\Model\RepoYssAccountReportCost;
 use \App\Model\RepoAdwAccountReportCost;
 use \App\Model\RepoYdnReport;
@@ -72,6 +75,7 @@ class Agency extends AbstractReportModel
             ->union($arrayOfAgencyData)
             ->orderBy($columnSort, $sort)
             ->get();
+
             $agencyTableData = [];
             foreach ($data as $key => $value) {
                 $agencyTableData[]= (array)$value;
@@ -364,5 +368,83 @@ class Agency extends AbstractReportModel
             $agenciesAndDirectClientsData = (array)$agenciesAndDirectClientsData;
         }
         return $agenciesAndDirectClientsData;
+    }
+    /**
+     * @param string $column
+     * @param string $accountStatus
+     * @param string $startDay
+     * @param string $endDay
+     * @return \Illuminate\Support\Collection
+     * @throws \InvalidArgumentException
+     */
+    public function getDataForGraph(
+        $engine,
+        $column,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        try {
+            new DateTime($startDay);
+            new DateTime($endDay);
+        } catch (Exception $exception) {
+            throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
+        }
+        $modelYssReport = new RepoYssAccountReportCost();
+        $modelYdnReport = new RepoYdnReport();
+        $modelAdwReport = new RepoAdwAccountReportCost();
+        $yssAccountDataForGraph = $modelYssReport->yssAccountDataForGraphOfAgencyList($column, $startDay, $endDay);
+        $ydnAccountDataForGraph = $modelYdnReport->ydnAccountDataForGraphOfAgencyList($column, $startDay, $endDay);
+        $adwAccountDataForGraph = $modelAdwReport->adwAccountDataForGraphOfAgencyList($column, $startDay, $endDay);
+
+        $data = $ydnAccountDataForGraph->union($yssAccountDataForGraph)->union($adwAccountDataForGraph);
+        $sql = $this->getBindingSql($data);
+        $data = DB::table(DB::raw("({$sql}) as tbl"))
+            ->select(DB::raw('day, sum(data) as data'))
+            ->groupBy('day');
+
+        $data = $data->get();
+        return $data;
+    }
+
+    //get Agencies to display on breadcrumbs
+    public function getAllAgencies() {
+        $arrayOfDirectClientsAndAgencies = self::select('agent_id')->where('level', '=', 3)
+                        ->where('agent_id', '!=', '')->get()->toArray();
+        $agencies = self::select('account_id')
+                        ->where('level', '=', 3)
+                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)
+                        ->get()->toArray();
+
+        $yssClients = RepoYssAccountReportCost::select('account_id')
+                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+        $ydnClients = RepoYdnReport::select('account_id')
+                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+        $adwClients = RepoAdwAccountReportCost::select('account_id')
+                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+        $arr = ['all' => 'All Agencies'];
+
+        $clientUnionArray = $yssClients->union($ydnClients)->union($adwClients);
+        $sql = $this->getBindingSql($clientUnionArray);
+        $data = DB::table(DB::raw("accounts ,({$sql}) as tbl"))
+            ->select(
+                [
+                    DB::raw('accounts.accountName'),
+                    DB::raw('accounts.account_id')
+                ]
+            )
+            ->where('level', '=', 3)
+            ->whereIn('accounts.account_id', $arrayOfDirectClientsAndAgencies)
+            ->whereRaw('accounts.account_id = tbl.account_id')->get();
+        foreach ($data as $key=>$value) {
+            $arr[] = (array)$value;
+        }
+        return $arr;
     }
 }

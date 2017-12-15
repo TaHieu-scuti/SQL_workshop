@@ -228,7 +228,6 @@ abstract class AbstractReportController extends Controller
             || session(self::SESSION_KEY_ENGINE) === null
         ) {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
-            dd(session(self::SESSION_KEY_ENGINE));
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }

@@ -42,27 +42,22 @@ Route::prefix('agency-report')->group(function () {
         '/',
         'AgencyController\AgencyController@index'
     )->name('agency-report');;
-    // Route::post(
-    //     '/update-table',
-    //     'AgencyController\AgencyController@updateTable'
-    // );
+    Route::post(
+        '/update-table',
+        'AgencyController\AgencyController@updateTable'
+    );
     Route::post(
         '/display-graph',
         'AgencyController\AgencyController@displayGraph'
     );
-    // Route::post(
-    //     '/updateSession',
-    //     'AgencyController\AgencyController@updateSessionID'
-    // );
-    // Route::get(
-    //     '/export_excel',
-    //     'AgencyController\AgencyController@exportToExcel'
-    // );
-
-    // Route::get(
-    //     '/export_csv',
-    //     'AgencyController\AgencyController@exportToCsv'
-    // );
+    Route::get(
+        '/export_excel',
+        'AgencyController\AgencyController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'AgencyController\AgencyController@exportToCsv'
+    );
 });
 
 Route::prefix('account_report')->group(function () {

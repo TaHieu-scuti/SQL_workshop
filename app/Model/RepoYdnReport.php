@@ -180,4 +180,16 @@ class RepoYdnReport extends AbstractReportModel
             )
             ->groupBy('day');
     }
+
+    public function ydnAccountDataForGraphOfAgencyList($column, $startDay, $endDay)
+    {
+        $aggreations = $this->getAggregatedGraphOfYdn($column);
+        return self::select($aggreations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy('day');
+    }
 }

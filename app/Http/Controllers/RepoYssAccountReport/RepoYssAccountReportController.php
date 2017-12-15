@@ -108,7 +108,7 @@ class RepoYssAccountReportController extends AbstractReportController
             20,
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
-        );  
+        );
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         return $this->responseFactory->view(

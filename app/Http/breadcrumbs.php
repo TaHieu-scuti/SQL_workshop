@@ -1,4 +1,11 @@
 <?php
+//Agency
+Breadcrumbs::register(
+    'agency-report',
+    function ($breadcrumbs) {
+        $breadcrumbs->push('Agency', route('agency-report'));
+    }
+);
 
 //Account
 Breadcrumbs::register(
