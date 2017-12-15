@@ -76,7 +76,7 @@
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                            @if (Route::current()->getName() === 'client-list')
+                            @if (isset($report['account_id']))
                             data-table="client-list"
                             @else
                             data-table="account_report"

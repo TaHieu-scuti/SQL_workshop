@@ -20,6 +20,7 @@ abstract class AbstractReportModel extends Model
     const SHOW_ZERO_STATUS = 'showZero';
     const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
     const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
+    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT = 'impressions != 0';
     // Please override these constants in the derived report models when necessary
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
