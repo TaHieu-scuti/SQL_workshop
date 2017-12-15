@@ -108,6 +108,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
+        $tableColumns[] = 'call_tracking';
         return view(
             'yssAdgroupReport.index',
             [
@@ -157,6 +158,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
+        $tableColumns[] = 'call_tracking';
         $tableDataLayout = view(
             'layouts.table_data',
             [

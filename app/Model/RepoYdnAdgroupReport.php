@@ -2,11 +2,10 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
 use Auth;
 use App\Http\Controllers\AbstractReportController;
 
-class RepoYdnAdgroupReport extends AbstractReportModel
+class RepoYdnAdgroupReport extends AbstractYdnReportModel
 {
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
     const PAGE_ID = 'adgroupID';
