@@ -6157,13 +6157,14 @@ a.guest-on i {
     resize: none;
 }
 
-.btn-add {
-    margin: 10px;
-
 li.panel-body {
     cursor: pointer;
 }
 
 li.panel-body.grayed-out {
     cursor: default;
+}
+
+a.btn.btn-add {
+    margin-bottom: 10px;
 }

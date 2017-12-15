@@ -4,7 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RepoAuthaccount extends Model
+class RepoAuthAccount extends Model
 {
     protected $table = 'repo_authaccounts';
     protected $fillable = [

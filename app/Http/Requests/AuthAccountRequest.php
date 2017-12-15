@@ -33,7 +33,7 @@ class AuthAccountRequest extends FormRequest
             'apiAccountPassword' => 'max:255',
             'accountId' => 'max:20',
             'onBehalfOfAccountId' => 'max:20',
-            'onBehalfOfPassword' => 'max:255s',
+            'onBehalfOfPassword' => 'max:255',
             'developerToken' => 'max:22',
             'clientCustomerId' => 'max:12',
         ];

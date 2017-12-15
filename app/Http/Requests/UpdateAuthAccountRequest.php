@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\AuthAccountRequest;
 use Auth;
-use App\Model\RepoAuthaccount;
+use App\Model\RepoAuthAccount;
 
 class UpdateAuthAccountRequest extends AuthAccountRequest
 {
@@ -16,7 +16,7 @@ class UpdateAuthAccountRequest extends AuthAccountRequest
      */
     public function authorize()
     {
-        $authAcount = RepoAuthaccount::find($this->route()->parameters['id']);
+        $authAcount = RepoAuthAccount::find($this->route()->parameters['id']);
         if (Auth::user()->account_id === $authAcount->account_id) {
             return true;
         }

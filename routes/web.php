@@ -191,22 +191,22 @@ Route::get('language/{locale}', function ($locale) {
 Route::prefix('auth-account')->group(function () {
     Route::get(
         '/',
-        'RepoAuthaccount\RepoAuthaccountController@index'
+        'RepoAuthAccount\RepoAuthAccountController@index'
     )->name('auth-account');
     Route::get(
         '/create-account',
-        'RepoAuthaccount\RepoAuthaccountController@create'
+        'RepoAuthAccount\RepoAuthAccountController@create'
     )->name('create-account');
     Route::post(
         '/store-account',
-        'RepoAuthaccount\RepoAuthaccountController@store'
+        'RepoAuthAccount\RepoAuthAccountController@store'
     )->name('store-account');
     Route::get(
         '/edit-account/{id}',
-        'RepoAuthaccount\RepoAuthaccountController@edit'
+        'RepoAuthAccount\RepoAuthAccountController@edit'
     )->name('edit-account');
     Route::post(
         '/update-account/{id}',
-        'RepoAuthaccount\RepoAuthaccountController@update'
+        'RepoAuthAccount\RepoAuthAccountController@update'
     )->name('update-account');
 });

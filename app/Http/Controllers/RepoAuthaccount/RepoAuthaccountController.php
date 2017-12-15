@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\RepoAuthaccount;
+namespace App\Http\Controllers\RepoAuthAccount;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\RepoAuthaccount;
+use App\Model\RepoAuthAccount;
 use App\Http\Requests\AuthAccountRequest;
 use App\Http\Requests\UpdateAuthAccountRequest;
 use Auth;
 
-class RepoAuthaccountController extends Controller
+class RepoAuthAccountController extends Controller
 {
     private $model;
 
-    public function __construct(RepoAuthaccount $model)
+    public function __construct(RepoAuthAccount $model)
     {
         $this->model = $model;
     }
@@ -23,7 +23,7 @@ class RepoAuthaccountController extends Controller
     public function index()
     {
 
-        $authAccounts = $this->model::where('account_id', Auth::user()->account_id)->paginate(5);
+        $authAccounts = RepoAuthAccount::where('account_id', Auth::user()->account_id)->paginate(20);
         return view('authAccount.index', ['authAccounts' => $authAccounts]);
     }
 
@@ -42,7 +42,7 @@ class RepoAuthaccountController extends Controller
     public function store(AuthAccountRequest $request)
     {
         $data = $request->all();
-        $this->model::create($data);
+        RepoAuthAccount::create($data);
         return redirect()->route('auth-account');
     }
 
@@ -52,7 +52,7 @@ class RepoAuthaccountController extends Controller
      */
     public function edit($id)
     {
-        $authAccount = $this->model::find($id);
+        $authAccount = RepoAuthAccount::find($id);
         return view('authAccount.EditAuthAccount', ['authAccount' => $authAccount]);
     }
 
@@ -62,8 +62,7 @@ class RepoAuthaccountController extends Controller
      */
     public function update(UpdateAuthAccountRequest $request, $id)
     {
-        $authAccount = $this->model::where('id', $id);
-
+        $authAccount = RepoAuthAccount::where('id', $id);
         $authAccount->update([
             'license' => $request->license,
             'apiAccountId' => $request->apiAccountId,
