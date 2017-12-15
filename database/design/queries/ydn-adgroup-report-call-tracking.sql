@@ -1,14 +1,13 @@
 SELECT
 	`repo_ydn_reports`.`account_id`,
-	`repo_ydn_reports`.`campaign_id`,
-	`repo_ydn_reports`.`accountid`,
+	`repo_ydn_reports`.`accountId`,
 	`repo_ydn_reports`.`campaignID`,
-	`repo_ydn_reports`.`adGroupId`,
+	`repo_ydn_reports`.`adgroupID`,
 	SUM(`repo_ydn_reports`.`impressions`) AS impressions,
 	SUM(`repo_ydn_reports`.`clicks`) AS clicks,
 	SUM(`repo_ydn_reports`.`cost`) AS cost,
 	AVG(`repo_ydn_reports`.`ctr`) AS ctr,
-	AVG(`repo_ydn_reports`.`averageCPC`) AS avgCPC,
+	AVG(`repo_ydn_reports`.`averageCpc`) AS avgCPC,
 	COUNT(`phone_time_use`.`id`) AS call_tracking,
 	SUM(`repo_ydn_reports`.`conversions`) AS webcv,
 	SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`) AS cv,
@@ -102,9 +101,7 @@ FROM
 WHERE
 	`repo_ydn_reports`.`account_id` = 1
 AND
-	`repo_ydn_reports`.`campaign_id` = 11
-AND
-	`repo_ydn_reports`.`accountid` = 11
+	`repo_ydn_reports`.`accountId` = 11
 AND
 	`repo_ydn_reports`.`campaignID` = 11
 AND
@@ -113,7 +110,6 @@ AND
 	`repo_ydn_reports`.`day` <= '2017-12-01'
 GROUP BY
 	`repo_ydn_reports`.`account_id`,
-	`repo_ydn_reports`.`campaign_id`,
-	`repo_ydn_reports`.`accountid`,
+	`repo_ydn_reports`.`accountId`,
 	`repo_ydn_reports`.`campaignID`,
-	`repo_ydn_reports`.`adGroupId`
+	`repo_ydn_reports`.`adgroupID`
