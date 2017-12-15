@@ -96,6 +96,7 @@ class RepoYssAdReportController extends AbstractReportController
         $tableColumns = $this->updateTableColumns($dataReports);
         if ($engine === 'ydn') {
             $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
         }
         return view(
             'yssAdReport.index',
@@ -139,6 +140,7 @@ class RepoYssAdReportController extends AbstractReportController
         $tableColumns = $this->updateTableColumns($reports);
         if ($engine === 'ydn') {
             $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
         }
         $tableDataLayout = view(
             'layouts.table_data',
