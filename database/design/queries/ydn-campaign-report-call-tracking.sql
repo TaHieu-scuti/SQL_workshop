@@ -1,3 +1,4 @@
+/* CONFIRMED TO BE WORKING */
 SELECT
   `repo_ydn_reports`.`account_id`,
   `repo_ydn_reports`.`accountId`,
