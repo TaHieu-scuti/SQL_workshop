@@ -33,7 +33,7 @@ Route::get(
 Route::get(
     '/home',
     function () {
-        return redirect('account_report');
+        return redirect('client-list');
     }
 );
 
@@ -180,6 +180,41 @@ Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/export_search_query_excel',
         'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToExcel'
+    );
+});
+
+Route::prefix('client-list')->group(function () {
+    Route::get(
+        '/',
+        'Clients\ClientsController@index'
+    )->name('client-list');
+    Route::post(
+        '/display-graph',
+        'Clients\ClientsController@displayGraph'
+    );
+    Route::post(
+        '/update-table',
+        'Clients\ClientsController@updateTable'
+    );
+    Route::get(
+        '/export_excel',
+        'Clients\ClientsController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'Clients\ClientsController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'Clients\ClientsController@updateSessionID'
+    );
+    Route::get(
+        '/export_search_query_csv',
+        'Clients\ClientsController@exportSearchQueryToCsv'
+    );
+    Route::get(
+        '/export_search_query_excel',
+        'Clients\ClientsController@exportSearchQueryToExcel'
     );
 });
 

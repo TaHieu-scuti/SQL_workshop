@@ -64,7 +64,17 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -98,7 +108,17 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -143,7 +163,17 @@ var Script = function () {
                     $('#status-label').html(response.statusLayout);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -244,7 +274,17 @@ var Script = function () {
                     $('button[data-id=selectpickerGraph] span.filter-option').text(columnName);
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
                 complete : function () {
                     completeRequest();
@@ -263,9 +303,26 @@ var Script = function () {
 
         function processRequestBreadcrumbs(url, requestId, engine) {
             switch (url) {
+                case 'client-list' :
+                    var obj = new Object();
+                    var urlReload = 'account_report';
+
+                    obj['id_adgainer'] = requestId;
+                    obj['id_account'] = 'all';
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['engine'] = engine;
+                    if (requestId === 'all') {
+                        urlReload = 'client-list';
+                    }
+                    sendRequestData(obj, url, urlReload);
+                    break;
                 case 'account_report' :
                     var obj = new Object();
                     var urlReload = 'campaign-report';
+                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');;
                     obj['id_account'] = requestId;
                     obj['id_campaign'] = 'all';
                     obj['id_adgroup'] = 'all';
@@ -279,6 +336,7 @@ var Script = function () {
                     break;
                 case 'campaign-report' :
                     var obj = new Object();
+                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = requestId;
                     obj['id_adgroup'] = 'all';
@@ -288,6 +346,7 @@ var Script = function () {
                     break;
                 case 'adgroup-report' :
                     var obj = new Object();
+                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = requestId;
@@ -301,6 +360,7 @@ var Script = function () {
                     break;
                 case 'ad-report' :
                     var obj = new Object();
+                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
@@ -310,6 +370,7 @@ var Script = function () {
                     break;
                 case 'keyword-report' :
                     var obj = new Object();
+                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
@@ -334,7 +395,17 @@ var Script = function () {
                     window.location = redirect;
                 },
                 error : function (response) {
-                    alert('Something went wrong!');
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
                 },
             });
         }
@@ -342,10 +413,14 @@ var Script = function () {
         $('.table_data_report').delegate('.table-redirect', 'click', function() {
             let tableName = $(this).attr('data-table');
             let engine = $(this).data('engine');
+            let accountID = $(this).data('adgainerid')
             if (!engine) {
                 engine = $('select.id_Account').find(':selected').attr('data-engine');
             }
             let requestId = $(this).data('id');
+            if (!requestId) {
+                requestId = accountID;
+            }
             processRequestBreadcrumbs(tableName, requestId, engine);
         })
 
@@ -355,6 +430,9 @@ var Script = function () {
             let requestId = 'all';
             let engine = '';
             switch (title) {
+                case 'Client' :
+                    url = 'client-list';
+                    break;
                 case 'Account' :
                     url = 'account_report';
                     break;

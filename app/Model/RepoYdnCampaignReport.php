@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 use Auth;
 
 class RepoYdnCampaignReport extends AbstractReportModel
@@ -22,7 +23,7 @@ class RepoYdnCampaignReport extends AbstractReportModel
                 function ($query) use ($accountId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        Auth::user()->account_id,
+                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
                         $engine,
                         $accountId
                     );
