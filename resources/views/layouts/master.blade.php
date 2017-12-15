@@ -91,7 +91,6 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body" id="time-period">
-                                @include('layouts.time-period')
                             </div>
                         </section>
                         </a>
@@ -223,7 +222,6 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <section class="panel">
                             <div class="panel-body" id= "status-label">
-                                    @include('layouts.status-title')
                             </div>
                         </section>
                         </a>
@@ -245,7 +243,6 @@
                 <div class="row line-chart">
                     <div class="loading-gif-on-top-graph hidden-graph"></div>
                     <div class="selection-dropdown selectionOnGraph">
-                        @include('layouts.graph_items')
                     </div>
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
@@ -259,7 +256,6 @@
                 </div>
 
                 <div class="row statistic summary_report">
-                    @include('layouts.summary_report')
                 </div>
 
                 <div class="row csv-file" id="active-scroll">
@@ -291,19 +287,7 @@
                                     <div class="modal-body">
                                         <form class="form-horizontal">
                                         <div class="result-per-page">
-                                            <p>Results per page</p>
-                                            <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="20" {{(int)$keyPagination === 20 ? 'checked' : ''}} > 20<br>
-                                            </div>
 
-                                            <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="50" {{(int)$keyPagination === 50 ? 'checked' : ''}}> 50<br>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <input type="radio" name="resultPerPage" value="100" {{(int)$keyPagination === 100 ? 'checked' : ''}}> 100
-                                            </div>
-                                            <div class="clearfix"></div>
                                         </div>
                                         <div class="items-to-display">
                                             <p>Items to display</p>
@@ -313,7 +297,9 @@
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>
-                                            @include('layouts.fields_on_modal')
+                                            <div id="fieldsOnModal">
+                                            </div>
+
                                             <div class="clearfix"></div>
                                         </div>
                                         <div>
@@ -327,7 +313,6 @@
                     </div>
                 </div>
                 <div class="table_data_report" style="position: relative;">
-                    @include('layouts.table_data')
                 </div>
         </section>
     </section>

@@ -125,7 +125,7 @@
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
-                        <td><i class="fa fa-rmb"></i>{{ $report[$fieldName] }}</td>
+                        <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif ($fieldName === 'averagePosition')
