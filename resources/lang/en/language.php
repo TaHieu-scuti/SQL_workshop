@@ -79,5 +79,6 @@ return [
     'all_client' => 'All Client',
     'all_agency' => 'All Agency',
     'matchtype' => 'Match Type',
-    'call_tracking' => 'Call CV'
+    'call_tracking' => 'Call CV',
+    'impressionshare' => 'Impression Share'
 ];
