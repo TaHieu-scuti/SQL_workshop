@@ -94,7 +94,9 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
-        $tableColumns[] = 'call_tracking';
+        if ($engine === 'ydn') {
+            $tableColumns[] = 'call_tracking';
+        }
         return view(
             'yssAdReport.index',
             [
@@ -122,7 +124,7 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSessionData($request);
 
         if ($request->specificItem === 'prefecture') {
@@ -135,7 +137,9 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
-        $tableColumns[] = 'call_tracking';
+        if ($engine === 'ydn') {
+            $tableColumns[] = 'call_tracking';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [
