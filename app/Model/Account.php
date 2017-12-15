@@ -213,7 +213,7 @@ class Account extends AbstractReportModel
             ->orderBy($columnSort, $sort);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
+            $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
         $datas = [];
         foreach ($arrAccountsAgency->get() as $report) {

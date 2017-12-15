@@ -104,12 +104,15 @@ class RepoYssCampaignReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if ($engine === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+        }
         return view(
             'yssCampaignReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $fieldNames, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -132,7 +135,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -152,11 +155,15 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if ($engine === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $fieldNames,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
