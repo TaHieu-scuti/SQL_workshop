@@ -46,6 +46,15 @@
                                 <i class="fa fa-arrow-up"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
                         @else
+                            @if($prefixRoute === '/client-list' && $fieldName === 'accountName')
+                                @php
+                                    $fieldName = 'clientName'
+                                @endphp
+                            @elseif($prefixRoute === '/agency-list' && $fieldName === 'accountName')
+                                @php
+                                    $fieldName = 'agencyName'
+                                @endphp
+                            @endif
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
                             </th>
