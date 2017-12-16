@@ -26,6 +26,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS_SHARE = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -48,11 +49,6 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
                 self::MAX_AVERAGE_POSITION * 100000
             ) / 100000;
 
-            $campaignReportCost->conversions = mt_rand(
-                self::MIN_CONVERSIONS,
-                $campaignReportCost->clicks
-            );
-
             $campaignReportCost->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST
@@ -63,9 +59,24 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
                 $accountReport->impressions
             );
 
+            $campaignReportCost->contentImprShare = mt_rand(
+                self::MIN_IMPRESSIONS_SHARE,
+                $accountReport->contentImprShare
+            );
+
+            $campaignReportCost->searchImprShare = mt_rand(
+                self::MIN_IMPRESSIONS_SHARE,
+                $accountReport->searchImprShare
+            );
+
             $campaignReportCost->clicks = mt_rand(
                 self::MIN_CLICKS,
                 $campaignReportCost->impressions
+            );
+
+            $campaignReportCost->conversions = mt_rand(
+                self::MIN_CONVERSIONS,
+                $campaignReportCost->clicks
             );
 
             $campaignReportCost->month = $accountReport->month;
@@ -100,9 +111,9 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->day = $accountReport->day;
             $campaignReportCost->dayOfWeek = $accountReport->dayOfWeek;
             $campaignReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-            $campaignReportCost->hourofday = $accountReport->hourofday;
-            $campaignReportCost->timeZone = $accountReport->hourofday;
-            $campaignReportCost->accountid = $accountReport->accountid;
+            $campaignReportCost->hourOfDay = $accountReport->hourOfDay;
+            $campaignReportCost->timeZone = $accountReport->hourOfDay;
+            $campaignReportCost->customerID = $accountReport->customerID;
             $campaignReportCost->saveOrFail();
         }
     }

@@ -188,7 +188,6 @@ class CreateRepoAdwAdgroupReportCostsTable extends Migration
                     );
                 $table->date('week')->nullable()->comment('yyyy-MM-ddの形式の月曜日の日付。');
                 $table->integer('year')->nullable()->comment('年はyyyyの形式です。');
-                $table->bigInteger('accountid')->comment('media id');
 
                 $table->unique('id', 'id_UNIQUE');
                 $table->index('exeDate', 'repo_adw_adgroup_report_cost1');

@@ -12,10 +12,18 @@ class RepoYdnReport extends AbstractReportModel
     protected $table = 'repo_ydn_reports';
     const PAGE_ID = 'accountid';
     const GROUPED_BY_FIELD_NAME = 'accountName';
+    const ARR_FIELDS = [
+        self::CLICKS => self::CLICKS,
+        self::COST => self::COST,
+        self::IMPRESSIONS => self::IMPRESSIONS,
+        self::CTR => self::CTR,
+        self::AVERAGE_POSITION => self::AVERAGE_POSITION,
+        self::AVERAGE_CPC => self::AVERAGE_CPC
+    ];
 
     public $timestamps = false;
 
-    private function getAggregatedGraphOfYdn($column)
+    public function getAggregatedGraphOfYdn($column)
     {
         $arrSelect = [];
         $tableName = $this->getTable();
@@ -68,10 +76,13 @@ class RepoYdnReport extends AbstractReportModel
             if ($fieldName === self::GROUPED_BY_FIELD_NAME
                 ||$fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
             ) {
                 $arrayCalculate[] = $fieldName;
+                continue;
+            }
+            if ($fieldName === self::DAY_OF_WEEK) {
+                $arrayCalculate[] = DB::raw('DAYNAME(day) AS ' . $fieldName);
                 continue;
             }
             if ($fieldName === self::PAGE_ID) {
@@ -190,6 +201,35 @@ class RepoYdnReport extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
+            ->groupBy('day');
+    }
+
+    public function getYdnAccountAgency(array $fieldNames, $startDay, $endDay)
+    {
+        $getAggregatedYdnAccounts = $this->getAggregatedAgency($fieldNames);
+
+        $accounts = self::select($getAggregatedYdnAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        return $accounts;
+    }
+
+    public function getGraphForAgencyYdn($column, $startDay, $endDay, $arrAccountsAgency)
+    {
+        $getAggregatedYdnAccounts = $this->getAggregatedGraphOfYdn($column);
+
+        return self::select($getAggregatedYdnAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->whereIn('account_id', $arrAccountsAgency)
             ->groupBy('day');
     }
 }

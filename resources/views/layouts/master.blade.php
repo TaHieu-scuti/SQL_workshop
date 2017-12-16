@@ -243,6 +243,7 @@
                 </div>
 
                 <div class="row line-chart">
+                    <div class="loading-gif-on-top-graph hidden-graph"></div>
                     <div class="selection-dropdown selectionOnGraph">
                         @include('layouts.graph_items')
                     </div>

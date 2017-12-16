@@ -13,6 +13,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS_SHARE = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -100,6 +101,11 @@ class RepoAdwKeywordReportGenerator extends Seeder
                     $keywordReportCost->clicks
                 );
 
+                $keywordReportCost->searchImprShare = mt_rand(
+                    self::MIN_IMPRESSIONS_SHARE,
+                    $adgroupReport->searchImprShare
+                );
+
                 if ($keywordReportCost->clicks === 0) {
                     $keywordReportCost->convRate = 0;
                 } else {
@@ -138,7 +144,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->quarter = $adgroupReport->quarter;
                 $keywordReportCost->month = $adgroupReport->month;
                 $keywordReportCost->week = $adgroupReport->week;
-                $keywordReportCost->accountid = $adgroupReport->accountid;
+                $keywordReportCost->customerID = $adgroupReport->customerID;
                 $keywordReportCost->matchType = self::MATCH_TYPE;
 
                 $keywordReportCost->saveOrFail();

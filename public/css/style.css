@@ -262,8 +262,8 @@ a, a:hover, a:focus {
     padding-left: 10px;
 }
 
-.wrapper .row.breadcrumb-list .breadcrumb .breadcrumb-item .breadcrumb-item-detail 
-.dropdown-menu.extended.tasks-bar .dropdown-menu.scroll-menu{
+.wrapper .row.breadcrumb-list .breadcrumb .breadcrumb-item .breadcrumb-item-detail
+.dropdown-menu.extended.tasks-bar .dropdown-menu.scroll-menu {
     border-radius: 1px;
     display: grid;
     height: 197px;
@@ -297,7 +297,7 @@ a, a:hover, a:focus {
 }
 .wrapper .row.information .element-title {
     border-bottom: 1px solid #ecedf1;
-    height: 74px; 
+    height: 74px;
 }
 .wrapper .row.information .panel .title {
     color: #797979;
@@ -627,42 +627,42 @@ a, a:hover, a:focus {
     padding-left: 0px;
 }
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .result-per-page>p {
     text-align: left;
 }
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .result-per-page {
     padding-left: 15px;
 }
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .result-per-page .form-group {
     float: left;
     margin-left: 0px;
     margin-right: 25px;
-} 
+}
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .items-to-display>p {
     text-align: left;
 }
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .items-to-display {
     padding-left: 15px;
 }
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .items-to-display .form-group {
     float: left;
     margin-left: 0px;
     text-align: left;
     width: 300px;
-} 
+}
 
-.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body 
+.wrapper .row.csv-file .columns .modal.fade .modal-dialog .modal-body
 .form-horizontal .notation {
     padding-left: 15px;
 }
@@ -684,7 +684,7 @@ a, a:hover, a:focus {
     height: 100%;
 }
 
-.wrapper .row.csv-file .columns .panel-body { 
+.wrapper .row.csv-file .columns .panel-body {
     color: #797979;
     padding: 0;
 }
@@ -806,6 +806,13 @@ a, a:hover, a:focus {
 
 .wrapper .row.report-table .paginator a {
     color: #797979;
+}
+.wrapper .row.report-table .ad-name {
+    text-decoration: underline;
+    color: #0000ff;
+}
+.wrapper .row.report-table .display-url {
+    color: #357535;
 }
 .modal.fade.in {
     z-index: 20000;
@@ -5929,6 +5936,20 @@ a.guest-on i {
     z-index:1050;
 }
 
+.loading-gif-on-top-graph {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58px;
+    background-color: #fff;
+    background:url('/images/Loading_icon_new.gif');
+    background-repeat:no-repeat;
+    background-position:center;
+    z-index:1050;
+    opacity: 0.5;
+}
+
 .hidden-graph {
     display: none !important;
 }
@@ -6075,4 +6096,67 @@ a.guest-on i {
 .bootstrap-select .inner {
     max-height: 200px!important;
     min-height: 100px!important;
+}
+
+/*AuthAccount*/
+
+#myselect {
+    color: #000;
+}
+
+.form-group {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100%;
+}
+.form-auth {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.form-warp .col-sm-8 {
+    float: right;
+}
+
+.form-auth-heading {
+    margin: 0;
+    padding:20px 15px;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    color: #000;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.form-group .control-label {
+    font-weight: 500;
+    text-align: right;
+}
+
+.form-group .form-control {
+    color: #000;
+}
+.form-warp {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-warp textarea {
+    resize: none;
+}
+
+li.panel-body {
+    cursor: pointer;
+}
+
+li.panel-body.grayed-out {
+    cursor: default;
+}
+
+a.btn.btn-add {
+    margin-bottom: 10px;
 }

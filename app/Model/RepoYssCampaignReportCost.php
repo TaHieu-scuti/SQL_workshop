@@ -31,16 +31,18 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     public function getAllCampaign(
         $accountId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         $arrCampaigns = [];
         $campaigns = null;
         $arrCampaigns['all'] = 'All Campaigns';
         if (session(AbstractReportController::SESSION_KEY_ENGINE) === 'yss') {
             $campaigns = self::select('campaignID', 'campaignName')
                 ->where(
-                    function ($query) use ($accountId) {
+                    function ($query) use ($accountId, $engine) {
                         $this->addQueryConditions(
                             $query,
-                            Auth::user()->account_id,
+                            session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                            $engine,
                             $accountId
                         );
                     }

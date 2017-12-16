@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAdwSearchQueryPerformanceReport;
+use App\Model\RepoYssSearchqueryReportCost;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -35,6 +37,8 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
+    const SESSION_KEY_ADGAINER_ID = 'adgainerId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -160,6 +164,7 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
+
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
@@ -258,8 +263,9 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             session([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
+
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_OLD_ENGINE)]);
+        session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
     }
 
     public function checkoutSessionFieldName()
@@ -318,6 +324,15 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
     }
 
+    public function updateSessionAdgainerId($adgainerId)
+    {
+        session()->put(
+            [
+                self::SESSION_KEY_ADGAINER_ID => $adgainerId
+            ]
+        );
+    }
+
     public function updateSessionAccountId($accountId)
     {
         session()->put(
@@ -325,6 +340,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_ACCOUNT_ID => $accountId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_ACCOUNT_ID)) {
+            session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
+        }
     }
 
     public function updateSessionAdReportId($adReportId)
@@ -394,18 +412,28 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
-        if (session()->has(self::SESSION_KEY_ENGINE)) {
-            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
-        }
+        // the first time we did not have value for session key engine, so old engine will be null
+        // the second time session key engine already exist, so we need to update old engine first,
+        // after that we will update session key engine.
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
     }
 
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
-        $array[0] = static::GROUPED_BY_FIELD;
+
+        if (session(static::SESSION_KEY_ENGINE) === 'yss'
+            || session(static::SESSION_KEY_ENGINE) === 'ydn'
+            || session(static::SESSION_KEY_ENGINE) === null
+        ) {
+            $array[0] = static::GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $array[0] = static::ADW_GROUPED_BY_FIELD;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
-        session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
     }
 
     public function updateSessionID(Request $request)
@@ -453,6 +481,17 @@ abstract class AbstractReportController extends Controller
             );
         } elseif ($request->id_account !== "all" && $request->id_account !== null) {
             $this->updateSessionAccountId($request->id_account);
+        }
+
+        //get id adgainer if avaiable
+        if ($request->id_adgainer === 'all') {
+            session()->put(
+                [
+                    self::SESSION_KEY_ADGAINER_ID => null
+                ]
+            );
+        } elseif ($request->id_adgainer !== "all" && $request->id_adgainer !== null) {
+            $this->updateSessionAdgainerId($request->id_adgainer);
         }
 
         //get id campaign if avaiable
@@ -527,7 +566,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -544,6 +583,9 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
+            session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+        }
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -555,7 +597,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -572,7 +614,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
@@ -590,7 +632,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            $this->adgainerId,
+            session(self::SESSION_KEY_ADGAINER_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -607,5 +649,90 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }
+    }
+
+    public function exportSearchQueryToCsv()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $collection = $data->getCollection();
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $csvData = $exporter->export();
+        return $this->responseFactory->make(
+            $csvData,
+            200,
+            [
+            'Content-Type' => 'application/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function exportSearchQueryToExcel()
+    {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if (session(static::SESSION_KEY_ENGINE) === 'yss') {
+            $this->model = new RepoYssSearchqueryReportCost;
+            $fieldNames[0] = 'searchQuery';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
+            $this->model = new RepoAdwSearchQueryPerformanceReport;
+            $fieldNames[0] = 'searchTerm';
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
+        $data = $this->getDataForTable();
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
+
+        /** @var $collection \Illuminate\Database\Eloquent\Collection */
+        $collection = $data->getCollection();
+
+        $aliases = $this->translateFieldNames($fieldNames);
+        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $excelData = $exporter->export();
+
+        return $this->responseFactory->make(
+            $excelData,
+            200,
+            [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $exporter->getFileName() . '"',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => (new DateTime)->format('D, d M Y H:i:s'),
+            'Cache-Control' => 'cache, must-revalidate, private',
+            'Pragma' => 'public'
+            ]
+        );
+    }
+
+    public function checkoutConditionForUpdateColumn($engine)
+    {
+        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+            if (session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID)) {
+                return false; // same campaign => no update
+            }
+            return true; // same engine, different account id => update back to normal report
+        } else {
+            return true; // different engine => update back to normal report
+        }
+        return false;
     }
 }

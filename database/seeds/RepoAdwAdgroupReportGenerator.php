@@ -14,6 +14,7 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS_SHARE = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -81,6 +82,16 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                     $adgroupReportCost->clicks
                 );
 
+                $adgroupReportCost->searchImprShare = mt_rand(
+                    self::MIN_IMPRESSIONS_SHARE,
+                    $campaignReport->searchImprShare
+                );
+
+                $adgroupReportCost->contentImprShare = mt_rand(
+                    self::MIN_IMPRESSIONS_SHARE,
+                    $campaignReport->contentImprShare
+                );
+
                 if ($adgroupReportCost->clicks === 0) {
                     $adgroupReportCost->convRate = 0;
                 } else {
@@ -96,12 +107,12 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->quarter = $campaignReport->quarter;
                 $adgroupReportCost->month = $campaignReport->month;
                 $adgroupReportCost->week = $campaignReport->week;
-                $adgroupReportCost->hourofday = $campaignReport->hourofday;
+                $adgroupReportCost->hourOfDay = $campaignReport->hourOfDay;
                 $adgroupReportCost->totalConvValue = mt_rand(
                     self::MIN_ALL_CONV_VALUE,
                     self::MAX_ALL_CONV_VALUE
                 );
-                $adgroupReportCost->accountid = $campaignReport->accountid;
+                $adgroupReportCost->customerID = $campaignReport->customerID;
                 $adgroupReportCost->saveOrFail();
             }
         }

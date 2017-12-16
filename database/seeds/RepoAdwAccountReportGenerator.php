@@ -25,6 +25,8 @@ class RepoAdwAccountReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
+    const MIN_IMPRESSIONS_SHARE = 0;
+    const MAX_IMPRESSIONS_SHARE = 4096;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -92,6 +94,16 @@ class RepoAdwAccountReportGenerator extends Seeder
             self::MAX_IMPRESSIONS
         );
 
+        $costReport->contentImprShare = mt_rand(
+            self::MIN_IMPRESSIONS_SHARE,
+            self::MAX_IMPRESSIONS_SHARE
+        );
+
+        $costReport->searchImprShare = mt_rand(
+            self::MIN_IMPRESSIONS_SHARE,
+            self::MAX_IMPRESSIONS_SHARE
+        );
+
         $costReport->clicks = mt_rand(
             self::MIN_CLICKS,
             $costReport->impressions
@@ -124,7 +136,7 @@ class RepoAdwAccountReportGenerator extends Seeder
             self::MAX_CONV_VALUE
         ) / mt_getrandmax();
 
-        $costReport->accountid = $mediaAccountNumber + 1;
+        $costReport->customerID = $mediaAccountNumber + 1;
 
         $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 

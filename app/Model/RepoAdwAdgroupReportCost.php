@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 
 class RepoAdwAdgroupReportCost extends AbstractReportModel
 {
@@ -28,12 +29,14 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         return self::select('adGroupID as adgroupID', 'adGroup as adgroupName')
             ->where(
-                function ($query) use ($accountId, $campaignId) {
+                function ($query) use ($accountId, $campaignId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        Auth::user()->account_id,
+                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                        $engine,
                         $accountId,
                         $campaignId
                     );

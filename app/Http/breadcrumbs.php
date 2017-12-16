@@ -4,13 +4,21 @@ Breadcrumbs::register(
     'agency-report',
     function ($breadcrumbs) {
         $breadcrumbs->push('Agency', route('agency-report'));
+
+//Client
+Breadcrumbs::register(
+    'client-list',
+    function ($breadcrumbs) {
+	$breadcrumbs->parent('agency-report');
+        $breadcrumbs->push('Client', route('client-list'));
     }
 );
 
-//Account
+//Client->Account
 Breadcrumbs::register(
     'account_report',
     function ($breadcrumbs) {
+        $breadcrumbs->parent('client-list');
         $breadcrumbs->push('Account', route('account_report'));
     }
 );

@@ -1,6 +1,7 @@
 <?php
 return [
     'account' => 'アカウント名',
+    'searchquery' => '検索クエリ',
     'Search_for_account' => 'アカウント名で検索',
     'engineAccount' => 'エンジンアカウント',
     'campaign' => 'キャンペーン',
@@ -35,7 +36,7 @@ return [
     'AvgCPC' => '平均CPC',
     'Avg_pos' => '平均掲載順位',
     'impression_Share' => 'インプレッション',
-    'yesterday' => '過去7日間',
+    'yesterday' => '昨日',
     'last_7_days' => '過去7日間',
     'including_today' => '今日を含む',
     'excluding_today' => '今日を除く',
@@ -70,7 +71,13 @@ return [
     'keyword_name' => 'キーワード名',
     'adname' => '広告名',
     'adreport' => '広告レポート',
-    'ad' => '広告レポート',
+    'ad' => '広告',
     'all_adreports' => 'すべての広告',
     'client' => 'クライアント',
+    'searchterm' => '検索クエリー',
+    'all_client' => 'すべての広告主',
+    'all_agency' => 'すべての代理店',
+    'matchtype' => 'マッチタイプ',
+    'call_tracking' => 'コール数',
+    'impressionshare' => 'インプレッションシェア'
 ];

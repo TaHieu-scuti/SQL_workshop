@@ -22,6 +22,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const GROUPED_BY_FIELD_NAME = 'accountName';
     const GROUPED_BY_FIELD_NAME_ADW = 'account';
     const PAGE_ID = 'accountid';
+    const ADW_CUSTOMER_ID = 'customerID';
 
     /**
      * @var bool
@@ -32,19 +33,23 @@ class RepoYssAccountReportCost extends AbstractReportModel
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
     const HIDE_ZERO_STATUS = 'hideZero';
     const SHOW_ZERO_STATUS = 'showZero';
-    const CLICKS = 'clicks';
-    const COST = 'cost';
-    const IMPRESSIONS = 'impressions';
-    const CTR = 'ctr';
-    const AVERAGE_POSITION = 'averagePosition';
-    const AVERAGE_CPC = 'averageCpc';
+
     const ADW_FIELDS = [
         self::CLICKS => self::CLICKS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
-        self::AVERAGE_POSITION => 'avgPosition',
-        self::AVERAGE_CPC => 'avgCPC'
+        self::AVERAGE_POSITION => self::ADW_AVERAGE_POSITION,
+        self::AVERAGE_CPC => self::ADW_AVERAGE_CPC
+    ];
+
+    const ARR_FIELDS = [
+        self::CLICKS => self::CLICKS,
+        self::COST => self::COST,
+        self::IMPRESSIONS => self::IMPRESSIONS,
+        self::CTR => self::CTR,
+        self::AVERAGE_POSITION => self::AVERAGE_POSITION,
+        self::AVERAGE_CPC => self::AVERAGE_CPC
     ];
 
     private function getAggregatedGraphOfGoogle($column)
@@ -80,7 +85,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         return $arrSelect;
     }
 
-    private function getAggregatedGraph($column)
+    public function getAggregatedGraph($column)
     {
         $arrSelect = [];
         $tableName = $this->getTable();
@@ -138,6 +143,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
+            if ($fieldName === self::PAGE_ID) {
+                $arrayCalculate[] = self::ADW_CUSTOMER_ID.' as accountid';
+                continue;
+            }
             if ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
@@ -440,7 +449,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             ->orderBy($columnSort, $sort);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
-            $adwAccountReport = $adwAccountReport->groupBy('accountid');
+            $adwAccountReport = $adwAccountReport->groupBy(self::ADW_CUSTOMER_ID);
         }
 
         $datas = $this->select(array_merge([DB::raw("'yss' as engine")], $aggregations))
@@ -521,6 +530,34 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
+            ->groupBy('day');
+    }
+
+    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay)
+    {
+        $getAggregatedYssAccounts = $this->getAggregatedAgency($fieldNames);
+
+        $accounts = self::select($getAggregatedYssAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        return $accounts;
+    }
+
+    public function getGraphForAgencyYss($column, $startDay, $endDay, $arrAccountsAgency)
+    {
+        $getAggregatedYssAccounts = $this->getAggregatedGraph($column);
+        return self::select($getAggregatedYssAccounts)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->whereIn('account_id', $arrAccountsAgency)
             ->groupBy('day');
     }
 }

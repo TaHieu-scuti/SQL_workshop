@@ -60,7 +60,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -83,6 +84,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+            if ($engine === 'ydn') {
+                $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+            }
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
         }
@@ -90,7 +94,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        if (session()->has(self::SESSION_KEY_OLD_ENGINE) && session(self::SESSION_KEY_OLD_ENGINE) !== $engine) {
+        if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
@@ -100,12 +104,17 @@ class RepoYssCampaignReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
-
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if ($engine === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
+        }
         return view(
             'yssCampaignReport.index',
             [
                 self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME), // field names which show on top of table
+                self::FIELD_NAMES => $fieldNames, // field names which show on top of table
                 self::REPORTS => $dataReports, // data that returned from query
                 self::COLUMNS => $defaultColumns, // all columns that show up in modal
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
@@ -128,7 +137,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -148,11 +157,17 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if ($engine === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $fieldNames,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -184,6 +199,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         } elseif ($engine === 'ydn') {
             $this->model = new RepoYdnCampaignReport;
         }
+
         return $engine;
     }
 }

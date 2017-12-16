@@ -181,6 +181,10 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->adName = 'YDN Ad Report ' . ($adReportNumber + 1);
 
+            $costReport->displayURL = 'https://'. 'YDN-Ad-Report ' . ($adReportNumber + 1);
+
+            $costReport->description1 = 'YDN Ad Report ' . ($adReportNumber + 1) . 'description';
+
             $costReport->prefectureID = $adReportNumber + 1;
 
             $costReport->prefecture = self::PREFECTURE[mt_rand(0, count(self::PREFECTURE) - 1)];

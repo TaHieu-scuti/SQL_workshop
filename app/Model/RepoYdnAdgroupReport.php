@@ -2,10 +2,10 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
 use Auth;
+use App\Http\Controllers\AbstractReportController;
 
-class RepoYdnAdgroupReport extends AbstractReportModel
+class RepoYdnAdgroupReport extends AbstractYdnReportModel
 {
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
     const PAGE_ID = 'adgroupID';
@@ -27,12 +27,14 @@ class RepoYdnAdgroupReport extends AbstractReportModel
         $accountId = null,
         $campaignId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         return self::select('adgroupID', 'adgroupName')
             ->where(
-                function ($query) use ($accountId, $campaignId) {
+                function ($query) use ($accountId, $campaignId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        Auth::user()->account_id,
+                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                        $engine,
                         $accountId,
                         $campaignId
                     );

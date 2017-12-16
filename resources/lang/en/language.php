@@ -1,6 +1,7 @@
 <?php
 return [
     'account' => 'Account',
+    'searchquery' => 'Search Query',
     'Search_for_account' => 'Search for account',
     'engineAccount' => 'ENGINE ACCOUNT',
     'campaign' => 'CAMPAIGNS',
@@ -63,14 +64,23 @@ return [
     'campaignname' => 'Campaign name',
     'all_campaigns' => 'All Campaigns',
     'all_adgroup' => 'All Adgroup',
+    'all_client' => 'All Client',
     'all_keywords' => 'All Keywords',
     'adgroupname' => 'Ad group name',
     'conversions' => 'Conversions',
     'all_ads' => 'All Ads',
     'keyword_name' => 'Keyword name',
-    'adname' => 'Ad name',
+    'adname' => 'Ad',
     'adreport' => 'Ad Report',
     'ad' => 'Ad',
     'all_adreports' => 'All Adreports',
-    'client' => 'Client'
+    'client' => 'Client',
+    'searchterm' => 'Search Query',
+    'all_client' => 'All Client',
+    'all_agency' => 'All Agency',
+    'matchtype' => 'Match Type',
+    'call_tracking' => 'Call CV',
+    'call_cvr' => 'Call CVR',
+    'call_cpa' => 'Call CPA',
+    'impressionshare' => 'Impression Share',
 ];

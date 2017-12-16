@@ -74,9 +74,17 @@ function sendingRequestTable() {
     }, 10);
 }
 
+function showLoadingImageOnTopGraph() {
+    $('.loading-gif-on-top-graph').removeClass('hidden-graph');
+    setTimeout(function() {
+        $('.loading-gif-on-top-graph').show();
+    }, 10);
+}
+
 function completeRequestTable()
 {
     $('.loading-gif-on-table').addClass('hidden-table');
+    $('.loading-gif-on-top-graph').addClass('hidden-graph');
 }
 /*
 *
@@ -108,12 +116,8 @@ $(".apply-button").click(function () {
             'fieldName' : array['fieldName'],
         },
         beforeSend : function () {
-            setTimeout(function() {
-                $('#columnsModal').modal('hide');
-            }, 1);
-            setTimeout(function() {
-                sendingRequestTable();
-            }, 200);
+            $('#columnsModal').modal('hide');
+            sendingRequestTable();
         },
         success: function(response) {
             $('.table_data_report').html(response.tableDataLayout);
@@ -122,7 +126,17 @@ $(".apply-button").click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -175,7 +189,17 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -209,7 +233,17 @@ $('.apply-custom-period').click(function() {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -255,7 +289,17 @@ $('.status-option li').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            alert('Something went wrong!');
+            if (response.status === 403) {
+                if (isJson(response.responseText)) {
+                    let obj = JSON.parse(response.responseText);
+                    if (obj.error === 'session_expired') {
+                        alert('Session expired');
+                        window.location.href = obj.redirect_url;
+                    }
+                }
+            } else {
+                alert('Something went wrong!');
+            }
         },
         complete : function () {
             completeRequestTable();
@@ -315,10 +359,8 @@ $('.specific-filter-item').click(function() {
             'specificItem' : $(this).data('value'),
         },
         beforeSend : function () {
-            $('html, body').animate({
-                scrollTop: $('#active-scroll').offset().top
-            }, 1000)
             sendingRequestTable();
+            showLoadingImageOnTopGraph();
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
@@ -356,6 +398,7 @@ $('.normal-report').click(function() {
 $(document).ready(function(){
     let array = [];
     let objectAccount = new Object();
+    let objectClient = new Object();
     let objectCampaign = new Object();
     let objectAdgroup = new Object();
     let objectKeyword = new Object();
@@ -375,6 +418,11 @@ $(document).ready(function(){
     if(engine === 'adw') {
         iconEngine = '<img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >';
     }
+    objectClient['title'] = 'Account';
+    objectClient['name'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
+    objectClient['value'] = $('select.id_Account').find(':selected').attr('data-tokens');
+    objectClient['engine'] = '';
+    array.push(objectClient);
 
     objectAccount['title'] = 'Account';
     objectAccount['name'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
@@ -390,7 +438,7 @@ $(document).ready(function(){
 
     objectAdgroup['title'] = 'Adgroup';
     objectAdgroup['name'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
-    objectAdgroup['value'] = $('select.id_Campaign').find(':selected').attr('data-tokens');
+    objectAdgroup['value'] = $('select.id_AdGroup').find(':selected').attr('data-tokens');
     objectAdgroup['engine'] = iconEngine;
     array.push(objectAdgroup);
 
@@ -447,3 +495,12 @@ $(document).ready(function(){
     }
     $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })
+
+function isJson(obj) {
+    try {
+        JSON.parse(obj);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}

@@ -51,12 +51,14 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
+        'matchType',
         'impressions',
         'clicks',
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -82,7 +84,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
         }
-        
+
         if (!session('keywordReport')) {
             $this->initializeSession($defaultColumns);
         }

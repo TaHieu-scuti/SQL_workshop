@@ -43,7 +43,6 @@ class RepoAdwAdReportGenerator extends Seeder
         $adgroupReports = RepoAdwAdgroupReportCost::select()
             ->where('network', 'LIKE', 'CONTENT')
             ->get();
-
         foreach ($adgroupReports as $adgroupReport) {
             $ammountOfKeyword = rand(
                 self::MIN_NUMBER_OF_AD,
@@ -66,6 +65,8 @@ class RepoAdwAdReportGenerator extends Seeder
 
                 if ($i % 2 === 0) {
                     $adReportCost->ad = 'Some text advertisement';
+                    $adReportCost->displayURL = 'https://some-text-avertisement.adg';
+                    $adReportCost->description = 'Some text advertisement description';
                 } else {
                     $adReportCost->imageAdURL =
                         'https://flydigitalprint.com/wp/wp-content/uploads/2016/12/banner-sign.jpg';
@@ -144,7 +145,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->quarter = $adgroupReport->quarter;
                 $adReportCost->month = $adgroupReport->month;
                 $adReportCost->week = $adgroupReport->week;
-                $adReportCost->accountid = $adgroupReport->accountid;
+                $adReportCost->customerID = $adgroupReport->customerID;
 
                 $adReportCost->saveOrFail();
             }

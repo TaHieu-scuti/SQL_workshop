@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\Account;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
@@ -57,11 +58,16 @@ class User extends Authenticatable
                 $model = new Agency;
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllAgencies();
-                // if (session(AbstractReportController::SESSION_KEY_ACCOUNT_ID) === null) {
-                //     $array['flag'] = 'all';
-                // } else {
-                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
-                // }
+                $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
+            case 'Client':
+                $model = new Account();
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllClient();
+                if (session(AbstractReportController::SESSION_KEY_ADGAINER_ID) === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ADGAINER_ID);
+                }
                 break;
             case 'Account':
                 $model = new RepoYssAccount;

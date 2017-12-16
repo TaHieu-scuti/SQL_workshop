@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Auth;
 use App\AbstractReportModel;
+use App\Http\Controllers\AbstractReportController;
 
 class RepoAdwCampaignReportCost extends AbstractReportModel
 {
@@ -20,12 +21,14 @@ class RepoAdwCampaignReportCost extends AbstractReportModel
     public function getAllAdwCampaign(
         $accountId = null
     ) {
+        $engine = session(static::SESSION_KEY_ENGINE);
         return self::select('campaignID', 'campaign as campaignName')
             ->where(
-                function ($query) use ($accountId) {
+                function ($query) use ($accountId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        Auth::user()->account_id,
+                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                        $engine,
                         $accountId
                     );
                 }

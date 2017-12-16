@@ -85,6 +85,10 @@ use App\Http\Controllers\AbstractReportController;
                                         $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
                                         $engine = isset($account['engine']) ? $account['engine'] : null;
                                         
+                                    if (is_array($account)) {
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                        $checkClient = false;
                                         if (isset($account['account_id'])) {
                                             $checkClient = true;
                                         }
