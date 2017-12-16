@@ -1,3 +1,4 @@
+/* CONFIRMED TO BE WORKING CORRECTLY */
 SELECT
   `repo_yss_campaign_report_cost`.`account_id`,
   `repo_yss_campaign_report_cost`.`accountid`,
@@ -15,7 +16,7 @@ SELECT
   AVG(`repo_yss_campaign_report_cost`.`averagePosition`) AS avgPosition
 FROM
   `repo_yss_campaign_report_cost`
-    LEFT JOIN (`campaigns`, `phone_time_use`)
+    LEFT JOIN `phone_time_use`
     ON (
         `phone_time_use`.`account_id` = `repo_yss_campaign_report_cost`.`account_id`
       AND
@@ -23,7 +24,7 @@ FROM
       AND
         `phone_time_use`.`utm_campaign` = `repo_yss_campaign_report_cost`.`campaignID`
       AND
-        STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_adgroup_report_cost`.`day`
+        STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_campaign_report_cost`.`day`
       AND
         `phone_time_use`.`source` = 'yss'
       AND
@@ -32,7 +33,7 @@ FROM
 WHERE
   `repo_yss_campaign_report_cost`.`account_id` = 1
 AND
-  `repo_yss_campaign_report_cost`.`accountid` = 11
+  `repo_yss_campaign_report_cost`.`accountid` = 11111
 AND
   `repo_yss_campaign_report_cost`.`day` >= '2017-01-01'
 AND
