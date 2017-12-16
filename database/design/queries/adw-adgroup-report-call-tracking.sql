@@ -103,19 +103,19 @@ FROM
                 `phone_time_use`.`custom10` = `repo_adw_ad_report_cost`.`adID`
               )
             )
-            AND
+          AND
             `phone_time_use`.`account_id` = `repo_adw_ad_report_cost`.`account_id`
-            AND
+          AND
             `phone_time_use`.`campaign_id` = `repo_adw_ad_report_cost`.`campaign_id`
-            AND
+          AND
             `phone_time_use`.`utm_campaign` = `repo_adw_ad_report_cost`.`campaignID`
-            AND
+          AND
             STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_ad_report_cost`.`day`
-            AND
+          AND
             `phone_time_use`.`source` = 'adw'
-            AND
+          AND
             `phone_time_use`.`traffic_type` = 'AD'
-            )
+          )
     WHERE
       `repo_adw_ad_report_cost`.`account_id` = 1
       AND
