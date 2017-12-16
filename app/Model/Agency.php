@@ -182,7 +182,7 @@ class Agency extends AbstractReportModel
         $sql = $this->getBindingSql($directClientsData);
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName']);
         $rawExpressions = $this->getRawExpressions($fieldNames);
-        $directClient['client'] = DB::raw("'directClient' AS accountName");
+        $directClient['client'] = DB::raw("'directClient' AS agencyName");
         $rawExpressions = $directClient + $rawExpressions;
 
         $directClientsData = DB::table(DB::raw("accounts,({$sql}) as tbl"))

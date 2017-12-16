@@ -755,4 +755,18 @@ abstract class AbstractReportController extends Controller
         }
         return false;
     }
+
+    public function updateColumnAccountNameToClientNameOrAgencyName(array $columns, $prefixRoute)
+    {
+        foreach ($columns as $key => $value) {
+            if ($value === 'accountName' && $prefixRoute === '/client-report') {
+                $columns[$key] = 'clientName';
+                break;
+            } elseif ($value === 'accountName' && $prefixRoute === '/agency-report') {
+                $columns[$key] = 'agencyName';
+                break;
+            }
+        }
+        return $columns;
+    }
 }

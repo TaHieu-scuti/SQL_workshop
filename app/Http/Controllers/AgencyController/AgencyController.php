@@ -5,8 +5,10 @@ namespace App\Http\Controllers\AgencyController;
 use App\Http\Controllers\AbstractReportController;
 use Auth;
 use Illuminate\Http\Request;
+use App\Export\Native\NativePHPCsvExporter;
+use App\Export\Spout\SpoutExcelExporter;
 use Illuminate\Contracts\Routing\ResponseFactory;
-
+use DateTime;
 use App\Model\Agency;
 use App\Model\RepoYssAccountReportCost;
 
@@ -121,7 +123,10 @@ class AgencyController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session()->get(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                ),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -132,7 +137,10 @@ class AgencyController extends AbstractReportController
             'layouts.fields_on_modal',
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session()->get(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                )
             ]
         )->render();
         $columnForLiveSearch = view(
@@ -200,7 +208,10 @@ class AgencyController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session()->get(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                ),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -266,15 +277,18 @@ class AgencyController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
+        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
+            session()->get(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_KEY_PREFIX_ROUTE
+        );
+        $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoYssPrefectureReportCost;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -296,8 +310,11 @@ class AgencyController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
+        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
+            session()->get(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_KEY_PREFIX_ROUTE
+        );
+        $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -306,7 +323,7 @@ class AgencyController extends AbstractReportController
 
         $aliases = $this->translateFieldNames($fieldNames);
 
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter(collect($collection), $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(

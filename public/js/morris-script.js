@@ -349,7 +349,7 @@ var Script = function () {
             switch (url) {
                 case 'agency-report' :
                     var obj = new Object();
-                    var urlReload = 'client-list';
+                    var urlReload = 'client-report';
 
                     obj['id_agency'] = requestId;
                     obj['id_client'] = 'all';
@@ -364,7 +364,7 @@ var Script = function () {
                     }
                     sendRequestData(obj, url, urlReload);
                     break;
-                case 'client-list' :
+                case 'client-report' :
                     var obj = new Object();
                     var urlReload = 'account_report';
 
@@ -377,7 +377,7 @@ var Script = function () {
                     obj['id_keyword'] = 'all';
                     obj['engine'] = engine;
                     if (requestId === 'all') {
-                        urlReload = 'client-list';
+                        urlReload = 'client-report';
                     }
                     sendRequestData(obj, url, urlReload);
                     break;
@@ -497,8 +497,11 @@ var Script = function () {
             let requestId = 'all';
             let engine = '';
             switch (title) {
+                case 'Agency' :
+                    url = 'agency-report';
+                    break;
                 case 'Client' :
-                    url = 'client-list';
+                    url = 'client-report';
                     break;
                 case 'Account' :
                     url = 'account_report';

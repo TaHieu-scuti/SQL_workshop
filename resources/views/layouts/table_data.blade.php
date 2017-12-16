@@ -63,13 +63,22 @@
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
                         @continue
                     @endif
-                    @if ($fieldName === 'clientName')
+                    @if ($fieldName === 'agencyName')
+                            <td>
+                                <a href="javascript:void(0)" class="table-redirect"
+                                   data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                                   data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
+                                   data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
+                                   data-table="agency-report"
+                                >{{ $report[$fieldName] }}</a>
+                            </td>
+                    @elseif ($fieldName === 'clientName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                            data-table="client-list"
+                            data-table="client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'accountName')
