@@ -101,6 +101,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
+        $engine = $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
