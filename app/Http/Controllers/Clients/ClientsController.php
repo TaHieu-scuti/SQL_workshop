@@ -134,17 +134,20 @@ class ClientsController extends AbstractReportController
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
-        $fieldsOnModal = view('layouts.fields_on_modal',
+        $fieldsOnModal = view(
+            'layouts.fields_on_modal',
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
             ]
         )->render();
-        $columnForLiveSearch = view('layouts.graph_items',
+        $columnForLiveSearch = view(
+            'layouts.graph_items',
             [
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
-            ])->render();
+            ]
+        )->render();
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))

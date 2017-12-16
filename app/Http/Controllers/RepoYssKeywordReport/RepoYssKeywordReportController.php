@@ -130,11 +130,13 @@ class RepoYssKeywordReportController extends AbstractReportController
                 self::FIELD_NAMES => $tableColumns
             ]
         )->render();
-        $columnForLiveSearch = view('layouts.graph_items',
+        $columnForLiveSearch = view(
+            'layouts.graph_items',
             [
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
                 self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
-            ])->render();
+            ]
+        )->render();
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
