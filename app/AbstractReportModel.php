@@ -141,7 +141,7 @@ abstract class AbstractReportModel extends Model
                 }
             }
             if ($fieldName === 'matchType') {
-                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                $arrayCalculate[] = DB::raw($this->getTable() . '.' . $key.' as '.$fieldName);
             }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
                 if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
@@ -886,11 +886,12 @@ abstract class AbstractReportModel extends Model
     {
         if ($engine === 'adw') {
             if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
-                $query->where('network', 'SEARCH');
+                $query->where($this->getTable() . '.network', 'SEARCH');
             } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
-                $query->where('network', 'CONTENT');
+                $query->where($this->getTable() . '.network', 'CONTENT');
             } else {
-                $query->where('network', 'SEARCH')->orWhere('network', 'CONTENT');
+                $query->where($this->getTable() . '.network', 'SEARCH')
+                    ->orWhere($this->getTable() . '.network', 'CONTENT');
             }
         }
     }
