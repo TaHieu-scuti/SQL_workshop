@@ -3,7 +3,6 @@
         $export = false;
     }
 @endphp
-<div class="loading-gif-on-table hidden-table"></div>
 @if($reports->total() !== 0)
     <div class="no-data-found-table hidden-no-data-found-message-table">
         <span class="no-data-found-message-table">No data found for table</span>
