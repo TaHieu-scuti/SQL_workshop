@@ -6104,7 +6104,7 @@ a.guest-on i {
     color: #000;
 }
 
-.form-group {
+div.form-group.form-auth-account {
     margin-left: 0 !important;
     margin-right: 0 !important;
     width: 100%;

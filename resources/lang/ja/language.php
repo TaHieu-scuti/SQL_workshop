@@ -79,5 +79,6 @@ return [
     'all_agency' => 'すべての代理店',
     'matchtype' => 'マッチタイプ',
     'call_tracking' => 'コール数',
-    'impressionshare' => 'インプレッションシェア'
+    'clientname' => 'クライアント名',
+    'impressionshare' => 'インプレッションシェア',
 ];

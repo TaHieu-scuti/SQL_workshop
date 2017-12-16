@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Clients;
 
 use Illuminate\Http\Request;
@@ -127,7 +126,7 @@ class ClientsController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME)),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -138,7 +137,7 @@ class ClientsController extends AbstractReportController
             'layouts.fields_on_modal',
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME))
             ]
         )->render();
         $columnForLiveSearch = view(
@@ -211,7 +210,7 @@ class ClientsController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME)),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -276,7 +275,7 @@ class ClientsController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->updateColumnAccountNameToClientName(session()->get(self::SESSION_KEY_FIELD_NAME));
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
@@ -303,7 +302,7 @@ class ClientsController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->updateColumnAccountNameToClientName(session()->get(self::SESSION_KEY_FIELD_NAME));
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
@@ -325,5 +324,16 @@ class ClientsController extends AbstractReportController
                 'Pragma' => 'public'
             ]
         );
+    }
+
+    public function updateColumnAccountNameToClientName(array $columns)
+    {
+        foreach ($columns as $key => $value) {
+            if ($value === 'accountName') {
+                $columns[$key] = 'clientName';
+                break;
+            }
+        }
+        return $columns;
     }
 }

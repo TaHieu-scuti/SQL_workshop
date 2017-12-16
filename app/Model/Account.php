@@ -275,7 +275,7 @@ class Account extends AbstractReportModel
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'accountName') {
-                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName .' AS '.$fieldName);
+                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName .' AS clientName');
             }
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
                 $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
