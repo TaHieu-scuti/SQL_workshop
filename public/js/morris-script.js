@@ -16,6 +16,7 @@ var Script = function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend : function () {
+                    $('.click-event').css({pointerEvents: "none"})
                     sendingRequestTable();
                 },
                 success: function(response) {
@@ -41,6 +42,7 @@ var Script = function () {
                     }
                 },
                 complete : function () {
+                    $('.click-event').css({pointerEvents: "auto"})
                     completeRequestTable();
                 }
             });
