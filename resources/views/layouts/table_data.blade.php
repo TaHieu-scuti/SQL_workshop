@@ -63,7 +63,16 @@
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
                         @continue
                     @endif
-                    @if ($fieldName === 'accountName')
+                    @if ($fieldName === 'clientName')
+                        <td>
+                            <a href="javascript:void(0)" class="table-redirect"
+                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
+                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
+                            data-table="client-list"
+                            >{{ $report[$fieldName] }}</a>
+                        </td>
+                    @elseif ($fieldName === 'accountName')
                         <td>
                             @if (isset($report['engine']))
                                 @if ($report['engine'] === 'adw')
@@ -78,11 +87,7 @@
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                            @if (isset($report['account_id']))
-                            data-table="client-list"
-                            @else
                             data-table="account_report"
-                            @endif
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'campaignName' || $fieldName === 'campaign')
@@ -127,7 +132,7 @@
                     @elseif ($fieldName === 'cost' && is_float($report[$fieldName]))
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
-                        <td><i class="fa fa-rmb"></i>{{ $report[$fieldName] }}</td>
+                        <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @elseif (is_float($report[$fieldName]) && ($fieldName === 'ctr' || $fieldName === 'impressionShare'))
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif ($fieldName === 'averagePosition')
