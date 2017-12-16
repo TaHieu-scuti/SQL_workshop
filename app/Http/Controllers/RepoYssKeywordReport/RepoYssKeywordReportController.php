@@ -106,6 +106,13 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
+
+        if ($engine === 'yss') {
+            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
+        }
+
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -167,7 +174,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSessionData($request);
 
         if ($request->specificItem === 'prefecture') {
@@ -179,6 +186,11 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
+        if ($engine === 'yss') {
+            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [

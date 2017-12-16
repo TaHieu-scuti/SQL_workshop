@@ -123,7 +123,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
-        if (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+
+        if (session(self::SESSION_KEY_ENGINE) === 'ydn'
+            || session(self::SESSION_KEY_ENGINE) === 'yss'
+        ) {
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
@@ -211,7 +214,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
-        if ($engine === 'ydn') {
+        if ($engine === 'ydn' || $engine === 'yss') {
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';

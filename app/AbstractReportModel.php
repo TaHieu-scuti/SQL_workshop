@@ -350,6 +350,15 @@ abstract class AbstractReportModel extends Model
         }
         // merge static::FIELDS in order to display ad as requested
         $this->groupBy = array_merge($this->groupBy, static::FIELDS);
+        $groupBy = $this->groupBy;
+        foreach ($groupBy as &$item) {
+            $item = $this->getTable() . '.' . $item;
+        }
+        foreach ($aggregations as &$aggregation) {
+            if (is_string($aggregation)) {
+                $aggregation = $this->getTable() . '.' . $aggregation;
+            }
+        }
         $builder = $this->select(array_merge(static::FIELDS, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -381,7 +390,7 @@ abstract class AbstractReportModel extends Model
                     $this->addConditionNetworkQueryForADW($engine, $query);
                 }
             )
-            ->groupBy($this->groupBy)
+            ->groupBy($groupBy)
             ->orderBy($columnSort, $sort);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
