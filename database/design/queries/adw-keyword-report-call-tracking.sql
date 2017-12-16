@@ -1,6 +1,6 @@
+/* CONFIRMED TO BE WORKING */
 SELECT
   `repo_adw_keywords_report_cost`.`account_id`,
-  `repo_adw_keywords_report_cost`.`campaign_id`,
   `repo_adw_keywords_report_cost`.`customerID`,
   `repo_adw_keywords_report_cost`.`campaignID`,
   `repo_adw_keywords_report_cost`.`adGroupID`,
@@ -105,15 +105,15 @@ FROM
 WHERE
   `repo_adw_keywords_report_cost`.`account_id` = 1
 AND
-  `repo_adw_keywords_report_cost`.`customerID` = 1
+  `repo_adw_keywords_report_cost`.`customerID` = 11111
 AND
-  `repo_adw_keywords_report_cost`.`campaignID` = 11
+  `repo_adw_keywords_report_cost`.`campaignID` = 111111
 AND
-  `repo_adw_keywords_report_cost`.`adGroupID` = 3
+  `repo_adw_keywords_report_cost`.`adGroupID` = 1111111
 AND
-  `repo_adw_keywords_report_cost`.`day` >= '2017-04-01'
+  `repo_adw_keywords_report_cost`.`day` >= '2017-01-01'
 AND
-  `repo_adw_keywords_report_cost`.`day` <= '2017-07-01'
+  `repo_adw_keywords_report_cost`.`day` <= '2017-12-01'
 AND
   `repo_adw_keywords_report_cost`.`network` = 'SEARCH'
 GROUP BY
