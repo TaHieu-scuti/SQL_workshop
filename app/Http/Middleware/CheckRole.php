@@ -15,7 +15,7 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        // TODO: add the authorization code
+        // TODO: add the authorization code, will do in next PR
         return $next($request);
     }
 }
