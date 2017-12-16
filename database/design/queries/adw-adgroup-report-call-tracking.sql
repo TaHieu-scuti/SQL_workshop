@@ -3,7 +3,7 @@ SELECT
   `keyword_ad`.`account_id`,
   `keyword_ad`.`customerID`,
   `keyword_ad`.`campaignID`,
-  `keyword_ad`.`adGroupId`,
+  `keyword_ad`.`adGroupID`,
   SUM(`keyword_ad`.`impressions`) AS impressions,
   SUM(`keyword_ad`.`clicks`) AS clicks,
   SUM(`keyword_ad`.`cost`) AS cost,
@@ -141,7 +141,7 @@ FROM
       `repo_adw_adgroup_report_cost`.`account_id`,
       `repo_adw_adgroup_report_cost`.`customerID`,
       `repo_adw_adgroup_report_cost`.`campaignID`,
-      `repo_adw_adgroup_report_cost`.`adGroupId`,
+      `repo_adw_adgroup_report_cost`.`adGroupID`,
       SUM(`repo_adw_adgroup_report_cost`.`impressions`) AS impressions,
       SUM(`repo_adw_adgroup_report_cost`.`clicks`) AS clicks,
       SUM(`repo_adw_adgroup_report_cost`.`cost`) AS cost,
@@ -251,10 +251,10 @@ FROM
       `repo_adw_adgroup_report_cost`.`account_id`,
       `repo_adw_adgroup_report_cost`.`customerID`,
       `repo_adw_adgroup_report_cost`.`campaignID`,
-      `repo_adw_adgroup_report_cost`.`adGroupId`
+      `repo_adw_adgroup_report_cost`.`adGroupID`
   ) AS keyword_ad
 GROUP BY
   `keyword_ad`.`account_id`,
   `keyword_ad`.`customerID`,
   `keyword_ad`.`campaignID`,
-  `keyword_ad`.`adGroupId`
+  `keyword_ad`.`adGroupID`
