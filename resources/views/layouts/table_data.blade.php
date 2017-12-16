@@ -74,13 +74,13 @@
                         </td>
                     @elseif ($fieldName === 'accountName')
                         <td>
-                            @if (isset($report['engine']))
-                                @if ($report['engine'] === 'adw')
-                                    <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
-                                @else
-                                    <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
-                                @endif
+                        @if (isset($report['engine']))
+                            @if ($report['engine'] === 'adw')
+                                <img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >
+                            @else
+                                <img src="images/yahoo.png" width="15px" height="15px" class="iconMedia" >
                             @endif
+                        @endif
                         </td>
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"

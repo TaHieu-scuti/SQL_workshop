@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 class RepoYssCampaignReportCost extends AbstractReportModel
 {
     // constant
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'campaignName';
     const PAGE_ID = 'campaignID';
 
@@ -153,7 +152,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
                     function ($query) use ($accountId, $engine) {
                         $this->addQueryConditions(
                             $query,
-                            session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                            session(AbstractReportController::SESSION_KEY_CLIENT_ID),
                             $engine,
                             $accountId
                         );

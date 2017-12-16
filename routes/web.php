@@ -33,9 +33,41 @@ Route::get(
 Route::get(
     '/home',
     function () {
-        return redirect('client-list');
+        return redirect('agency-report');
     }
 );
+
+Route::prefix('agency-report')->group(function () {
+    Route::get(
+        '/',
+        'AgencyController\AgencyController@index'
+    )->name('agency-report');
+    Route::post(
+        '/update-table',
+        'AgencyController\AgencyController@updateTable'
+    );
+    Route::post(
+        '/display-graph',
+        'AgencyController\AgencyController@displayGraph'
+    );
+    Route::get(
+        '/export_excel',
+        'AgencyController\AgencyController@exportToExcel'
+    );
+    Route::get(
+        '/export_csv',
+        'AgencyController\AgencyController@exportToCsv'
+    );
+    Route::post(
+        '/updateSession',
+        'AgencyController\AgencyController@updateSessionID'
+    );
+
+    Route::get(
+        '/getDataForLayouts',
+        'AgencyController\AgencyController@getDataForLayouts'
+    );
+});
 
 Route::prefix('account_report')->group(function () {
     Route::get(
@@ -232,14 +264,6 @@ Route::prefix('client-list')->group(function () {
     Route::post(
         '/updateSession',
         'Clients\ClientsController@updateSessionID'
-    );
-    Route::get(
-        '/export_search_query_csv',
-        'Clients\ClientsController@exportSearchQueryToCsv'
-    );
-    Route::get(
-        '/export_search_query_excel',
-        'Clients\ClientsController@exportSearchQueryToExcel'
     );
     Route::get(
         '/getDataForLayouts',

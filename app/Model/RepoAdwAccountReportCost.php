@@ -17,10 +17,8 @@ class RepoAdwAccountReportCost extends AbstractReportModel
     public $timestamps = false;
 
     // constant
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'account';
     const PAGE_ID = 'accountid';
-
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
         self::COST => self::COST,
@@ -71,6 +69,18 @@ class RepoAdwAccountReportCost extends AbstractReportModel
         return $arrSelect;
     }
 
+    public function adwAccountDataForGraphOfAgencyList($column, $startDay, $endDay)
+    {
+        $aggreations = $this->getDataForGraphAdw($column);
+        return self::select($aggreations)
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->groupBy('day');
+    }
+    
     public function getDataGraphForAdw($column, $startDay, $endDay, $arrAccountsAgency)
     {
         $getAggregatedAdwAccounts = $this->getDataForGraphAdw($column);

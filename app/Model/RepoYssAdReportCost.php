@@ -15,7 +15,6 @@ use Auth;
 class RepoYssAdReportCost extends AbstractReportModel
 {
     // constant
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adName';
     const PAGE_ID = 'adId';
     const ALL_HIGHER_LAYERS =

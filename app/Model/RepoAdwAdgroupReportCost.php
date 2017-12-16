@@ -7,7 +7,6 @@ use App\Http\Controllers\AbstractReportController;
 
 class RepoAdwAdgroupReportCost extends AbstractReportModel
 {
-    const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'adGroup';
     const PAGE_ID = "adgroupID";
     const ALL_HIGHER_LAYERS =
@@ -34,7 +33,7 @@ class RepoAdwAdgroupReportCost extends AbstractReportModel
                 function ($query) use ($accountId, $campaignId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                        session(AbstractReportController::SESSION_KEY_CLIENT_ID),
                         $engine,
                         $accountId,
                         $campaignId

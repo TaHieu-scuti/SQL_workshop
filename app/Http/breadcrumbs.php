@@ -1,8 +1,17 @@
 <?php
+//Agency
+Breadcrumbs::register(
+    'agency-report',
+    function ($breadcrumbs) {
+        $breadcrumbs->push('Agency', route('agency-report'));
+    }
+);
+
 //Client
 Breadcrumbs::register(
     'client-list',
     function ($breadcrumbs) {
+        $breadcrumbs->parent('agency-report');
         $breadcrumbs->push('Client', route('client-list'));
     }
 );

@@ -118,7 +118,7 @@ class Account extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $this->unsetColumns($fieldNames, [$groupedByField]);
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus);
     }
 
@@ -211,7 +211,6 @@ class Account extends AbstractReportModel
             ->whereRaw('accounts.account_id = ydn.account_id')
             ->whereRaw('accounts.account_id = adw.account_id')
             ->orderBy($columnSort, $sort);
-
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }

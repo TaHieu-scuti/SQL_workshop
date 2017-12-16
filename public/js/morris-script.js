@@ -336,6 +336,7 @@ var Script = function () {
         $('.selectpickerBreadCrumbs').on('change', function(){
             var curent_url = $(this).find("option:selected").data("url");
             let requestId = $(this).find("option:selected").data('breadcumbs');
+
             var str = curent_url.lastIndexOf('/');
             var url = curent_url.substring(str + 1);
             let engine = $(this).find("option:selected").data('engine');
@@ -344,11 +345,29 @@ var Script = function () {
 
         function processRequestBreadcrumbs(url, requestId, engine) {
             switch (url) {
+                case 'agency-report' :
+                    var obj = new Object();
+                    var urlReload = 'client-list';
+
+                    obj['id_agency'] = requestId;
+                    obj['id_client'] = 'all';
+                    obj['id_account'] = 'all';
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['engine'] = engine;
+                    if (requestId === 'all') {
+                        urlReload = 'agency-report';
+                    }
+                    sendRequestData(obj, url, urlReload);
+                    break;
                 case 'client-list' :
                     var obj = new Object();
                     var urlReload = 'account_report';
 
-                    obj['id_adgainer'] = requestId;
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = requestId;
                     obj['id_account'] = 'all';
                     obj['id_campaign'] = 'all';
                     obj['id_adgroup'] = 'all';
@@ -363,7 +382,8 @@ var Script = function () {
                 case 'account_report' :
                     var obj = new Object();
                     var urlReload = 'campaign-report';
-                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');;
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
                     obj['id_account'] = requestId;
                     obj['id_campaign'] = 'all';
                     obj['id_adgroup'] = 'all';
@@ -377,7 +397,8 @@ var Script = function () {
                     break;
                 case 'campaign-report' :
                     var obj = new Object();
-                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = requestId;
                     obj['id_adgroup'] = 'all';
@@ -387,7 +408,8 @@ var Script = function () {
                     break;
                 case 'adgroup-report' :
                     var obj = new Object();
-                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = requestId;
@@ -401,7 +423,8 @@ var Script = function () {
                     break;
                 case 'ad-report' :
                     var obj = new Object();
-                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');
@@ -411,7 +434,8 @@ var Script = function () {
                     break;
                 case 'keyword-report' :
                     var obj = new Object();
-                    obj['id_adgainer'] = $('select.id_Client').find(':selected').attr('data-adgainerid');
+                    obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+                    obj['id_client'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
                     obj['id_account'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
                     obj['id_campaign'] = $('select.id_Campaign').find(':selected').attr('data-breadcumbs');
                     obj['id_adgroup'] = $('select.id_AdGroup').find(':selected').attr('data-breadcumbs');

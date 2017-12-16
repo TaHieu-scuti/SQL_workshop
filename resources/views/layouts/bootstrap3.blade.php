@@ -23,10 +23,10 @@ use App\Http\Controllers\AbstractReportController;
                         @if (count($titleBreadCumbs['contents']) > 0)
                                     @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
+                                    $checkClient = false;
                                     if (is_array($account)) {
                                         $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
                                         $engine = isset($account['engine']) ? $account['engine'] : null;
-                                        $checkClient = false;
                                         if (isset($account['account_id'])) {
                                             $checkClient = true;
                                         }
@@ -55,7 +55,8 @@ use App\Http\Controllers\AbstractReportController;
                                                         || $account === 'All Adgroup'
                                                         || $account === 'All Keywords'
                                                         || $account === 'All Adreports'
-                                                        || $account === 'All Client')
+                                                        || $account === 'All Client'
+                                                        || $account === 'All Agencies')
                                                         {{__('language.' .str_slug($account,'_'))}}
                                                     @else
                                                         {{$account}}
@@ -79,6 +80,11 @@ use App\Http\Controllers\AbstractReportController;
                             @if (count($titleBreadCumbs['contents']) > 0)
                                 @foreach ($titleBreadCumbs['contents'] as $key => $account)
                                     <?php
+                                    $checkClient = false;
+                                    if (is_array($account)) {
+                                        $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
+                                        $engine = isset($account['engine']) ? $account['engine'] : null;
+                                    }
                                     if (is_array($account)) {
                                         $key = isset($account['accountid']) ? $account['accountid'] : $account['account_id'];
                                         $engine = isset($account['engine']) ? $account['engine'] : null;
@@ -111,7 +117,8 @@ use App\Http\Controllers\AbstractReportController;
                                                 || $account === 'All Adgroup'
                                                 || $account === 'All Keywords'
                                                 || $account === 'All Adreports'
-                                                || $account === 'All Client')
+                                                || $account === 'All Client'
+                                                || $account === 'All Agencies')
                                                 {{__('language.' .str_slug($account,'_'))}}
                                             @else
                                                 {{$account}}
