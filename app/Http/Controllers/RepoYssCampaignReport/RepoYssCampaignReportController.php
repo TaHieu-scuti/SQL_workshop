@@ -97,36 +97,83 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->updateModelForPrefecture();
         }
         $this->checkoutSessionFieldName();
+        return $this->responseFactory->view(
+            'yssCampaignReport.index',
+            [
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+            ]
+        );
+    }
+
+    public function getDataForLayouts()
+    {
+        $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        if ($engine === 'ydn' || $engine = 'yss') {
+
+        if (session(self::SESSION_KEY_ENGINE) === 'ydn'
+            || session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $fieldNames[] = 'call_tracking';
             $fieldNames[] = 'call_cvr';
             $fieldNames[] = 'call_cpa';
         }
-        return view(
-            'yssCampaignReport.index',
+        $summaryReportLayout = view(
+            'layouts.summary_report',
             [
-                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION),
-                self::FIELD_NAMES => $fieldNames, // field names which show on top of table
-                self::REPORTS => $dataReports, // data that returned from query
-                self::COLUMNS => $defaultColumns, // all columns that show up in modal
+                self::SUMMARY_REPORT => $summaryReportData
+            ]
+        )->render();
+        $tableDataLayout = view(
+            'layouts.table_data',
+            [
+                self::REPORTS => $dataReports,
+                self::FIELD_NAMES => $fieldNames,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
-                self::TIME_PERIOD_TITLE => session(self::SESSION_KEY_TIME_PERIOD_TITLE),
-                self::STATUS_TITLE => session(self::SESSION_KEY_STATUS_TITLE),
-                self::START_DAY => session(self::SESSION_KEY_START_DAY),
-                self::END_DAY => session(self::SESSION_KEY_END_DAY),
-                // all columns that show columns live search
-                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
-                self::TOTAL_DATA_ARRAY => $totalDataArray, // total data of each field
-                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::SUMMARY_REPORT => $summaryReportData,
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+            ]
+        )->render();
+        $fieldsOnModal = view(
+            'layouts.fields_on_modal',
+            [
+                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
+                self::FIELD_NAMES => $fieldNames
+            ]
+        )->render();
+        $columnForLiveSearch = view(
+            'layouts.graph_items',
+            [
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
+            ]
+        )->render();
+        $timePeriodLayout = view('layouts.time-period')
+            ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
+            ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
+            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->render();
+        $statusLayout = view('layouts.status-title')
+            ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
+            ->render();
+        $keyPagination = view(
+            'layouts.key_pagination_per_page',
+            [
+                self::KEY_PAGINATION => session(self::SESSION_KEY_PAGINATION)
+            ]
+        )->render();
+
+        return $this->responseFactory->json(
+            [
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'fieldsOnModal' => $fieldsOnModal,
+                'coloumnForLiveSearch' => $columnForLiveSearch,
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'keyPagination' => $keyPagination
             ]
         );
     }
@@ -195,7 +242,6 @@ class RepoYssCampaignReportController extends AbstractReportController
         } elseif ($engine === 'ydn') {
             $this->model = new RepoYdnCampaignReport;
         }
-
         return $engine;
     }
 }

@@ -725,15 +725,13 @@ abstract class AbstractReportController extends Controller
 
     public function checkoutConditionForUpdateColumn($engine)
     {
-        if (session()->has(self::SESSION_KEY_OLD_ENGINE)) {
-            if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
-                if (session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID)) {
-                    return false; // same campaign => no update
-                }
-                return true; // same engine, different account id => update back to normal report
-            } else {
-                return true; // different engine => update back to normal report
+        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+            if (session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID)) {
+                return false; // same campaign => no update
             }
+            return true; // same engine, different account id => update back to normal report
+        } else {
+            return true; // different engine => update back to normal report
         }
         return false;
     }

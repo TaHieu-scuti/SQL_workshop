@@ -4,6 +4,47 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
+        setTimeout(function() {
+            getDataForLayouts();
+        }, 500);
+
+        function getDataForLayouts() {
+            $.ajax({
+                url: prefixRoute + "/getDataForLayouts",
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend : function () {
+                    sendingRequestTable();
+                },
+                success: function(response) {
+                    $('.table_data_report').html(response.tableDataLayout);
+                    $('.summary_report').html(response.summaryReportLayout);
+                    $('#time-period').html(response.timePeriodLayout);
+                    $('#status-label').html(response.statusLayout);
+                    $('.selectionOnGraph').html(response.coloumnForLiveSearch);
+                    $('#fieldsOnModal').html(response.fieldsOnModal);
+                    $('.result-per-page').html(response.keyPagination);
+                },
+                error : function (response) {
+                    if (response.status === 403) {
+                        if (isJson(response.responseText)) {
+                            let obj = JSON.parse(response.responseText);
+                            if (obj.error === 'session_expired') {
+                                alert('Session expired');
+                                window.location.href = obj.redirect_url;
+                            }
+                        }
+                    } else {
+                        alert('Something went wrong!');
+                    }
+                },
+                complete : function () {
+                    completeRequestTable();
+                }
+            });
+        }
 
         $('.summary_report').delegate('.fields', 'click', function() {
             var $active = $('.statistic .fields.active');
@@ -458,5 +499,21 @@ var Script = function () {
         });
 
     });
+
+    function sendingRequestTable() {
+        $('.selectpickerBreadCrumbs').attr('disabled', true);
+        $('.report-table').css('display', 'none');
+        $('.loading-gif-on-table').removeClass('hidden-table');
+        setTimeout(function() {
+            $('.loading-gif-on-table').show();
+        }, 10);
+    }
+
+    function completeRequestTable()
+    {
+        $('.loading-gif-on-table').addClass('hidden-table');
+        $('.loading-gif-on-top-graph').addClass('hidden-graph');
+        $('.selectpickerBreadCrumbs').attr('disabled', false);
+    }
 
 }();
