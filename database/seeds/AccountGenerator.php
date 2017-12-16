@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\Account;
 
 // @codingStandardsIgnoreLine
-class AccountGenerator extends Seeder
+    class AccountGenerator extends Seeder
 {
     const NUMBER_OF_ACCOUNTS = 12;
     const LEVEL = 3;
@@ -37,10 +37,10 @@ class AccountGenerator extends Seeder
             $account->level = 1;
         }
         $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
-        if ((int)$account_id === 3 || (int)$account_id === 1 || (int)$account_id === 4) {
+        if ((int)$account_id === 3 || (int)$account_id === 2 || (int)$account_id === 4) {
             $account->agent_id = '';
-        } elseif ((int)$account_id === 2) {
-            $account->agent_id = $account_id + 1;
+        } elseif ((int)$account_id === 1) {
+            $account->agent_id = 2;
         }
         $account->accountName = str_random(10);
         $account->dept = '';
