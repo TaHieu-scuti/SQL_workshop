@@ -9,10 +9,10 @@ Breadcrumbs::register(
 
 //Client
 Breadcrumbs::register(
-    'client-list',
+    'client-report',
     function ($breadcrumbs) {
         $breadcrumbs->parent('agency-report');
-        $breadcrumbs->push('Client', route('client-list'));
+        $breadcrumbs->push('Client', route('client-report'));
     }
 );
 
@@ -20,7 +20,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'account_report',
     function ($breadcrumbs) {
-        $breadcrumbs->parent('client-list');
+        $breadcrumbs->parent('client-report');
         $breadcrumbs->push('Account', route('account_report'));
     }
 );

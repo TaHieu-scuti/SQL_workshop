@@ -36,7 +36,7 @@ class ClientsController extends AbstractReportController
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
     const SESSION_KEY_SUMMARY_REPORT = self::SESSION_KEY_PREFIX . self::SUMMARY_REPORT;
-    const SESSION_KEY_PREFIX_ROUTE = '/client-list';
+    const SESSION_KEY_PREFIX_ROUTE = '/client-report';
     const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
 
     const REPORTS = 'reports';
@@ -126,7 +126,10 @@ class ClientsController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME)),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                ),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -137,7 +140,10 @@ class ClientsController extends AbstractReportController
             'layouts.fields_on_modal',
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME))
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                )
             ]
         )->render();
         $columnForLiveSearch = view(
@@ -210,7 +216,10 @@ class ClientsController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => $this->updateColumnAccountNameToClientName(session(self::SESSION_KEY_FIELD_NAME)),
+                self::FIELD_NAMES => $this->updateColumnAccountNameToClientNameOrAgencyName(
+                    session(self::SESSION_KEY_FIELD_NAME),
+                    self::SESSION_KEY_PREFIX_ROUTE
+                ),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -275,7 +284,10 @@ class ClientsController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientName(session()->get(self::SESSION_KEY_FIELD_NAME));
+        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
+            session()->get(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_KEY_PREFIX_ROUTE
+        );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
@@ -302,7 +314,10 @@ class ClientsController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientName(session()->get(self::SESSION_KEY_FIELD_NAME));
+        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
+            session()->get(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_KEY_PREFIX_ROUTE
+        );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
@@ -324,16 +339,5 @@ class ClientsController extends AbstractReportController
                 'Pragma' => 'public'
             ]
         );
-    }
-
-    public function updateColumnAccountNameToClientName(array $columns)
-    {
-        foreach ($columns as $key => $value) {
-            if ($value === 'accountName') {
-                $columns[$key] = 'clientName';
-                break;
-            }
-        }
-        return $columns;
     }
 }

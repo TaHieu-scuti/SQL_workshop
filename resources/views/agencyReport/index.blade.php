@@ -7,13 +7,8 @@
 @section('filter-list')
     <ul class="panel">
         <li class="panel-body">
-            <a href="javascript:void(0)">
+            <a href="{{route('client-report')}}">
                 @lang('language.clients')
-            </a>
-        </li>
-        <li class="panel-body">
-            <a href="javascript:void(0)">
-                @lang('language.engineAccount')
             </a>
         </li>
         <li class="panel-body separator">
@@ -34,6 +29,6 @@
 @stop
 
 @section('export')
-    <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
-    <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
+    <li><a href="{{ url('/agency-report/export_csv') }}">@lang('language.CSV')</a></li>
+    <li><a href="{{ url('/agency-report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop

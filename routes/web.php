@@ -240,11 +240,11 @@ Route::prefix('keyword-report')->group(function () {
     );
 });
 
-Route::prefix('client-list')->group(function () {
+Route::prefix('client-report')->group(function () {
     Route::get(
         '/',
         'Clients\ClientsController@index'
-    )->name('client-list');
+    )->name('client-report');
     Route::post(
         '/display-graph',
         'Clients\ClientsController@displayGraph'

@@ -836,7 +836,7 @@ abstract class AbstractReportModel extends Model
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
-                $rawExpression[] = DB::raw($fieldName);
+                $rawExpression[] = DB::raw($fieldName. ' AS agencyName');
                 continue;
             }
             if (in_array($fieldName, static::SUM_FIELDS)) {
