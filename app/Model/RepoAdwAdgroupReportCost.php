@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use Auth;
 use App\AbstractReportModel;
 use App\Http\Controllers\AbstractReportController;
 
