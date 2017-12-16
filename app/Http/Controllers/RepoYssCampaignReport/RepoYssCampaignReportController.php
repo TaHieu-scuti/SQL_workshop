@@ -99,6 +99,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
+            // $this->updateFieldNamesWithoutImressionShare();
         }
         $this->checkoutSessionFieldName();
         $dataReports = $this->getDataForTable();

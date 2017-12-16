@@ -32,6 +32,9 @@
                         @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
                             @continue
                         @endif
+                        @if($groupedByField === 'prefecture' && $fieldName === 'impressionShare')
+                            @continue
+                        @endif
                         @if($fieldName === 'accountName')
                             <th></th>
                         @endif

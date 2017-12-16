@@ -735,4 +735,11 @@ abstract class AbstractReportController extends Controller
         }
         return false;
     }
+
+    public function updateFieldNamesWithoutImressionShare()
+    {
+        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+        session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+    }
 }

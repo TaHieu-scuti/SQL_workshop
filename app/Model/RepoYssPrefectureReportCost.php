@@ -63,6 +63,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         if (request()->is('account_report/*') || request()->is('account_report')) {
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
             $yssAggregations = $this->getAggregated($fieldNames);
@@ -166,6 +167,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         if (request()->is('account_report/*') || request()->is('account_report')) {
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
             Event::listen(StatementPrepared::class, function ($event) {
@@ -262,6 +264,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         if (request()->is('account_report/*') || request()->is('account_report')) {
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid', 'prefecture']);
             Event::listen(StatementPrepared::class, function ($event) {
