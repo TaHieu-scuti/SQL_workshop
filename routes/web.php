@@ -64,6 +64,11 @@ Route::prefix('account_report')->group(function () {
         '/updateSession',
         'RepoYssAccountReport\RepoYssAccountReportController@updateSessionID'
     );
+
+    Route::get(
+        '/getDataForLayouts',
+        'RepoYssAccountReport\RepoYssAccountReportController@getDataForLayouts'
+    );
 });
 
 Route::prefix('campaign-report')->group(function () {
@@ -90,6 +95,11 @@ Route::prefix('campaign-report')->group(function () {
     Route::post(
         '/updateSession',
         'RepoYssCampaignReport\RepoYssCampaignReportController@updateSessionID'
+    );
+
+    Route::get(
+        '/getDataForLayouts',
+        'RepoYssCampaignReport\RepoYssCampaignReportController@getDataForLayouts'
     );
 });
 
@@ -118,6 +128,11 @@ Route::prefix('adgroup-report')->group(function () {
         '/updateSession',
         'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateSessionID'
     );
+
+    Route::get(
+        '/getDataForLayouts',
+        'RepoYssAdgroupReport\RepoYssAdgroupReportController@getDataForLayouts'
+    );
 });
 
 Route::prefix('ad-report')->group(function () {
@@ -145,6 +160,11 @@ Route::prefix('ad-report')->group(function () {
     Route::post(
         '/updateSession',
         'RepoYssAdReport\RepoYssAdReportController@updateSessionID'
+    );
+
+    Route::get(
+        '/getDataForLayouts',
+        'RepoYssAdReport\RepoYssAdReportController@getDataForLayouts'
     );
 });
 
@@ -181,6 +201,11 @@ Route::prefix('keyword-report')->group(function () {
         '/export_search_query_excel',
         'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToExcel'
     );
+
+    Route::get(
+        '/getDataForLayouts',
+        'RepoYssKeywordReport\RepoYssKeywordReportController@getDataForLayouts'
+    );
 });
 
 Route::prefix('client-list')->group(function () {
@@ -215,6 +240,10 @@ Route::prefix('client-list')->group(function () {
     Route::get(
         '/export_search_query_excel',
         'Clients\ClientsController@exportSearchQueryToExcel'
+    );
+    Route::get(
+        '/getDataForLayouts',
+        'Clients\ClientsController@getDataForLayouts'
     );
 });
 
