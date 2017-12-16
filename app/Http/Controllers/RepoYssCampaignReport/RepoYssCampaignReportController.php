@@ -7,12 +7,8 @@ use App\Model\RepoYssCampaignReportCost;
 use App\Model\RepoAdwCampaignReportCost;
 use App\Model\RepoYdnCampaignReport;
 
-use App\Model\RepoYssPrefectureReportCost;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-
-use DateTime;
-use Exception;
 
 class RepoYssCampaignReportController extends AbstractReportController
 {
@@ -105,7 +101,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        if ($engine === 'ydn') {
+        if ($engine === 'ydn' || $engine = 'yss') {
             $fieldNames[] = 'call_tracking';
             $fieldNames[] = 'call_cvr';
             $fieldNames[] = 'call_cpa';
@@ -158,7 +154,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        if ($engine === 'ydn') {
+        if ($engine === 'ydn' || $engine = 'yss') {
             $fieldNames[] = 'call_tracking';
             $fieldNames[] = 'call_cvr';
             $fieldNames[] = 'call_cpa';
