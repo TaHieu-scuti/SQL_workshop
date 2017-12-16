@@ -108,7 +108,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
 
-        if ($engine === 'yss') {
+        if ($engine === 'yss' || $engine === 'adw') {
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
@@ -187,7 +187,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
-        if ($engine === 'yss') {
+        if ($engine === 'yss' || $engine === 'adw') {
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
