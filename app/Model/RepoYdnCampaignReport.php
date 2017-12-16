@@ -22,7 +22,7 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
                 function ($query) use ($accountId, $engine) {
                     $this->addQueryConditions(
                         $query,
-                        session(AbstractReportController::SESSION_KEY_ADGAINER_ID),
+                        session(AbstractReportController::SESSION_KEY_CLIENT_ID),
                         $engine,
                         $accountId
                     );

@@ -38,7 +38,8 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
-    const SESSION_KEY_ADGAINER_ID = 'adgainerId';
+    const SESSION_KEY_CLIENT_ID = 'clientId';
+    const SESSION_KEY_AGENCY_ID = 'agencyId';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -324,11 +325,19 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
     }
 
-    public function updateSessionAdgainerId($adgainerId)
+    public function updateSessionClientId($clientId)
     {
         session()->put(
             [
-                self::SESSION_KEY_ADGAINER_ID => $adgainerId
+                self::SESSION_KEY_CLIENT_ID => $clientId
+            ]
+        );
+    }
+    public function updateSessionAgencyId($agencyId)
+    {
+        session()->put(
+            [
+                self::SESSION_KEY_AGENCY_ID => $agencyId
             ]
         );
     }
@@ -483,15 +492,26 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionAccountId($request->id_account);
         }
 
-        //get id adgainer if avaiable
-        if ($request->id_adgainer === 'all') {
+        //get id client if avaiable
+        if ($request->id_client === 'all') {
             session()->put(
                 [
-                    self::SESSION_KEY_ADGAINER_ID => null
+                    self::SESSION_KEY_CLIENT_ID => null
                 ]
             );
-        } elseif ($request->id_adgainer !== "all" && $request->id_adgainer !== null) {
-            $this->updateSessionAdgainerId($request->id_adgainer);
+        } elseif ($request->id_client !== "all" && $request->id_client !== null) {
+            $this->updateSessionClientId($request->id_client);
+        }
+
+        //get id agency if avaiable
+        if ($request->id_agency === 'all') {
+            session()->put(
+                [
+                    self::SESSION_KEY_AGENCY_ID => null
+                ]
+            );
+        } elseif ($request->id_agency !== "all" && $request->id_agency !== null) {
+            $this->updateSessionAgencyId($request->id_agency);
         }
 
         //get id campaign if avaiable
@@ -566,7 +586,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            session(self::SESSION_KEY_ADGAINER_ID),
+            session(self::SESSION_KEY_CLIENT_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -597,7 +617,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            session(self::SESSION_KEY_ADGAINER_ID),
+            session(self::SESSION_KEY_CLIENT_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),
@@ -614,7 +634,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_ACCOUNT_ID),
-            session(self::SESSION_KEY_ADGAINER_ID),
+            session(self::SESSION_KEY_CLIENT_ID),
             session(static::SESSION_KEY_CAMPAIGNID),
             session(static::SESSION_KEY_AD_GROUP_ID),
             session(static::SESSION_KEY_AD_REPORT_ID),
@@ -632,7 +652,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_END_DAY),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
             session(self::SESSION_KEY_ACCOUNT_ID),
-            session(self::SESSION_KEY_ADGAINER_ID),
+            session(self::SESSION_KEY_CLIENT_ID),
             session(self::SESSION_KEY_CAMPAIGNID),
             session(self::SESSION_KEY_AD_GROUP_ID),
             session(self::SESSION_KEY_AD_REPORT_ID),

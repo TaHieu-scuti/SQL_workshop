@@ -41,7 +41,7 @@ Route::prefix('agency-report')->group(function () {
     Route::get(
         '/',
         'AgencyController\AgencyController@index'
-    )->name('agency-report');;
+    )->name('agency-report');
     Route::post(
         '/update-table',
         'AgencyController\AgencyController@updateTable'
@@ -61,6 +61,11 @@ Route::prefix('agency-report')->group(function () {
     Route::post(
         '/updateSession',
         'AgencyController\AgencyController@updateSessionID'
+    );
+
+    Route::get(
+        '/getDataForLayouts',
+        'AgencyController\AgencyController@getDataForLayouts'
     );
 });
 

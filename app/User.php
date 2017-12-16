@@ -58,16 +58,20 @@ class User extends Authenticatable
                 $model = new Agency;
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllAgencies();
-                $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
+                if (session(AbstractReportController::SESSION_KEY_AGENCY_ID) === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_AGENCY_ID);
+                }
                 break;
             case 'Client':
                 $model = new Account();
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllClient();
-                if (session(AbstractReportController::SESSION_KEY_ADGAINER_ID) === null) {
+                if (session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
-                    $array['flag'] = session(AbstractReportController::SESSION_KEY_ADGAINER_ID);
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_CLIENT_ID);
                 }
                 break;
             case 'Account':
