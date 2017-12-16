@@ -120,7 +120,6 @@ class Account extends AbstractReportModel
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus);
-
     }
 
     public function calculateSummaryData(

@@ -94,7 +94,7 @@ class AgencyController extends AbstractReportController
         );
     }
 
-        public function getDataForLayouts(Request $request)
+    public function getDataForLayouts(Request $request)
     {
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
