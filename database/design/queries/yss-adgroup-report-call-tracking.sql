@@ -1,3 +1,4 @@
+/* CONFIRMED TO BE WORKING CORRECTLY */
 SELECT
   `repo_yss_adgroup_report_cost`.`account_id`,
   `repo_yss_adgroup_report_cost`.`accountid`,
@@ -99,9 +100,9 @@ FROM
 WHERE
   `repo_yss_adgroup_report_cost`.`account_id` = 1
 AND
-  `repo_yss_adgroup_report_cost`.`accountid` = 11
+  `repo_yss_adgroup_report_cost`.`accountid` = 11111
 AND
-  `repo_yss_adgroup_report_cost`.`campaignID` = 11
+  `repo_yss_adgroup_report_cost`.`campaignID` = 111111
 AND
   `repo_yss_adgroup_report_cost`.`day` >= '2017-01-01'
 AND
