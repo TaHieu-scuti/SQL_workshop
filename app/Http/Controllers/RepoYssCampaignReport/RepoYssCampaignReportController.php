@@ -112,13 +112,10 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        $fieldNames[] = 'call_tracking';
+        $fieldNames[] = 'call_cvr';
+        $fieldNames[] = 'call_cpa';
 
-        if (session(self::SESSION_KEY_ENGINE) === 'ydn'
-            || session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $fieldNames[] = 'call_tracking';
-            $fieldNames[] = 'call_cvr';
-            $fieldNames[] = 'call_cpa';
-        }
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -180,7 +177,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -201,11 +198,10 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        if ($engine === 'ydn' || $engine = 'yss') {
-            $fieldNames[] = 'call_tracking';
-            $fieldNames[] = 'call_cvr';
-            $fieldNames[] = 'call_cpa';
-        }
+        $fieldNames[] = 'call_tracking';
+        $fieldNames[] = 'call_cvr';
+        $fieldNames[] = 'call_cpa';
+
         $tableDataLayout = view(
             'layouts.table_data',
             [
