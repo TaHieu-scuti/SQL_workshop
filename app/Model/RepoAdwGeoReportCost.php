@@ -42,6 +42,7 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
         $paginatedData = RepoAdwGeoReportCost::select($adwAggregations)
             ->join(
@@ -84,6 +85,7 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
         return RepoAdwGeoReportCost::select($adwAggregations)
@@ -118,6 +120,7 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
         return RepoAdwGeoReportCost::select($adwAggregations)
             ->join(
