@@ -81,4 +81,7 @@ return [
     'matchtype' => 'Match Type',
     'call_tracking' => 'Call CV',
     'clientname' => 'Client Name',
+    'call_cvr' => 'Call CVR',
+    'call_cpa' => 'Call CPA',
+    'impressionshare' => 'Impression Share',
 ];

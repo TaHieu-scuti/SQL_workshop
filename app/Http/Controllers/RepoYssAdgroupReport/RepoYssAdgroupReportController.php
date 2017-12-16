@@ -61,7 +61,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -84,6 +85,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+            if ($engine === 'ydn') {
+                $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+            }
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
         }
@@ -110,6 +114,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $tableColumns = $this->updateTableColumns($dataReports);
         if ($engine === 'ydn') {
             $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
         }
         return view(
             'yssAdgroupReport.index',
@@ -162,6 +168,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $tableColumns = $this->updateTableColumns($reports);
         if ($engine === 'ydn') {
             $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
         }
         $tableDataLayout = view(
             'layouts.table_data',

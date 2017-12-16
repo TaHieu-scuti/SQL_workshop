@@ -60,7 +60,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -83,6 +84,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+            if ($engine === 'ydn') {
+                $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+            }
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
         }
@@ -103,6 +107,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($engine === 'ydn') {
             $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
         }
         return view(
             'yssCampaignReport.index',
@@ -154,6 +160,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($engine === 'ydn') {
             $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
         }
         $tableDataLayout = view(
             'layouts.table_data',

@@ -80,4 +80,5 @@ return [
     'matchtype' => 'マッチタイプ',
     'call_tracking' => 'コール数',
     'clientname' => 'クライアント名',
+    'impressionshare' => 'インプレッションシェア',
 ];

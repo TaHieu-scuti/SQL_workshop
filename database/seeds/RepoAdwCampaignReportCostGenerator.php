@@ -26,6 +26,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
+    const MIN_IMPRESSIONS_SHARE = 0;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -56,6 +57,16 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->impressions = mt_rand(
                 self::MIN_IMPRESSIONS,
                 $accountReport->impressions
+            );
+
+            $campaignReportCost->contentImprShare = mt_rand(
+                self::MIN_IMPRESSIONS_SHARE,
+                $accountReport->contentImprShare
+            );
+
+            $campaignReportCost->searchImprShare = mt_rand(
+                self::MIN_IMPRESSIONS_SHARE,
+                $accountReport->searchImprShare
             );
 
             $campaignReportCost->clicks = mt_rand(

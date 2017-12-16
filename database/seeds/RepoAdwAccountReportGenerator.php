@@ -25,6 +25,8 @@ class RepoAdwAccountReportGenerator extends Seeder
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
     const MAX_IMPRESSIONS = 4096;
+    const MIN_IMPRESSIONS_SHARE = 0;
+    const MAX_IMPRESSIONS_SHARE = 4096;
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
@@ -90,6 +92,16 @@ class RepoAdwAccountReportGenerator extends Seeder
         $costReport->impressions = mt_rand(
             self::MIN_IMPRESSIONS,
             self::MAX_IMPRESSIONS
+        );
+
+        $costReport->contentImprShare = mt_rand(
+            self::MIN_IMPRESSIONS_SHARE,
+            self::MAX_IMPRESSIONS_SHARE
+        );
+
+        $costReport->searchImprShare = mt_rand(
+            self::MIN_IMPRESSIONS_SHARE,
+            self::MAX_IMPRESSIONS_SHARE
         );
 
         $costReport->clicks = mt_rand(
