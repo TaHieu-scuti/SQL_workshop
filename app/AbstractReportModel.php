@@ -141,7 +141,7 @@ abstract class AbstractReportModel extends Model
                 }
             }
             if ($fieldName === 'matchType') {
-                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                $arrayCalculate[] = DB::raw($this->getTable() . '.' . $key.' as '.$fieldName);
             }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
                 if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
