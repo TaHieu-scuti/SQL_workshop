@@ -158,8 +158,7 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
-    )
-    {
+    ) {
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
