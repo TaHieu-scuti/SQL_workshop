@@ -251,3 +251,26 @@ Route::get('language/{locale}', function ($locale) {
     Session::put('locale', $locale);
     return redirect()->back();
 });
+
+Route::prefix('auth-account')->group(function () {
+    Route::get(
+        '/',
+        'RepoAuthAccount\RepoAuthAccountController@index'
+    )->name('auth-account');
+    Route::get(
+        '/create-account',
+        'RepoAuthAccount\RepoAuthAccountController@create'
+    )->name('create-account');
+    Route::post(
+        '/store-account',
+        'RepoAuthAccount\RepoAuthAccountController@store'
+    )->name('store-account');
+    Route::get(
+        '/edit-account/{id}',
+        'RepoAuthAccount\RepoAuthAccountController@edit'
+    )->name('edit-account');
+    Route::post(
+        '/update-account/{id}',
+        'RepoAuthAccount\RepoAuthAccountController@update'
+    )->name('update-account');
+});

@@ -75,7 +75,7 @@
                             data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                            @if (Route::current()->getName() === 'client-list')
+                            @if (isset($report['account_id']))
                             data-table="client-list"
                             @else
                             data-table="account_report"
@@ -125,7 +125,7 @@
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
                         <td><i class="fa fa-rmb"></i>{{ $report[$fieldName] }}</td>
-                    @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
+                    @elseif (is_float($report[$fieldName]) && ($fieldName === 'ctr' || $fieldName === 'impressionShare'))
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif ($fieldName === 'averagePosition')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
@@ -176,7 +176,7 @@
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'averageCpc')
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
-                        @elseif (is_float($report[$fieldName]) && $fieldName === 'ctr')
+                        @elseif (is_float($totalDataArray->$fieldName) && ($fieldName === 'ctr' || $fieldName === 'impressionShare'))
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}%</td>
                         @elseif (is_float($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>

@@ -20,6 +20,7 @@ abstract class AbstractReportModel extends Model
     const SHOW_ZERO_STATUS = 'showZero';
     const SUM_IMPRESSIONS_EQUAL_ZERO = 'SUM(impressions) = 0';
     const SUM_IMPRESSIONS_NOT_EQUAL_ZERO = 'SUM(impressions) != 0';
+    const SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT = 'impressions != 0';
     // Please override these constants in the derived report models when necessary
     const FIELD_TYPE = 'float';
     const GROUPED_BY_FIELD_NAME = 'id';
@@ -43,6 +44,7 @@ abstract class AbstractReportModel extends Model
     const ADW_ADGROUP_NAME = 'adGroup';
     const YSS_ADGROUP_NAME = 'adgroupName';
     const ADW_SEARCH_QUERY = 'searchTerm';
+    const YSS_IMPRESSION_SHARE = 'impressionShare';
 
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
@@ -52,7 +54,8 @@ abstract class AbstractReportModel extends Model
     const AVERAGE_FIELDS = [
         self::AVERAGE_CPC,
         self::AVERAGE_POSITION,
-        self::CTR
+        self::CTR,
+        self::YSS_IMPRESSION_SHARE
     ];
 
     const SUM_FIELDS = [
@@ -69,28 +72,22 @@ abstract class AbstractReportModel extends Model
 
     const YSS_FIELDS_MAP = [
 //      'columns' => 'alias'
-        self::IMPRESSIONS => self::IMPRESSIONS,
-        self::CLICKS => self::CLICKS,
-        self::COST => self::COST,
-        self::CTR => self::CTR,
-        self::AVERAGE_CPC => self::AVERAGE_CPC,
-        self::AVERAGE_POSITION => self::AVERAGE_POSITION,
-        self::YSS_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
-        self::YSS_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
+        self::YSS_IMPRESSION_SHARE => self::YSS_IMPRESSION_SHARE,
         'keywordMatchType' => 'matchType'
     ];
 
     const ADW_FIELDS_MAP = [
 //      'columns' => 'alias'
-        self::IMPRESSIONS => self::IMPRESSIONS,
-        self::CLICKS => self::CLICKS,
-        self::COST => self::COST,
-        self::CTR => self::CTR,
         self::ADW_AVERAGE_CPC => self::AVERAGE_CPC,
         self::ADW_AVERAGE_POSITION => self::AVERAGE_POSITION,
         self::ADW_CAMPAIGN_NAME => self::YSS_CAMPAIGN_NAME,
         self::ADW_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
-        'matchType' => 'matchType'
+    ];
+
+    const YDN_FIELDS_MAP = [
+//      'columns' => 'alias'
+        'keywordMatchType' => 'matchType',
+        'DAYNAME(day)' => 'dayOfWeek'
     ];
 
     const ALL_HIGHER_LAYERS = [];
@@ -126,6 +123,23 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
+            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                continue;
+            }
+            if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+                if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
+                    );
+                    continue;
+                } else {
+                    $arrayCalculate[] = DB::raw(
+                        'ROUND(AVG('. $tableName .'.searchImprShare) + AVG('.
+                        $tableName .'.contentImprShare), 2) AS ' .$fieldName
+                    );
+                    continue;
+                }
+            }
             if ($fieldName === 'matchType') {
                 $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
             }
@@ -149,7 +163,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::YSS_SEARCH_QUERY
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
                 continue;
             }
 
@@ -287,7 +301,97 @@ abstract class AbstractReportModel extends Model
         return DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
     }
 
-    public function calculateData(
+    protected function getAggregatedForTable()
+    {
+        return [];
+    }
+
+    protected function getBuilderForGetDataForTable(
+        $engine,
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $higherLayerSelections = [];
+        if ($groupedByField !== self::DEVICE
+            && $groupedByField !== self::HOUR_OF_DAY
+            && $groupedByField !== self::DAY_OF_WEEK
+            && $groupedByField !== self::PREFECTURE
+        ) {
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        }
+        $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
+        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
+        if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
+            array_push($this->groupBy, DB::raw('DAYNAME(day)'));
+        } else {
+            array_push($this->groupBy, $groupedByField);
+        }
+        if ($groupedByField === 'ad' || $groupedByField === 'adName') {
+            array_push($this->groupBy, 'adType');
+        }
+
+        if ($groupedByField === 'keyword') {
+            if ($engine === self::ADW) {
+                array_push($this->groupBy, 'matchType');
+            } elseif ($engine === self::YSS) {
+                array_push($this->groupBy, 'keywordMatchType');
+            }
+        }
+        // merge static::FIELDS in order to display ad as requested
+        $this->groupBy = array_merge($this->groupBy, static::FIELDS);
+        $builder = $this->select(array_merge(static::FIELDS, $aggregations))
+            ->where(
+                function (Builder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )->where(
+                function (Builder $query) use (
+                    $adgainerId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId,
+                    $engine
+                ) {
+                    $this->addQueryConditions(
+                        $query,
+                        $adgainerId,
+                        $engine,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            )->where(
+                function (Builder $query) use ($engine) {
+                    $this->addConditionNetworkQueryForADW($engine, $query);
+                }
+            )
+            ->groupBy($this->groupBy)
+            ->orderBy($columnSort, $sort);
+
+        if ($accountStatus == self::HIDE_ZERO_STATUS) {
+            $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
+        }
+
+        return $builder;
+    }
+
+    protected function getBuilderForCalculateData(
         $engine,
         $fieldNames,
         $accountStatus,
@@ -309,6 +413,7 @@ abstract class AbstractReportModel extends Model
         }
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
+        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -342,11 +447,43 @@ abstract class AbstractReportModel extends Model
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                ->first();
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $data = $data->first();
+            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
+
+        return $data;
+    }
+
+    public function calculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $accountId = null,
+        $adgainerId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $data = $this->getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        $data = $data->first();
+
         if ($data === null) {
             $data = [];
         }
@@ -489,69 +626,24 @@ abstract class AbstractReportModel extends Model
         $adReportId = null,
         $keywordId = null
     ) {
-        $higherLayerSelections = [];
-        if ($groupedByField !== self::DEVICE
-            && $groupedByField !== self::HOUR_OF_DAY
-            && $groupedByField !== self::DAY_OF_WEEK
-            && $groupedByField !== self::PREFECTURE
-        ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
-        }
-        $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
-        array_push($this->groupBy, $groupedByField);
-        if ($groupedByField === 'ad' || $groupedByField === 'adName') {
-            array_push($this->groupBy, 'adType');
-        }
+        $builder = $this->getBuilderForGetDataForTable(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $columnSort,
+            $sort,
+            $groupedByField,
+            $accountId,
+            $adgainerId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
 
-        if ($groupedByField === 'keyword') {
-            if ($engine === self::ADW) {
-                array_push($this->groupBy, 'matchType');
-            } elseif ($engine === self::YSS) {
-                array_push($this->groupBy, 'keywordMatchType');
-            }
-        }
-        // merge static::FIELDS in order to display ad as requested
-        $this->groupBy = array_merge($this->groupBy, static::FIELDS);
-        $paginatedData = $this->select(array_merge(static::FIELDS, $aggregations))
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use (
-                    $adgainerId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId,
-                    $engine
-                ) {
-                    $this->addQueryConditions(
-                        $query,
-                        $adgainerId,
-                        $engine,
-                        $accountId,
-                        $campaignId,
-                        $adGroupId,
-                        $adReportId,
-                        $keywordId
-                    );
-                }
-            )->where(
-                function (Builder $query) use ($engine) {
-                    $this->addConditionNetworkQueryForADW($engine, $query);
-                }
-            )
-            ->groupBy($this->groupBy)
-            ->orderBy($columnSort, $sort);
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
-                ->paginate($pagination);
-        } elseif ($accountStatus == self::SHOW_ZERO_STATUS) {
-            $paginatedData = $paginatedData->paginate($pagination);
-        }
-        return $paginatedData;
+        return $builder->paginate($pagination);
     }
 
     /**
@@ -688,13 +780,12 @@ abstract class AbstractReportModel extends Model
     {
         $resultFieldNames = [];
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss'
-            || $engine === 'ydn'
-            || $engine === null
-        ) {
+        if ($engine === 'yss' || $engine === null) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
         } elseif ($engine === 'adw') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
+        } elseif ($engine === 'ydn') {
+            $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YDN_FIELDS_MAP);
         }
         return $resultFieldNames;
     }

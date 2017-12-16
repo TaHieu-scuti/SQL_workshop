@@ -57,7 +57,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**

@@ -61,7 +61,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -84,6 +85,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+            if ($engine === 'ydn') {
+                $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+            }
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
         }
@@ -111,13 +115,19 @@ class RepoYssAdgroupReportController extends AbstractReportController
         );
     }
 
-    public function getDataForLayouts(Request $request)
+    public function getDataForLayouts()
     {
+        $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
+        if (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
+        }
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -177,7 +187,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('adgroupReport')) {
             $this->initializeSession($columns);
@@ -199,6 +209,11 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
+        if ($engine === 'ydn') {
+            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cvr';
+            $tableColumns[] = 'call_cpa';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [

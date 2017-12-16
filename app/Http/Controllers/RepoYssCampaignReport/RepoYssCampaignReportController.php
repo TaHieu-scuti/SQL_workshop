@@ -60,7 +60,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'impressionShare'
     ];
 
     /**
@@ -83,6 +84,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+            if ($engine === 'ydn') {
+                $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+            }
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
         }
@@ -107,9 +111,16 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
+        $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
+        }
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -120,7 +131,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $fieldNames,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -131,7 +142,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'layouts.fields_on_modal',
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
+                self::FIELD_NAMES => $fieldNames
             ]
         )->render();
         $columnForLiveSearch = view('layouts.graph_items',
@@ -169,7 +180,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $columns = $this->model->getColumnNames();
         if (!session('campaignReport')) {
             $this->initializeSession($columns);
@@ -189,11 +200,17 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
+        if ($engine === 'ydn') {
+            $fieldNames[] = 'call_tracking';
+            $fieldNames[] = 'call_cvr';
+            $fieldNames[] = 'call_cpa';
+        }
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $fieldNames,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -225,7 +242,6 @@ class RepoYssCampaignReportController extends AbstractReportController
         } elseif ($engine === 'ydn') {
             $this->model = new RepoYdnCampaignReport;
         }
-
         return $engine;
     }
 }
