@@ -59,6 +59,7 @@ class User extends Authenticatable
                 $array['title'] = $title;
                 $array['contents'] = $model->getAllAgencies();
                 $array['flag'] = session(AbstractReportController::SESSION_KEY_ACCOUNT_ID);
+                break;
             case 'Client':
                 $model = new Account();
                 $array['title'] = $title;

@@ -77,9 +77,9 @@ class Agency extends AbstractReportModel
             ->get();
 
             $agencyTableData = [];
-            foreach ($data as $key => $value) {
-                $agencyTableData[]= (array)$value;
-            }
+        foreach ($data as $key => $value) {
+            $agencyTableData[]= (array)$value;
+        }
         return $agencyTableData;
     }
 
@@ -264,8 +264,8 @@ class Agency extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null)
-    {
+        $keywordId = null
+    ) {
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName']);
         $yssTableName = (new RepoYssAccountReportCost)->getTable();
         $ydnTableName = (new RepoYdnReport)->getTable();
@@ -319,8 +319,8 @@ class Agency extends AbstractReportModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null)
-    {
+        $keywordId = null
+    ) {
         $yssTableName = (new RepoYssAccountReportCost)->getTable();
         $ydnTableName = (new RepoYdnReport)->getTable();
         $adwTableName = (new RepoAdwAccountReportCost)->getTable();
@@ -414,7 +414,8 @@ class Agency extends AbstractReportModel
     }
 
     //get Agencies to display on breadcrumbs
-    public function getAllAgencies() {
+    public function getAllAgencies()
+    {
         $arrayOfDirectClientsAndAgencies = self::select('agent_id')->where('level', '=', 3)
                         ->where('agent_id', '!=', '')->get()->toArray();
         $agencies = self::select('account_id')
@@ -442,7 +443,7 @@ class Agency extends AbstractReportModel
             ->where('level', '=', 3)
             ->whereIn('accounts.account_id', $arrayOfDirectClientsAndAgencies)
             ->whereRaw('accounts.account_id = tbl.account_id')->get();
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $arr[] = (array)$value;
         }
         return $arr;

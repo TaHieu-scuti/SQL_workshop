@@ -40,7 +40,7 @@ class AgencyController extends AbstractReportController
     const DEFAULT_COLUMNS = [
             'impressions',
             'clicks',
-            'cost', 
+            'cost',
             'ctr',
             'averageCpc',
             'averagePosition'
@@ -121,7 +121,8 @@ class AgencyController extends AbstractReportController
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
                 //update column on filter column graph
                 self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-            ]);
+            ]
+        );
     }
 
     /**
@@ -276,5 +277,4 @@ class AgencyController extends AbstractReportController
             ]
         );
     }
-
 }
