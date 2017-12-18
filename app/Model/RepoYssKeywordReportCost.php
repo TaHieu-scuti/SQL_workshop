@@ -133,12 +133,12 @@ class RepoYssKeywordReportCost extends AbstractReportModel
         return [
             DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
             DB::raw(
-                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
+                "ROUND(((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+                . "/ SUM(`{$this->table}`.`clicks`)) * 100, 2) AS call_cvr"
             ),
             DB::raw(
-                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+                "ROUND(SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
+                . "+ COUNT(`phone_time_use`.`id`)), 2) AS call_cpa"
             )
         ];
     }
