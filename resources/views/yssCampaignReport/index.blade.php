@@ -37,7 +37,7 @@ use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
                 </a>
             </li>
         @endif
-        <li class="panel-body click-event">
+        <li class="panel-body">
             <a href="{{ route('adgroup-report') }}">
                 @lang('language.AD_GROUPS')
             </a>
@@ -48,7 +48,7 @@ use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
             @lang('language.keywords')
         </li>
         @else
-        <li class="panel-body click-event">
+        <li class="panel-body">
             <a href="{{ route('keyword-report') }}">
                 @lang('language.keywords')
             </a>
@@ -60,7 +60,7 @@ use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
                 @lang('language.ADS')
             </li>
         @else
-            <li class="panel-body click-event">
+            <li class="panel-body">
                 <a href="{{ route('ad-report') }}">
                     @lang('language.ADS')
                 </a>

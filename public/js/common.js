@@ -126,17 +126,7 @@ $(".apply-button").click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            if (response.status === 403) {
-                if (isJson(response.responseText)) {
-                    let obj = JSON.parse(response.responseText);
-                    if (obj.error === 'session_expired') {
-                        alert('Session expired');
-                        window.location.href = obj.redirect_url;
-                    }
-                }
-            } else {
-                alert('Something went wrong!');
-            }
+            checkErrorAjax(response);
         },
         complete : function () {
             completeRequestTable();
@@ -189,17 +179,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            if (response.status === 403) {
-                if (isJson(response.responseText)) {
-                    let obj = JSON.parse(response.responseText);
-                    if (obj.error === 'session_expired') {
-                        alert('Session expired');
-                        window.location.href = obj.redirect_url;
-                    }
-                }
-            } else {
-                alert('Something went wrong!');
-            }
+            checkErrorAjax(response);
         },
         complete : function () {
             completeRequestTable();
@@ -233,17 +213,7 @@ $('.apply-custom-period').click(function() {
             history.pushState("", "", link);
         },
         error : function (response) {
-            if (response.status === 403) {
-                if (isJson(response.responseText)) {
-                    let obj = JSON.parse(response.responseText);
-                    if (obj.error === 'session_expired') {
-                        alert('Session expired');
-                        window.location.href = obj.redirect_url;
-                    }
-                }
-            } else {
-                alert('Something went wrong!');
-            }
+            checkErrorAjax(response);
         },
         complete : function () {
             completeRequestTable();
@@ -289,17 +259,7 @@ $('.status-option li').click(function () {
             history.pushState("", "", link);
         },
         error : function (response) {
-            if (response.status === 403) {
-                if (isJson(response.responseText)) {
-                    let obj = JSON.parse(response.responseText);
-                    if (obj.error === 'session_expired') {
-                        alert('Session expired');
-                        window.location.href = obj.redirect_url;
-                    }
-                }
-            } else {
-                alert('Something went wrong!');
-            }
+            checkErrorAjax(response);
         },
         complete : function () {
             completeRequestTable();
@@ -344,6 +304,9 @@ $('.table_data_report').delegate('th', 'click', function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+        },
+        error : function (response) {
+            checkErrorAjax(response);
         }
     });
 })
@@ -366,6 +329,9 @@ $('.specific-filter-item').click(function() {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
         },
+        error : function (response) {
+            checkErrorAjax(response);
+        },
         complete : function () {
             completeRequestTable();
         }
@@ -387,6 +353,9 @@ $('.normal-report').click(function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+        },
+        error : function (response) {
+            checkErrorAjax(response);
         },
         complete : function () {
             completeRequestTable();
@@ -503,4 +472,20 @@ function isJson(obj) {
         return false;
     }
     return true;
+}
+
+function checkErrorAjax (response) {
+    if (response !== 4) {
+        return false;
+    }
+    if (response.status === 403 && isJson(response.responseText)) {
+        let obj = JSON.parse(response.responseText);
+        if (obj.error === 'session_expired') {
+            alert('Session expired');
+            window.location.href = obj.redirect_url;
+        }
+    } else {
+        alert('Something went wrong!');
+        console.error(response.statusText);
+    }
 }
