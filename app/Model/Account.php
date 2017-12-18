@@ -59,8 +59,9 @@ class Account extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -93,7 +94,9 @@ class Account extends AbstractReportModel
         $data = DB::table(DB::raw("accounts,({$sql}) as tbl"))
             ->select(DB::raw('day, sum(data) as data'))
             ->groupBy('day');
-
+        if ($agencyId !== NULL) {
+            $data->where('agent_id', '=', $agencyId);
+        }
         return $data->get();
     }
 
@@ -111,15 +114,16 @@ class Account extends AbstractReportModel
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
-        return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus);
+        return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
     }
 
     public function calculateSummaryData(
@@ -128,15 +132,16 @@ class Account extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
         $keywordId = null
     ) {
         array_unshift($fieldNames, self::FOREIGN_KEY_YSS_ACCOUNTS);
-        $datas = $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus);
+        $datas = $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
         $data = [];
         foreach ($datas as $key => $val) {
             $data[$key] = $val;
@@ -164,8 +169,9 @@ class Account extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -211,6 +217,9 @@ class Account extends AbstractReportModel
             ->whereRaw('accounts.account_id = ydn.account_id')
             ->whereRaw('accounts.account_id = adw.account_id')
             ->orderBy($columnSort, $sort);
+        if ($agencyId !== NULL) {
+            $arrAccountsAgency->where('agent_id', '=', $agencyId);
+        }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
@@ -221,7 +230,7 @@ class Account extends AbstractReportModel
         return $datas;
     }
 
-    public function calculateAllData(array $fieldNames, $startDay, $endDay, $accountStatus)
+    public function calculateAllData(array $fieldNames, $startDay, $endDay, $accountStatus, $agencyId)
     {
         $modelYssAccount = new RepoYssAccountReportCost();
         $modelYdnAccount = new RepoYdnReport();
@@ -253,7 +262,9 @@ class Account extends AbstractReportModel
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->whereRaw('accounts.account_id = tbl.account_id');
-
+        if ($agencyId !== NULL) {
+            $datas = $datas->where('agent_id', '=', $agencyId);
+        }
         $datas = $datas->first();
         if ($datas === null) {
             $datas = [
@@ -290,5 +301,12 @@ class Account extends AbstractReportModel
             }
         }
         return $arrayCalculate;
+    }
+
+    public function addConditionAgency(Builder $query, $agencyId)
+    {
+        if ($agencyId !== null) {
+            $query->where('accounts.agent_id', '', $agencyId);
+        }
     }
 }
