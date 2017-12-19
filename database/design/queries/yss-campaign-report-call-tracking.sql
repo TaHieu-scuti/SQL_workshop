@@ -8,7 +8,7 @@ SELECT
   SUM(`repo_yss_campaign_report_cost`.`cost`) AS cost,
   AVG(`repo_yss_campaign_report_cost`.`ctr`) AS ctr,
   AVG(`repo_yss_campaign_report_cost`.`averageCpc`) AS avgCPC,
-  COUNT(`phone_time_use`.`id`) AS call_tracking,
+  COUNT(`phone_time_use`.`id`) AS call_cv,
   SUM(`repo_yss_campaign_report_cost`.`conversions`) + COUNT(`phone_time_use`.`id`) AS cv,
   ((SUM(`repo_yss_campaign_report_cost`.`conversions`) + COUNT(`phone_time_use`.`id`)) / SUM(`repo_yss_campaign_report_cost`.`clicks`)) * 100 AS cvr,
   SUM(`repo_yss_campaign_report_cost`.`cost`) / (SUM(`repo_yss_campaign_report_cost`.`conversions`) + COUNT(`phone_time_use`.`id`)) AS cpa,
