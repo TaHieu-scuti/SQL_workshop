@@ -9,7 +9,7 @@ use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
 
 @section('filter-list')
     <ul class="panel">
-        <li class="panel-body campaign-navigation click-event">
+        <li class="panel-body campaign-navigation">
             <a href="{{ route('campaign-report') }}">
                 @lang('language.campaign')
             </a>
@@ -37,7 +37,7 @@ use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
                 @lang('language.keywords')
             </li>
         @else
-            <li class="panel-body click-event">
+            <li class="panel-body">
                 <a href="{{ route('keyword-report') }}">
                     @lang('language.keywords')
                 </a>
@@ -49,7 +49,7 @@ use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
                 @lang('language.ADS')
             </li>
         @else
-            <li class="panel-body click-event">
+            <li class="panel-body">
                 <a href="{{ route('ad-report') }}">
                     @lang('language.ADS')
                 </a>

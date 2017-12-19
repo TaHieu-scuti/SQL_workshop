@@ -10,12 +10,12 @@ use App\Http\Controllers\AbstractReportController;
 
 @section('filter-list')
 <ul class="panel">
-    <li class="panel-body campaign-navigation click-event">
+    <li class="panel-body campaign-navigation">
         <a href="{{ route('campaign-report') }}">
             @lang('language.campaign')
         </a>
     </li>
-    <li class="panel-body adgroup-navigation click-event">
+    <li class="panel-body adgroup-navigation">
         <a href="{{session(AbstractReportController::SESSION_KEY_AD_GROUP_ID) !== null ? 'javascript:void(0)' : route('adgroup-report') }}">
             @lang('language.AD_GROUPS')
         </a>
@@ -26,7 +26,7 @@ use App\Http\Controllers\AbstractReportController;
             @lang('language.keywords')
         </li>
     @else
-        <li class="panel-body click-event">
+        <li class="panel-body">
             <a href="{{ route('keyword-report') }}">
                 @lang('language.keywords')
             </a>
@@ -38,7 +38,7 @@ use App\Http\Controllers\AbstractReportController;
             @lang('language.ADS')
         </li>
     @else
-        <li class="panel-body active click-event">
+        <li class="panel-body active">
             <a href="{{ route('ad-report') }}">
                 @lang('language.ADS')
             </a>
