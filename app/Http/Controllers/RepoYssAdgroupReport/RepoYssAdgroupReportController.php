@@ -127,7 +127,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (session(self::SESSION_KEY_ENGINE) === 'ydn'
             || session(self::SESSION_KEY_ENGINE) === 'yss'
         ) {
-            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cv';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
             $tableColumns[] = 'web_cv';
@@ -218,7 +218,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
         if ($engine === 'ydn' || $engine === 'yss') {
-            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cv';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
             $tableColumns[] = 'web_cv';

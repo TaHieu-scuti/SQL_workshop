@@ -55,7 +55,7 @@ class RepoYssCampaignReportCost extends AbstractReportModel
     protected function getAggregatedForTable()
     {
         return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
+            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
             DB::raw(
                 "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
                 . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
