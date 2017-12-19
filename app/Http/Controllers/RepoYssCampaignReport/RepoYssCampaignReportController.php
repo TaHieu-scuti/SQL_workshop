@@ -115,6 +115,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames[] = 'call_tracking';
         $fieldNames[] = 'call_cvr';
         $fieldNames[] = 'call_cpa';
+        $fieldNames[] = 'web_cv';
+        $fieldNames[] = 'web_cvr';
+        $fieldNames[] = 'web_cpa';
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -201,6 +204,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         $fieldNames[] = 'call_tracking';
         $fieldNames[] = 'call_cvr';
         $fieldNames[] = 'call_cpa';
+        $fieldNames[] = 'web_cv';
+        $fieldNames[] = 'web_cvr';
+        $fieldNames[] = 'web_cpa';
 
         $tableDataLayout = view(
             'layouts.table_data',

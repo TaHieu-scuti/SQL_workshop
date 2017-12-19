@@ -130,6 +130,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
+            $tableColumns[] = 'web_cv';
+            $tableColumns[] = 'web_cvr';
+            $tableColumns[] = 'web_cpa';
         }
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -218,6 +221,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $tableColumns[] = 'call_tracking';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
+            $tableColumns[] = 'web_cv';
+            $tableColumns[] = 'web_cvr';
+            $tableColumns[] = 'web_cpa';
         }
         $tableDataLayout = view(
             'layouts.table_data',
