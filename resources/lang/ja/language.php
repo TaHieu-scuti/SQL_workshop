@@ -86,5 +86,5 @@ return [
     'impressionshare' => 'インプレッションシェア',
     'web_cv' => 'Web_CV',
     'web_cvr' => 'Web_CVR',
-    'web_cpa' => 'Web_CPA'
-];
+    'web_cpa' => 'Web_CPA',
+    'call_cv' => 'Call_CV'
