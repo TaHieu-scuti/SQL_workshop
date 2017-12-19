@@ -56,8 +56,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -74,7 +75,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )->where(
                     function (Builder $query) use (
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -83,7 +84,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     ) {
                         $this->addQueryConditions(
                             $query,
-                            $adgainerId,
+                            $clientId,
                             $accountId,
                             $campaignId,
                             $adGroupId,
@@ -100,8 +101,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->where(
-                    function (Builder $query) use ($adgainerId) {
-                        $query->where('account_id', '=', $adgainerId);
+                    function (Builder $query) use ($clientId) {
+                        $query->where('account_id', '=', $clientId);
                     }
                 )
                 ->groupBy($groupedByField);
@@ -118,8 +119,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->where(
-                    function (Builder $query) use ($adgainerId) {
-                        $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                    function (Builder $query) use ($clientId) {
+                        $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                     }
                 )
                 ->groupBy('criteria.Name');
@@ -144,8 +145,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $columnSort,
             $sort,
             $groupedByField,
+            $agencyId,
             $accountId,
-            $adgainerId,
+            $clientId,
             $campaignId,
             $adGroupId,
             $adReportId,
@@ -160,8 +162,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -181,7 +184,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )->where(
                     function (Builder $query) use (
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -190,7 +193,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     ) {
                         $this->addQueryConditions(
                             $query,
-                            $adgainerId,
+                            $clientId,
                             $accountId,
                             $campaignId,
                             $adGroupId,
@@ -207,8 +210,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->where(
-                    function (Builder $query) use ($adgainerId) {
-                        $query->where('repo_ydn_reports.account_id', '=', $adgainerId);
+                    function (Builder $query) use ($clientId) {
+                        $query->where('repo_ydn_reports.account_id', '=', $clientId);
                     }
                 );
 
@@ -225,8 +228,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->where(
-                    function (Builder $query) use ($adgainerId) {
-                        $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                    function (Builder $query) use ($clientId) {
+                        $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                     }
                 );
             $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
@@ -242,8 +245,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $startDay,
             $endDay,
             $groupedByField,
+            $agencyId,
             $accountId,
-            $adgainerId,
+            $clientId,
             $campaignId,
             $adGroupId,
             $adReportId,
@@ -257,8 +261,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -278,7 +283,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 )->where(
                     function (Builder $query) use (
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -287,7 +292,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     ) {
                         $this->addQueryConditions(
                             $query,
-                            $adgainerId,
+                            $clientId,
                             $accountId,
                             $campaignId,
                             $adGroupId,
@@ -303,8 +308,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                             $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
                     )->where(
-                        function (Builder $query) use ($adgainerId) {
-                            $query->where('repo_ydn_reports.account_id', '=', $adgainerId);
+                        function (Builder $query) use ($clientId) {
+                            $query->where('repo_ydn_reports.account_id', '=', $clientId);
                         }
                     );
 
@@ -321,8 +326,8 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                             $this->addTimeRangeCondition($startDay, $endDay, $query);
                         }
                     )->where(
-                        function (Builder $query) use ($adgainerId) {
-                            $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                        function (Builder $query) use ($clientId) {
+                            $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                         }
                     );
                 Event::listen(StatementPrepared::class, function ($event) {
@@ -340,8 +345,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $accountStatus,
             $startDay,
             $endDay,
+            $agencyId,
             $accountId,
-            $adgainerId,
+            $clientId,
             $campaignId,
             $adGroupId,
             $adReportId
@@ -419,8 +425,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -437,7 +444,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             )
             ->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -446,7 +453,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -473,8 +480,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null
@@ -488,7 +496,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             )
             ->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -496,7 +504,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -533,8 +541,9 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -548,7 +557,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 }
             )->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -557,7 +566,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,

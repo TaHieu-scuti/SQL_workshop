@@ -235,7 +235,7 @@ abstract class AbstractReportModel extends Model
 
     protected function addQueryConditions(
         Builder $query,
-        $adgainerId,
+        $clientId,
         $engine = null,
         $accountId = null,
         $campaignId = null,
@@ -263,7 +263,7 @@ abstract class AbstractReportModel extends Model
             $query->where($this->getTable().'.keywordID', '=', $keywordId);
         }
         if ($accountId === null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            $query->where($this->getTable().'.account_id', '=', $adgainerId);
+            $query->where($this->getTable().'.account_id', '=', $clientId);
         }
     }
 
@@ -315,8 +315,9 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -366,7 +367,7 @@ abstract class AbstractReportModel extends Model
                 }
             )->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -376,7 +377,7 @@ abstract class AbstractReportModel extends Model
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $engine,
                         $accountId,
                         $campaignId,
@@ -396,7 +397,6 @@ abstract class AbstractReportModel extends Model
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
-
         return $builder;
     }
 
@@ -407,8 +407,9 @@ abstract class AbstractReportModel extends Model
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -431,7 +432,7 @@ abstract class AbstractReportModel extends Model
             )
             ->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -441,7 +442,7 @@ abstract class AbstractReportModel extends Model
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $engine,
                         $accountId,
                         $campaignId,
@@ -469,8 +470,9 @@ abstract class AbstractReportModel extends Model
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -483,8 +485,9 @@ abstract class AbstractReportModel extends Model
             $startDay,
             $endDay,
             $groupedByField,
+            $agencyId,
             $accountId,
-            $adgainerId,
+            $clientId,
             $campaignId,
             $adGroupId,
             $adReportId,
@@ -505,8 +508,9 @@ abstract class AbstractReportModel extends Model
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -521,7 +525,7 @@ abstract class AbstractReportModel extends Model
             )
             ->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -530,7 +534,7 @@ abstract class AbstractReportModel extends Model
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $engine,
                         $accountId,
                         $campaignId,
@@ -628,8 +632,9 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -644,8 +649,9 @@ abstract class AbstractReportModel extends Model
             $columnSort,
             $sort,
             $groupedByField,
+            $agencyId,
             $accountId,
-            $adgainerId,
+            $clientId,
             $campaignId,
             $adGroupId,
             $adReportId,
@@ -669,8 +675,9 @@ abstract class AbstractReportModel extends Model
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -697,7 +704,7 @@ abstract class AbstractReportModel extends Model
             )
             ->where(
                 function (Builder $query) use (
-                    $adgainerId,
+                    $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
@@ -707,7 +714,7 @@ abstract class AbstractReportModel extends Model
                 ) {
                     $this->addQueryConditions(
                         $query,
-                        $adgainerId,
+                        $clientId,
                         $engine,
                         $accountId,
                         $campaignId,

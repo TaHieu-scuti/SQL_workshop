@@ -119,7 +119,7 @@ class RepoYdnReport extends AbstractReportModel
         $sort,
         $startDay,
         $endDay,
-        $adgainerId = null,
+        $clientId = null,
         $accountId = null
     ) {
         $aggregations = $this->getAggregatedOfYdn($fieldNames);
@@ -131,8 +131,8 @@ class RepoYdnReport extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             )
             ->groupBy($groupedByField)
@@ -145,7 +145,7 @@ class RepoYdnReport extends AbstractReportModel
         return $ydnAccountReport;
     }
 
-    public function calculateSummaryDataYdn(array $fieldNames, $startDay, $endDay, $adgainerId)
+    public function calculateSummaryDataYdn(array $fieldNames, $startDay, $endDay, $clientId)
     {
         $aggreations = $this->getAggregatedOfYdn($fieldNames);
         return self::select(array_merge($aggreations))
@@ -154,13 +154,13 @@ class RepoYdnReport extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             );
     }
 
-    public function ydnAccountCalculate($fieldNames, $startDay, $endDay, $adgainerId)
+    public function ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId)
     {
         $aggreations = $this->getAggregatedOfYdn($fieldNames);
         return self::select(array_merge($aggreations))
@@ -169,13 +169,13 @@ class RepoYdnReport extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             );
     }
 
-    public function ydnAccountDataForGraph($column, $startDay, $endDay, $adgainerId)
+    public function ydnAccountDataForGraph($column, $startDay, $endDay, $clientId)
     {
         $aggreations = $this->getAggregatedGraphOfYdn($column);
         return self::select($aggreations)
@@ -185,8 +185,8 @@ class RepoYdnReport extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function ($query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             )
             ->groupBy('day');

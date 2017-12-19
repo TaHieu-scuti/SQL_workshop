@@ -195,8 +195,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -211,7 +212,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $modelYdnReport = new RepoYdnReport();
         $arrSelect = $this->getAggregatedGraph($column);
         $arrSelectGoogle = $this->getAggregatedGraphOfGoogle($column);
-        $ydnAccountDataForGraph = $modelYdnReport->ydnAccountDataForGraph($column, $startDay, $endDay, $adgainerId);
+        $ydnAccountDataForGraph = $modelYdnReport->ydnAccountDataForGraph($column, $startDay, $endDay, $clientId);
         $dataForGoogle = RepoAdwAccountReportCost::select($arrSelectGoogle)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -219,8 +220,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function ($query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             )
             ->groupBy('day');
@@ -238,8 +239,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($adgainerId) {
-                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                function ($query) use ($clientId) {
+                    $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
                 }
             )
             ->groupBy('day');
@@ -274,8 +275,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -287,13 +289,13 @@ class RepoYssAccountReportCost extends AbstractReportModel
         });
         $tableName = $this->getTable();
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
-        $ydnAccountCalculate = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $adgainerId);
+        $ydnAccountCalculate = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId);
         $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
         if (empty($arrayCalculate)) {
             return $arrayCalculate;
         }
-        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId);
+        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $clientId);
         $data = $this->select($arrayCalculate)
             ->join(
                 $joinTableName,
@@ -306,8 +308,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             )
             ->where(
-                function ($query) use ($adgainerId) {
-                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                function ($query) use ($clientId) {
+                    $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
                 }
             );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -336,8 +338,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -347,8 +350,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $tableName = $this->getTable();
         $arrayCalculate = $this->getAggregated($fieldNames);
         $joinTableName = (new RepoYssAccount)->getTable();
-        $ydnAccountCalculate = $modelYdnReport->calculateSummaryDataYdn($fieldNames, $startDay, $endDay, $adgainerId);
-        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $adgainerId);
+        $ydnAccountCalculate = $modelYdnReport->calculateSummaryDataYdn($fieldNames, $startDay, $endDay, $clientId);
+        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $clientId);
         $data = self::select($arrayCalculate)
                 ->join(
                     $joinTableName,
@@ -361,8 +364,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     }
                 )
                 ->where(
-                    function ($query) use ($adgainerId) {
-                        $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                    function ($query) use ($clientId) {
+                        $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
                     }
                 );
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -410,8 +413,9 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -425,7 +429,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             $sort,
             $startDay,
             $endDay,
-            $adgainerId,
+            $clientId,
             $accountId
         );
 
@@ -441,8 +445,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             )
             ->groupBy($groupedByField)
@@ -464,8 +468,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_yss_account_report_cost.account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
                 }
             )
             ->groupBy($groupedByField)
@@ -504,7 +508,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         array $fieldNames,
         $startDay,
         $endDay,
-        $adgainerId = null
+        $clientId = null
     ) {
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggregations))
@@ -513,8 +517,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('account_id', '=', $clientId);
                 }
             );
 
