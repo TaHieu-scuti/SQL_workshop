@@ -11,19 +11,13 @@ class RepoYdnReportGenerator extends Seeder
     const INTERVAL = 'P1D';
     const END_DATE = '2018-02-03 00:00:00';
     const NUMBER_OF_ACCOUNTS = 2;
-    const NUMBER_OF_MEDIA_ACCOUNTS = [
-        2,
-        4,
-        5,
-        1,
-        3
-    ];
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
-    const MAX_NUMBER_OF_CAMPAIGNS = 5;
+    const MAX_NUMBER_OF_CAMPAIGNS = 1;
     const MIN_NUMBER_OF_ADGROUP = 1;
-    const MAX_NUMBER_OF_ADGROUP = 5;
+    const MAX_NUMBER_OF_ADGROUP = 2;
     const MIN_NUMBER_OF_AD_REPORT = 1;
-    const MAX_NUMBER_OF_AD_REPORT = 5;
+    const MAX_NUMBER_OF_AD_REPORT = 2;
+    const NUMBER_OF_CONVERSION_POINTS = 2;
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
@@ -90,7 +84,7 @@ class RepoYdnReportGenerator extends Seeder
             self::MAX_NUMBER_OF_CAMPAIGNS
         );
 
-        for ($i = 0; $i < $numberOfCampaigns + 1; ++$i) {
+        for ($i = 0; $i < $numberOfCampaigns; ++$i) {
             $this->processCampaign($day, $i);
         }
     }
@@ -115,12 +109,28 @@ class RepoYdnReportGenerator extends Seeder
         );
 
         for ($i = 0; $i < $numberOfReports + 1; ++$i) {
-            $this->createReport($day, $campaignNumber, $adGroupNumber, $i);
+            $this->processConversionPoint($day, $campaignNumber, $adGroupNumber, $i);
         }
     }
 
-    private function createReport(DateTime $day, $campaignNumber, $adGroupNumber, $adReportNumber)
-    {
+    private function processConversionPoint(
+        DateTime $day,
+        $campaignNumber,
+        $adGroupNumber,
+        $adReportNumber
+    ) {
+        for ($i = 0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
+            $this->createReport($day, $campaignNumber, $adGroupNumber, $adReportNumber, $i);
+        }
+    }
+
+    private function createReport(
+        DateTime $day,
+        $campaignNumber,
+        $adGroupNumber,
+        $adReportNumber,
+        $conversionNumber
+    ) {
         $repoYdnAccounts = RepoYdnAccount::select('account_id', 'accountId', 'accountName')->get();
         foreach ($repoYdnAccounts as $account) {
             $costReport = new RepoYdnReport();
@@ -173,11 +183,20 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
 
-            $costReport->adgroupID = $adGroupNumber + 1;
+            $costReport->adgroupID = (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . (string) $costReport->campaignID
+                . ($adGroupNumber + 1);
 
             $costReport->adgroupName = 'YDN AdGroup ' . ($adGroupNumber + 1);
 
-            $costReport->adID = $adReportNumber + 1;
+            $costReport->adID = (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . (string) $costReport->campaignID
+                . (string) $costReport->adgroupID
+                . ($adReportNumber + 1);
 
             $costReport->adName = 'YDN Ad Report ' . ($adReportNumber + 1);
 
@@ -209,6 +228,12 @@ class RepoYdnReportGenerator extends Seeder
                 self::MIN_CONVERSIONS,
                 $costReport->clicks
             );
+
+            $costReport->conversionName = 'YDN conversion '
+                . (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . $conversionNumber;
 
             if ($costReport->clicks === 0) {
                 $costReport->convRate = 0;
