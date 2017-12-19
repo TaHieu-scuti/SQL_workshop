@@ -100,12 +100,12 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         return [
             DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
             DB::raw(
-                'ROUND(((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`)) '
-                . '/ SUM(`repo_ydn_reports`.`clicks`)) * 100, 2) AS call_cvr'
+                '((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`)) '
+                . '/ SUM(`repo_ydn_reports`.`clicks`)) * 100 AS call_cvr'
             ),
             DB::raw(
-                'ROUND(SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) '
-                . '+ COUNT(`phone_time_use`.`id`)), 2) AS call_cpa'
+                'SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) '
+                . '+ COUNT(`phone_time_use`.`id`)) AS call_cpa'
             )
         ];
     }
