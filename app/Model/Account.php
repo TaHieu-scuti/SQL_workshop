@@ -94,7 +94,7 @@ class Account extends AbstractReportModel
         $data = DB::table(DB::raw("accounts,({$sql}) as tbl"))
             ->select(DB::raw('day, sum(data) as data'))
             ->groupBy('day');
-        if ($agencyId !== NULL) {
+        if ($agencyId !== null) {
             $data->where('agent_id', '=', $agencyId);
         }
         return $data->get();
@@ -217,7 +217,7 @@ class Account extends AbstractReportModel
             ->whereRaw('accounts.account_id = ydn.account_id')
             ->whereRaw('accounts.account_id = adw.account_id')
             ->orderBy($columnSort, $sort);
-        if ($agencyId !== NULL) {
+        if ($agencyId !== null) {
             $arrAccountsAgency->where('agent_id', '=', $agencyId);
         }
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
@@ -262,7 +262,7 @@ class Account extends AbstractReportModel
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->whereRaw('accounts.account_id = tbl.account_id');
-        if ($agencyId !== NULL) {
+        if ($agencyId !== null) {
             $datas = $datas->where('agent_id', '=', $agencyId);
         }
         $datas = $datas->first();

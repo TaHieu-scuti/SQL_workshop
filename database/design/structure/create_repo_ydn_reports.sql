@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `ADGAINER_db_SECURE`.`repo_ydn_reports` (
   `campaignName` TEXT NULL DEFAULT NULL COMMENT 'キャンペーン名',
   `account_id` VARCHAR(50) NULL DEFAULT NULL COMMENT 'ADgainerシステムのアカウントID',
   `campaign_id` VARCHAR(50) NULL DEFAULT NULL COMMENT 'ADgainerシステムのキャンペーンID\ndestinationURLのクエリパラメータを分解して取得',
+  `dailySpendingLimit` INT(20) NULL COMMENT '1日の予算',
   `adgroupID` INT(20) NULL DEFAULT NULL COMMENT '広告グループID',
   `adgroupName` TEXT NULL DEFAULT NULL COMMENT '広告グループ名',
   `adID` INT(20) NULL DEFAULT NULL COMMENT '広告ID',
