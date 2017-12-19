@@ -189,7 +189,6 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
         if ($engine === 'ydn' || $engine === 'adw') {
-            
             $tableColumns[] = 'call_cv';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
