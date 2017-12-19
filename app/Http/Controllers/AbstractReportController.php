@@ -392,6 +392,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionColumnSortAndSort($columnSort)
     {
+        if ($columnSort === 'agencyName') {
+            session([static::SESSION_KEY_COLUMN_SORT => 'agencyName']);
+        }
         if (session(static::SESSION_KEY_COLUMN_SORT) !== $columnSort
             || session(static::SESSION_KEY_SORT) !== 'desc'
         ) {
@@ -605,8 +608,11 @@ abstract class AbstractReportController extends Controller
     public function getDataForTable()
     {
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
-            session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+            if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName') {
+                session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
+            }
         }
+
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
