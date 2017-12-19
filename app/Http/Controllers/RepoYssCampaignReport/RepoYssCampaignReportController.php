@@ -113,6 +113,10 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         $fieldNames[] = 'call_tracking';
+        $fieldNames[] = 'web_cv';
+        $fieldNames[] = 'web_cvr';
+        $fieldNames[] = 'web_cpa';
+        $fieldNames[] = 'cv';
         $fieldNames[] = 'call_cvr';
         $fieldNames[] = 'call_cpa';
 
