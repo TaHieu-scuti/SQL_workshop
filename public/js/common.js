@@ -475,7 +475,8 @@ function isJson(obj) {
 }
 
 function checkErrorAjax (response) {
-    if (response !== 4) {
+    // XMLHttpRequest.readyState === 4: The operation is complete.
+    if (response.readyState !== 4) {
         return false;
     }
     if (response.status === 403 && isJson(response.responseText)) {
