@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Event;
 use DateTime;
 use Exception;
 use DB;
+use Auth;
 
 class Account extends AbstractReportModel
 {
     /** @var bool */
     public $timestamps = false;
+    const NUMBER_ADMIN = 1;
 
     public function getAllClient()
     {
@@ -308,5 +310,56 @@ class Account extends AbstractReportModel
         if ($agencyId !== null) {
             $query->where('accounts.agent_id', '', $agencyId);
         }
+    }
+
+    public function getAllAdminAndAgencyAccounts()
+    {
+        $arrAcounts = [];
+        $arrAdmin = [];
+        $arrAgency = [];
+        $admin = self::select('account_id')
+            ->where('level', '=', self::NUMBER_ADMIN)
+            ->get();
+
+        $agency = self::select('account_id')
+            ->whereIn(
+                'account_id',
+                function ($query) {
+                    $query->select(DB::raw('agent_id'))
+                        ->from('accounts')
+                        ->where('agent_id', '!=', '')
+                        ->get();
+                }
+            )
+            ->where('level', '=', 3)
+            ->where('agent_id', '=', '')
+            ->get();
+        foreach ($admin as $account) {
+            $arrAdmin[] = $account['account_id'];
+        }
+
+        foreach ($agency as $account) {
+            $arrAgency[] = $account['account_id'];
+        }
+
+        $arrAcounts['admin'] = $arrAdmin;
+        $arrAcounts['agency'] = $arrAgency;
+
+        return $arrAcounts;
+    }
+
+    public function checkConditonForBreadcumbs($title)
+    {
+        $idAccounts = $this->getAllAdminAndAgencyAccounts();
+        $adgainerId = Auth::user()->id;
+        if (($title === 'Agency' && !in_array($adgainerId, $idAccounts['admin']))
+            || ($title === 'Client' && !in_array($adgainerId, $idAccounts['agency'])
+            && !in_array($adgainerId, $idAccounts['admin']))
+
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

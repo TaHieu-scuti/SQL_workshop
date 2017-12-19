@@ -72,6 +72,7 @@ class AgencyController extends AbstractReportController
         ResponseFactory $responseFactory,
         Agency $model
     ) {
+        $this->middleware('checkRole');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
@@ -79,7 +80,7 @@ class AgencyController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
