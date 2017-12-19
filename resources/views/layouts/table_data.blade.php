@@ -147,9 +147,10 @@
                         && ($fieldName === 'ctr'
                         || $fieldName === 'impressionShare'))
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
-                    @elseif ($fieldName === 'averagePosition'
-                            || $fieldName === 'call_cvr'
-                            ||$fieldName === 'call_cpa')
+                    @elseif (
+                        $fieldName === 'averagePosition'
+                        || $fieldName === 'call_cvr'
+                        || $fieldName === 'call_cpa')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $report[$fieldName] }}</td>
