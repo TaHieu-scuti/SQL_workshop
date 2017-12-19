@@ -35,8 +35,9 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -56,8 +57,8 @@ class RepoAdwGeoReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                 }
             )
             ->groupBy('criteria.Name')
@@ -78,8 +79,9 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $startDay,
         $endDay,
         $groupedByField,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -100,8 +102,8 @@ class RepoAdwGeoReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                 }
             )
             ->first();
@@ -113,8 +115,9 @@ class RepoAdwGeoReportCost extends AbstractReportModel
         $accountStatus,
         $startDay,
         $endDay,
+        $agencyId = null,
         $accountId = null,
-        $adgainerId = null,
+        $clientId = null,
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
@@ -134,8 +137,8 @@ class RepoAdwGeoReportCost extends AbstractReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) use ($adgainerId) {
-                    $query->where('repo_adw_geo_report_cost.account_id', '=', $adgainerId);
+                function (Builder $query) use ($clientId) {
+                    $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                 }
             )
             ->first();

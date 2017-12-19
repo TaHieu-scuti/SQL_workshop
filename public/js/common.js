@@ -399,14 +399,15 @@ $(document).ready(function(){
     let array = [];
     let objectAccount = new Object();
     let objectClient = new Object();
+    let objectAgency = new Object();
     let objectCampaign = new Object();
     let objectAdgroup = new Object();
     let objectKeyword = new Object();
     let objectAd = new Object();
     let objectUser = new Object();
 
-    objectUser['title'] = 'Client';
-    objectUser['name'] = 'Client';
+    objectUser['title'] = 'Admin';
+    objectUser['name'] = 'Admin';
     objectUser['engine'] = "";
     objectUser['value'] = $('#username').attr('value');
     array.push(objectUser);
@@ -418,9 +419,15 @@ $(document).ready(function(){
     if(engine === 'adw') {
         iconEngine = '<img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >';
     }
-    objectClient['title'] = 'Account';
-    objectClient['name'] = $('select.id_Account').find(':selected').attr('data-breadcumbs');
-    objectClient['value'] = $('select.id_Account').find(':selected').attr('data-tokens');
+    objectAgency['title'] = 'Agency';
+    objectAgency['name'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
+    objectAgency['value'] = $('select.id_Agency').find(':selected').attr('data-tokens');
+    objectAgency['engine'] = '';
+    array.push(objectAgency);
+
+    objectClient['title'] = 'Client';
+    objectClient['name'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
+    objectClient['value'] = $('select.id_Client').find(':selected').attr('data-tokens');
     objectClient['engine'] = '';
     array.push(objectClient);
 
