@@ -4,9 +4,8 @@ var Script = function () {
     $(function () {
         var lineChart;
         initMorris();
-        setTimeout(function() {
-            getDataForLayouts();
-        }, 500);
+
+        getDataForLayouts();
 
         function getDataForLayouts() {
             $.ajax({
@@ -16,7 +15,6 @@ var Script = function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend : function () {
-                    $('.click-event').css({pointerEvents: "none"})
                     sendingRequestTable();
                 },
                 success: function(response) {
@@ -29,20 +27,9 @@ var Script = function () {
                     $('.result-per-page').html(response.keyPagination);
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
                 complete : function () {
-                    $('.click-event').css({pointerEvents: "auto"})
                     completeRequestTable();
                 }
             });
@@ -107,17 +94,7 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
                 complete : function () {
                     completeRequest();
@@ -151,17 +128,7 @@ var Script = function () {
                     $('#time-period').html(response.timePeriodLayout);
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
                 complete : function () {
                     completeRequest();
@@ -206,17 +173,7 @@ var Script = function () {
                     $('#status-label').html(response.statusLayout);
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
                 complete : function () {
                     completeRequest();
@@ -317,17 +274,7 @@ var Script = function () {
                     $('button[data-id=selectpickerGraph] span.filter-option').text(columnName);
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
                 complete : function () {
                     completeRequest();
@@ -462,17 +409,7 @@ var Script = function () {
                     window.location = redirect;
                 },
                 error : function (response) {
-                    if (response.status === 403) {
-                        if (isJson(response.responseText)) {
-                            let obj = JSON.parse(response.responseText);
-                            if (obj.error === 'session_expired') {
-                                alert('Session expired');
-                                window.location.href = obj.redirect_url;
-                            }
-                        }
-                    } else {
-                        alert('Something went wrong!');
-                    }
+                    checkErrorAjax(response);
                 },
             });
         }
@@ -530,7 +467,6 @@ var Script = function () {
     });
 
     function sendingRequestTable() {
-        $('.selectpickerBreadCrumbs').attr('disabled', true);
         $('.report-table').css('display', 'none');
         $('.loading-gif-on-table').removeClass('hidden-table');
         setTimeout(function() {
@@ -542,7 +478,6 @@ var Script = function () {
     {
         $('.loading-gif-on-table').addClass('hidden-table');
         $('.loading-gif-on-top-graph').addClass('hidden-graph');
-        $('.selectpickerBreadCrumbs').attr('disabled', false);
     }
 
 }();

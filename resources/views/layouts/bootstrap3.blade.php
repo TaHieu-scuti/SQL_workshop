@@ -15,7 +15,7 @@ $model = new Account();
             @if ($breadcrumb->url && !$breadcrumb->last)
                     <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
-                        <span class="title click-event"
+                        <span class="title"
                         data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">
                             <a href="javascript:void(0)"
                             data-title="{{ $breadcrumb->title }}">
@@ -77,7 +77,7 @@ $model = new Account();
             @else
                 <li class="breadcrumb-item active">
                     <div class="breadcrumb-item-detail">
-                        <span class="title click-event"
+                        <span class="title"
                         data-titleBreadCumbs="{{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}">
                         {{ __('language.' .str_slug($titleBreadCumbs['title'],'_')) }}<br></span>
                         <select class="selectpicker selectpickerBreadCrumbs tasks-bar id_{{$titleBreadCumbs['title']}}"

@@ -112,9 +112,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames[] = 'call_tracking';
+        $fieldNames[] = 'call_cv';
         $fieldNames[] = 'call_cvr';
         $fieldNames[] = 'call_cpa';
+        $fieldNames[] = 'web_cv';
+        $fieldNames[] = 'web_cvr';
+        $fieldNames[] = 'web_cpa';
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -198,9 +201,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames[] = 'call_tracking';
+        $fieldNames[] = 'call_cv';
         $fieldNames[] = 'call_cvr';
         $fieldNames[] = 'call_cpa';
+        $fieldNames[] = 'web_cv';
+        $fieldNames[] = 'web_cvr';
+        $fieldNames[] = 'web_cpa';
 
         $tableDataLayout = view(
             'layouts.table_data',
