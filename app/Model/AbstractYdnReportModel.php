@@ -98,7 +98,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
     protected function getAggregatedForTable()
     {
         return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
+            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
             DB::raw('SUM(`repo_ydn_reports`.`conversions`) as web_cv'),
             DB::raw(
                 '(SUM(`repo_ydn_reports`.`conversions`) / SUM(`repo_ydn_reports`.`clicks`)) * 100 AS web_cvr'
