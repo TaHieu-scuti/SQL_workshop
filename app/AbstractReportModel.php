@@ -397,7 +397,6 @@ abstract class AbstractReportModel extends Model
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
-
         return $builder;
     }
 
