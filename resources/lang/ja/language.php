@@ -88,4 +88,4 @@ return [
     'web_cvr' => 'Web_CVR',
     'web_cpa' => 'Web_CPA',
     'call_cv' => 'Call_CV',
-]
+];
