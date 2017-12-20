@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AbstractYdnReportModel extends AbstractReportModel
 {
-    protected $casts = [
-        'conversions' => 'float',
-    ];
-
     private function addJoin(EloquentBuilder $builder)
     {
         $builder->leftJoin(
