@@ -89,8 +89,17 @@ class Agency extends AbstractReportModel
         $startDay,
         $endDay
     ) {
-        $arrayOfDirectClientsAndAgencies = self::select('agent_id')->where('level', '=', 3)
-                        ->where('agent_id', '!=', '')->get()->toArray();
+        $arrayOfDirectClientsAndAgencies = self::select('account_id')
+                ->whereIn(
+                    'agent_id',
+                    function ($query) {
+                        $query->select(DB::raw('account_id'))
+                            ->from('accounts')
+                            ->where('agent_id', '=', '');
+                    }
+                )
+                ->where('level', '=', 3)
+                ->get()->toArray();
         $yssTableName = (new RepoYssAccountReportCost)->getTable();
         $ydnTableName = (new RepoYdnReport)->getTable();
         $adwTableName = (new RepoAdwAccountReportCost)->getTable();
@@ -136,7 +145,6 @@ class Agency extends AbstractReportModel
                     $rawExpressions
                 )
                 ->where('level', '=', 3)
-                ->where('agent_id', '=', '')
                 ->whereRaw('accounts.account_id = tbl.account_id')
                 ->groupBy('accountName');
         return $arrayOfAgencyData;
@@ -147,8 +155,17 @@ class Agency extends AbstractReportModel
         $startDay,
         $endDay
     ) {
-        $arrayOfDirectClientsAndAgencies = self::select('agent_id')->where('level', '=', 3)
-                        ->where('agent_id', '!=', '')->get()->toArray();
+        $arrayOfDirectClientsAndAgencies = self::select('account_id')
+                ->whereNotIn(
+                    'account_id',
+                    function ($query) {
+                        $query->select(DB::raw('agent_id'))
+                            ->from('accounts')
+                            ->where('agent_id', '!=', '');
+                    }
+                )
+                ->where('level', '=', 3)
+                ->where('agent_id', '=', '')->get()->toArray();
         $yssTableName = (new RepoYssAccountReportCost)->getTable();
         $ydnTableName = (new RepoYdnReport)->getTable();
         $adwTableName = (new RepoAdwAccountReportCost)->getTable();
@@ -161,21 +178,21 @@ class Agency extends AbstractReportModel
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
                             }
                         )
-                        ->whereNotIn('account_id', $arrayOfDirectClientsAndAgencies);
+                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies);
         $ydnAccountData = RepoYdnReport::select($ydnAccountAggregation)
                         ->where(
                             function (Builder $query) use ($startDay, $endDay) {
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
                             }
                         )
-                        ->whereNotIn('account_id', $arrayOfDirectClientsAndAgencies);
+                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies);
         $adwAccountData = RepoAdwAccountReportCost::select($adwAccountAggregation)
                         ->where(
                             function (Builder $query) use ($startDay, $endDay) {
                                 $this->addTimeRangeCondition($startDay, $endDay, $query);
                             }
                         )
-                        ->whereNotIn('account_id', $arrayOfDirectClientsAndAgencies);
+                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies);
         $directClientsData = $yssAccountData
             ->union($ydnAccountData)
             ->union($adwAccountData);
@@ -420,19 +437,24 @@ class Agency extends AbstractReportModel
     //get Agencies to display on breadcrumbs
     public function getAllAgencies()
     {
-        $arrayOfDirectClientsAndAgencies = self::select('agent_id')->where('level', '=', 3)
-                        ->where('agent_id', '!=', '')->get()->toArray();
-        $agencies = self::select('account_id')
-                        ->where('level', '=', 3)
-                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)
-                        ->get()->toArray();
+        $arrayOfDirectClientsAndAgencies = self::select('account_id')
+            ->whereIn(
+                'agent_id',
+                function ($query) {
+                    $query->select(DB::raw('account_id'))
+                        ->from('accounts')
+                        ->where('agent_id', '=', '');
+                }
+            )
+            ->where('level', '=', 3)
+            ->get()->toArray();
 
         $yssClients = RepoYssAccountReportCost::select('account_id')
-                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
         $ydnClients = RepoYdnReport::select('account_id')
-                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
         $adwClients = RepoAdwAccountReportCost::select('account_id')
-                    ->whereIn('account_id', $agencies)->groupBy('account_id');
+                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
         $arr = ['all' => 'All Agencies'];
 
         $clientUnionArray = $yssClients->union($ydnClients)->union($adwClients);
@@ -445,7 +467,6 @@ class Agency extends AbstractReportModel
                 ]
             )
             ->where('level', '=', 3)
-            ->whereIn('accounts.account_id', $arrayOfDirectClientsAndAgencies)
             ->whereRaw('accounts.account_id = tbl.account_id')->get();
         foreach ($data as $key => $value) {
             $arr[] = (array)$value;
