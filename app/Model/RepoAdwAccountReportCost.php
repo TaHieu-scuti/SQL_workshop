@@ -2,12 +2,10 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use App\AbstractReportModel;
-use DB;
+use Illuminate\Support\Facades\DB;
 
-class RepoAdwAccountReportCost extends AbstractReportModel
+class RepoAdwAccountReportCost extends AbstractAccountReportModel
 {
     protected $table = 'repo_adw_account_report_cost';
 
@@ -28,6 +26,11 @@ class RepoAdwAccountReportCost extends AbstractReportModel
         self::AVERAGE_CPC => self::ADW_AVERAGE_CPC
     ];
 
+    protected function getPhoneTimeUseSourceValue()
+    {
+        return 'adw';
+    }
+
     public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay)
     {
         $getAggregatedAdwAccounts = $this->getAggregatedAgency($fieldNames);
@@ -39,6 +42,8 @@ class RepoAdwAccountReportCost extends AbstractReportModel
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }
