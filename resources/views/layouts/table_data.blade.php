@@ -136,7 +136,6 @@
                         </td>
                         @endif
                     @elseif (ctype_digit($report[$fieldName]))
-
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif (($fieldName === 'cost' || $fieldName === 'web_cpa') && is_float($report[$fieldName]))
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
@@ -148,6 +147,10 @@
                         || $fieldName === 'impressionShare')
                         || $fieldName === 'web_cvr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
+                    @elseif (
+                        is_float($report[$fieldName])
+                        && $fieldName === 'ctr')
+                        <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif (
                         $fieldName === 'averagePosition'
                         || $fieldName === 'call_cvr'
