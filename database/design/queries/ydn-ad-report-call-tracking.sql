@@ -12,6 +12,8 @@ SELECT
   AVG(`repo_ydn_reports`.`averageCpc`) AS avgCPC,
   COUNT(`phone_time_use`.`id`) AS call_tracking,
   SUM(`repo_ydn_reports`.`conversions`) AS webcv,
+  (SUM(`repo_ydn_reports`.`conversions`) / SUM(`repo_ydn_reports`.`clicks`)) * 100 AS webcvr,
+  (SUM(`repo_ydn_reports`.`cost`) / SUM(`repo_ydn_reports`.`conversions`)) AS webcpa,
   SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`) AS cv,
   ((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`)) / SUM(`repo_ydn_reports`.`clicks`)) * 100 AS cvr,
   SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) + COUNT(`phone_time_use`.`id`)) AS cpa,

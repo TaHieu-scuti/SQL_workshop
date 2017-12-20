@@ -109,9 +109,12 @@ class RepoYssKeywordReportController extends AbstractReportController
         $tableColumns = $this->updateTableColumns($dataReports);
 
         if ($engine === 'yss' || $engine === 'adw') {
-            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cv';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
+            $tableColumns[] = 'Web_CV';
+            $tableColumns[] = 'Web_CVR';
+            $tableColumns[] = 'Web_CPA';
         }
 
         $summaryReportLayout = view(
@@ -188,9 +191,12 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableColumns = $this->updateTableColumns($reports);
         if ($engine === 'yss' || $engine === 'adw') {
-            $tableColumns[] = 'call_tracking';
+            $tableColumns[] = 'call_cv';
             $tableColumns[] = 'call_cvr';
             $tableColumns[] = 'call_cpa';
+            $tableColumns[] = 'Web_CV';
+            $tableColumns[] = 'Web_CVR';
+            $tableColumns[] = 'Web_CPA';
         }
         $tableDataLayout = view(
             'layouts.table_data',
