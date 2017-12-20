@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Event;
 use DateTime;
 use Exception;
 use DB;
+use Auth;
 
 class Account extends AbstractReportModel
 {
     /** @var bool */
     public $timestamps = false;
+    const NUMBER_ADMIN = 1;
 
     public function getAllClient()
     {
@@ -308,5 +310,56 @@ class Account extends AbstractReportModel
         if ($agencyId !== null) {
             $query->where('accounts.agent_id', '', $agencyId);
         }
+    }
+
+    public function checkConditonForBreadcumbs($title)
+    {
+        if (($title === 'Agency' && !$this->isAdmin(Auth::user()->account_id))
+            || ($title === 'Client' && !$this->isAgency(Auth::user()->account_id)
+            && !$this->isAdmin(Auth::user()->account_id))
+
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isAdmin($account_id)
+    {
+        $admin = self::select('account_id')
+            ->where('level', '=', self::NUMBER_ADMIN)
+            ->where('account_id', '=', $account_id)
+            ->get();
+
+        if (!$admin->isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isAgency($account_id)
+    {
+        $agency = self::select('account_id')
+            ->whereIn(
+                'account_id',
+                function ($query) {
+                    $query->select(DB::raw('agent_id'))
+                        ->from('accounts')
+                        ->where('agent_id', '!=', '')
+                        ->get();
+                }
+            )
+            ->where('account_id', '=', $account_id)
+            ->where('level', '=', 3)
+            ->where('agent_id', '=', '')
+            ->get();
+
+        if (!$agency->isEmpty()) {
+            return true;
+        }
+
+        return false;
     }
 }

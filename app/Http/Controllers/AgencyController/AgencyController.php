@@ -72,6 +72,7 @@ class AgencyController extends AbstractReportController
         ResponseFactory $responseFactory,
         Agency $model
     ) {
+        $this->middleware('checkRole');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
@@ -79,7 +80,7 @@ class AgencyController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
@@ -257,7 +258,7 @@ class AgencyController extends AbstractReportController
         foreach ($data as $value) {
             // if data !== null, display on graph
             // else, display "no data found" image
-            if ($value->data !== null) {
+            if (isset($value->data)) {
                 $this->displayNoDataFoundMessageOnGraph = false;
             }
         }

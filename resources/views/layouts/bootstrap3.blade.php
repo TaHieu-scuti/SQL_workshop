@@ -1,13 +1,18 @@
 <?php
 use App\Http\Controllers\AbstractReportController;
+use App\Model\Account;
+
+$model = new Account();
 ?>
 @if ($breadcrumbs)
     <ul class="breadcrumb">
         @foreach ($breadcrumbs as $breadcrumb)
             <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);?>
+            @if ($model->checkConditonForBreadcumbs($breadcrumb->title))
+                @continue;
+            @endif
             <input type="hidden" name="id_{{$breadcrumb->title}}" id="id_{{$breadcrumb->title}}" value="all">
             @if ($breadcrumb->url && !$breadcrumb->last)
-
                     <li class="breadcrumb-item">
                     <div class="breadcrumb-item-detail">
                         <span class="title"
