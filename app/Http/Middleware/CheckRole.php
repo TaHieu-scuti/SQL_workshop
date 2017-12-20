@@ -20,14 +20,11 @@ class CheckRole
     {
         // TODO: add the authorization code, will do in next PR
         $model = new Account();
-        $arrAccounts = $model->getAllAdminAndAgencyAccounts();
 
-        if (in_array(Auth::user()->id, $arrAccounts['agency'])) {
+        if ($model->isAgency(Auth::user()->account_id)) {
             session([AbstractReportController::SESSION_KEY_AGENCY_ID => Auth::user()->id]);
             return redirect('/client-report');
-        } elseif (!in_array(Auth::user()->id, $arrAccounts['agency'])
-            && !in_array(Auth::user()->id, $arrAccounts['admin'])
-        ) {
+        } elseif (!$model->isAdmin(Auth::user()->account_id)) {
             session([AbstractReportController::SESSION_KEY_CLIENT_ID => Auth::user()->id]);
             return redirect('/account_report');
         }

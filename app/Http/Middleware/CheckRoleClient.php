@@ -19,8 +19,7 @@ class CheckRoleClient
     public function handle($request, Closure $next)
     {
         $model = new Account();
-        $arrAccounts = $model->getAllAdminAndAgencyAccounts();
-        if (in_array(Auth::user()->id, $arrAccounts['agency'])
+        if ($model->isAgency(Auth::user()->account_id)
             && session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
             return redirect('/client-report');
         }

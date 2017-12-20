@@ -312,15 +312,35 @@ class Account extends AbstractReportModel
         }
     }
 
-    public function getAllAdminAndAgencyAccounts()
+    public function checkConditonForBreadcumbs($title)
     {
-        $arrAcounts = [];
-        $arrAdmin = [];
-        $arrAgency = [];
+        if (($title === 'Agency' && !$this->isAdmin(Auth::user()->account_id))
+            || ($title === 'Client' && !$this->isAgency(Auth::user()->account_id)
+            && !$this->isAdmin(Auth::user()->account_id))
+
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isAdmin($account_id)
+    {
         $admin = self::select('account_id')
             ->where('level', '=', self::NUMBER_ADMIN)
+            ->where('account_id', '=', $account_id)
             ->get();
 
+        if (!$admin->isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isAgency($account_id)
+    {
         $agency = self::select('account_id')
             ->whereIn(
                 'account_id',
@@ -331,32 +351,12 @@ class Account extends AbstractReportModel
                         ->get();
                 }
             )
+            ->where('account_id', '=', $account_id)
             ->where('level', '=', 3)
             ->where('agent_id', '=', '')
             ->get();
-        foreach ($admin as $account) {
-            $arrAdmin[] = $account['account_id'];
-        }
 
-        foreach ($agency as $account) {
-            $arrAgency[] = $account['account_id'];
-        }
-
-        $arrAcounts['admin'] = $arrAdmin;
-        $arrAcounts['agency'] = $arrAgency;
-
-        return $arrAcounts;
-    }
-
-    public function checkConditonForBreadcumbs($title)
-    {
-        $idAccounts = $this->getAllAdminAndAgencyAccounts();
-        $adgainerId = Auth::user()->id;
-        if (($title === 'Agency' && !in_array($adgainerId, $idAccounts['admin']))
-            || ($title === 'Client' && !in_array($adgainerId, $idAccounts['agency'])
-            && !in_array($adgainerId, $idAccounts['admin']))
-
-        ) {
+        if (!$agency->isEmpty()) {
             return true;
         }
 
