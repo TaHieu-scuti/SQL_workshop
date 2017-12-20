@@ -94,6 +94,10 @@ abstract class AbstractReportModel extends Model
     const ADW = 'adw';
     const YSS = 'yss';
 
+    protected $casts = [
+        'conversions' => 'integer',
+    ];
+
     protected $groupByFieldName = [
         self::DEVICE,
         self::HOUR_OF_DAY,

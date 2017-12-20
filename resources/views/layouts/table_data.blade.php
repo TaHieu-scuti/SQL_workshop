@@ -148,10 +148,6 @@
                         || $fieldName === 'web_cvr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif (
-                        is_float($report[$fieldName])
-                        && $fieldName === 'web_cv')
-                        <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
-                    @elseif (
                         $fieldName === 'averagePosition'
                         || $fieldName === 'call_cvr'
                         || $fieldName === 'call_cpa')
@@ -205,8 +201,6 @@
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
                         @elseif (is_float($totalDataArray->$fieldName) && ($fieldName === 'ctr' || $fieldName === 'impressionShare' || $fieldName === 'web_cvr'))
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}%</td>
-                        @elseif ($fieldName === 'web_cv')
-                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif (is_float($totalDataArray->$fieldName) || $fieldName === 'call_cvr' || $fieldName === 'call_cpa')
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
                         @else
