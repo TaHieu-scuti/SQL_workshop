@@ -163,15 +163,16 @@ class RepoYdnReport extends AbstractReportModel
 
     public function ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId)
     {
-        $aggreations = $this->getAggregatedOfYdn($fieldNames);
-        return self::select(array_merge($aggreations))
+        $aggregations = $this->getAggregatedOfYdn($fieldNames);
+        $aggregations = array_merge($this->getAggregatedForAccounts(), $aggregations);
+        return self::select(array_merge($aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }

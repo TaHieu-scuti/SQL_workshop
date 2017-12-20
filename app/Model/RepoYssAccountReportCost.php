@@ -273,6 +273,65 @@ class RepoYssAccountReportCost extends AbstractReportModel
      * @param $endDay
      * @return array
      */
+    // public function calculateData(
+    //     $engine,
+    //     $fieldNames,
+    //     $accountStatus,
+    //     $startDay,
+    //     $endDay,
+    //     $groupedByField,
+    //     $agencyId = null,
+    //     $accountId = null,
+    //     $clientId = null,
+    //     $campaignId = null,
+    //     $adGroupId = null,
+    //     $adReportId = null,
+    //     $keywordId = null
+    // ) {
+    //     Event::listen(StatementPrepared::class, function ($event) {
+    //         $event->statement->setFetchMode(PDO::FETCH_OBJ);
+    //     });
+    //     $modelYdnReport = new RepoYdnReport();
+    //     $tableName = $this->getTable();
+    //     $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
+    //     $ydnAccountCalculate = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId);
+    //     $arrayCalculate = $this->getAggregated($fieldNames);
+    //     $joinTableName = (new RepoYssAccount)->getTable();
+    //     if (empty($arrayCalculate)) {
+    //         return $arrayCalculate;
+    //     }
+    //     $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $clientId);
+    //     $data = $this->select($arrayCalculate)
+    //         ->join(
+    //             $joinTableName,
+    //             $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+    //             '=',
+    //             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+    //         )->where(
+    //             function (Builder $query) use ($startDay, $endDay) {
+    //                 $this->addTimeRangeCondition($startDay, $endDay, $query);
+    //             }
+    //         )
+    //         ->where(
+    //             function ($query) use ($clientId) {
+    //                 $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
+    //             }
+    //         );
+    //     if ($accountStatus == self::HIDE_ZERO_STATUS) {
+    //         $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
+    //         $adwAccountReport = $adwAccountReport->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
+    //         $ydnAccountCalculate = $ydnAccountCalculate->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
+    //     }
+    //     $data = $data->union($adwAccountReport)->union($ydnAccountCalculate);
+    //
+    //     $sql = $this->getBindingSql($data);
+    //     $rawExpression = $this->getRawExpressions($fieldNames);
+    //     $data = DB::table(DB::raw("({$sql}) as tbl"))
+    //     ->select($rawExpression);
+    //     $data = $data->first();
+    //     return $data;
+    // }
+
     public function calculateData(
         $engine,
         $fieldNames,
@@ -288,48 +347,155 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $modelYdnReport = new RepoYdnReport();
-        Event::listen(StatementPrepared::class, function ($event) {
-            $event->statement->setFetchMode(PDO::FETCH_OBJ);
-        });
-        $tableName = $this->getTable();
-        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, self::PAGE_ID]);
-        $ydnAccountCalculate = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId);
-        $arrayCalculate = $this->getAggregated($fieldNames);
-        $joinTableName = (new RepoYssAccount)->getTable();
-        if (empty($arrayCalculate)) {
-            return $arrayCalculate;
-        }
-        $adwAccountReport = $this->getDatasAccountOfGoogle($fieldNames, $startDay, $endDay, $clientId);
-        $data = $this->select($arrayCalculate)
-            ->join(
-                $joinTableName,
-                $tableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
-                '=',
-                $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-            )->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )
-            ->where(
-                function ($query) use ($clientId) {
-                    $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
-                }
-            );
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $adwAccountReport = $adwAccountReport->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $ydnAccountCalculate = $ydnAccountCalculate->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-        }
-        $data = $data->union($adwAccountReport)->union($ydnAccountCalculate);
+        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid']);
+        //YSS
+        $joinTableName = 'repo_yss_accounts';
+        $yssAggregations = $this->getAggregated($fieldNames);
+        $yssAggregations = array_merge($this->getAggregatedForAccounts('repo_yss_account_report_cost'), $yssAggregations);
+        $yssData = $this->select($yssAggregations)
+        ->join(
+            $joinTableName,
+            $this->getTable(). '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
+            '=',
+            $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
+        )->where(
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )->where(
+            function (Builder $query) use ($clientId) {
+                $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
+            }
+        );
+        $yssData->leftJoin(
+            DB::raw("`phone_time_use`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
+                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
+                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+                        ->whereRaw(
+                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
+                        );
+                    }
+                );
+            }
+        );
+        //Adw
+        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAggregations = array_merge($this->getAggregatedForAccounts('repo_adw_account_report_cost'), $adwAggregations);
+        $adwData = RepoAdwAccountReportCost::select($adwAggregations)
+        ->where(
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )->where(
+            function (Builder $query) use ($clientId) {
+                $query->where('repo_adw_account_report_cost.account_id', '=', $clientId);
+            }
+        );
+        $adwData->leftJoin(
+            DB::raw("`phone_time_use`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_adw_account_report_cost`.`account_id`")
+                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`")
+                        ->whereRaw(
+                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_account_report_cost`.`day`"
+                        )->whereRaw("`phone_time_use`.`source` = 'adw'")
+                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'");
+                    }
+                );
+            }
+        );
+        //YDN
+        $modelYdnReport = new RepoYdnReport;
+        $ydnData = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId);
+        $ydnData->leftJoin(
+            DB::raw("(`phone_time_use`,`campaigns`)"),
+            function (JoinClause $join) {
+                $join->on('campaigns.account_id', '=', 'repo_ydn_reports.account_id')
+                ->on('campaigns.campaign_id', '=', 'repo_ydn_reports.campaign_id')
+                ->on(
+                    function (JoinClause $builder) {
+                        $builder->where(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom1` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom1` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom2` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom2` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom3` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom3` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom4` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom4` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom5` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom5` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom6` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom6` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom7` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom7` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom8` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom8` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom9` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom9` = `repo_ydn_reports`.`adID`");
+                            }
+                        )->orWhere(
+                            function (JoinClause $builder) {
+                                $builder->whereRaw("`campaigns`.`camp_custom10` = 'creative'")
+                                ->whereRaw("`phone_time_use`.`custom10` = `repo_ydn_reports`.`adID`");
+                            }
+                        );
+                    }
+                )
+                ->on('phone_time_use.account_id', '=', 'repo_ydn_reports.account_id')
+                ->on('phone_time_use.campaign_id', '=', 'repo_ydn_reports.campaign_id')
+                ->on('phone_time_use.utm_campaign', '=', 'repo_ydn_reports.campaignID')
+                ->where('phone_time_use.source', '=', 'ydn')
+                ->where('phone_time_use.traffic_type', '=', 'AD');
+            }
+        );
 
+        $data = $ydnData->union($yssData)->union($adwData);
         $sql = $this->getBindingSql($data);
         $rawExpression = $this->getRawExpressions($fieldNames);
+        $array = [
+            DB::raw('SUM(call_cv) as call_cv'),
+            DB::raw('SUM(call_cvr) as call_cvr'),
+            DB::raw('SUM(call_cpa) as call_cpa'),
+            DB::raw('SUM(web_cv) as Web_CV'),
+            DB::raw('SUM(web_cvr) as Web_CVR'),
+            DB::raw('SUM(web_cpa) as Web_CPA')
+        ];
+        $rawExpression = array_merge($array, $rawExpression);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
-        $data = $data->first();
-        return $data;
+        return $data->first();
     }
 
     public function repoYssAccounts()
@@ -655,7 +821,6 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         // YDN
         $accountYdnReport = new RepoYdnReport;
-        // $ydnFieldNames = array_merge($this->getAggregatedForAccounts('repo_ydn_reports'), $fieldNames);
         $ydnData = $accountYdnReport->getAllAccountYdn(
             $fieldNames,
             $groupedByField,
