@@ -41,4 +41,17 @@ class LoginController extends Controller
     {
         return 'username';
     }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        $this->guard()->logout();
+
+        return redirect('/');
+    }
 }
