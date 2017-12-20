@@ -4,8 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+// use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 //use Illuminate\Database\Eloquent\JoinClause;
 
@@ -308,7 +308,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 '=',
                 $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
             )->where(
-                function (EloquentBuilder $query) use ($startDay, $endDay) {
+                function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
@@ -364,7 +364,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                     '=',
                     $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
                 )->where(
-                    function (EloquentBuilder $query) use ($startDay, $endDay) {
+                    function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
@@ -518,11 +518,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggregations))
             ->where(
-                function (EloquentBuilder $query) use ($startDay, $endDay) {
+                function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (EloquentBuilder $query) use ($clientId) {
+                function (Builder $query) use ($clientId) {
                     $query->where('account_id', '=', $clientId);
                 }
             );
@@ -624,11 +624,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
             '=',
             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
         )->where(
-            function (EloquentBuilder $query) use ($startDay, $endDay) {
+            function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )->where(
-            function (EloquentBuilder $query) use ($clientId) {
+            function (Builder $query) use ($clientId) {
                 $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
             }
         )
@@ -638,7 +638,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             DB::raw("`phone_time_use`"),
             function (JoinClause $join) {
                 $join->on(
-                    function (Builder $builder) {
+                    function (JoinClause $builder) {
                         $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
                         ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
                         ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
@@ -672,54 +672,54 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $join->on('campaigns.account_id', '=', 'repo_ydn_reports.account_id')
                 ->on('campaigns.campaign_id', '=', 'repo_ydn_reports.campaign_id')
                 ->on(
-                    function (Builder $builder) {
+                    function (JoinClause $builder) {
                         $builder->where(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom1` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom1` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom2` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom2` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom3` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom3` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom4` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom4` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom5` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom5` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom6` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom6` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom7` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom7` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom8` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom8` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom9` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom9` = `repo_ydn_reports`.`adID`");
                             }
                         )->orWhere(
-                            function (Builder $builder) {
+                            function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom10` = 'creative'")
                                 ->whereRaw("`phone_time_use`.`custom10` = `repo_ydn_reports`.`adID`");
                             }
@@ -740,11 +740,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $adwData = RepoAdwAccountReportCost::select(
             array_merge([DB::raw("'adw' as engine")], $adwAggregations)
         )->where(
-            function (EloquentBuilder $query) use ($startDay, $endDay) {
+            function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )->where(
-            function (EloquentBuilder $query) use ($clientId) {
+            function (Builder $query) use ($clientId) {
                 $query->where('repo_adw_account_report_cost.account_id', '=', $clientId);
             }
         )
@@ -758,7 +758,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
             DB::raw("`phone_time_use`"),
             function (JoinClause $join) {
                 $join->on(
-                    function (Builder $builder) {
+                    function (JoinClause $builder) {
                         $builder->whereRaw("`phone_time_use`.`account_id` = `repo_adw_account_report_cost`.`account_id`")
                         ->whereRaw("`phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`")
                         ->whereRaw(
