@@ -82,13 +82,12 @@ return [
     'all_client' => 'All Client',
     'all_agencies' => 'All Agencies',
     'matchtype' => 'Match Type',
-    'call_tracking' => 'Call CV',
     'clientname' => 'Client Name',
     'call_cvr' => 'Call CVR',
     'call_cpa' => 'Call CPA',
     'impressionshare' => 'Impression Share',
-    'web_cv' => 'Web_CV',
-    'web_cvr' => 'Web_CVR',
-    'web_cpa' => 'Web_CPA',
-    'call_cv' => 'Call_CV'
+    'web_cv' => 'Web CV',
+    'web_cvr' => 'Web CVR',
+    'web_cpa' => 'Web CPA',
+    'call_cv' => 'Call CV'
 ];

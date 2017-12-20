@@ -84,8 +84,8 @@ return [
     'call_tracking' => 'コール数',
     'clientname' => 'クライアント名',
     'impressionshare' => 'インプレッションシェア',
-    'web_cv' => 'Web_CV',
-    'web_cvr' => 'Web_CVR',
-    'web_cpa' => 'Web_CPA',
-    'call_cv' => 'Call_CV',
+    'web_cv' => 'Webコンバージョン数',
+    'web_cvr' => 'Web CVR',
+    'web_cpa' => 'Web CPA',
+    'call_cv' => 'コール数',
 ];
