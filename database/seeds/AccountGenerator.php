@@ -31,16 +31,14 @@ class AccountGenerator extends Seeder
         $account->api_key = '';
         $account->super_agent_id = '';
         $account->level = self::LEVEL;
-        if ((int)$account_id < 4) {
-            $account->level = 3;
-        } elseif ((int)$account_id === 4) {
+        if ((int)$account_id === 4) {
             $account->level = 1;
         }
         $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
-        if ((int)$account_id === 3 || (int)$account_id === 2 || (int)$account_id === 4) {
+        if ((int)$account_id === 3 || (int)$account_id === 1 || (int)$account_id === 4) {
             $account->agent_id = '';
-        } elseif ((int)$account_id === 1) {
-            $account->agent_id = 2;
+        } elseif ((int)$account_id === 2) {
+            $account->agent_id = 3;
         }
         $account->accountName = str_random(10);
         $account->dept = '';
