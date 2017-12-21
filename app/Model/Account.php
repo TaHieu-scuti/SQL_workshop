@@ -6,15 +6,62 @@ use App\AbstractReportModel;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 
 use DateTime;
 use Exception;
 
 class Account extends AbstractReportModel
 {
+    const TABLE_ALIASES = [
+        'adw',
+        'ydn',
+        'yss'
+    ];
+
     /** @var bool */
     public $timestamps = false;
+
+    private function getSummedFieldNamesForTableAliases($fieldName)
+    {
+        $rawExpression = '';
+        foreach (self::TABLE_ALIASES as $i => $tableAlias) {
+            $rawExpression .= $tableAlias . '.' . $fieldName;
+            if ($i < count(self::TABLE_ALIASES) - 1) {
+                $rawExpression .= ' + ';
+            }
+        }
+
+        return $rawExpression;
+    }
+
+    private function getRawExpression($fieldName)
+    {
+        if (in_array($fieldName, static::SUM_FIELDS)) {
+            $rawExpression = 'sum('
+                . $this->getSummedFieldNamesForTableAliases($fieldName)
+                . ') as ' . $fieldName;
+        } elseif (in_array($fieldName, static::AVERAGE_FIELDS)) {
+            $rawExpression = 'avg('
+                . $this->getSummedFieldNamesForTableAliases($fieldName)
+                . ') as ' . $fieldName;
+        }
+
+        return DB::raw($rawExpression);
+    }
+
+    protected function getRawExpressions($fieldNames)
+    {
+        $rawExpression = [];
+        foreach ($fieldNames as $fieldName) {
+            if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
+                $rawExpression[] = DB::raw($fieldName. ' AS agencyName');
+            }
+
+            $rawExpression[] = $this->getRawExpression($fieldName);
+        }
+
+        return $rawExpression;
+    }
 
     public function getAllClient()
     {
@@ -164,6 +211,7 @@ class Account extends AbstractReportModel
      * @param int|null $adReportId
      * @param int|null $keywordId
      * @return array
+     * @todo use the same way to build the query as in calculateAllData
      */
     public function getDataForTable(
         $engine,
@@ -321,11 +369,19 @@ class Account extends AbstractReportModel
         return $datas;
     }
 
+    /**
+     * @param array   $fieldNames
+     * @param string  $startDay
+     * @param string  $endDay
+     * @param string  $accountStatus
+     * @param integer $agencyId
+     * @return array
+     */
     public function calculateAllData(array $fieldNames, $startDay, $endDay, $accountStatus, $agencyId)
     {
-        $modelYssAccount = new RepoYssAccountReportCost();
-        $modelYdnAccount = new RepoYdnReport();
-        $modelAdwAccount = new RepoAdwAccountReportCost();
+        $modelYssAccount = new RepoYssAccountReportCost;
+        $modelYdnAccount = new RepoYdnReport;
+        $modelAdwAccount = new RepoAdwAccountReportCost;
 
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency($fieldNames, $startDay, $endDay);
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency($fieldNames, $startDay, $endDay);
@@ -337,28 +393,37 @@ class Account extends AbstractReportModel
             $adwAccountAgency = $adwAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
 
-        $datas = $yssAccountAgency->union($ydnAccountAgency)->union($adwAccountAgency);
-
-        Event::listen(StatementPrepared::class, function ($event) {
-            $event->statement->setFetchMode(PDO::FETCH_ASSOC);
-        });
         $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
-        $sql = $this->getBindingSql($datas);
+
         $rawExpressions = $this->getRawExpressions($fieldNames);
 
-        $datas = DB::table(DB::raw("accounts ,({$sql}) as tbl"))
-            ->select(
-                $rawExpressions
+        $query = $this->select($rawExpressions)
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
+                'accounts.account_id',
+                '=',
+                'yss.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
+                'accounts.account_id',
+                '=',
+                'ydn.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
+                'accounts.account_id',
+                '=',
+                'adw.account_id'
             )
             ->where('level', '=', 3)
-            ->where('agent_id', '!=', '')
-            ->whereRaw('accounts.account_id = tbl.account_id');
-        if ($agencyId !== null) {
-            $datas = $datas->where('agent_id', '=', $agencyId);
-        }
-        $datas = $datas->first();
-        if ($datas === null) {
-            $datas = [
+            ->where('agent_id', '!=', '');
+
+        $this->addConditionAgency($query, $agencyId);
+
+        $totals = $query->first();
+        if ($totals === null) {
+            return [
                 'clicks' => 0,
                 'impressions' => 0,
                 'cost' => 0,
@@ -367,7 +432,7 @@ class Account extends AbstractReportModel
             ];
         }
 
-        return $datas;
+        return $totals->toArray();
     }
 
     public function getAggregatedAgency(array $fieldNames)
