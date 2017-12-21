@@ -183,6 +183,7 @@
                     <td></td>
                 @endif
                 <td colspan="{{ $totalColspan }}">@lang('language.Total_all_networks')</td>
+                @php if (is_array($totalDataArray)) $totalDataArray = (object) $totalDataArray @endphp
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField
                         || $fieldName === "accountid"
