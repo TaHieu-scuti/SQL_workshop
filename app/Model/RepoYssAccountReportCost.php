@@ -375,6 +375,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                         $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
                         ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
                         ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
                         ->whereRaw(
                             "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
                         );
@@ -486,11 +487,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $rawExpression = $this->getRawExpressions($fieldNames);
         $array = [
             DB::raw('SUM(call_cv) as call_cv'),
-            DB::raw('SUM(call_cvr) as call_cvr'),
-            DB::raw('SUM(call_cpa) as call_cpa'),
+            DB::raw('AVG(call_cvr) as call_cvr'),
+            DB::raw('AVG(call_cpa) as call_cpa'),
             DB::raw('SUM(web_cv) as Web_CV'),
-            DB::raw('SUM(web_cvr) as Web_CVR'),
-            DB::raw('SUM(web_cpa) as Web_CPA')
+            DB::raw('AVG(web_cvr) as Web_CVR'),
+            DB::raw('AVG(web_cpa) as Web_CPA')
         ];
         $rawExpression = array_merge($array, $rawExpression);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
@@ -808,6 +809,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                         $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
                         ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
                         ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
                         ->whereRaw(
                             "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
                         );
