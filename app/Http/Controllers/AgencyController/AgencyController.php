@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\AgencyController;
 
-use App\Http\Controllers\AbstractReportController;
-use Auth;
-use Illuminate\Http\Request;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use DateTime;
+use App\Http\Controllers\AbstractReportController;
 use App\Model\Agency;
 use App\Model\RepoYssAccountReportCost;
+
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+
+use DateTime;
 
 class AgencyController extends AbstractReportController
 {

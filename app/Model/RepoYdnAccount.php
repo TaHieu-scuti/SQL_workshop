@@ -13,6 +13,7 @@ class RepoYdnAccount extends AbstractReportModel
 
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,

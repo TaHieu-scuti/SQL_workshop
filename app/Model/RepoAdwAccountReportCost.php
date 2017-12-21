@@ -2,12 +2,10 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use App\AbstractReportModel;
-use DB;
+use Illuminate\Support\Facades\DB;
 
-class RepoAdwAccountReportCost extends AbstractReportModel
+class RepoAdwAccountReportCost extends AbstractAccountReportModel
 {
     protected $table = 'repo_adw_account_report_cost';
 
@@ -21,6 +19,7 @@ class RepoAdwAccountReportCost extends AbstractReportModel
     const PAGE_ID = 'accountid';
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
@@ -28,17 +27,31 @@ class RepoAdwAccountReportCost extends AbstractReportModel
         self::AVERAGE_CPC => self::ADW_AVERAGE_CPC
     ];
 
+    protected function getPhoneTimeUseSourceValue()
+    {
+        return 'adw';
+    }
+
     public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay)
     {
         $getAggregatedAdwAccounts = $this->getAggregatedAgency($fieldNames);
+
+        $tableName = $this->getTable();
 
         $accounts = self::select($getAggregatedAdwAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
+            )->where(
+                function (Builder $query) use ($tableName) {
+                    $query->where($tableName . '.network', '=', 'SEARCH')
+                        ->orWhere($tableName . '.network', '=', 'CONTENT');
+                }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }

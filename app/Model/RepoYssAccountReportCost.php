@@ -2,23 +2,17 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
-
-
-use App\AbstractReportModel;
 use Illuminate\Database\Events\StatementPrepared;
 use Illuminate\Support\Facades\Event;
-use \App\Model\RepoAdwAccountReportCost;
 
 use DateTime;
 use Exception;
-use Auth;
 use PDO;
 
-class RepoYssAccountReportCost extends AbstractReportModel
+class RepoYssAccountReportCost extends AbstractAccountReportModel
 {
     protected $table = 'repo_yss_account_report_cost';
     const GROUPED_BY_FIELD_NAME = 'accountName';
@@ -38,15 +32,18 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
     const ADW_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
         self::AVERAGE_POSITION => self::ADW_AVERAGE_POSITION,
         self::AVERAGE_CPC => self::ADW_AVERAGE_CPC
+
     ];
 
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
@@ -85,6 +82,11 @@ class RepoYssAccountReportCost extends AbstractReportModel
             }
         }
         return $arrSelect;
+    }
+
+    protected function getPhoneTimeUseSourceValue()
+    {
+        return 'yss';
     }
 
     public function getAggregatedGraph($column)
@@ -473,6 +475,8 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
+
+        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }
