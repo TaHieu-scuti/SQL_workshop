@@ -33,9 +33,9 @@ class UsersTableSeeder extends Seeder
         $user->dept = 'Sales';
         $user->type = 1;
         $user->active = 1;
-        $user->account_id = '1';
+        $user->account_id = '4';
         $user->attach_accounts = '';
-        $user->level = 7;
+        $user->level = 1;
         $user->last_login = '2017-02-03 01:00:00';
         $user->chat_time = '2017-02-03 01:00:00';
         $user->internal_chat_time = '2017-02-01 02:00:00';

@@ -262,13 +262,16 @@ class ClientsController extends AbstractReportController
         } catch (Exception $exception) {
             return $this->generateJSONErrorResponse($exception);
         }
-        foreach ($data as $value) {
-            // if data !== null, display on graph
-            // else, display "no data found" image
-            if ($value->data !== null) {
-                $this->displayNoDataFoundMessageOnGraph = false;
+        if (!$data->isEmpty()) {
+            foreach ($data as $value) {
+                // if data !== null, display on graph
+                // else, display "no data found" image
+                if (isset($value->data)) {
+                    $this->displayNoDataFoundMessageOnGraph = false;
+                }
             }
         }
+
         return $this->responseFactory->json(
             [
                 'data' => $data,

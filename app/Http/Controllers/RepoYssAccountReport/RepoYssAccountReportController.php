@@ -77,6 +77,7 @@ class RepoYssAccountReportController extends AbstractReportController
         ResponseFactory $responseFactory,
         RepoYssAccountReportCost $model
     ) {
+        $this->middleware('checkRoleClient');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
