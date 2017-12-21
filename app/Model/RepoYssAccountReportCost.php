@@ -31,15 +31,18 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
     const ADW_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
         self::AVERAGE_POSITION => self::ADW_AVERAGE_POSITION,
         self::AVERAGE_CPC => self::ADW_AVERAGE_CPC
+
     ];
 
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,

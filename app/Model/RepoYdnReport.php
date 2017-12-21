@@ -12,6 +12,7 @@ class RepoYdnReport extends AbstractAccountReportModel
     const GROUPED_BY_FIELD_NAME = 'accountName';
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
