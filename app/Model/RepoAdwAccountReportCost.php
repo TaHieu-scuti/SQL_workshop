@@ -19,6 +19,7 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
     const PAGE_ID = 'accountid';
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
