@@ -41,6 +41,11 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
+            )->where(
+                function (Builder $query) {
+                    $query->where('network', '=', 'SEARCH')
+                        ->orWhere('network', '=', 'CONTENT');
+                }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
 
