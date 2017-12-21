@@ -239,128 +239,44 @@ class Account extends AbstractReportModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
-        $modelYssAccount = new RepoYssAccountReportCost();
-        $modelYdnAccount = new RepoYdnReport();
-        $modelAdwAccount = new RepoAdwAccountReportCost();
-        $getAggregatedYssAccounts = $modelYssAccount->getAggregatedAgency($fieldNames);
-        $yssAggregations = implode(',', $getAggregatedYssAccounts);
 
-        $getAggregatedYdnAccounts = $modelYdnAccount->getAggregatedAgency($fieldNames);
-        $ydnAggregations = implode(',', $getAggregatedYdnAccounts);
+        $modelYssAccount = new RepoYssAccountReportCost;
+        $modelYdnAccount = new RepoYdnReport;
+        $modelAdwAccount = new RepoAdwAccountReportCost;
 
-        $getAggregatedAdwAccounts = $modelAdwAccount->getAggregatedAgency($fieldNames);
-        $adwAggregations = implode(',', $getAggregatedAdwAccounts);
+        $yssAccountAgency = $modelYssAccount->getYssAccountAgency($fieldNames, $startDay, $endDay);
+        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency($fieldNames, $startDay, $endDay);
+        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency($fieldNames, $startDay, $endDay);
 
         $getAgreatedAgency = $this->getAggregatedAgency($fieldNames);
 
-        $arrAccountsAgency = $this->select($getAgreatedAgency)
+        $query = $this->select($getAgreatedAgency)
             ->leftJoin(
-                DB::raw(
-                    "(
-                        SELECT
-                            {$adwAggregations}
-                        FROM
-                          `repo_adw_account_report_cost`
-                            LEFT JOIN `phone_time_use`
-                              ON (
-                                `phone_time_use`.`account_id` = `repo_adw_account_report_cost`.`account_id`
-                              AND
-                                `phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`
-                              AND
-                                STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_account_report_cost`.`day`
-                              AND
-                                `phone_time_use`.`source` = 'adw'
-                              AND
-                                `phone_time_use`.`traffic_type` = 'AD'
-                              )
-                        WHERE
-                          `repo_adw_account_report_cost`.`day` >= '{$startDay}'
-                        AND
-                          `repo_adw_account_report_cost`.`day` <= '{$endDay}'
-                        AND
-                          (
-                              `repo_adw_account_report_cost`.`network` = 'SEARCH'
-                            OR
-                              `repo_adw_account_report_cost`.`network` = 'CONTENT'
-                          )
-                        GROUP BY
-                          `repo_adw_account_report_cost`.`account_id`
-                    ) AS adw"
-                ),
+                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
+                'accounts.account_id',
+                '=',
+                'yss.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
+                'accounts.account_id',
+                '=',
+                'ydn.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
                 'accounts.account_id',
                 '=',
                 'adw.account_id'
-            )
-            ->leftJoin(
-                DB::raw(
-                    "(
-                        SELECT
-                            {$ydnAggregations}
-                        FROM
-                          `repo_ydn_reports`
-                            LEFT JOIN `phone_time_use`
-                              ON (
-                                `phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
-                              AND
-                                `phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
-                              AND
-                                STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
-                              AND
-                                `phone_time_use`.`source` = 'ydn'
-                              AND
-                                `phone_time_use`.`traffic_type` = 'AD'
-                              )
-                        WHERE
-                          `repo_ydn_reports`.`day` >= '{$startDay}'
-                          AND
-                          `repo_ydn_reports`.`day` <= '{$endDay}'
-                        GROUP BY
-                          `repo_ydn_reports`.`account_id`
-                    ) AS ydn"
-                ),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
-            )
-            ->leftJoin(
-                DB::raw(
-                    "(
-                        SELECT
-                          {$yssAggregations}
-                        FROM
-                          `repo_yss_account_report_cost`
-                            LEFT JOIN `phone_time_use`
-                              ON (
-                                `phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`
-                              AND
-                                `phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`
-                              AND
-                                STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`
-                              AND
-                                `phone_time_use`.`source` = 'yss'
-                              AND
-                                `phone_time_use`.`traffic_type` = 'AD'
-                              )
-                        WHERE
-                          `repo_yss_account_report_cost`.`day` >= '{$startDay}'
-                          AND
-                          `repo_yss_account_report_cost`.`day` <= '{$endDay}'
-                        GROUP BY
-                          `repo_yss_account_report_cost`.`account_id`
-                    ) AS yss"
-                ),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
             )
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->orderBy($columnSort, $sort);
 
-        $this->addConditionAgency($arrAccountsAgency, $agencyId);
+        $this->addConditionAgency($query, $agencyId);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $arrAccountsAgency = $arrAccountsAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $arrAccountsAgency = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
 
         $datas = [];
