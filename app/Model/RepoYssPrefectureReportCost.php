@@ -261,33 +261,27 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 $event->statement->setFetchMode(PDO::FETCH_OBJ);
             });
             $yssAggregations = $this->getAggregated($fieldNames);
+            $yssAggregations = array_merge(
+                $this->getAggregatedForPrefecture('repo_yss_prefecture_report_cost'),
+                $yssAggregations
+            );
             $yssPrefectureData = self::select($yssAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
                         $this->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )->where(
-                    function (Builder $query) use (
-                        $clientId,
-                        $accountId,
-                        $campaignId,
-                        $adGroupId,
-                        $adReportId,
-                        $keywordId
-                    ) {
-                        $this->addQueryConditions(
-                            $query,
-                            $clientId,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId,
-                            $keywordId
-                        );
+                    function (Builder $query) use ($clientId) {
+                        $query->where('repo_yss_prefecture_report_cost.account_id', '=', $clientId);
                     }
                 );
-
+            $this->addJoinConditionForYssPrefecture($yssPrefectureData);
+            //YDN prefecture
             $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
+            $ydnAggregations = array_merge(
+                $this->getAggregatedForPrefecture('repo_ydn_reports'),
+                $ydnAggregations
+            );
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
@@ -298,8 +292,13 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $query->where('repo_ydn_reports.account_id', '=', $clientId);
                     }
                 );
-
+            $this->addJoinConditionForYdnPrefecture($ydnPrefectureData);
+            //ADW prefecture
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
+            $adwAggregations = array_merge(
+                $this->getAggregatedForPrefecture('repo_adw_geo_report_cost'),
+                $adwAggregations
+            );
             $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
                     self::ADW_JOIN_TABLE_NAME,
@@ -316,11 +315,82 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
                     }
                 );
-            $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
+            $this->addJoinConditionForAdwPrefecture($adwPrefectureData);
+            $data = $adwPrefectureData->union($yssPrefectureData)->union($ydnPrefectureData);
             $sql = $this->getBindingSql($data);
-            $rawExpression = $this->getRawExpressions($fieldNames);
+            $rawExpressions = $this->getRawExpressions($fieldNames);
+            $array = [
+                DB::raw('SUM(call_cv) as call_cv'),
+                DB::raw('AVG(call_cvr) as call_cvr'),
+                DB::raw('AVG(call_cpa) as call_cpa'),
+                DB::raw('SUM(web_cv) as Web_CV'),
+                DB::raw('AVG(web_cvr) as Web_CVR'),
+                DB::raw('AVG(web_cpa) as Web_CPA')
+            ];
+            $rawExpressions = array_merge($array, $rawExpressions);
             return DB::table(DB::raw("({$sql}) as tbl"))
-            ->select($rawExpression)->first();
+            ->select($rawExpressions)->first();
+            // $yssAggregations = $this->getAggregated($fieldNames);
+            // $yssPrefectureData = self::select($yssAggregations)
+            //     ->where(
+            //         function (Builder $query) use ($startDay, $endDay) {
+            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
+            //         }
+            //     )->where(
+            //         function (Builder $query) use (
+            //             $clientId,
+            //             $accountId,
+            //             $campaignId,
+            //             $adGroupId,
+            //             $adReportId,
+            //             $keywordId
+            //         ) {
+            //             $this->addQueryConditions(
+            //                 $query,
+            //                 $clientId,
+            //                 $accountId,
+            //                 $campaignId,
+            //                 $adGroupId,
+            //                 $adReportId,
+            //                 $keywordId
+            //             );
+            //         }
+            //     );
+            //
+            // $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
+            // $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
+            //     ->where(
+            //         function (Builder $query) use ($startDay, $endDay) {
+            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
+            //         }
+            //     )->where(
+            //         function (Builder $query) use ($clientId) {
+            //             $query->where('repo_ydn_reports.account_id', '=', $clientId);
+            //         }
+            //     );
+            //
+            // $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
+            // $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
+            //     ->join(
+            //         self::ADW_JOIN_TABLE_NAME,
+            //         'repo_adw_geo_report_cost.region',
+            //         '=',
+            //         self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
+            //     )
+            //     ->where(
+            //         function (Builder $query) use ($startDay, $endDay) {
+            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
+            //         }
+            //     )->where(
+            //         function (Builder $query) use ($clientId) {
+            //             $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
+            //         }
+            //     );
+            // $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
+            // $sql = $this->getBindingSql($data);
+            // $rawExpression = $this->getRawExpressions($fieldNames);
+            // return DB::table(DB::raw("({$sql}) as tbl"))
+            // ->select($rawExpression)->first();
         }
 
         return $this->calculateTotalWhenCurrentPageIsNotAccountReport(
