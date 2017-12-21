@@ -150,74 +150,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->select($rawExpressions)
                 ->groupBy('prefecture')
                 ->orderBy($columnSort, $sort)->get();
-            // $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
-            // $yssAggregations = $this->getAggregated($fieldNames);
-            // $yssPrefectureData = self::select($yssAggregations)
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use (
-            //             $clientId,
-            //             $accountId,
-            //             $campaignId,
-            //             $adGroupId,
-            //             $adReportId,
-            //             $keywordId
-            //         ) {
-            //             $this->addQueryConditions(
-            //                 $query,
-            //                 $clientId,
-            //                 $accountId,
-            //                 $campaignId,
-            //                 $adGroupId,
-            //                 $adReportId,
-            //                 $keywordId
-            //             );
-            //         }
-            //     )
-            //     ->groupBy($groupedByField);
-            // $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
-            // $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use ($clientId) {
-            //             $query->where('account_id', '=', $clientId);
-            //         }
-            //     )
-            //     ->groupBy($groupedByField);
-            // $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            // $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
-            //     ->join(
-            //         self::ADW_JOIN_TABLE_NAME,
-            //         'repo_adw_geo_report_cost.region',
-            //         '=',
-            //         self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
-            //     )
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use ($clientId) {
-            //             $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
-            //         }
-            //     )
-            //     ->groupBy('criteria.Name');
-            // $data = $adwPrefectureData->union($yssPrefectureData)->union($ydnPrefectureData);
-            // $sql = $this->getBindingSql($data);
-            // Event::listen(StatementPrepared::class, function ($event) {
-            //     $event->statement->setFetchMode(PDO::FETCH_ASSOC);
-            // });
-            // $rawExpressions = $this->getRawExpressions($fieldNames);
-            // return DB::table(DB::raw("({$sql}) as tbl"))
-            //     ->select($rawExpressions)
-            //     ->groupBy('prefecture')
-            //     ->orderBy($columnSort, $sort)->get();
         }
 
         return $this->getPrefectureReportsWhenCurrentPageIsNotAccountReport(
@@ -330,67 +262,6 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $rawExpressions = array_merge($array, $rawExpressions);
             return DB::table(DB::raw("({$sql}) as tbl"))
             ->select($rawExpressions)->first();
-            // $yssAggregations = $this->getAggregated($fieldNames);
-            // $yssPrefectureData = self::select($yssAggregations)
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use (
-            //             $clientId,
-            //             $accountId,
-            //             $campaignId,
-            //             $adGroupId,
-            //             $adReportId,
-            //             $keywordId
-            //         ) {
-            //             $this->addQueryConditions(
-            //                 $query,
-            //                 $clientId,
-            //                 $accountId,
-            //                 $campaignId,
-            //                 $adGroupId,
-            //                 $adReportId,
-            //                 $keywordId
-            //             );
-            //         }
-            //     );
-            //
-            // $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
-            // $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use ($clientId) {
-            //             $query->where('repo_ydn_reports.account_id', '=', $clientId);
-            //         }
-            //     );
-            //
-            // $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
-            // $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
-            //     ->join(
-            //         self::ADW_JOIN_TABLE_NAME,
-            //         'repo_adw_geo_report_cost.region',
-            //         '=',
-            //         self::ADW_JOIN_TABLE_NAME . '.CriteriaID'
-            //     )
-            //     ->where(
-            //         function (Builder $query) use ($startDay, $endDay) {
-            //             $this->addTimeRangeCondition($startDay, $endDay, $query);
-            //         }
-            //     )->where(
-            //         function (Builder $query) use ($clientId) {
-            //             $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
-            //         }
-            //     );
-            // $data = $adwPrefectureData->union($ydnPrefectureData)->union($yssPrefectureData);
-            // $sql = $this->getBindingSql($data);
-            // $rawExpression = $this->getRawExpressions($fieldNames);
-            // return DB::table(DB::raw("({$sql}) as tbl"))
-            // ->select($rawExpression)->first();
         }
 
         return $this->calculateTotalWhenCurrentPageIsNotAccountReport(
@@ -809,52 +680,72 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                         $builder->where(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom1` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom1` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom1` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom2` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom2` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom2` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom3` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom3` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom3` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom4` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom4` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom4` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom5` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom5` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom5` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom6` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom6` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom6` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom7` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom7` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom7` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom8` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom8` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom8` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom9` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom9` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom9` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         )->orWhere(
                             function (JoinClause $builder) {
                                 $builder->whereRaw("`campaigns`.`camp_custom10` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom10` = `repo_yss_prefecture_report_cost`.`adgroupID`");
+                                ->whereRaw(
+                                    "`phone_time_use`.`custom10` = `repo_yss_prefecture_report_cost`.`adgroupID`"
+                                );
                             }
                         );
                     }
@@ -865,7 +756,10 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_prefecture_report_cost`.`day`"
                 )->whereRaw("`phone_time_use`.`source` = 'yss'")
                 ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
-                ->whereRaw("`phone_time_use`.`visitor_city_state` LIKE CONCAT('%', `repo_yss_prefecture_report_cost`.`prefecture`, ' (Japan)')");
+                ->whereRaw(
+                    "`phone_time_use`.`visitor_city_state` LIKE
+                    CONCAT('%', `repo_yss_prefecture_report_cost`.`prefecture`, ' (Japan)')"
+                );
             }
         );
     }
