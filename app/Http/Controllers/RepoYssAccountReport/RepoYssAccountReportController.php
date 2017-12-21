@@ -227,6 +227,13 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
+        $tableColumns = $this->updateTableColumns($reports);
+        $tableColumns[] = 'call_cv';
+        $tableColumns[] = 'call_cvr';
+        $tableColumns[] = 'call_cpa';
+        $tableColumns[] = 'Web_CV';
+        $tableColumns[] = 'Web_CVR';
+        $tableColumns[] = 'Web_CPA';
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
@@ -234,7 +241,7 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
