@@ -112,6 +112,9 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);

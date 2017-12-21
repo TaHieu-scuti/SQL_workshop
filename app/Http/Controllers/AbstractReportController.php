@@ -40,6 +40,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_CLIENT_ID = 'clientId';
     const SESSION_KEY_AGENCY_ID = 'agencyId';
+    const PREFECTURE = 'prefecture';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -670,6 +671,13 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+    }
+
+    public function getModelForPrefecture()
+    {
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->updateModelForPrefecture();
+        }
     }
 
     public function updateModelForPrefecture()
