@@ -43,4 +43,91 @@ abstract class AbstractAccountReportModel extends AbstractReportModel
             }
         );
     }
+
+    protected function getAggregatedAgency(array $fieldNames)
+    {
+        $expressions = parent::getAggregatedAgency($fieldNames);
+
+        for($i = count($expressions); $i < count($fieldNames); $i++) {
+            switch ($fieldNames[$i]) {
+                case 'call_cv':
+                    $expressions[] = DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv');
+                    break;
+
+                case 'call_cvr':
+                    $expressions[] = DB::raw(
+                        '(COUNT(`phone_time_use`.`id`) / SUM('
+                        . $this->getTable()
+                        . '.clicks)) * 100 AS call_cvr'
+                    );
+                    break;
+
+                case 'call_cpa':
+                    $expressions[] = DB::raw(
+                        'SUM('
+                        . $this->getTable()
+                        . '.cost) / COUNT(`phone_time_use`.`id`) AS call_cpa'
+                    );
+                    break;
+
+                case 'web_cv':
+                    $expressions[] = DB::raw('SUM('
+                        . $this->getTable()
+                        . '.conversions) AS web_cv'
+                    );
+                    break;
+
+                case 'web_cvr':
+                    $expressions[] = DB::raw(
+                        '(SUM('
+                        . $this->getTable()
+                        . '.conversions) / SUM('
+                        . $this->getTable()
+                        . '.clicks)) * 100 AS web_cvr'
+                    );
+                    break;
+
+                case 'web_cpa':
+                    $expressions[] = DB::raw(
+                        'SUM('
+                        . $this->getTable()
+                        . '.cost) / SUM('
+                        . $this->getTable()
+                        . '.conversions) AS web_cpa'
+                    );
+                    break;
+
+                case 'total_cv':
+                    $expressions[] = DB::raw(
+                        'SUM('
+                        . $this->getTable()
+                        . '.conversions) + COUNT(`phone_time_use`.`id`) AS total_cv'
+                    );
+                    break;
+
+                case 'total_cvr':
+                    $expressions[] = DB::raw(
+                        '(SUM('
+                        . $this->getTable()
+                        . '.conversions) + COUNT(`phone_time_use`.`id`)) / SUM('
+                        . $this->getTable()
+                        . '.clicks) '
+                        . 'AS total_cvr'
+                    );
+                    break;
+
+                case 'total_cpa':
+                    $expressions[] = DB::raw(
+                        'SUM('
+                        . $this->getTable()
+                        . '.cost) / (SUM('
+                        . $this->getTable()
+                        . '.conversions) + COUNT(`phone_time_use`.`id`)) AS total_cpa'
+                    );
+                    break;
+            }
+        }
+
+        return $expressions;
+    }
 }
