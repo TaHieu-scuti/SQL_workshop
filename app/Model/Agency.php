@@ -145,7 +145,17 @@ class Agency extends AbstractReportModel
                     $rawExpressions
                 )
                 ->where('level', '=', 3)
-                ->whereRaw('accounts.account_id = tbl.account_id')
+                ->where('agent_id', '=', '')
+                ->whereIn(
+                    'accounts.account_id',
+                    function ($query) use ($arrayOfDirectClientsAndAgencies) {
+                        $query->select('agent_id')
+                            ->from('accounts')
+                            ->where('agent_id', '!=', '')
+                            ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)
+                            ->whereRaw('accounts.account_id = tbl.account_id');
+                    }
+                )
                 ->groupBy('accountName');
         return $arrayOfAgencyData;
     }
@@ -200,9 +210,7 @@ class Agency extends AbstractReportModel
         $sql = $this->getBindingSql($directClientsData);
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName']);
         $rawExpressions = $this->getRawExpressions($fieldNames);
-        $directClient['client'] = DB::raw("'directClient' AS agencyName");
-        $rawExpressions = $directClient + $rawExpressions;
-
+        array_unshift($rawExpressions, DB::raw("'directClient' AS agencyName"));
         $directClientsData = DB::table(DB::raw("accounts,({$sql}) as tbl"))
                 ->select(
                     $rawExpressions
@@ -467,7 +475,17 @@ class Agency extends AbstractReportModel
                 ]
             )
             ->where('level', '=', 3)
-            ->whereRaw('accounts.account_id = tbl.account_id')->get();
+            ->where('agent_id', '=', '')
+            ->whereIn(
+                'accounts.account_id',
+                function ($query) use ($arrayOfDirectClientsAndAgencies) {
+                    $query->select('agent_id')
+                        ->from('accounts')
+                        ->where('agent_id', '!=', '')
+                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)
+                        ->whereRaw('accounts.account_id = tbl.account_id');
+                }
+            )->get();
         foreach ($data as $key => $value) {
             $arr[] = (array)$value;
         }
