@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 
 use DateTime;
 
-
 class AgencyController extends AbstractReportController
 {
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
