@@ -4,10 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
-//use Illuminate\Database\Eloquent\JoinClause;
 
 
 use App\AbstractReportModel;
