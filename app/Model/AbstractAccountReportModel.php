@@ -17,8 +17,8 @@ abstract class AbstractAccountReportModel extends AbstractReportModel
         $builder->leftJoin(
             'phone_time_use',
             function (JoinClause $join) {
-                $join->on(function (Builder $builder) {
-                    $builder->where(
+                $join->on(function (JoinClause $join) {
+                    $join->where(
                         $this->getTable() . '.account_id',
                         '=',
                         'phone_time_use.account_id'
