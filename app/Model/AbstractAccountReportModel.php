@@ -48,7 +48,7 @@ abstract class AbstractAccountReportModel extends AbstractReportModel
     {
         $expressions = parent::getAggregatedAgency($fieldNames);
 
-        for($i = count($expressions); $i < count($fieldNames); $i++) {
+        for ($i = count($expressions); $i < count($fieldNames); $i++) {
             switch ($fieldNames[$i]) {
                 case 'call_cv':
                     $expressions[] = DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv');
@@ -73,8 +73,7 @@ abstract class AbstractAccountReportModel extends AbstractReportModel
                 case 'web_cv':
                     $expressions[] = DB::raw('SUM('
                         . $this->getTable()
-                        . '.conversions) AS web_cv'
-                    );
+                        . '.conversions) AS web_cv');
                     break;
 
                 case 'web_cvr':
