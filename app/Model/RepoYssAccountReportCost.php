@@ -321,7 +321,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         )->where(
             function (Builder $query) {
                 $query->whereRaw("`repo_adw_account_report_cost`.`network` = 'SEARCH'")
-                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'")
+                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'");
             }
         );
         $this->addJoinConditionForAdw($adwData);
@@ -400,7 +400,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         )->where(
             function (Builder $query) {
                 $query->whereRaw("`repo_adw_account_report_cost`.`network` = 'SEARCH'")
-                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'")
+                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'");
             }
         );
         $this->addJoinConditionForAdw($adwData);
@@ -595,7 +595,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         )->where(
             function (Builder $query) {
                 $query->whereRaw("`repo_adw_account_report_cost`.`network` = 'SEARCH'")
-                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'")
+                ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'");
             }
         )
         ->groupBy($groupedByField)
