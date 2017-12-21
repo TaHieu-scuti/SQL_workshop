@@ -285,7 +285,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
         //YSS
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated($fieldNames);
-        $yssAggregations = array_merge($this->getAggregatedForAccounts('repo_yss_account_report_cost'), $yssAggregations);
+        $yssAggregations = array_merge(
+            $this->getAggregatedForAccounts('repo_yss_account_report_cost'),
+            $yssAggregations
+        );
         $yssData = $this->select($yssAggregations)
         ->join(
             $joinTableName,
@@ -304,7 +307,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
         $this->addJoinConditionForYss($yssData);
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAggregations = array_merge($this->getAggregatedForAccounts('repo_adw_account_report_cost'), $adwAggregations);
+        $adwAggregations = array_merge(
+            $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
+            $adwAggregations
+        );
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
@@ -521,7 +527,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
         // YSS
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated($fieldNames);
-        $yssAggregations = array_merge($this->getAggregatedForAccounts('repo_yss_account_report_cost'), $yssAggregations);
+        $yssAggregations = array_merge(
+            $this->getAggregatedForAccounts('repo_yss_account_report_cost'),
+            $yssAggregations
+        );
         $yssData = $this->select(
             array_merge([DB::raw("'yss' as engine")], $yssAggregations)
         )->join(
@@ -561,7 +570,10 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
-        $adwAggregations = array_merge($this->getAggregatedForAccounts('repo_adw_account_report_cost'), $adwAggregations);
+        $adwAggregations = array_merge(
+            $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
+            $adwAggregations
+        );
         $adwData = RepoAdwAccountReportCost::select(
             array_merge([DB::raw("'adw' as engine")], $adwAggregations)
         )->where(
@@ -662,10 +674,12 @@ class RepoYssAccountReportCost extends AbstractReportModel
             function (JoinClause $join) {
                 $join->on(
                     function (JoinClause $builder) {
-                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_adw_account_report_cost`.`account_id`")
-                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`")
+                        $builder->whereRaw(
+                            "`phone_time_use`.`account_id` = `repo_adw_account_report_cost`.`account_id`"
+                        )->whereRaw("`phone_time_use`.`campaign_id` = `repo_adw_account_report_cost`.`campaign_id`")
                         ->whereRaw(
-                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_adw_account_report_cost`.`day`"
+                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') =
+                            `repo_adw_account_report_cost`.`day`"
                         )->whereRaw("`phone_time_use`.`source` = 'adw'")
                         ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'");
                     }
@@ -681,12 +695,14 @@ class RepoYssAccountReportCost extends AbstractReportModel
             function (JoinClause $join) {
                 $join->on(
                     function (JoinClause $builder) {
-                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
-                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
+                        $builder->whereRaw(
+                            "`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`"
+                        )->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
                         ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
                         ->whereRaw("`phone_time_use`.`source` = 'yss'")
                         ->whereRaw(
-                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
+                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') =
+                            `repo_yss_account_report_cost`.`day`"
                         );
                     }
                 );
