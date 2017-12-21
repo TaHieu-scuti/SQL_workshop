@@ -301,22 +301,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
             }
         );
-        $yssData->leftJoin(
-            DB::raw("`phone_time_use`"),
-            function (JoinClause $join) {
-                $join->on(
-                    function (JoinClause $builder) {
-                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
-                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
-                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
-                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
-                        ->whereRaw(
-                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
-                        );
-                    }
-                );
-            }
-        );
+        $this->addJoinConditionForYss($yssData);
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge($this->getAggregatedForAccounts('repo_adw_account_report_cost'), $adwAggregations);
@@ -391,22 +376,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
                 $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
             }
         );
-        $yssData->leftJoin(
-            DB::raw("`phone_time_use`"),
-            function (JoinClause $join) {
-                $join->on(
-                    function (JoinClause $builder) {
-                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
-                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
-                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
-                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
-                        ->whereRaw(
-                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
-                        );
-                    }
-                );
-            }
-        );
+        $this->addJoinConditionForYss($yssData);
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
@@ -570,22 +540,7 @@ class RepoYssAccountReportCost extends AbstractReportModel
         )
         ->groupBy($groupedByField)
         ->orderBy($columnSort, $sort);
-        $yssData = $yssData->leftJoin(
-            DB::raw("`phone_time_use`"),
-            function (JoinClause $join) {
-                $join->on(
-                    function (JoinClause $builder) {
-                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
-                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
-                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
-                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
-                        ->whereRaw(
-                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
-                        );
-                    }
-                );
-            }
-        );
+        $this->addJoinConditionForYss($yssData);
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $yssData = $yssData->groupBy('repo_yss_accounts.accountid');
         }
@@ -721,6 +676,21 @@ class RepoYssAccountReportCost extends AbstractReportModel
 
     private function addJoinConditionForYss(Builder $builder)
     {
-        
+        $builder->leftJoin(
+            DB::raw("`phone_time_use`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw("`phone_time_use`.`account_id` = `repo_yss_account_report_cost`.`account_id`")
+                        ->whereRaw("`phone_time_use`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
+                        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+                        ->whereRaw("`phone_time_use`.`source` = 'yss'")
+                        ->whereRaw(
+                            "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_account_report_cost`.`day`"
+                        );
+                    }
+                );
+            }
+        );
     }
 }
