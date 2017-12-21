@@ -6,6 +6,7 @@ use App\AbstractReportModel;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use DateTime;
 use Exception;
