@@ -209,7 +209,6 @@
                     @endif
                 @endforeach
             </tr>
-
             @if (!$export)
             <tr>
                 <td class="paginator">
