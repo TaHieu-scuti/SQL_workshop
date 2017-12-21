@@ -64,7 +64,7 @@ class RepoYdnReport extends AbstractAccountReportModel
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG('. $fieldName . '), 2) AS ' . $fieldName
+                    'ROUND(AVG('. $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -72,11 +72,11 @@ class RepoYdnReport extends AbstractAccountReportModel
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName
+                        'ROUND(SUM(' . $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $fieldName . ' ) AS ' . $fieldName
+                        'SUM( ' . $tableName. '.' .$fieldName . ' ) AS ' . $fieldName
                     );
                 }
             }
@@ -129,6 +129,7 @@ class RepoYdnReport extends AbstractAccountReportModel
         $accountId = null
     ) {
         $aggregations = $this->getAggregatedOfYdn($fieldNames);
+        $aggregations = array_merge($this->getAggregatedForAccounts(), $aggregations);
         $ydnAccountReport = self::select(
             array_merge([DB::raw("'ydn' as engine")], $aggregations)
         )
@@ -138,7 +139,7 @@ class RepoYdnReport extends AbstractAccountReportModel
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             )
             ->groupBy($groupedByField)
@@ -161,22 +162,23 @@ class RepoYdnReport extends AbstractAccountReportModel
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }
 
     public function ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId)
     {
-        $aggreations = $this->getAggregatedOfYdn($fieldNames);
-        return self::select(array_merge($aggreations))
+        $aggregations = $this->getAggregatedOfYdn($fieldNames);
+        $aggregations = array_merge($this->getAggregatedForAccounts(), $aggregations);
+        return self::select(array_merge($aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }
@@ -239,5 +241,29 @@ class RepoYdnReport extends AbstractAccountReportModel
             )
             ->whereIn('account_id', $arrAccountsAgency)
             ->groupBy('day');
+    }
+
+    private function getAggregatedForAccounts()
+    {
+        return [
+            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
+            DB::raw(
+                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
+            ),
+            DB::raw(
+                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
+                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+            ),
+            DB::raw(
+                "SUM(`{$this->table}`.conversions) AS Web_CV"
+            ),
+            DB::raw(
+                "(SUM(`{$this->table}`.conversions) / SUM(`{$this->table}`.clicks) * 100) AS Web_CVR"
+            ),
+            DB::raw(
+                "(SUM(`{$this->table}`.cost) / SUM(`{$this->table}`.conversions)) AS Web_CPA"
+            )
+        ];
     }
 }

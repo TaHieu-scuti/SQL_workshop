@@ -123,6 +123,13 @@ class RepoYssAccountReportController extends AbstractReportController
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
 
+        $tableColumns = $this->updateTableColumns($dataReports);
+        $tableColumns[] = 'call_cv';
+        $tableColumns[] = 'call_cvr';
+        $tableColumns[] = 'call_cpa';
+        $tableColumns[] = 'Web_CV';
+        $tableColumns[] = 'Web_CVR';
+        $tableColumns[] = 'Web_CPA';
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view(
@@ -135,7 +142,7 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -343,5 +350,17 @@ class RepoYssAccountReportController extends AbstractReportController
                 'Pragma' => 'public'
             ]
         );
+    }
+
+    private function updateTableColumns($dataReports)
+    {
+        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
+        if (!empty($dataReports[0]->adgroupName)) {
+            array_unshift($tableColumns, 'adgroupName');
+        }
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
+        return $tableColumns;
     }
 }
