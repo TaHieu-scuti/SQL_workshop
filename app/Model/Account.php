@@ -40,6 +40,18 @@ class Account extends AbstractReportModel
         'total_cpa'
     ];
 
+    protected $casts = [
+        'call_cv' => 'integer',
+        'web_cv' => 'integer',
+        'total_cv' => 'integer',
+        'ydn_web_cv' => 'integer',
+        'yss_web_cv' => 'integer',
+        'adw_web_cv' => 'integer',
+        'ydn_call_cv' => 'integer',
+        'yss_call_cv' => 'integer',
+        'adw_call_cv' => 'integer'
+    ];
+
     /** @var bool */
     public $timestamps = false;
 
@@ -58,133 +70,147 @@ class Account extends AbstractReportModel
 
     private function getRawExpression($fieldName)
     {
-        if (in_array($fieldName, static::SUM_FIELDS)) {
-            $rawExpression = 'SUM('
-                . $this->getSummedFieldNamesForTableAliases($fieldName)
-                . ') AS ' . $fieldName;
-        } elseif (in_array($fieldName, static::AVERAGE_FIELDS)) {
-            $rawExpression = 'AVG('
-                . $this->getSummedFieldNamesForTableAliases($fieldName)
-                . ') AS ' . $fieldName;
+        if ($fieldName === 'ctr') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn.ctr) + AVG(yss.ctr) + AVG(adw.ctr)) / 3, 0) AS ctr'
+            );
+        } elseif ($fieldName === 'averageCpc') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn.averageCpc) + AVG(yss.averageCpc) + AVG(adw.averageCpc)) / 3, 0) '
+                . 'AS averageCpc'
+            );
+        } elseif ($fieldName === 'averagePosition') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn.averagePosition) + AVG(yss.averagePosition) + '
+                . 'AVG(adw.averagePosition)) / 3, 0) AS averagePosition'
+            );
         } elseif ($fieldName === 'ydn_web_cv') {
             $rawExpression = DB::raw(
-                'SUM(ydn.web_cv) AS ydn_web_cv'
+                'IFNULL(SUM(ydn.web_cv), 0) AS ydn_web_cv'
             );
         } elseif ($fieldName === 'ydn_web_cvr') {
             $rawExpression = DB::raw(
-                'AVG(ydn.web_cvr) AS ydn_web_cvr'
+                'IFNULL(AVG(ydn.web_cvr), 0) AS ydn_web_cvr'
             );
         } elseif ($fieldName === 'ydn_web_cpa') {
             $rawExpression = DB::raw(
-                'AVG(ydn.web_cpa) AS ydn_web_cpa'
+                'IFNULL(AVG(ydn.web_cpa), 0) AS ydn_web_cpa'
             );
         } elseif ($fieldName === 'yss_web_cv') {
             $rawExpression = DB::raw(
-                'SUM(yss.web_cv) AS yss_web_cv'
+                'IFNULL(SUM(yss.web_cv), 0) AS yss_web_cv'
             );
         } elseif ($fieldName === 'yss_web_cvr') {
             $rawExpression = DB::raw(
-                'AVG(yss.web_cvr) AS yss_web_cvr'
+                'IFNULL(AVG(yss.web_cvr), 0) AS yss_web_cvr'
             );
         } elseif ($fieldName === 'yss_web_cpa') {
             $rawExpression = DB::raw(
-                'AVG(yss.web_cpa) AS yss_web_cpa'
+                'IFNULL(AVG(yss.web_cpa), 0) AS yss_web_cpa'
             );
         } elseif ($fieldName === 'adw_web_cv') {
             $rawExpression = DB::raw(
-                'SUM(adw.web_cv) AS adw_web_cv'
+                'IFNULL(SUM(adw.web_cv), 0) AS adw_web_cv'
             );
         } elseif ($fieldName === 'adw_web_cvr') {
             $rawExpression = DB::raw(
-                'AVG(adw.web_cvr) AS adw_web_cvr'
+                'IFNULL(AVG(adw.web_cvr), 0) AS adw_web_cvr'
             );
         } elseif ($fieldName === 'adw_web_cpa') {
             $rawExpression = DB::raw(
-                'AVG(adw.web_cpa) AS adw_web_cpa'
+                'IFNULL(AVG(adw.web_cpa), 0) AS adw_web_cpa'
             );
         } elseif ($fieldName === 'web_cv') {
             $rawExpression = DB::raw(
-                'SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv) AS web_cv'
+                'IFNULL(SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv), 0) AS web_cv'
             );
         } elseif ($fieldName === 'web_cvr') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv)) / '
-                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)) AS web_cvr'
+                'IFNULL((SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv)) / '
+                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)), 0) AS web_cvr'
             );
         } elseif ($fieldName === 'web_cpa') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
-                . '(SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv)) AS web_cpa'
+                'IFNULL((SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
+                . '(SUM(ydn.web_cv) + SUM(yss.web_cv) + SUM(adw.web_cv)), 0) AS web_cpa'
             );
         } elseif ($fieldName === 'ydn_call_cv') {
             $rawExpression = DB::raw(
-                'SUM(ydn.call_cv) AS ydn_call_cv'
+                'IFNULL(SUM(ydn.call_cv), 0) AS ydn_call_cv'
             );
         } elseif ($fieldName === 'ydn_call_cvr') {
             $rawExpression = DB::raw(
-                'AVG(ydn.call_cvr) AS ydn_call_cvr'
+                'IFNULL(AVG(ydn.call_cvr), 0) AS ydn_call_cvr'
             );
         } elseif ($fieldName === 'ydn_call_cpa') {
             $rawExpression = DB::raw(
-                'AVG(ydn.call_cpa) AS ydn_call_cpa'
+                'IFNULL(AVG(ydn.call_cpa), 0) AS ydn_call_cpa'
             );
         } elseif ($fieldName === 'yss_call_cv') {
             $rawExpression = DB::raw(
-                'SUM(yss.call_cv) AS yss_call_cv'
+                'IFNULL(SUM(yss.call_cv), 0) AS yss_call_cv'
             );
         } elseif ($fieldName === 'yss_call_cvr') {
             $rawExpression = DB::raw(
-                'AVG(yss.call_cvr) AS yss_call_cvr'
+                'IFNULL(AVG(yss.call_cvr), 0) AS yss_call_cvr'
             );
         } elseif ($fieldName === 'yss_call_cpa') {
             $rawExpression = DB::raw(
-                'AVG(yss.call_cpa) AS yss_call_cpa'
+                'IFNULL(AVG(yss.call_cpa), 0) AS yss_call_cpa'
             );
         } elseif ($fieldName === 'adw_call_cv') {
             $rawExpression = DB::raw(
-                'SUM(adw.call_cv) AS adw_call_cv'
+                'IFNULL(SUM(adw.call_cv), 0) AS adw_call_cv'
             );
         } elseif ($fieldName === 'adw_call_cvr') {
             $rawExpression = DB::raw(
-                'AVG(adw.call_cvr) AS adw_call_cvr'
+                'IFNULL(AVG(adw.call_cvr), 0) AS adw_call_cvr'
             );
         } elseif ($fieldName === 'adw_call_cpa') {
             $rawExpression = DB::raw(
-                'AVG(adw.call_cpa) AS adw_call_cpa'
+                'IFNULL(AVG(adw.call_cpa), 0) AS adw_call_cpa'
             );
         } elseif ($fieldName === 'call_cv') {
             $rawExpression = DB::raw(
-                'SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) AS call_cv'
+                'IFNULL(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv), 0) AS call_cv'
             );
         } elseif ($fieldName === 'call_cvr') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv)) / '
-                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)) AS call_cvr'
+                'IFNULL((SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv)) / '
+                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)), 0) AS call_cvr'
             );
         } elseif ($fieldName === 'call_cpa') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
-                . '(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv)) AS call_cpa'
+                'IFNULL((SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
+                . '(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv)), 0) AS call_cpa'
             );
         } elseif ($fieldName === 'total_cv') {
             $rawExpression = DB::raw(
-                'SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) + SUM(ydn.web_cv) + '
-                . 'SUM(yss.web_cv) + SUM(adw.web_cv) AS total_cv'
+                'IFNULL(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) + SUM(ydn.web_cv) + '
+                . 'SUM(yss.web_cv) + SUM(adw.web_cv), 0) AS total_cv'
             );
         } elseif ($fieldName === 'total_cvr') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) + SUM(ydn.web_cv) + '
+                'IFNULL((SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) + SUM(ydn.web_cv) + '
                 . 'SUM(yss.web_cv) + SUM(adw.web_cv)) / '
-                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)) AS total_cvr'
+                . '(SUM(ydn.clicks) + SUM(yss.clicks) + SUM(adw.clicks)), 0) AS total_cvr'
             );
         } elseif ($fieldName === 'total_cpa') {
             $rawExpression = DB::raw(
-                '(SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
+                'IFNULL((SUM(ydn.cost) + SUM(yss.cost) + SUM(adw.cost)) / '
                 . '(SUM(ydn.call_cv) + SUM(yss.call_cv) + SUM(adw.call_cv) + SUM(ydn.web_cv) + '
-                . 'SUM(yss.web_cv) + SUM(adw.web_cv)) AS total_cpa'
+                . 'SUM(yss.web_cv) + SUM(adw.web_cv)), 0) AS total_cpa'
             );
+        } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+                $rawExpression = 'IFNULL(SUM('
+                    . $this->getSummedFieldNamesForTableAliases($fieldName)
+                    . '), 0) AS ' . $fieldName;
+        } elseif (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $rawExpression = 'IFNULL(AVG('
+                    . $this->getSummedFieldNamesForTableAliases($fieldName)
+                    . '), 0) AS ' . $fieldName;
         } else {
-            throw new \InvalidArgumentException($fieldName);
+            throw new \InvalidArgumentException('Unsupported field name provided: `' . $fieldName . '`!');
         }
 
         return DB::raw($rawExpression);
@@ -504,121 +530,128 @@ class Account extends AbstractReportModel
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    '(adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.')/3 AS '.$fieldName
+                    'IFNULL((adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.')/3, 0) AS '.$fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'adw.'. $fieldName .' +  ydn.'.$fieldName.' + yss.'.$fieldName.' AS '.$fieldName
+                    'IFNULL(adw.'. $fieldName . ' +  ydn.' . $fieldName . ' + yss.' . $fieldName . ', 0)'
+                    . ' AS '. $fieldName
                 );
             } elseif ($fieldName === 'ydn_web_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.web_cv AS ydn_web_cv'
+                    'IFNULL(ydn.web_cv, 0) AS ydn_web_cv'
                 );
             } elseif ($fieldName === 'ydn_web_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.web_cvr AS ydn_web_cvr'
+                    'IFNULL(ydn.web_cvr, 0) AS ydn_web_cvr'
                 );
             } elseif ($fieldName === 'ydn_web_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.web_cpa AS ydn_web_cpa'
+                    'IFNULL(ydn.web_cpa, 0) AS ydn_web_cpa'
                 );
             } elseif ($fieldName === 'yss_web_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.web_cv AS yss_web_cv'
+                    'IFNULL(yss.web_cv, 0) AS yss_web_cv'
                 );
             } elseif ($fieldName === 'yss_web_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.web_cvr AS yss_web_cvr'
+                    'IFNULL(yss.web_cvr, 0) AS yss_web_cvr'
                 );
             } elseif ($fieldName === 'yss_web_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.web_cpa AS yss_web_cpa'
+                    'IFNULL(yss.web_cpa, 0) AS yss_web_cpa'
                 );
             } elseif ($fieldName === 'adw_web_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.web_cv AS adw_web_cv'
+                    'IFNULL(adw.web_cv, 0) AS adw_web_cv'
                 );
             } elseif ($fieldName === 'adw_web_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.web_cvr AS adw_web_cvr'
+                    'IFNULL(adw.web_cvr, 0) AS adw_web_cvr'
                 );
             } elseif ($fieldName === 'adw_web_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.web_cpa AS adw_web_cpa'
+                    'IFNULL(adw.web_cpa, 0) AS adw_web_cpa'
                 );
             } elseif ($fieldName === 'web_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.web_cv + yss.web_cv + adw.web_cv AS web_cv'
+                    'IFNULL(ydn.web_cv + yss.web_cv + adw.web_cv, 0) AS web_cv'
                 );
             } elseif ($fieldName === 'web_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.web_cv + yss.web_cv + adw.web_cv) / (ydn.clicks + yss.clicks + adw.clicks) AS web_cvr'
+                    'IFNULL((ydn.web_cv + yss.web_cv + adw.web_cv) / '
+                    . '(ydn.clicks + yss.clicks + adw.clicks), 0) AS web_cvr'
                 );
             } elseif ($fieldName === 'web_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.cost + yss.cost + adw.cost) / (ydn.web_cv + yss.web_cv + adw.web_cv) AS web_cpa'
+                    'IFNULL((ydn.cost + yss.cost + adw.cost) / '
+                    . '(ydn.web_cv + yss.web_cv + adw.web_cv), 0) AS web_cpa'
                 );
             } elseif ($fieldName === 'ydn_call_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.call_cv AS ydn_call_cv'
+                    'IFNULL(ydn.call_cv, 0) AS ydn_call_cv'
                 );
             } elseif ($fieldName === 'ydn_call_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.call_cvr AS ydn_call_cvr'
+                    'IFNULL(ydn.call_cvr, 0) AS ydn_call_cvr'
                 );
             } elseif ($fieldName === 'ydn_call_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.call_cpa AS ydn_call_cpa'
+                    'IFNULL(ydn.call_cpa, 0) AS ydn_call_cpa'
                 );
             } elseif ($fieldName === 'yss_call_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.call_cv AS yss_call_cv'
+                    'IFNULL(yss.call_cv, 0) AS yss_call_cv'
                 );
             } elseif ($fieldName === 'yss_call_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.call_cvr AS yss_call_cvr'
+                    'IFNULL(yss.call_cvr, 0) AS yss_call_cvr'
                 );
             } elseif ($fieldName === 'yss_call_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'yss.call_cpa AS yss_call_cpa'
+                    'IFNULL(yss.call_cpa, 0) AS yss_call_cpa'
                 );
             } elseif ($fieldName === 'adw_call_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.call_cv AS adw_call_cv'
+                    'IFNULL(adw.call_cv, 0) AS adw_call_cv'
                 );
             } elseif ($fieldName === 'adw_call_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.call_cvr AS adw_call_cvr'
+                    'IFNULL(adw.call_cvr, 0) AS adw_call_cvr'
                 );
             } elseif ($fieldName === 'adw_call_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    'adw.call_cpa AS adw_call_cpa'
+                    'IFNULL(adw.call_cpa, 0) AS adw_call_cpa'
                 );
             } elseif ($fieldName === 'call_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.call_cv + yss.call_cv + adw.call_cv AS call_cv'
+                    'IFNULL(ydn.call_cv + yss.call_cv + adw.call_cv, 0) AS call_cv'
                 );
             } elseif ($fieldName === 'call_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.call_cv + yss.call_cv + adw.call_cv) / (ydn.clicks + yss.clicks + adw.clicks) AS call_cvr'
+                    'IFNULL((ydn.call_cv + yss.call_cv + adw.call_cv) / '
+                    . '(ydn.clicks + yss.clicks + adw.clicks), 0) AS call_cvr'
                 );
             } elseif ($fieldName === 'call_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.cost + yss.cost + adw.cost) / (ydn.call_cv + yss.call_cv + adw.call_cv) AS call_cpa'
+                    'IFNULL((ydn.cost + yss.cost + adw.cost) / '
+                    . '(ydn.call_cv + yss.call_cv + adw.call_cv), 0) AS call_cpa'
                 );
             } elseif ($fieldName === 'total_cv') {
                 $arrayCalculate[] = DB::raw(
-                    'ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + yss.web_cv + adw.web_cv AS total_cv'
+                    'IFNULL(ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + '
+                    . 'yss.web_cv + adw.web_cv, 0) AS total_cv'
                 );
             } elseif ($fieldName === 'total_cvr') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + yss.web_cv + adw.web_cv) / '
-                    . '(ydn.clicks + yss.clicks + adw.clicks) AS total_cvr'
+                    'IFNULL((ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + yss.web_cv + adw.web_cv) / '
+                    . '(ydn.clicks + yss.clicks + adw.clicks), 0) AS total_cvr'
                 );
             } elseif ($fieldName === 'total_cpa') {
                 $arrayCalculate[] = DB::raw(
-                    '(ydn.cost + yss.cost + adw.cost) / '
-                    . '(ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + yss.web_cv + adw.web_cv) AS total_cpa'
+                    'IFNULL((ydn.cost + yss.cost + adw.cost) / '
+                    . '(ydn.call_cv + yss.call_cv + adw.call_cv + ydn.web_cv + yss.web_cv + '
+                    . 'adw.web_cv), 0) AS total_cpa'
                 );
             }
         }
