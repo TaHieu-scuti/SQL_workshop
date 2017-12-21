@@ -276,11 +276,11 @@ class Account extends AbstractReportModel
         $this->addConditionAgency($query, $agencyId);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $arrAccountsAgency = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
 
         $datas = [];
-        foreach ($arrAccountsAgency->get() as $report) {
+        foreach ($query->get() as $report) {
             $datas[] = $report->toArray();
         }
 

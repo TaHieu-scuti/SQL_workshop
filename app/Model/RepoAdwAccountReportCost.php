@@ -36,15 +36,17 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
     {
         $getAggregatedAdwAccounts = $this->getAggregatedAgency($fieldNames);
 
+        $tableName = $this->getTable();
+
         $accounts = self::select($getAggregatedAdwAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
-                function (Builder $query) {
-                    $query->where('network', '=', 'SEARCH')
-                        ->orWhere('network', '=', 'CONTENT');
+                function (Builder $query) use ($tableName) {
+                    $query->where($tableName . '.network', '=', 'SEARCH')
+                        ->orWhere($tableName . '.network', '=', 'CONTENT');
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
