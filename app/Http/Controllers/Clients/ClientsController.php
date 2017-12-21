@@ -51,6 +51,7 @@ class ClientsController extends AbstractReportController
     const DEFAULT_COLUMNS = [
         'impressions',
         'clicks',
+        'conversions',
         'cost',
         'ctr',
         'averageCpc',
