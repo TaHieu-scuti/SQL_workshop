@@ -49,8 +49,8 @@ class ClientsController extends AbstractReportController
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
-        'cost',
         'impressions',
+        'cost',
         'clicks',
         'ctr',
         'averageCpc',
