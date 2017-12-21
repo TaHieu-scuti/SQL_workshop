@@ -267,6 +267,7 @@ abstract class AbstractReportController extends Controller
 
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
     }
 
     public function checkoutSessionFieldName()
@@ -424,11 +425,12 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionEngine($engine)
     {
-        // the first time we did not have value for session key engine, so old engine will be null
-        // the second time session key engine already exist, so we need to update old engine first,
-        // after that we will update session key engine.
-        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        // the first time we will update session key engine,
+        // after that we check if old engine doesn't exit, we will update session for old engine.
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
+        if (!session()->has(self::SESSION_KEY_OLD_ENGINE)) {
+            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        }
     }
 
     public function updateNormalReport()
@@ -763,7 +765,6 @@ abstract class AbstractReportController extends Controller
         } else {
             return true; // different engine => update back to normal report
         }
-        return false;
     }
 
     public function updateColumnAccountNameToClientNameOrAgencyName(array $columns, $prefixRoute)
