@@ -64,6 +64,11 @@ class PhoneTimeUseGenerator extends Seeder
         'Okinawa'
     ];
 
+    const MOBILE = [
+        'Yes',      // mobile
+        'No'        // tablet or PC
+    ];
+
     private function newRecord(
         $account_id,
         $campaign_id,
@@ -126,7 +131,7 @@ class PhoneTimeUseGenerator extends Seeder
 
         $phoneTimeUse->utm_campaign = $campaignID;
 
-        $phoneTimeUse->mobile = '';
+        $phoneTimeUse->mobile = self::MOBILE[rand(0, (count(self::MOBILE))-1)];
         $phoneTimeUse->platform = '';
         $phoneTimeUse->browser = '';
 
