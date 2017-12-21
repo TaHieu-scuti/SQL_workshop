@@ -156,7 +156,7 @@ class RepoYdnReport extends AbstractReportModel
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }
