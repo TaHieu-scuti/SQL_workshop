@@ -213,7 +213,6 @@ class Account extends AbstractReportModel
      * @param int|null $adReportId
      * @param int|null $keywordId
      * @return array
-     * @todo use the same way to build the query as in calculateAllData
      */
     public function getDataForTable(
         $engine,
