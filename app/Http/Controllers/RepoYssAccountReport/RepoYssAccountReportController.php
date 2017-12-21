@@ -85,8 +85,9 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
@@ -111,6 +112,9 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);

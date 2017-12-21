@@ -46,7 +46,6 @@ class RepoYssCampaignReportController extends AbstractReportController
     const GROUPED_BY_FIELD = 'campaignName';
     const ADW_GROUPED_BY_FIELD = 'campaign';
     const PREFIX_ROUTE = 'prefixRoute';
-    const PREFECTURE = 'prefecture';
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -93,9 +92,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-        }
+        $this->getModelForPrefecture();
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssCampaignReport.index',
@@ -108,6 +105,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function getDataForLayouts()
     {
         $this->updateModel();
+        $this->getModelForPrefecture();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -187,9 +185,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-        }
+        $this->getModelForPrefecture();
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
