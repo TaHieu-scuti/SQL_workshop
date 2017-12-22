@@ -10,7 +10,7 @@ abstract class AbstractYssReportModel extends AbstractReportModel
 {
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
-        $expressions = parent::getAggregated($fieldNames);
+        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
                 case 'call_cv':
