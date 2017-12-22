@@ -12,9 +12,4 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
     protected $table = 'repo_ydn_reports';
 
     public $timestamps = false;
-
-    protected function addJoinConditions(JoinClause $join)
-    {
-        parent::addJoinConditions($join);
-    }
 }
