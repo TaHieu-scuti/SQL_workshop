@@ -59,7 +59,7 @@
         <tbody>
             @foreach($reports as $report)
                 @php
-                    if (is_object($report)) $report = (array) $report;
+                    if (isset($agency)) $report = (array) $report;
                 @endphp
                 <tr>
                 @foreach($fieldNames as $fieldName)

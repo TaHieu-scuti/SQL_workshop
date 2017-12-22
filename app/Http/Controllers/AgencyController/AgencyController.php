@@ -131,7 +131,7 @@ class AgencyController extends AbstractReportController
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
-        
+
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
             array_slice($dataReports, ($this->page - 1) * 20, 20),
             count($dataReports),
@@ -160,6 +160,7 @@ class AgencyController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         $fieldsOnModal = view(
