@@ -33,7 +33,7 @@ class AdGainerUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return $this->userModel->find($identifier)->first();
+        return $this->userModel->find($identifier);
     }
 
     /**

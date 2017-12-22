@@ -86,9 +86,15 @@
         $("#myselect").on("change", function() {
             $("#" + $(this).val()).show().siblings().hide();
         });
+
+        function getRoutePrefix()
+        {
+            return '{{ route("auth-account") }}';
+        }
     </script>
 
     <script src="/js/common-function.js"></script>
+    <script src="/js/auth-account-function.js"></script>
 <!-- s -->
 </body>
 </html>
