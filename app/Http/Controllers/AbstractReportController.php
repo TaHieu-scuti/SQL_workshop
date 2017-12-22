@@ -13,6 +13,10 @@ use App\Model\RepoYdnDayOfWeek;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
+use App\Model\RepoYssAdgroupTimezone;
+use App\Model\RepoYssCampaignTimezone;
+use App\Model\RepoYssCampaignDayofweek;
+use App\Model\RepoYssAdgroupDayofweek;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -702,7 +706,12 @@ abstract class AbstractReportController extends Controller
     public function updateModelForTimezone()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            // TODO: change model to yss hourOfDay if needed
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYssAdgroupTimezone;
+            }
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYssCampaignTimezone;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnTimezone;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
@@ -713,7 +722,12 @@ abstract class AbstractReportController extends Controller
     public function updateModelForDayOfWeek()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            // TODO: change model to yss dayOfWeek if needed
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYssAdgroupDayofweek;
+            }
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYssCampaignDayofweek;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnDayOfWeek;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
