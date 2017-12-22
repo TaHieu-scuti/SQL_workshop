@@ -2,14 +2,14 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractYssReportModel;
 use App\Http\Controllers\AbstractReportController;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssCampaignReportCost extends AbstractReportModel
+class RepoYssCampaignReportCost extends AbstractYssReportModel
 {
     // constant
     const GROUPED_BY_FIELD_NAME = 'campaignName';
@@ -24,6 +24,15 @@ class RepoYssCampaignReportCost extends AbstractReportModel
      * @var string
      */
     protected $table = 'repo_yss_campaign_report_cost';
+
+    protected $casts = [
+        'call_cv' => 'integer',
+        'call_cvr' => 'integer',
+        'call_cpa' => 'integer',
+        'web_cv' => 'integer',
+        'web_cvr' => 'integer',
+        'web_cpa' => 'integer'
+    ];
 
     private function addJoin(EloquentBuilder $builder)
     {
