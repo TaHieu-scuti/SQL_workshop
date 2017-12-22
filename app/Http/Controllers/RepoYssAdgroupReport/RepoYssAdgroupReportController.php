@@ -105,9 +105,11 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
         }
+
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->updateModelForTimezone();
         }
+
         $this->checkOldId();
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(

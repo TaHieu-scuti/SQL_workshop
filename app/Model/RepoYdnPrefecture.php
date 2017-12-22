@@ -2,12 +2,24 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use App\AbstractReportModel;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 
-class RepoYdnPrefecture extends AbstractReportModel
+use App\Model\AbstractYdnReportModel;
+
+class RepoYdnPrefecture extends AbstractYdnReportModel
 {
     protected $table = 'repo_ydn_reports';
 
     public $timestamps = false;
+
+    protected function addJoinConditions(JoinClause $join)
+    {
+        parent::addJoinConditions($join);
+        $join->on(
+            DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
+            '=',
+            DB::raw("DAYNAME(" . $this->table . ".`hourofday`)")
+        );
+    }
 }
