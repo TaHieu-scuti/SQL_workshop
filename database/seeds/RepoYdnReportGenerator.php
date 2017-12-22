@@ -18,6 +18,8 @@ class RepoYdnReportGenerator extends Seeder
     const MIN_NUMBER_OF_AD_REPORT = 1;
     const MAX_NUMBER_OF_AD_REPORT = 2;
     const NUMBER_OF_CONVERSION_POINTS = 2;
+    const MIN_DAILY_SPENDING_LIMIT = 1;
+    const MAX_DAILY_SPENDING_LIMIT = 1004;
     const MIN_COST = 0;
     const MAX_COST = 1004;
     const MIN_IMPRESSIONS = 0;
@@ -138,7 +140,10 @@ class RepoYdnReportGenerator extends Seeder
             $costReport->account_id = $account->account_id;
 
             $costReport->accountName = $account->accountName;
-
+            $costReport->dailySpendingLimit = mt_rand(
+                self::MIN_DAILY_SPENDING_LIMIT,
+                self::MAX_DAILY_SPENDING_LIMIT
+            );
             $costReport->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST

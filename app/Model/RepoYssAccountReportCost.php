@@ -295,9 +295,17 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             $this->getTable(). '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
             '=',
             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-        )->where(
+        )
+        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+        ->whereRaw("`phone_time_use`.`source` = 'yss'")
+        ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                if ($startDay === $endDay) {
+                    $query->whereDate($this->getTable().'.day', '=', $endDay);
+                } else {
+                    $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                        ->whereDate($this->getTable().'.day', '<=', $endDay);
+                }
             }
         )->where(
             function (Builder $query) use ($clientId) {
@@ -305,11 +313,15 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             }
         );
         $this->addJoinConditionForYss($yssData);
+        $this->addJoinConditonCampaignReportCostForYss($yssData);
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge(
             $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
-            $adwAggregations
+            $adwAggregations,
+            [
+                DB::raw("sum('0') as dailySpendingLimit")
+            ]
         );
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
         ->where(
@@ -343,7 +355,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             DB::raw('AVG(web_cvr) as Web_CVR'),
             DB::raw('AVG(web_cpa) as Web_CPA')
         ];
-        $rawExpression = array_merge($array, $rawExpression);
+        $rawExpression = array_merge($array, $rawExpression,[DB::raw("sum(dailySpendingLimit) AS dailySpendingLimit")]);
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
         return $data->first();
@@ -368,9 +380,10 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid']);
+        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid', 'dailySpendingLimit']);
         //YSS
         $joinTableName = 'repo_yss_accounts';
+
         $yssAggregations = $this->getAggregated($fieldNames);
         $yssData = $this->select($yssAggregations)
         ->join(
@@ -378,7 +391,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             $this->getTable(). '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
             '=',
             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-        )->where(
+        )
+        ->where(
             function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
@@ -550,9 +564,17 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             $this->getTable(). '.'.self::FOREIGN_KEY_YSS_ACCOUNTS,
             '=',
             $joinTableName . '.'.self::FOREIGN_KEY_YSS_ACCOUNTS
-        )->where(
+        )
+        ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+        ->whereRaw("`phone_time_use`.`source` = 'yss'")
+        ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                if ($startDay === $endDay) {
+                    $query->whereDate($this->getTable().'.day', '=', $endDay);
+                } else {
+                    $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                        ->whereDate($this->getTable().'.day', '<=', $endDay);
+                }
             }
         )->where(
             function (Builder $query) use ($clientId) {
@@ -562,6 +584,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->groupBy($groupedByField)
         ->orderBy($columnSort, $sort);
         $this->addJoinConditionForYss($yssData);
+        $this->addJoinConditonCampaignReportCostForYss($yssData);
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $yssData = $yssData->groupBy('repo_yss_accounts.accountid');
         }
@@ -584,7 +607,10 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge(
             $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
-            $adwAggregations
+            $adwAggregations,
+            [
+                DB::raw("sum('0') as dailySpendingLimit")
+            ]
         );
         $adwData = RepoAdwAccountReportCost::select(
             array_merge([DB::raw("'adw' as engine")], $adwAggregations)
@@ -721,6 +747,23 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                             "STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') =
                             `repo_yss_account_report_cost`.`day`"
                         );
+                    }
+                );
+            }
+        );
+    }
+
+    private function addJoinConditonCampaignReportCostForYss(Builder $builder)
+    {
+        $builder->leftJoin(
+            DB::raw("`repo_yss_campaign_report_cost`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw(
+                            "`repo_yss_campaign_report_cost`.`account_id` = `repo_yss_account_report_cost`.`account_id`"
+                        )->whereRaw("`repo_yss_campaign_report_cost`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
+                            ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_account_report_cost`.`day`");
                     }
                 );
             }
