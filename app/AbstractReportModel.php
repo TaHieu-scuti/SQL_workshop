@@ -46,7 +46,7 @@ abstract class AbstractReportModel extends Model
     const YSS_ADGROUP_NAME = 'adgroupName';
     const ADW_SEARCH_QUERY = 'searchTerm';
     const YSS_IMPRESSION_SHARE = 'impressionShare';
-
+    const DAILY_SPENDING_LIMIT = 'dailySpendingLimit';
     const FOREIGN_KEY_YSS_ACCOUNTS = 'account_id';
 
     const FIELDS = [
@@ -63,7 +63,7 @@ abstract class AbstractReportModel extends Model
         self::CLICKS,
         self::IMPRESSIONS,
         self::COST,
-        self::CONVERSIONS
+        self::CONVERSIONS,
     ];
 
     const SUMMARY_FIELDS = [
@@ -146,6 +146,12 @@ abstract class AbstractReportModel extends Model
                     continue;
                 }
             }
+            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
+                $arrayCalculate[] = DB::raw(
+                    'SUM( ' .$fieldName. ' ) AS ' . $fieldName
+                );
+
+            }
             if ($fieldName === 'matchType') {
                 $arrayCalculate[] = DB::raw($this->getTable() . '.' . $key.' as '.$fieldName);
             }
@@ -169,7 +175,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::YSS_SEARCH_QUERY
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
-                $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
                 continue;
             }
 

@@ -75,9 +75,16 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 $yssAggregations
             );
             $yssPrefectureData = self::select($yssAggregations)
+                ->whereRaw("`phone_time_use`.`source` = 'yss'")
+                ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        if ($startDay === $endDay) {
+                            $query->whereDate($this->getTable().'.day', '=', $endDay);
+                        } else {
+                            $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                                ->whereDate($this->getTable().'.day', '<=', $endDay);
+                        }
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -87,6 +94,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 ->groupBy($groupedByField)
                 ->orderBy($columnSort, $sort);
             $this->addJoinConditionForYssPrefecture($yssPrefectureData);
+            $this->addJoinConditonCampaignReportCostForYss($yssPrefectureData);
             //YDN prefecture
             $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
             $ydnAggregations = array_merge(
@@ -110,7 +118,10 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
             $adwAggregations = array_merge(
                 $this->getAggregatedForPrefecture('repo_adw_geo_report_cost'),
-                $adwAggregations
+                $adwAggregations,
+                [
+                    DB::raw("SUM('0') AS dailySpendingLimit")
+                ]
             );
             $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
@@ -145,7 +156,11 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 DB::raw('AVG(web_cvr) as Web_CVR'),
                 DB::raw('AVG(web_cpa) as Web_CPA')
             ];
-            $rawExpressions = array_merge($array, $rawExpressions);
+            $rawExpressions = array_merge(
+                $array,
+                $rawExpressions,
+                [DB::raw("SUM(dailySpendingLimit) AS dailySpendingLimit")]
+            );
             return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select($rawExpressions)
                 ->groupBy('prefecture')
@@ -200,7 +215,12 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $yssPrefectureData = self::select($yssAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        if ($startDay === $endDay) {
+                            $query->whereDate($this->getTable().'.day', '=', $endDay);
+                        } else {
+                            $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                                ->whereDate($this->getTable().'.day', '<=', $endDay);
+                        }
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -208,6 +228,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     }
                 );
             $this->addJoinConditionForYssPrefecture($yssPrefectureData);
+            $this->addJoinConditonCampaignReportCostForYss($yssPrefectureData);
             //YDN prefecture
             $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
             $ydnAggregations = array_merge(
@@ -229,7 +250,10 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
             $adwAggregations = array_merge(
                 $this->getAggregatedForPrefecture('repo_adw_geo_report_cost'),
-                $adwAggregations
+                $adwAggregations,
+                [
+                    DB::raw("SUM('0') AS dailySpendingLimit")
+                ]
             );
             $adwPrefectureData = RepoAdwGeoReportCost::select($adwAggregations)
                 ->join(
@@ -259,7 +283,11 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 DB::raw('AVG(web_cvr) as Web_CVR'),
                 DB::raw('AVG(web_cpa) as Web_CPA')
             ];
-            $rawExpressions = array_merge($array, $rawExpressions);
+            $rawExpressions = array_merge(
+                $array,
+                $rawExpressions,
+                [DB::raw("SUM(dailySpendingLimit) AS dailySpendingLimit")]
+            );
             return DB::table(DB::raw("({$sql}) as tbl"))
             ->select($rawExpressions)->first();
         }
@@ -301,7 +329,12 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             $yssPrefectureData = self::select($yssAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query);if ($startDay === $endDay) {
+                            $query->whereDate($this->getTable().'.day', '=', $endDay);
+                        } else {
+                            $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                                ->whereDate($this->getTable().'.day', '<=', $endDay);
+                        }
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -406,6 +439,11 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             if ($fieldName === 'prefecture') {
                 $ydnAggregations[] = DB::raw($fieldName);
                 continue;
+            }
+            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
+                $ydnAggregations[] = DB::raw(
+                    'SUM('.$fieldName.') AS '.$fieldName
+                );
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $ydnAggregations[] = DB::raw(
@@ -803,5 +841,22 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS Web_CPA"
             )
         ];
+    }
+
+    private function addJoinConditonCampaignReportCostForYss(Builder $builder)
+    {
+        $builder->leftJoin(
+            DB::raw("`repo_yss_campaign_report_cost`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw(
+                            "`repo_yss_campaign_report_cost`.`account_id` = `repo_yss_prefecture_report_cost`.`account_id`"
+                        )->whereRaw("`repo_yss_campaign_report_cost`.`campaign_id` = `repo_yss_prefecture_report_cost`.`campaign_id`")
+                            ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_prefecture_report_cost`.`day`");
+                    }
+                );
+            }
+        );
     }
 }

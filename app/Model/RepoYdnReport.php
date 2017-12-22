@@ -62,6 +62,11 @@ class RepoYdnReport extends AbstractAccountReportModel
                 $arrayCalculate[] = DB::raw('accountId AS ' . $fieldName);
                 continue;
             }
+            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
+                $arrayCalculate[] = DB::raw(
+                    'SUM( ' .$fieldName. ' ) AS ' . $fieldName
+                );
+            }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG('. $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName

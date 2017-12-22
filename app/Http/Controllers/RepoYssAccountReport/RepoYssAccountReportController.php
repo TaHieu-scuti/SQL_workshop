@@ -59,7 +59,8 @@ class RepoYssAccountReportController extends AbstractReportController
         'cost',
         'ctr',
         'averageCpc',
-        'averagePosition'
+        'averagePosition',
+        'dailySpendingLimit'
     ];
 
     /**
