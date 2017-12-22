@@ -186,10 +186,14 @@ class RepoYssCampaignReportController extends AbstractReportController
         $this->updateSessionData($request);
 
         $this->getModelForPrefecture();
-
+        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+            session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
             $this->updateModelForPrefecture();
+        } else {
+            session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
 
         $reports = $this->getDataForTable();

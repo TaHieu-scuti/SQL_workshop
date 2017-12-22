@@ -12,8 +12,8 @@ abstract class AbstractYssReportModel extends AbstractReportModel
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames);
-        for ($i = count($expressions); $i < count($fieldNames); $i++) {
-            switch ($fieldNames[$i]) {
+        foreach($fieldNames as $fieldName) {
+            switch ($fieldName) {
                 case 'call_cv':
                     $expressions[] = DB::raw("COUNT(`phone_time_use`.`id`) as call_cv");
                     break;

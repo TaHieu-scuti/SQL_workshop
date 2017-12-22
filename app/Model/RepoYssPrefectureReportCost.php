@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractYssReportModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Event;
 
 use PDO;
 
-class RepoYssPrefectureReportCost extends AbstractReportModel
+class RepoYssPrefectureReportCost extends AbstractYssReportModel
 {
     const GROUPED_BY_FIELD_NAME = 'prefecture';
     const ADW_JOIN_TABLE_NAME = 'criteria';
@@ -473,6 +473,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                     );
                 }
             );
+        $this->addJoinConditionForYssPrefecture($data);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $data = $data->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->first();
@@ -588,6 +589,7 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
             )
             ->groupBy($groupedByField)
             ->orderBy($columnSort, $sort);
+        $this->addJoinConditionForYssPrefecture($paginatedData);
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->paginate($pagination);
