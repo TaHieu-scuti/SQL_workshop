@@ -101,6 +101,15 @@ class RepoYssCampaignReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
         }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+            $this->updateModelForTimezone();
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->updateModelForDayOfWeek();
+        }
+
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssCampaignReport.index',
@@ -187,7 +196,21 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        $this->getModelForPrefecture();
+        if ($request->specificItem === self::PREFECTURE) {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
+            $this->updateModelForPrefecture();
+        }
+
+        if ($request->specificItem === 'hourofday') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
+            $this->updateModelForTimezone();
+        }
+
+        if ($request->specificItem === 'dayOfWeek') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'dayOfWeek']);
+            $this->updateModelForDayOfWeek();
+        }
+
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
