@@ -2,18 +2,17 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use App\AbstractReportModel;
 use Illuminate\Database\Eloquent\Builder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
-class RepoYdnReport extends AbstractReportModel
+class RepoYdnReport extends AbstractAccountReportModel
 {
     protected $table = 'repo_ydn_reports';
     const PAGE_ID = 'accountid';
     const GROUPED_BY_FIELD_NAME = 'accountName';
     const ARR_FIELDS = [
         self::CLICKS => self::CLICKS,
+        self::CONVERSIONS => self::CONVERSIONS,
         self::COST => self::COST,
         self::IMPRESSIONS => self::IMPRESSIONS,
         self::CTR => self::CTR,
@@ -22,32 +21,6 @@ class RepoYdnReport extends AbstractReportModel
     ];
 
     public $timestamps = false;
-
-    public function getAggregatedGraphOfYdn($column)
-    {
-        $arrSelect = [];
-        $tableName = $this->getTable();
-        $arrSelect[] = DB::raw('DATE(day) as day');
-        if (in_array($column, static::AVERAGE_FIELDS)) {
-            $arrSelect[] = DB::raw(
-                'ROUND(AVG('. $column .'), 2) AS data'
-            );
-        } elseif (in_array($column, static::SUM_FIELDS)) {
-            if (DB::connection()->getDoctrineColumn($tableName, $column)
-                    ->getType()
-                    ->getName()
-                === self::FIELD_TYPE) {
-                $arrSelect[] = DB::raw(
-                    'ROUND(SUM(' . $column . '), 2) AS data'
-                );
-            } else {
-                $arrSelect[] = DB::raw(
-                    'SUM( ' . $column . ' ) AS data'
-                );
-            }
-        }
-        return $arrSelect;
-    }
 
     private function getAggregatedOfYdn(array $fieldNames)
     {
@@ -91,7 +64,7 @@ class RepoYdnReport extends AbstractReportModel
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG('. $fieldName . '), 2) AS ' . $fieldName
+                    'ROUND(AVG('. $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -99,17 +72,50 @@ class RepoYdnReport extends AbstractReportModel
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $fieldName . '), 2) AS ' . $fieldName
+                        'ROUND(SUM(' . $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $fieldName . ' ) AS ' . $fieldName
+                        'SUM( ' . $tableName. '.' .$fieldName . ' ) AS ' . $fieldName
                     );
                 }
             }
         }
 
         return $arrayCalculate;
+    }
+
+    protected function getPhoneTimeUseSourceValue()
+    {
+        return 'ydn';
+    }
+
+    public function getAggregatedGraphOfYdn($column)
+    {
+        $arrSelect = [];
+        $tableName = $this->getTable();
+        $arrSelect[] = DB::raw('DATE(day) as day');
+
+        if (in_array($column, static::AVERAGE_FIELDS)) {
+            $arrSelect[] = DB::raw(
+                'ROUND(AVG('. $column .'), 2) AS data'
+            );
+        } elseif (in_array($column, static::SUM_FIELDS)) {
+            if (DB::connection()->getDoctrineColumn($tableName, $column)
+                    ->getType()
+                    ->getName()
+                === self::FIELD_TYPE) {
+                $arrSelect[] = DB::raw(
+                    'ROUND(SUM(' . $column . '), 2) AS data'
+                );
+            } else {
+                $arrSelect[] = DB::raw(
+                    'SUM( ' . $column . ' ) AS data'
+                );
+            }
+        }
+
+        return $arrSelect;
     }
 
     public function getAllAccountYdn(
@@ -123,6 +129,7 @@ class RepoYdnReport extends AbstractReportModel
         $accountId = null
     ) {
         $aggregations = $this->getAggregatedOfYdn($fieldNames);
+        $aggregations = array_merge($this->getAggregatedForAccounts(), $aggregations);
         $ydnAccountReport = self::select(
             array_merge([DB::raw("'ydn' as engine")], $aggregations)
         )
@@ -132,7 +139,7 @@ class RepoYdnReport extends AbstractReportModel
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             )
             ->groupBy($groupedByField)
@@ -155,22 +162,23 @@ class RepoYdnReport extends AbstractReportModel
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }
 
     public function ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId)
     {
-        $aggreations = $this->getAggregatedOfYdn($fieldNames);
-        return self::select(array_merge($aggreations))
+        $aggregations = $this->getAggregatedOfYdn($fieldNames);
+        $aggregations = array_merge($this->getAggregatedForAccounts(), $aggregations);
+        return self::select(array_merge($aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
+                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
                 }
             );
     }
@@ -216,6 +224,8 @@ class RepoYdnReport extends AbstractReportModel
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
 
+        $this->addJoinOnPhoneTimeUse($accounts);
+
         return $accounts;
     }
 
@@ -231,5 +241,29 @@ class RepoYdnReport extends AbstractReportModel
             )
             ->whereIn('account_id', $arrAccountsAgency)
             ->groupBy('day');
+    }
+
+    private function getAggregatedForAccounts()
+    {
+        return [
+            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
+            DB::raw(
+                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
+            ),
+            DB::raw(
+                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
+                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+            ),
+            DB::raw(
+                "SUM(`{$this->table}`.conversions) AS Web_CV"
+            ),
+            DB::raw(
+                "(SUM(`{$this->table}`.conversions) / SUM(`{$this->table}`.clicks) * 100) AS Web_CVR"
+            ),
+            DB::raw(
+                "(SUM(`{$this->table}`.cost) / SUM(`{$this->table}`.conversions)) AS Web_CPA"
+            )
+        ];
     }
 }

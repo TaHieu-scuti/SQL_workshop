@@ -121,6 +121,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function getDataForLayouts()
     {
         $this->updateModel();
+        $this->getModelForPrefecture();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -205,9 +206,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-        }
+        $this->getModelForPrefecture();
 
         if ($request->specificItem === self::PREFECTURE) {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);

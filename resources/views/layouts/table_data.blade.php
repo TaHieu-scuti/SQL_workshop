@@ -137,15 +137,30 @@
                         @endif
                     @elseif (ctype_digit($report[$fieldName]))
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
-                    @elseif (($fieldName === 'cost' || $fieldName === 'web_cpa') && is_float($report[$fieldName]))
+                    @elseif ($fieldName === 'cost' ||
+                            $fieldName === 'web_cpa' ||
+                            $fieldName === 'call_cpa' ||
+                            $fieldName === 'total_cpa' ||
+                            $fieldName === 'ydn_web_cpa' ||
+                            $fieldName === 'yss_web_cpa' ||
+                            $fieldName === 'adw_web_cpa' ||
+                            $fieldName === 'ydn_call_cpa' ||
+                            $fieldName === 'yss_call_cpa' ||
+                            $fieldName === 'adw_call_cpa')
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
-                    @elseif (
-                        is_float($report[$fieldName])
-                        && ($fieldName === 'ctr'
-                        || $fieldName === 'impressionShare')
-                        || $fieldName === 'web_cvr')
+                    @elseif ($fieldName === 'ctr'
+                        || $fieldName === 'impressionShare'
+                        || $fieldName === 'web_cvr'
+                        || $fieldName === 'call_cvr'
+                        || $fieldName === 'total_cvr'
+                        || $fieldName === 'ydn_web_cvr'
+                        || $fieldName === 'yss_web_cvr'
+                        || $fieldName === 'adw_web_cvr'
+                        || $fieldName === 'ydn_call_cvr'
+                        || $fieldName === 'yss_call_cvr'
+                        || $fieldName === 'adw_call_cvr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif (
                         $fieldName === 'averagePosition'
@@ -182,6 +197,7 @@
                     <td></td>
                 @endif
                 <td colspan="{{ $totalColspan }}">@lang('language.Total_all_networks')</td>
+                @php if (is_array($totalDataArray)) $totalDataArray = (object) $totalDataArray; @endphp
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === $groupedByField
                         || $fieldName === "accountid"
@@ -192,14 +208,34 @@
                         || $fieldName === "campaign")
                         @continue
                     @endif
+
                     @if(isset($totalDataArray->$fieldName))
                         @if (ctype_digit($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
-                        @elseif (($fieldName === 'cost' || $fieldName === 'web_cpa') && is_float($totalDataArray->$fieldName))
+                        @elseif ($fieldName === 'cost' ||
+                            $fieldName === 'web_cpa' ||
+                            $fieldName === 'call_cpa' ||
+                            $fieldName === 'total_cpa' ||
+                            $fieldName === 'ydn_web_cpa' ||
+                            $fieldName === 'yss_web_cpa' ||
+                            $fieldName === 'adw_web_cpa' ||
+                            $fieldName === 'ydn_call_cpa' ||
+                            $fieldName === 'yss_call_cpa' ||
+                            $fieldName === 'adw_call_cpa')
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'averageCpc')
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
-                        @elseif (is_float($totalDataArray->$fieldName) && ($fieldName === 'ctr' || $fieldName === 'impressionShare' || $fieldName === 'web_cvr'))
+                        @elseif ($fieldName === 'ctr' ||
+                                $fieldName === 'impressionShare' ||
+                                $fieldName === 'web_cvr' ||
+                                $fieldName === 'call_cvr' ||
+                                $fieldName === 'total_cvr' ||
+                                $fieldName === 'ydn_web_cvr' ||
+                                $fieldName === 'yss_web_cvr' ||
+                                $fieldName === 'adw_web_cvr' ||
+                                $fieldName === 'ydn_call_cvr' ||
+                                $fieldName === 'yss_call_cvr' ||
+                                $fieldName === 'adw_call_cvr')
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}%</td>
                         @elseif (is_float($totalDataArray->$fieldName) || $fieldName === 'call_cvr' || $fieldName === 'call_cpa')
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
@@ -209,7 +245,6 @@
                     @endif
                 @endforeach
             </tr>
-
             @if (!$export)
             <tr>
                 <td class="paginator">

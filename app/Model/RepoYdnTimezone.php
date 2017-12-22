@@ -18,8 +18,8 @@ class RepoYdnTimezone extends AbstractYdnReportModel
         parent::addJoinConditions($join);
         $join->on(
             DB::raw("HOUR(`phone_time_use`.`time_of_call`)"),
-                '=',
-                $this->table . '.hourofday'
+            '=',
+            $this->table . '.hourofday'
         );
     }
 }

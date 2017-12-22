@@ -34,6 +34,7 @@ abstract class AbstractReportModel extends Model
     const CLICKS = 'clicks';
     const COST = 'cost';
     const IMPRESSIONS = 'impressions';
+    const CONVERSIONS = 'conversions';
     const CTR = 'ctr';
     const AVERAGE_POSITION = 'averagePosition';
     const AVERAGE_CPC = 'averageCpc';
@@ -61,7 +62,8 @@ abstract class AbstractReportModel extends Model
     const SUM_FIELDS = [
         self::CLICKS,
         self::IMPRESSIONS,
-        self::COST
+        self::COST,
+        self::CONVERSIONS
     ];
 
     const SUMMARY_FIELDS = [
@@ -846,7 +848,11 @@ abstract class AbstractReportModel extends Model
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
+            if (in_array($fieldName, $this->groupByFieldName)) {
+                $rawExpression[] = $fieldName;
+                continue;
+            }
+            if ($fieldName === 'accountName') {
                 $rawExpression[] = DB::raw($fieldName. ' AS agencyName');
                 continue;
             }

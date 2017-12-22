@@ -85,8 +85,9 @@ class RepoYssAccountReportController extends AbstractReportController
     /**
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
+        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
@@ -111,6 +112,9 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoYssPrefectureReportCost;
+        }
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
@@ -123,6 +127,13 @@ class RepoYssAccountReportController extends AbstractReportController
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
 
+        $tableColumns = $this->updateTableColumns($dataReports);
+        $tableColumns[] = 'call_cv';
+        $tableColumns[] = 'call_cvr';
+        $tableColumns[] = 'call_cpa';
+        $tableColumns[] = 'Web_CV';
+        $tableColumns[] = 'Web_CVR';
+        $tableColumns[] = 'Web_CPA';
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view(
@@ -135,7 +146,7 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -216,6 +227,13 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
+        $tableColumns = $this->updateTableColumns($reports);
+        $tableColumns[] = 'call_cv';
+        $tableColumns[] = 'call_cvr';
+        $tableColumns[] = 'call_cpa';
+        $tableColumns[] = 'Web_CV';
+        $tableColumns[] = 'Web_CVR';
+        $tableColumns[] = 'Web_CPA';
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
@@ -223,7 +241,7 @@ class RepoYssAccountReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $results,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -343,5 +361,17 @@ class RepoYssAccountReportController extends AbstractReportController
                 'Pragma' => 'public'
             ]
         );
+    }
+
+    private function updateTableColumns($dataReports)
+    {
+        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
+        if (!empty($dataReports[0]->adgroupName)) {
+            array_unshift($tableColumns, 'adgroupName');
+        }
+        if (!empty($dataReports[0]->campaignName)) {
+            array_unshift($tableColumns, 'campaignName');
+        }
+        return $tableColumns;
     }
 }
