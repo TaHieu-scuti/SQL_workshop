@@ -25,4 +25,11 @@ class RepoAuthAccount extends Model
      * @var boolean
      **/
     public $timestamps = false;
+
+    public function getAuthAccountByAgentId($agentId)
+    {
+        return self::whereIn('account_id', function ($query) use ($agentId) {
+            $query->select('account_id')->from('accounts')->where('agent_id', $agentId);
+        })->paginate(20);
+    }
 }

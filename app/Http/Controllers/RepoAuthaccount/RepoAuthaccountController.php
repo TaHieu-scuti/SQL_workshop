@@ -16,6 +16,8 @@ class RepoAuthAccountController extends Controller
     private $model;
 
     const ADW_MEDIA = 0;
+    const YDN_MEDIA = 1;
+    const YSS_MEDIA = 2;
 
     public function __construct(RepoAuthAccount $model)
     {
@@ -38,12 +40,11 @@ class RepoAuthAccountController extends Controller
     {
         $accountModel = new Account();
         $account_id = Auth::user()->account_id;
+        $authAccountModel = new RepoAuthAccount();
         if (!$accountModel->isAgency($account_id)) {
             return redirect()->route('config-account', ['id' => $account_id]);
         }
-        $authAccounts = RepoAuthAccount::whereIn('account_id', function ($query) use ($account_id) {
-            $query->select('account_id')->from('accounts')->where('agent_id', $account_id);
-        })->paginate(20);
+        $authAccounts = $authAccountModel->getAuthAccountByAgentId($account_id);
         return view('authAccount.index', ['authAccounts' => $authAccounts]);
     }
 
@@ -90,6 +91,7 @@ class RepoAuthAccountController extends Controller
         $authAccount = RepoAuthAccount::find($id);
         if ((int)$authAccount->media === self::ADW_MEDIA) {
             $this->validate($request, [
+                'userAgent' => 'required',
                 'developerToken' => 'required|max:22',
                 'clientCustomerId' => 'required|max:12',
                 'onBehalfOfAccountId' => 'required|max:20',
@@ -104,6 +106,7 @@ class RepoAuthAccountController extends Controller
             ]);
         } else {
             $this->validate($request, [
+                'userAgent' => 'required',
                 'license' => 'required|max:19',
                 'accountId' => 'required|max:20',
                 'apiAccountId' => 'required|max:19',
@@ -135,9 +138,10 @@ class RepoAuthAccountController extends Controller
             $isAgency = true;
         }
 
-        $adw_record = RepoAuthAccount::where('account_id', $account_id)->where('media', 0)->first();
-        $ydn_record = RepoAuthAccount::where('account_id', $account_id)->where('media', 1)->first();
-        $yss_record = RepoAuthAccount::where('account_id', $account_id)->where('media', 2)->first();
+        $adw_record = RepoAuthAccount::where('account_id', $account_id)->where('media', self::ADW_MEDIA)->first();
+        $ydn_record = RepoAuthAccount::where('account_id', $account_id)->where('media', self::YDN_MEDIA)->first();
+        $yss_record = RepoAuthAccount::where('account_id', $account_id)->where('media', self::YSS_MEDIA)->first();
+
         if ($adw_record === null && $ydn_record === null && $yss_record === null) {
             $isEmptyApi = true;
         }
