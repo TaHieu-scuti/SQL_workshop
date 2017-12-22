@@ -25,6 +25,15 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
      */
     protected $table = 'repo_yss_campaign_report_cost';
 
+    protected $casts = [
+        'call_cv' => 'integer',
+        'call_cvr' => 'integer',
+        'call_cpa' => 'integer',
+        'web_cv' => 'integer',
+        'web_cvr' => 'integer',
+        'web_cpa' => 'integer'
+    ];
+
     private function addJoin(EloquentBuilder $builder)
     {
         $builder->leftJoin(
