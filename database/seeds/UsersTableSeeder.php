@@ -14,9 +14,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1 ; $i<=2; $i++) {
+        for ($i=1; $i<=2; $i++) {
             $user = new User();
-
             $user->email = "agency@example.com";
             $user->password = 'agency';
             $user->username = 'agency';
@@ -44,7 +43,6 @@ class UsersTableSeeder extends Seeder
                 $user->password = 'admin';
             }
             $user->attach_accounts = '';
-
             $user->last_login = '2017-02-03 01:00:00';
             $user->chat_time = '2017-02-03 01:00:00';
             $user->internal_chat_time = '2017-02-01 02:00:00';
@@ -66,6 +64,5 @@ class UsersTableSeeder extends Seeder
 
             $user->saveOrFail();
         }
-
     }
 }
