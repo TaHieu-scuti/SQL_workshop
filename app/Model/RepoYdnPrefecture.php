@@ -16,10 +16,5 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
     protected function addJoinConditions(JoinClause $join)
     {
         parent::addJoinConditions($join);
-        $join->on(
-            DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
-            '=',
-            DB::raw("DAYNAME(" . $this->table . ".`hourofday`)")
-        );
     }
 }
