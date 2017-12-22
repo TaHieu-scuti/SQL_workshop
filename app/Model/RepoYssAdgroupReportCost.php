@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractYssReportModel;
 use App\Http\Controllers\AbstractReportController;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -10,7 +10,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssAdgroupReportCost extends AbstractReportModel
+class RepoYssAdgroupReportCost extends AbstractYssReportModel
 {
     // constant
     const GROUPED_BY_FIELD_NAME = 'adgroupName';
@@ -115,33 +115,6 @@ class RepoYssAdgroupReportCost extends AbstractReportModel
             )
             ->where('phone_time_use.source', '=', 'yss')
             ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
-
-    /**
-     * @return Expression[]
-     */
-    protected function getAggregatedForTable()
-    {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
-            DB::raw(
-                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.conversions) AS web_cv"
-            ),
-            DB::raw(
-                "(SUM(`{$this->table}`.conversions) / SUM(`{$this->table}`.clicks) * 100) AS web_cvr"
-            ),
-            DB::raw(
-                "(SUM(`{$this->table}`.cost) / SUM(`{$this->table}`.conversions)) AS web_cpa"
-            )
-        ];
     }
 
     protected function getBuilderForGetDataForTable(

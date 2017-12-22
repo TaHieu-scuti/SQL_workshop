@@ -338,7 +338,6 @@ abstract class AbstractReportModel extends Model
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
-        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
             array_push($this->groupBy, DB::raw('DAYNAME(day)'));
         } else {
@@ -431,7 +430,6 @@ abstract class AbstractReportModel extends Model
         }
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
-        $aggregations = array_merge($aggregations, $this->getAggregatedForTable());
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {

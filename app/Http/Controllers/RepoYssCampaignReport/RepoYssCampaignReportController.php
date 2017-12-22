@@ -98,7 +98,9 @@ class RepoYssCampaignReportController extends AbstractReportController
         if ($this->checkoutConditionForUpdateColumn($engine)) {
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
-        $this->getModelForPrefecture();
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->updateModelForPrefecture();
+        }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssCampaignReport.index',
