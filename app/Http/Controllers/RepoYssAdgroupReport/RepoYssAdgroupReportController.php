@@ -116,6 +116,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->updateModelForTimezone();
         }
 
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->updateModelForDayOfWeek();
+        }
+
         $this->checkOldId();
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
@@ -211,6 +215,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if ($request->specificItem === 'hourofday') {
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
             $this->updateModelForTimezone();
+        }
+        if ($request->specificItem === 'dayOfWeek') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'dayOfWeek']);
+            $this->updateModelForDayOfWeek();
         }
 
         $reports = $this->getDataForTable();
