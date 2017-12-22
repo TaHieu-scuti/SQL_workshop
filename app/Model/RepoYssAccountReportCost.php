@@ -355,7 +355,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             DB::raw('AVG(web_cvr) as Web_CVR'),
             DB::raw('AVG(web_cpa) as Web_CPA')
         ];
-        $rawExpression = array_merge($array, $rawExpression,[DB::raw("sum(dailySpendingLimit) AS dailySpendingLimit")]);
+        $rawExpression = array_merge(
+            $array,
+            $rawExpression,
+            [DB::raw("sum(dailySpendingLimit) AS dailySpendingLimit")]
+        );
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
         return $data->first();
@@ -761,9 +765,14 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 $join->on(
                     function (JoinClause $builder) {
                         $builder->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`account_id` = `repo_yss_account_report_cost`.`account_id`"
-                        )->whereRaw("`repo_yss_campaign_report_cost`.`campaign_id` = `repo_yss_account_report_cost`.`campaign_id`")
-                            ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_account_report_cost`.`day`");
+                            "`repo_yss_campaign_report_cost`.`account_id` = 
+                            `repo_yss_account_report_cost`.`account_id`"
+                        )
+                        ->whereRaw(
+                            "`repo_yss_campaign_report_cost`.`campaign_id`= 
+                            `repo_yss_account_report_cost`.`campaign_id`"
+                        )
+                        ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_account_report_cost`.`day`");
                     }
                 );
             }

@@ -851,9 +851,14 @@ class RepoYssPrefectureReportCost extends AbstractReportModel
                 $join->on(
                     function (JoinClause $builder) {
                         $builder->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`account_id` = `repo_yss_prefecture_report_cost`.`account_id`"
-                        )->whereRaw("`repo_yss_campaign_report_cost`.`campaign_id` = `repo_yss_prefecture_report_cost`.`campaign_id`")
-                            ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_prefecture_report_cost`.`day`");
+                            "`repo_yss_campaign_report_cost`.`account_id` = 
+                            `repo_yss_prefecture_report_cost`.`account_id`"
+                        )
+                        ->whereRaw(
+                            "`repo_yss_campaign_report_cost`.`campaign_id` = 
+                            `repo_yss_prefecture_report_cost`.`campaign_id`"
+                        )
+                        ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_prefecture_report_cost`.`day`");
                     }
                 );
             }
