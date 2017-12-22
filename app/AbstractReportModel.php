@@ -150,7 +150,6 @@ abstract class AbstractReportModel extends Model
                 $arrayCalculate[] = DB::raw(
                     'SUM( ' .$fieldName. ' ) AS ' . $fieldName
                 );
-
             }
             if ($fieldName === 'matchType') {
                 $arrayCalculate[] = DB::raw($this->getTable() . '.' . $key.' as '.$fieldName);
