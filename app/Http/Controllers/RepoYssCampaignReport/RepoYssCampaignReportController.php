@@ -56,7 +56,13 @@ class RepoYssCampaignReportController extends AbstractReportController
         'ctr',
         'averageCpc',
         'averagePosition',
-        'impressionShare'
+        'impressionShare',
+        'web_cv',
+        'web_cvr',
+        'web_cpa',
+        'call_cv',
+        'call_cvr',
+        'call_cpa'
     ];
 
     /**
@@ -110,12 +116,6 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames[] = 'call_cv';
-        $fieldNames[] = 'call_cvr';
-        $fieldNames[] = 'call_cpa';
-        $fieldNames[] = 'web_cv';
-        $fieldNames[] = 'web_cvr';
-        $fieldNames[] = 'web_cpa';
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -127,7 +127,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => $fieldNames,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -196,19 +196,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
-        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames[] = 'call_cv';
-        $fieldNames[] = 'call_cvr';
-        $fieldNames[] = 'call_cpa';
-        $fieldNames[] = 'web_cv';
-        $fieldNames[] = 'web_cvr';
-        $fieldNames[] = 'web_cpa';
 
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
-                self::FIELD_NAMES => $fieldNames,
+                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
