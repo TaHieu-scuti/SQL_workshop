@@ -111,4 +111,5 @@ return [
     'total_cv' => 'Total CV',
     'total_cvr' => 'Total CVR',
     'total_cpa' => 'Total CPA',
+    'dailyspendinglimit' => 'Daily Spending Limit',
 ];
