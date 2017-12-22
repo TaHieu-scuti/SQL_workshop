@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractYssReportModel;
 use App\Http\Controllers\AbstractReportController;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -10,7 +10,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssAdgroupReportCost extends AbstractReportModel
+class RepoYssAdgroupReportCost extends AbstractYssReportModel
 {
     // constant
     const GROUPED_BY_FIELD_NAME = 'adgroupName';

@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
-use App\AbstractReportModel;
+use App\Model\AbstractYssReportModel;
 
 use Auth;
 
-class RepoYssKeywordReportCost extends AbstractReportModel
+class RepoYssKeywordReportCost extends AbstractYssReportModel
 {
     const PAGE_ID = "keywordID";
     const GROUPED_BY_FIELD_NAME = 'keyword';
@@ -128,29 +128,29 @@ class RepoYssKeywordReportCost extends AbstractReportModel
     /**
      * @return Expression[]
      */
-    protected function getAggregatedForTable()
-    {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
-            DB::raw(
-                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.conversions) AS Web_CV"
-            ),
-            DB::raw(
-                "(SUM(`{$this->table}`.conversions) / SUM(`{$this->table}`.clicks) * 100) AS Web_CVR"
-            ),
-            DB::raw(
-                "(SUM(`{$this->table}`.cost) / SUM(`{$this->table}`.conversions)) AS Web_CPA"
-            )
-        ];
-    }
+    // protected function getAggregatedForTable()
+    // {
+    //     return [
+    //         DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
+    //         DB::raw(
+    //             "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+    //             . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
+    //         ),
+    //         DB::raw(
+    //             "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
+    //             . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+    //         ),
+    //         DB::raw(
+    //             "SUM(`{$this->table}`.conversions) AS web_cv"
+    //         ),
+    //         DB::raw(
+    //             "(SUM(`{$this->table}`.conversions) / SUM(`{$this->table}`.clicks) * 100) AS web_cvr"
+    //         ),
+    //         DB::raw(
+    //             "(SUM(`{$this->table}`.cost) / SUM(`{$this->table}`.conversions)) AS web_cpa"
+    //         )
+    //     ];
+    // }
 
     protected function getBuilderForGetDataForTable(
         $engine,
