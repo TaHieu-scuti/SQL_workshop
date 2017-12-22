@@ -216,6 +216,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
             $this->updateModelForTimezone();
         }
+        if ($request->specificItem === 'dayOfWeek') {
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
+            $this->updateModelForTimezone();
+        }
 
         $reports = $this->getDataForTable();
 
