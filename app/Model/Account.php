@@ -361,6 +361,39 @@ class Account extends AbstractReportModel
         return $data;
     }
 
+    protected function getQueryBuilderForTable($select, $startDay, $endDay)
+    {
+        $modelYssAccount = new RepoYssAccountReportCost;
+        $modelYdnAccount = new RepoYdnReport;
+        $modelAdwAccount = new RepoAdwAccountReportCost;
+
+        $yssAccountAgency = $modelYssAccount->getYssAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
+        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
+        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
+
+        $query = $this->select($select)
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
+                'accounts.account_id',
+                '=',
+                'yss.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
+                'accounts.account_id',
+                '=',
+                'ydn.account_id'
+            )
+            ->leftJoin(
+                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
+                'accounts.account_id',
+                '=',
+                'adw.account_id'
+            );
+
+        return $query;
+    }
+
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus
@@ -404,35 +437,9 @@ class Account extends AbstractReportModel
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
 
-        $modelYssAccount = new RepoYssAccountReportCost;
-        $modelYdnAccount = new RepoYdnReport;
-        $modelAdwAccount = new RepoAdwAccountReportCost;
+        $getAgreatedAgency = $this->getAggregatedAgency($fieldNames, 'clientName');
 
-        $yssAccountAgency = $modelYssAccount->getYssAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-
-        $getAgreatedAgency = $this->getAggregatedAgency($fieldNames);
-
-        $query = $this->select($getAgreatedAgency)
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
-                'accounts.account_id',
-                '=',
-                'yss.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
-                'accounts.account_id',
-                '=',
-                'adw.account_id'
-            )
+        $query = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->orderBy($columnSort, $sort);
@@ -517,13 +524,20 @@ class Account extends AbstractReportModel
         return $totals->toArray();
     }
 
-    public function getAggregatedAgency(array $fieldNames)
-    {
+    public function getAggregatedAgency(
+        array $fieldNames,
+        $accountNameAlias = 'clientName',
+        $accountNameValue = 'accountName'
+    ) {
         $arrayCalculate = [];
         $tableName = $this->getTable();
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === 'accountName') {
-                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName .' AS clientName');
+                if ($accountNameValue === 'accountName') {
+                    $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName . ' AS ' . $accountNameAlias);
+                } else {
+                    $arrayCalculate[] = DB::raw($accountNameValue . ' AS ' . $accountNameAlias);
+                }
             }
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
                 $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');

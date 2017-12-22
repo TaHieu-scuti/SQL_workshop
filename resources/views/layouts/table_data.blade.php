@@ -58,6 +58,9 @@
         </thead>
         <tbody>
             @foreach($reports as $report)
+                @php
+                    if (is_object($report)) $report = (array) $report;
+                @endphp
                 <tr>
                 @foreach($fieldNames as $fieldName)
                     @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
@@ -135,7 +138,11 @@
                             <span> {{ $report['description'] }}</span>
                         </td>
                         @endif
-                    @elseif (ctype_digit($report[$fieldName]))
+                    @elseif (ctype_digit($report[$fieldName])
+                        || $fieldName === 'yss_web_cv'
+                        || $fieldName === 'adw_web_cv'
+                        || $fieldName === 'web_cv'
+                        || $fieldName === 'total_cv')
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' ||
                             $fieldName === 'web_cpa' ||
@@ -162,10 +169,7 @@
                         || $fieldName === 'yss_call_cvr'
                         || $fieldName === 'adw_call_cvr')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
-                    @elseif (
-                        $fieldName === 'averagePosition'
-                        || $fieldName === 'call_cvr'
-                        || $fieldName === 'call_cpa')
+                    @elseif ($fieldName === 'averagePosition')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $report[$fieldName] }}</td>
