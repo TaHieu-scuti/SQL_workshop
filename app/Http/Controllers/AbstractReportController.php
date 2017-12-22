@@ -8,6 +8,7 @@ use App\Export\Spout\SpoutExcelExporter;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
+use App\Model\RepoYdnTimezone;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
@@ -678,6 +679,17 @@ abstract class AbstractReportController extends Controller
             $this->model = new RepoYdnPrefecture;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
+        }
+    }
+
+    public function updateModelForTimezone()
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss') {
+            // TODO: change model to yss hourOfDay
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $this->model = new RepoYdnTimezone;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            // TODO: change model to adw hourOfDay
         }
     }
 
