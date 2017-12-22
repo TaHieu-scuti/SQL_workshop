@@ -359,7 +359,9 @@ abstract class AbstractReportModel extends Model
         $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         $groupBy = $this->groupBy;
         foreach ($groupBy as &$item) {
-            $item = $this->getTable() . '.' . $item;
+            if (is_string($item)) {
+                $item = $this->getTable() . '.' . $item;
+            }
         }
         foreach ($aggregations as &$aggregation) {
             if (is_string($aggregation)) {

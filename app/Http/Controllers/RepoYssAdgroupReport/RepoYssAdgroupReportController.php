@@ -105,8 +105,13 @@ class RepoYssAdgroupReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
         }
+
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->updateModelForTimezone();
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->updateModelForDayOfWeek();
         }
         $this->checkOldId();
         $this->checkoutSessionFieldName();
@@ -217,8 +222,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->updateModelForTimezone();
         }
         if ($request->specificItem === 'dayOfWeek') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
-            $this->updateModelForTimezone();
+            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'dayOfWeek']);
+            $this->updateModelForDayOfWeek();
         }
 
         $reports = $this->getDataForTable();

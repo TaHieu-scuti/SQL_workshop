@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnTimezone;
+use App\Model\RepoYdnDayOfWeek;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
@@ -701,14 +702,24 @@ abstract class AbstractReportController extends Controller
     public function updateModelForTimezone()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            // TODO: change model to yss hourOfDay
+            // TODO: change model to yss hourOfDay if needed
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnTimezone;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            // TODO: change model to adw hourOfDay
+            // TODO: change model to adw hourOfDay if needed
         }
     }
 
+    public function updateModelForDayOfWeek()
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss') {
+            // TODO: change model to yss dayOfWeek if needed
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $this->model = new RepoYdnDayOfWeek;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            // TODO: change model to adw dayOfWeek if needed
+        }
+    }
     public function exportSearchQueryToCsv()
     {
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
