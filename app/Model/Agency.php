@@ -2,19 +2,13 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
 use DateTime;
 use Exception;
 
-use \App\Model\RepoYssAccountReportCost;
-use \App\Model\RepoAdwAccountReportCost;
-use \App\Model\RepoYdnReport;
-
-class Agency extends AbstractReportModel
+class Agency extends Account
 {
     const AVERAGE_FIELDS = [
         'averageCpc',
@@ -37,10 +31,7 @@ class Agency extends AbstractReportModel
         'averagePosition' => 'avgPosition'
     ];
 
-    /** @var bool */
-    public $timestamps = false;
     protected $table = 'accounts';
-
 
     /**
      * @param string[] $fieldNames
@@ -70,18 +61,34 @@ class Agency extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $directClientsData = $this->getDataOfDirectClients($fieldNames, $startDay, $endDay);
-        $arrayOfAgencyData = $this->getDataOfAgencies($fieldNames, $startDay, $endDay);
-        $data = $directClientsData
-            ->union($arrayOfAgencyData)
-            ->orderBy($columnSort, $sort)
-            ->get();
+        $agencyAggregations = $this->getAggregatedAgency($fieldNames, 'agencyName');
+        $agencyClientQuery = $this->getQueryBuilderForTable($agencyAggregations, $startDay, $endDay)
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) > 0"
+            );
 
-            $agencyTableData = [];
-        foreach ($data as $key => $value) {
-            $agencyTableData[]= (array)$value;
-        }
-        return $agencyTableData;
+        $directClientAggregations = $this->getAggregatedAgency(
+            $fieldNames,
+            'agencyName',
+            "'directClients'"
+        );
+        $directClientQuery = $this->getQueryBuilderForTable($directClientAggregations, $startDay, $endDay)
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            );
+
+        $unionQuery = $agencyClientQuery->union($directClientQuery);
+
+        $outerQuery = DB::query()
+            ->from(DB::raw("({$this->getBindingSql($unionQuery)}) AS tbl"))
+            ->orderBy($columnSort, $sort)
+            ->groupBy('agencyName');
+
+        return $outerQuery->get();
     }
 
     public function getDataOfAgencies(
