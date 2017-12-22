@@ -18,6 +18,7 @@ class RepoAuthAccount extends Model
         'developerToken',
         'userAgent',
         'clientCustomerId',
+        'media',
     ];
 
     /**

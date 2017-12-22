@@ -6160,3 +6160,24 @@ li.panel-body.grayed-out {
 a.btn.btn-add {
     margin-bottom: 10px;
 }
+
+div#content-auth-account .menu_left a{
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-bottom: 10px;
+}
+
+div#content-auth-account .menu_redirect a{
+    width: 100%;
+    padding: 10px 0 10px 0;
+    margin-bottom: 10px;
+}
+
+div#content-auth-account .form-auth {
+    margin-bottom: 100px;
+}
+
+div.container .row.report-table a#client_redirect {
+    margin-bottom: 10px;
+    float: left;
+}
