@@ -2,10 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
-use App\AbstractReportModel;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 
-class RepoYdnPrefecture extends AbstractReportModel
+use App\Model\AbstractYdnReportModel;
+
+class RepoYdnPrefecture extends AbstractYdnReportModel
 {
     protected $table = 'repo_ydn_reports';
 
