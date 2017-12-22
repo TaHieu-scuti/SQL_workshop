@@ -41,13 +41,40 @@ class AgencyController extends AbstractReportController
     const SESSION_KEY_PREFIX_ROUTE = '/agency-report';
     const SESSION_KEY_GROUPED_BY_FIELD = self::SESSION_KEY_PREFIX . 'groupedByField';
     const DEFAULT_COLUMNS = [
-            'impressions',
-            'clicks',
-            'cost',
-            'ctr',
-            'averageCpc',
-            'averagePosition'
-        ];
+        'impressions',
+        'cost',
+        'clicks',
+        'ctr',
+        'averageCpc',
+        'averagePosition',
+        'ydn_web_cv',
+        'ydn_web_cvr',
+        'ydn_web_cpa',
+        'yss_web_cv',
+        'yss_web_cvr',
+        'yss_web_cpa',
+        'adw_web_cv',
+        'adw_web_cvr',
+        'adw_web_cpa',
+        'web_cv',
+        'web_cvr',
+        'web_cpa',
+        'ydn_call_cv',
+        'ydn_call_cvr',
+        'ydn_call_cpa',
+        'yss_call_cv',
+        'yss_call_cvr',
+        'yss_call_cpa',
+        'adw_call_cv',
+        'adw_call_cvr',
+        'adw_call_cpa',
+        'call_cv',
+        'call_cvr',
+        'call_cpa',
+        'total_cv',
+        'total_cvr',
+        'total_cpa'
+    ];
 
     const REPORTS = 'reports';
     const FIELD_NAMES = 'fieldNames';
