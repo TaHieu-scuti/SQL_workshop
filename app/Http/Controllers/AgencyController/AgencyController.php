@@ -112,7 +112,7 @@ class AgencyController extends AbstractReportController
     {
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, 'accountName');
+        array_unshift($defaultColumns, 'accountName', self::ACCOUNT_ID);
 
         if (!session('agencyReport')) {
             $this->initializeSession($defaultColumns);
@@ -131,7 +131,6 @@ class AgencyController extends AbstractReportController
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
-
         $results = new \Illuminate\Pagination\LengthAwarePaginator(
             array_slice($dataReports, ($this->page - 1) * 20, 20),
             count($dataReports),
