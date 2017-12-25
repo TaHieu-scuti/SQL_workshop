@@ -70,10 +70,6 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             $fieldNames = $this->unsetColumns($fieldNames, ['accountid']);
             //YSS prefecture
             $yssAggregations = $this->getAggregated($fieldNames);
-            $yssAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_yss_prefecture_report_cost'),
-                $yssAggregations
-            );
             $yssPrefectureData = self::select($yssAggregations)
                 ->whereRaw("`phone_time_use`.`source` = 'yss'")
                 ->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
@@ -98,7 +94,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             //YDN prefecture
             $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
             $ydnAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_ydn_reports'),
+                $this->getAggregatedForPrefecture('repo_ydn_reports', $fieldNames),
                 $ydnAggregations
             );
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
@@ -117,7 +113,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             //ADW prefecture
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
             $adwAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_adw_geo_report_cost'),
+                $this->getAggregatedForPrefecture('repo_adw_geo_report_cost', $fieldNames),
                 $adwAggregations,
                 [
                     DB::raw("SUM('0') AS dailySpendingLimit")
@@ -148,19 +144,6 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 $event->statement->setFetchMode(PDO::FETCH_ASSOC);
             });
             $rawExpressions = $this->getRawExpressions($fieldNames);
-            $array = [
-                DB::raw('SUM(call_cv) as call_cv'),
-                DB::raw('AVG(call_cvr) as call_cvr'),
-                DB::raw('AVG(call_cpa) as call_cpa'),
-                DB::raw('SUM(web_cv) as Web_CV'),
-                DB::raw('AVG(web_cvr) as Web_CVR'),
-                DB::raw('AVG(web_cpa) as Web_CPA')
-            ];
-            $rawExpressions = array_merge(
-                $array,
-                $rawExpressions,
-                [DB::raw("SUM(dailySpendingLimit) AS dailySpendingLimit")]
-            );
             return DB::table(DB::raw("({$sql}) as tbl"))
                 ->select($rawExpressions)
                 ->groupBy('prefecture')
@@ -208,10 +191,6 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 $event->statement->setFetchMode(PDO::FETCH_OBJ);
             });
             $yssAggregations = $this->getAggregated($fieldNames);
-            $yssAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_yss_prefecture_report_cost'),
-                $yssAggregations
-            );
             $yssPrefectureData = self::select($yssAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
@@ -232,7 +211,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             //YDN prefecture
             $ydnAggregations = $this->getAggregatedForPrefectureYdn($fieldNames);
             $ydnAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_ydn_reports'),
+                $this->getAggregatedForPrefecture('repo_ydn_reports', $fieldNames),
                 $ydnAggregations
             );
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
@@ -249,7 +228,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             //ADW prefecture
             $adwAggregations = $this->getAggregatedForPrefectureGoogle($fieldNames);
             $adwAggregations = array_merge(
-                $this->getAggregatedForPrefecture('repo_adw_geo_report_cost'),
+                $this->getAggregatedForPrefecture('repo_adw_geo_report_cost', $fieldNames),
                 $adwAggregations,
                 [
                     DB::raw("SUM('0') AS dailySpendingLimit")
@@ -821,28 +800,63 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
         );
     }
 
-    private function getAggregatedForPrefecture($tableName)
+    private function getAggregatedForPrefecture($tableName, $fieldNames)
     {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
-            DB::raw(
-                "((SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$tableName}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$tableName}`.`cost`) / (SUM(`{$tableName}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            ),
-            DB::raw(
-                "SUM(`{$tableName}`.conversions) AS Web_CV"
-            ),
-            DB::raw(
-                "(SUM(`{$tableName}`.conversions) / SUM(`{$tableName}`.clicks) * 100) AS Web_CVR"
-            ),
-            DB::raw(
-                "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS Web_CPA"
-            )
-        ];
+        $expressions = [];
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case 'call_cv':
+                    $expressions[] = DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv');
+                    break;
+                case 'call_cvr':
+                    $expressions[] = DB::raw(
+                        "((SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+                        . "/ SUM(`{$tableName}`.`clicks`)) * 100 AS call_cvr"
+                    );
+                    break;
+                case 'call_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.`cost`) / (SUM(`{$tableName}`.`conversions`) "
+                        . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+                    );
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.conversions) AS web_cv"
+                    );
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.conversions) / SUM(`{$tableName}`.clicks) * 100) AS web_cvr"
+                    );
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS web_cpa"
+                    );
+                    break;
+                case 'total_cv':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) as total_cv"
+                    );
+                    break;
+                case 'total_cvr':
+                    $expressions[] = DB::raw(
+                        "((COUNT(`phone_time_use`.`id`) / SUM(`{$tableName}`.`clicks`)) * 100
+                    +
+                    (SUM(`{$tableName}`.`conversions`) / SUM(`{$tableName}`.`clicks`)) * 100)
+                    / 2 as total_cvr"
+                    );
+                    break;
+                case 'total_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.`cost`) / COUNT(`phone_time_use`.`id`) +
+                        SUM(`{$tableName}`.`cost`) / SUM(`{$tableName}`.`conversions`) as total_cpa"
+                    );
+                    break;
+            }
+        }
+        return $expressions;
     }
 
     private function addJoinConditonCampaignReportCostForYss(Builder $builder)
@@ -853,11 +867,11 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 $join->on(
                     function (JoinClause $builder) {
                         $builder->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`account_id` = 
+                            "`repo_yss_campaign_report_cost`.`account_id` =
                             `repo_yss_prefecture_report_cost`.`account_id`"
                         )
                         ->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`campaign_id` = 
+                            "`repo_yss_campaign_report_cost`.`campaign_id` =
                             `repo_yss_prefecture_report_cost`.`campaign_id`"
                         )
                         ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_prefecture_report_cost`.`day`");
@@ -865,5 +879,57 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 );
             }
         );
+    }
+
+    protected function getRawExpressions($fieldNames)
+    {
+        $expressions = parent::getRawExpressions($fieldNames);
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case 'call_cv':
+                    $expressions[] = DB::raw('SUM(`call_cv`) AS call_cv');
+                    break;
+                case 'call_cvr':
+                    $expressions[] = DB::raw(
+                        "((SUM(`web_cv`) + COUNT(`call_cv`)) "
+                        . "/ SUM(`clicks`)) * 100 AS call_cvr"
+                    );
+                    break;
+                case 'call_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`cost`) / (SUM(`web_cv`) "
+                        . "+ SUM(`call_cv`)) AS call_cpa"
+                    );
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw(
+                        "SUM(`web_cv`) AS web_cv"
+                    );
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw(
+                        "(SUM(`web_cv`) / SUM(`clicks`) * 100) AS web_cvr"
+                    );
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw(
+                        "(SUM(`cost`) / SUM(`web_cv`)) AS web_cpa"
+                    );
+                    break;
+                case 'dailySpendingLimit':
+                    $expressions[] = DB::raw("SUM(`dailySpendingLimit`) AS dailySpendingLimit");
+                    break;
+                case 'total_cv':
+                    $expressions[] = DB::raw("(SUM(`web_cv`) + SUM(`call_cv`)) as total_cv");
+                    break;
+                case 'total_cvr':
+                    $expressions[] = DB::raw("((SUM(`web_cvr`) + SUM(`call_cvr`))/2) as total_cvr");
+                    break;
+                case 'total_cpa':
+                    $expressions[] = DB::raw("(SUM(`web_cpa`) + SUM(`call_cpa`)) as total_cpa");
+                    break;
+            }
+        }
+        return $expressions;
     }
 }
