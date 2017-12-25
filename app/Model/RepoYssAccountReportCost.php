@@ -662,7 +662,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         return $adwData->union($ydnData)->union($yssData)->orderBy($columnSort, $sort)->get();
     }
 
-    private function addJoinConditionForYdn(Builder $builder)
+    protected function addJoinConditionForYdn(Builder $builder)
     {
         $builder->leftJoin(
             DB::raw("(`phone_time_use`,`campaigns`)"),
@@ -733,7 +733,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    private function addJoinConditionForAdw(Builder $builder)
+    protected function addJoinConditionForAdw(Builder $builder)
     {
         $builder->leftJoin(
             DB::raw("`phone_time_use`"),
@@ -754,7 +754,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    private function addJoinConditionForYss(Builder $builder)
+    protected function addJoinConditionForYss(Builder $builder)
     {
         $builder->leftJoin(
             DB::raw("`phone_time_use`"),

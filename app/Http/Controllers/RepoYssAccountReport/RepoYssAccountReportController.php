@@ -7,6 +7,7 @@ use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAccountTimezone;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -133,6 +134,9 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->page,
             ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
         );
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+            $this->model = new RepoAccountTimezone;
+        }
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view(
@@ -214,7 +218,9 @@ class RepoYssAccountReportController extends AbstractReportController
             session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
             $this->model = new RepoYssPrefectureReportCost;
         }
-
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+            $this->model = new RepoAccountTimezone;
+        }
         $reports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
