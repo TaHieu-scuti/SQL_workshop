@@ -88,5 +88,8 @@ return [
     'web_cvr' => 'Web CVR',
     'web_cpa' => 'Web CPA',
     'call_cv' => 'コール数',
+    'total_cv' => '合計 CV',
+    'total_cvr' => '合計 CVR',
+    'total_cpa' => '合計 CPA',
     'dailyspendinglimit' => '1日の予算',
 ];
