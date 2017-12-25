@@ -643,6 +643,22 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         }
         $this->addJoinConditionForAdw($adwData);
 
+        $data = $adwData->union($ydnData)->union($yssData);
+
+        if (in_array($groupedByField, $this->groupByFieldName)) {
+            $sql = $this->getBindingSql($data);
+            $rawExpression = $this->getRawExpressions($fieldNames);
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(PDO::FETCH_ASSOC);
+            });
+            $data = DB::table(DB::raw("({$sql}) as tbl"))
+            ->select($rawExpression)
+            ->orderBy($columnSort, $sort)
+            ->groupBy($groupedByField)
+            ->get();
+            return $data;
+        }
+
         return $adwData->union($ydnData)->union($yssData)->orderBy($columnSort, $sort)->get();
     }
 
