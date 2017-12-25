@@ -286,7 +286,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated($fieldNames);
         $yssAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_yss_account_report_cost'),
+            $this->getAggregatedForAccounts('repo_yss_account_report_cost', $fieldNames),
             $yssAggregations
         );
         $yssData = $this->select($yssAggregations)
@@ -317,7 +317,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
+            $this->getAggregatedForAccounts('repo_adw_account_report_cost', $fieldNames),
             $adwAggregations,
             [
                 DB::raw("sum('0') as dailySpendingLimit")
@@ -347,19 +347,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $data = $ydnData->union($yssData)->union($adwData);
         $sql = $this->getBindingSql($data);
         $rawExpression = $this->getRawExpressions($fieldNames);
-        $array = [
-            DB::raw('SUM(call_cv) as call_cv'),
-            DB::raw('AVG(call_cvr) as call_cvr'),
-            DB::raw('AVG(call_cpa) as call_cpa'),
-            DB::raw('SUM(web_cv) as Web_CV'),
-            DB::raw('AVG(web_cvr) as Web_CVR'),
-            DB::raw('AVG(web_cpa) as Web_CPA')
-        ];
-        $rawExpression = array_merge(
-            $array,
-            $rawExpression,
-            [DB::raw("sum(dailySpendingLimit) AS dailySpendingLimit")]
-        );
         $data = DB::table(DB::raw("({$sql}) as tbl"))
         ->select($rawExpression);
         return $data->first();
@@ -512,28 +499,44 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             ->groupBy('day');
     }
 
-    private function getAggregatedForAccounts($tableName)
+    private function getAggregatedForAccounts($tableName, $fieldNames)
     {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv'),
-            DB::raw(
-                "((SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$tableName}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$tableName}`.`cost`) / (SUM(`{$tableName}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            ),
-            DB::raw(
-                "SUM(`{$tableName}`.conversions) AS Web_CV"
-            ),
-            DB::raw(
-                "(SUM(`{$tableName}`.conversions) / SUM(`{$tableName}`.clicks) * 100) AS Web_CVR"
-            ),
-            DB::raw(
-                "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS Web_CPA"
-            )
-        ];
+        $expressions = [];
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case 'call_cv':
+                    $expressions[] = DB::raw('COUNT(`phone_time_use`.`id`) AS call_cv');
+                    break;
+                case 'call_cvr':
+                    $expressions[] = DB::raw(
+                        "((SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
+                        . "/ SUM(`{$tableName}`.`clicks`)) * 100 AS call_cvr"
+                    );
+                    break;
+                case 'call_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.`cost`) / (SUM(`{$tableName}`.`conversions`) "
+                        . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
+                    );
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.conversions) AS web_cv"
+                    );
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.conversions) / SUM(`{$tableName}`.clicks) * 100) AS web_cvr"
+                    );
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS web_cpa"
+                    );
+                    break;
+            }
+        }
+        return $expressions;
     }
 
     public function getDataForTable(
@@ -558,7 +561,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated($fieldNames);
         $yssAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_yss_account_report_cost'),
+            $this->getAggregatedForAccounts('repo_yss_account_report_cost', $fieldNames),
             $yssAggregations
         );
         $yssData = $this->select(
@@ -610,7 +613,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_adw_account_report_cost'),
+            $this->getAggregatedForAccounts('repo_adw_account_report_cost', $fieldNames),
             $adwAggregations,
             [
                 DB::raw("sum('0') as dailySpendingLimit")
@@ -765,11 +768,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 $join->on(
                     function (JoinClause $builder) {
                         $builder->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`account_id` = 
+                            "`repo_yss_campaign_report_cost`.`account_id` =
                             `repo_yss_account_report_cost`.`account_id`"
                         )
                         ->whereRaw(
-                            "`repo_yss_campaign_report_cost`.`campaign_id`= 
+                            "`repo_yss_campaign_report_cost`.`campaign_id`=
                             `repo_yss_account_report_cost`.`campaign_id`"
                         )
                         ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_account_report_cost`.`day`");
@@ -777,5 +780,48 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 );
             }
         );
+    }
+
+    protected function getRawExpressions($fieldNames)
+    {
+        $expressions = parent::getRawExpressions($fieldNames);
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case 'call_cv':
+                    $expressions[] = DB::raw('SUM(`call_cv`) AS call_cv');
+                    break;
+                case 'call_cvr':
+                    $expressions[] = DB::raw(
+                        "((SUM(`web_cv`) + COUNT(`call_cv`)) "
+                        . "/ SUM(`clicks`)) * 100 AS call_cvr"
+                    );
+                    break;
+                case 'call_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`cost`) / (SUM(`web_cv`) "
+                        . "+ SUM(`call_cv`)) AS call_cpa"
+                    );
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw(
+                        "SUM(`web_cv`) AS web_cv"
+                    );
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw(
+                        "(SUM(`web_cv`) / SUM(`clicks`) * 100) AS web_cvr"
+                    );
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw(
+                        "(SUM(`cost`) / SUM(`web_cv`)) AS web_cpa"
+                    );
+                    break;
+                case 'dailySpendingLimit':
+                    $expressions[] = DB::raw("SUM(`dailySpendingLimit`) AS dailySpendingLimit");
+                    break;
+            }
+        }
+        return $expressions;
     }
 }
