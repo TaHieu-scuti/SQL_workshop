@@ -8,6 +8,7 @@ use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Model\RepoAccountTimezone;
+use App\Model\RepoAccountDayOfWeek;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -137,6 +138,10 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
         }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->model = new RepoAccountDayOfWeek;
+        }
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view(
@@ -221,6 +226,11 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
         }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->model = new RepoAccountDayOfWeek;
+        }
+
         $reports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
