@@ -68,7 +68,10 @@ class RepoYssAccountReportController extends AbstractReportController
         'web_cpa',
         'call_cv',
         'call_cvr',
-        'call_cpa'
+        'call_cpa',
+        'total_cv',
+        'total_cvr',
+        'total_cpa'
     ];
 
     /**

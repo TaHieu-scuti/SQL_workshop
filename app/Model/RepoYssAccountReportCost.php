@@ -534,6 +534,25 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                         "(SUM(`{$tableName}`.cost) / SUM(`{$tableName}`.conversions)) AS web_cpa"
                     );
                     break;
+                case 'total_cv':
+                    $expressions[] = DB::raw(
+                        "(SUM(`{$tableName}`.`conversions`) + COUNT(`phone_time_use`.`id`)) as total_cv"
+                    );
+                    break;
+                case 'total_cvr':
+                    $expressions[] = DB::raw(
+                        "((COUNT(`phone_time_use`.`id`) / SUM(`{$tableName}`.`clicks`)) * 100
+                    +
+                    (SUM(`{$tableName}`.`conversions`) / SUM(`{$tableName}`.`clicks`)) * 100)
+                    / 2 as total_cvr"
+                    );
+                    break;
+                case 'total_cpa':
+                    $expressions[] = DB::raw(
+                        "SUM(`{$tableName}`.`cost`) / COUNT(`phone_time_use`.`id`) +
+                        SUM(`{$tableName}`.`cost`) / SUM(`{$tableName}`.`conversions`) as total_cpa"
+                    );
+                    break;
             }
         }
         return $expressions;
@@ -835,6 +854,15 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                     break;
                 case 'dailySpendingLimit':
                     $expressions[] = DB::raw("SUM(`dailySpendingLimit`) AS dailySpendingLimit");
+                    break;
+                case 'total_cv':
+                    $expressions[] = DB::raw("(SUM(`web_cv`) + SUM(`call_cv`)) as total_cv");
+                    break;
+                case 'total_cvr':
+                    $expressions[] = DB::raw("((SUM(`web_cvr`) + SUM(`call_cvr`))/2) as total_cvr");
+                    break;
+                case 'total_cpa':
+                    $expressions[] = DB::raw("(SUM(`web_cpa`) + SUM(`call_cpa`)) as total_cpa");
                     break;
             }
         }
