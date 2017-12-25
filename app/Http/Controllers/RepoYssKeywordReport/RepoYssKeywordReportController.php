@@ -177,10 +177,6 @@ class RepoYssKeywordReportController extends AbstractReportController
         $engine = $this->updateModel();
         $this->updateSessionData($request);
 
-        if ($request->specificItem === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
-        }
-
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
