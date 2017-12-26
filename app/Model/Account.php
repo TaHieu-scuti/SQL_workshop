@@ -676,7 +676,7 @@ class Account extends AbstractReportModel
     public function addConditionAgency(Builder $query, $agencyId)
     {
         if ($agencyId !== null) {
-            $query->where('accounts.agent_id', '', $agencyId);
+            $query->where('accounts.agent_id', '=', $agencyId);
         }
     }
 
