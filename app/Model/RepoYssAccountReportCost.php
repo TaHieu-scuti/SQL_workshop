@@ -385,14 +385,21 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         )
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                if ($startDay === $endDay) {
+                    $query->whereDate($this->getTable().'.day', '=', $endDay);
+                } else {
+                    $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                        ->whereDate($this->getTable().'.day', '<=', $endDay);
+                }
             }
         )->where(
             function (Builder $query) use ($clientId) {
                 $query->where('repo_yss_account_report_cost.account_id', '=', $clientId);
             }
-        );
+        )->whereRaw("`phone_time_use`.`traffic_type` = 'AD'")
+        ->whereRaw("`phone_time_use`.`source` = 'yss'");
         $this->addJoinConditionForYss($yssData);
+        $this->addJoinConditonCampaignReportCostForYss($yssData);
         //Adw
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
