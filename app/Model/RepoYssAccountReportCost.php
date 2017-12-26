@@ -221,7 +221,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $dataForGoogle = RepoAdwAccountReportCost::select($arrSelectGoogle)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
                 }
             )
             ->where(
@@ -300,12 +300,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->whereRaw("`phone_time_use`.`source` = 'yss'")
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                if ($startDay === $endDay) {
-                    $query->whereDate($this->getTable().'.day', '=', $endDay);
-                } else {
-                    $query->whereDate($this->getTable().'.day', '>=', $startDay)
-                        ->whereDate($this->getTable().'.day', '<=', $endDay);
-                }
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )->where(
             function (Builder $query) use ($clientId) {
@@ -326,7 +321,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
             }
         )->where(
             function (Builder $query) use ($clientId) {
@@ -405,7 +400,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
             }
         )->where(
             function (Builder $query) use ($clientId) {
@@ -453,7 +448,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwAccountReport = RepoAdwAccountReportCost::select(array_merge($adwAggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
                 }
             )->where(
                 function (Builder $query) use ($clientId) {
@@ -649,7 +644,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             array_merge([DB::raw("'adw' as engine")], $adwAggregations)
         )->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addTimeRangeCondition($startDay, $endDay, $query);
+                $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
             }
         )->where(
             function (Builder $query) use ($clientId) {
