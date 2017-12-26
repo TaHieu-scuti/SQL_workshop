@@ -91,6 +91,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function index()
     {
         $engine = $this->updateModel();
+        session()->put([self::SESSION_KEY_AD_GROUP_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);

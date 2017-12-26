@@ -109,6 +109,7 @@ class ClientsController extends AbstractReportController
     public function index()
     {
         session()->forget(self::SESSION_KEY_ENGINE);
+        session()->put([self::SESSION_KEY_CLIENT_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ACCOUNT_ID);
         if (!session('client')) {

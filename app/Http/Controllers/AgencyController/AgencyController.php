@@ -111,6 +111,7 @@ class AgencyController extends AbstractReportController
     public function index()
     {
         session()->forget(self::SESSION_KEY_ENGINE);
+        session()->put([self::SESSION_KEY_AGENCY_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, 'accountName');
 
