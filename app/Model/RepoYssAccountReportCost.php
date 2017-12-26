@@ -51,6 +51,25 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         self::AVERAGE_CPC => self::AVERAGE_CPC
     ];
 
+    const DEFAULT_COLUMNS = [
+        'impressions',
+        'clicks',
+        'cost',
+        'ctr',
+        'averageCpc',
+        'averagePosition',
+        'dailySpendingLimit',
+        'web_cv',
+        'web_cvr',
+        'web_cpa',
+        'call_cv',
+        'call_cvr',
+        'call_cpa',
+        'total_cv',
+        'total_cvr',
+        'total_cpa'
+    ];
+
     private function getAggregatedGraphOfGoogle($column)
     {
         $arrSelect = [];
@@ -284,9 +303,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid']);
         //YSS
         $joinTableName = 'repo_yss_accounts';
-        $yssAggregations = $this->getAggregated($fieldNames);
+        $yssAggregations = $this->getAggregated(self::DEFAULT_COLUMNS);
         $yssAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_yss_account_report_cost', $fieldNames),
+            $this->getAggregatedForAccounts('repo_yss_account_report_cost', self::DEFAULT_COLUMNS),
             $yssAggregations
         );
         $yssData = $this->select($yssAggregations)
@@ -315,9 +334,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $this->addJoinConditionForYss($yssData);
         $this->addJoinConditonCampaignReportCostForYss($yssData);
         //Adw
-        $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
+        $adwAggregations = $this->getAggregatedOfGoogle(self::DEFAULT_COLUMNS);
         $adwAggregations = array_merge(
-            $this->getAggregatedForAccounts('repo_adw_account_report_cost', $fieldNames),
+            $this->getAggregatedForAccounts('repo_adw_account_report_cost', self::DEFAULT_COLUMNS),
             $adwAggregations,
             [
                 DB::raw("sum('0') as dailySpendingLimit")
@@ -341,7 +360,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $this->addJoinConditionForAdw($adwData);
         //YDN
         $modelYdnReport = new RepoYdnReport;
-        $ydnData = $modelYdnReport->ydnAccountCalculate($fieldNames, $startDay, $endDay, $clientId);
+        $ydnData = $modelYdnReport->ydnAccountCalculate(self::DEFAULT_COLUMNS, $startDay, $endDay, $clientId);
         $this->addJoinConditionForYdn($ydnData);
 
         $data = $ydnData->union($yssData)->union($adwData);
