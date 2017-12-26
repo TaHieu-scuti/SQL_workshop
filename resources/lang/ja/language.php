@@ -92,4 +92,6 @@ return [
     'total_cvr' => '合計 CVR',
     'total_cpa' => '合計 CPA',
     'dailyspendinglimit' => '1日の予算',
+    'directclients' => '直クライアント',
+    'direct_client' => '直クライアント',
 ];

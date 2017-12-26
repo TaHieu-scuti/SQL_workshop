@@ -112,4 +112,6 @@ return [
     'total_cvr' => 'Total CVR',
     'total_cpa' => 'Total CPA',
     'dailyspendinglimit' => 'Daily Budget',
+    'directclients' => 'Direct Clients',
+    'direct_client' => 'Direct Clients',
 ];

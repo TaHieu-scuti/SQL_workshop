@@ -298,6 +298,7 @@ var Script = function () {
                     var obj = new Object();
                     var urlReload = 'client-report';
 
+                    obj['directClient'] = 'Client';
                     obj['id_agency'] = requestId;
                     obj['id_client'] = 'all';
                     obj['id_account'] = 'all';
@@ -314,7 +315,6 @@ var Script = function () {
                 case 'client-report' :
                     var obj = new Object();
                     var urlReload = 'account_report';
-
                     obj['id_agency'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
                     obj['id_client'] = requestId;
                     obj['id_account'] = 'all';
@@ -325,6 +325,38 @@ var Script = function () {
                     obj['engine'] = engine;
                     if (requestId === 'all') {
                         urlReload = 'client-report';
+                    }
+                    sendRequestData(obj, url, urlReload);
+                    break;
+                case 'direct-client' :
+                    var obj = new Object();
+                    url = 'direct-client-report';
+                    var urlReload = 'direct-client-report';
+                    obj['directClient'] = 'DirectClient';
+                    obj['id_agency'] = 'all';
+                    obj['id_client'] = requestId;
+                    obj['id_account'] = 'all';
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['engine'] = engine;
+                    sendRequestData(obj, url, urlReload);
+                    break;
+                case 'direct-client-report' :
+                    var obj = new Object();
+                    var urlReload = 'account_report';
+
+                    obj['id_agency'] = 'all';
+                    obj['id_client'] = requestId;
+                    obj['id_account'] = 'all';
+                    obj['id_campaign'] = 'all';
+                    obj['id_adgroup'] = 'all';
+                    obj['id_adReport'] = 'all';
+                    obj['id_keyword'] = 'all';
+                    obj['engine'] = engine;
+                    if (requestId === 'all') {
+                        urlReload = 'direct-client-report';
                     }
                     sendRequestData(obj, url, urlReload);
                     break;

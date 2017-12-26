@@ -7,6 +7,7 @@ use App\AbstractReportModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AbstractReportController;
 
 use DateTime;
 use Exception;
@@ -390,7 +391,6 @@ class Account extends AbstractReportModel
                 '=',
                 'adw.account_id'
             );
-
         return $query;
     }
 
@@ -693,6 +693,20 @@ class Account extends AbstractReportModel
         return false;
     }
 
+    public function isDirectClient($title)
+    {
+        if ($title === 'Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'DirectClient'
+        ) {
+            return true;
+        } elseif ($title === 'Direct Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client'
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     public function isAdmin($account_id)
     {
         $admin = self::select('account_id')
@@ -729,5 +743,19 @@ class Account extends AbstractReportModel
         }
 
         return false;
+    }
+
+    public function getAllDirectClient()
+    {
+        $directClients = self::select('account_id', 'accountName')
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            )
+            ->get()->toArray();
+        $arr = ['all' => 'All Direct Clients'];
+
+        return $arr + $directClients;
     }
 }

@@ -7,8 +7,11 @@ $model = new Account();
 @if ($breadcrumbs)
     <ul class="breadcrumb">
         @foreach ($breadcrumbs as $breadcrumb)
-            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);?>
-            @if ($model->checkConditonForBreadcumbs($breadcrumb->title))
+            <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);
+            ?>
+            @if ($model->checkConditonForBreadcumbs($breadcrumb->title)
+                || $model->isDirectClient($breadcrumb->title)
+            )
                 @continue;
             @endif
             <input type="hidden" name="id_{{$breadcrumb->title}}" id="id_{{$breadcrumb->title}}" value="all">

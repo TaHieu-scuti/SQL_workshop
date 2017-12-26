@@ -72,7 +72,11 @@
                                data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                                data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                                data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                               data-table="agency-report"
+                               @if ($report[$fieldName] === 'directClients')
+                                    data-table="direct-client"
+                               @else
+                                    data-table="agency-report"
+                               @endif
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'clientName')
@@ -82,6 +86,15 @@
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                             data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="client-report"
+                            >{{ $report[$fieldName] }}</a>
+                        </td>
+                    @elseif ($fieldName === 'directClients')
+                        <td>
+                            <a href="javascript:void(0)" class="table-redirect"
+                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                            data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
+                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
+                            data-table="direct-client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'accountName')
