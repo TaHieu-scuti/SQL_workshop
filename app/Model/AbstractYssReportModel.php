@@ -41,7 +41,7 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     break;
                 case 'total_cvr':
                     $expressions[] = DB::raw("
-                    ((COUNT(`phone_time_use`.`id`) / SUM(`{$this->table}`.`clicks`)) * 100 
+                    ((COUNT(`phone_time_use`.`id`) / SUM(`{$this->table}`.`clicks`)) * 100
                     +
                     (SUM(`{$this->table}`.`conversions`) / SUM(`{$this->table}`.`clicks`)) * 100)
                     / 2 as total_cvr");
