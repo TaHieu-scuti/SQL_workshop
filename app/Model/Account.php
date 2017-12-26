@@ -748,16 +748,11 @@ class Account extends AbstractReportModel
     public function getAllDirectClient()
     {
         $directClients = self::select('account_id', 'accountName')
-            ->whereNotIn(
-                'account_id',
-                function ($query) {
-                    $query->select('agent_id')
-                        ->from('accounts')
-                        ->where('agent_id', '!=', '');
-                }
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
             )
-            ->where('level', '=', 3)
-            ->where('agent_id', '=', '')
             ->get()->toArray();
         $arr = ['all' => 'All Direct Clients'];
 
