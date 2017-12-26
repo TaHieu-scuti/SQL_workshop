@@ -89,4 +89,6 @@ return [
     'web_cpa' => 'Web CPA',
     'call_cv' => 'コール数',
     'dailyspendinglimit' => '1日の予算',
+    'directclients' => '直クライアント',
+    'direct_client' => '直クライアント',
 ];

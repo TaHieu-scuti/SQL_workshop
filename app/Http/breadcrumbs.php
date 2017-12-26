@@ -16,11 +16,20 @@ Breadcrumbs::register(
     }
 );
 
-//Client->Account
+//Client
+Breadcrumbs::register(
+    'direct-client-report',
+    function ($breadcrumbs) {
+        $breadcrumbs->parent('client-report');
+        $breadcrumbs->push('Direct Client', route('direct-client-report'));
+    }
+);
+
+//Client->Account or DirectClient->Account
 Breadcrumbs::register(
     'account_report',
     function ($breadcrumbs) {
-        $breadcrumbs->parent('client-report');
+        $breadcrumbs->parent('direct-client-report');
         $breadcrumbs->push('Account', route('account_report'));
     }
 );

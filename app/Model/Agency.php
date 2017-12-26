@@ -81,7 +81,9 @@ class Agency extends Account
             );
 
         $unionQuery = $agencyClientQuery->union($directClientQuery);
-
+        if ($accountStatus === self::HIDE_ZERO_STATUS) {
+            $unionQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+        }
         $outerQuery = DB::query()
             ->from(DB::raw("({$this->getBindingSql($unionQuery)}) AS tbl"))
             ->orderBy($columnSort, $sort)

@@ -74,6 +74,16 @@ class User extends Authenticatable
                     $array['flag'] = session(AbstractReportController::SESSION_KEY_CLIENT_ID);
                 }
                 break;
+            case 'Direct Client':
+                $model = new Account();
+                $array['title'] = $title;
+                $array['contents'] = $model->getAllDirectClient();
+                if (session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
+                    $array['flag'] = 'all';
+                } else {
+                    $array['flag'] = session(AbstractReportController::SESSION_KEY_CLIENT_ID);
+                }
+                break;
             case 'Account':
                 $model = new RepoYssAccount;
                 $array['title'] = $title;

@@ -42,6 +42,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_CLIENT_ID = 'clientId';
     const SESSION_KEY_AGENCY_ID = 'agencyId';
+    const SESSION_KEY_DIRECT_CLIENT = 'directClients';
     const PREFECTURE = 'prefecture';
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
@@ -500,6 +501,15 @@ abstract class AbstractReportController extends Controller
             $this->updateSessionAccountId($request->id_account);
         }
 
+        //update session directClient if avaiable
+        if ($request->directClient !== null) {
+            session()->put(
+              [
+                  self::SESSION_KEY_DIRECT_CLIENT => $request->directClient
+              ]
+            );
+        }
+
         //get id client if avaiable
         if ($request->id_client === 'all') {
             session()->put(
@@ -812,6 +822,9 @@ abstract class AbstractReportController extends Controller
                 break;
             } elseif ($value === 'accountName' && $prefixRoute === '/agency-report') {
                 $columns[$key] = 'agencyName';
+                break;
+            } elseif ($value === 'accountName' && $prefixRoute === '/direct-client-report') {
+                $columns[$key] = 'directClients';
                 break;
             }
         }

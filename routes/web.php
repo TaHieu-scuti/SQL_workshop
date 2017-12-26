@@ -103,6 +103,40 @@ Route::prefix('account_report')->group(function () {
     );
 });
 
+Route::prefix('direct-client-report')->group(function () {
+    Route::get(
+        '/',
+        'DirectClient\DirectClientController@index'
+    )->name('direct-client-report');
+    Route::post(
+        '/update-table',
+        'DirectClient\DirectClientController@updateTable'
+    );
+    Route::post(
+        '/display-graph',
+        'DirectClient\DirectClientController@displayGraph'
+    );
+    Route::get(
+        '/export_excel',
+        'DirectClient\DirectClientController@exportToExcel'
+    );
+
+    Route::get(
+        '/export_csv',
+        'DirectClient\DirectClientController@exportToCsv'
+    );
+
+    Route::post(
+        '/updateSession',
+        'DirectClient\DirectClientController@updateSessionID'
+    );
+
+    Route::get(
+        '/getDataForLayouts',
+        'DirectClient\DirectClientController@getDataForLayouts'
+    );
+});
+
 Route::prefix('campaign-report')->group(function () {
     Route::get(
         '/',
