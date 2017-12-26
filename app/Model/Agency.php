@@ -90,7 +90,6 @@ class Agency extends Account
             ->groupBy('agencyName');
 
         $results = $outerQuery->get();
-
         return isset($results) ? $results->toArray() : [];
     }
 
@@ -109,7 +108,7 @@ class Agency extends Account
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountName']);
+        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
 
         $rawExpressions = $this->getRawExpressions($fieldNames);
         $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)

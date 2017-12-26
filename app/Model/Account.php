@@ -676,7 +676,7 @@ class Account extends AbstractReportModel
     public function addConditionAgency(Builder $query, $agencyId)
     {
         if ($agencyId !== null) {
-            $query->where('accounts.agent_id', '', $agencyId);
+            $query->where('accounts.agent_id', '=', $agencyId);
         }
     }
 
@@ -695,9 +695,13 @@ class Account extends AbstractReportModel
 
     public function isDirectClient($title)
     {
-        if ($title === 'Client' && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'DirectClient') {
+        if ($title === 'Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'DirectClient'
+        ) {
             return true;
-        } elseif ($title === 'Direct Client' && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client') {
+        } elseif ($title === 'Direct Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client'
+        ) {
             return true;
         }
         return false;

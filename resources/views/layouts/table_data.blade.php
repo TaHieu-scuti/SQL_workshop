@@ -67,18 +67,18 @@
                         @continue
                     @endif
                     @if ($fieldName === 'agencyName')
-                            <td>
-                                <a href="javascript:void(0)" class="table-redirect"
-                                   data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
-                                   data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                                   data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
-                                   @if ($report[$fieldName] === 'directClients')
-                                        data-table="direct-client"
-                                   @else
-                                        data-table="agency-report"
-                                   @endif
-                                >{{ $report[$fieldName] }}</a>
-                            </td>
+                        <td>
+                            <a href="javascript:void(0)" class="table-redirect"
+                               data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
+                               data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
+                               data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
+                               @if ($report[$fieldName] === 'directClients')
+                                    data-table="direct-client"
+                               @else
+                                    data-table="agency-report"
+                               @endif
+                            >{{ $report[$fieldName] }}</a>
+                        </td>
                     @elseif ($fieldName === 'clientName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"

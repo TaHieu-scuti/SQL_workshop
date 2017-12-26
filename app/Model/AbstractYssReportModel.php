@@ -35,6 +35,23 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     $expressions[] = DB::raw("SUM(`{$this->table}`.`cost`) /
                     SUM(`{$this->table}`.`conversions`) as web_cpa");
                     break;
+                case 'total_cv':
+                    $expressions[] = DB::raw("SUM(`{$this->table}`.`conversions`) +
+                    COUNT(`phone_time_use`.`id`) as total_cv");
+                    break;
+                case 'total_cvr':
+                    $expressions[] = DB::raw("
+                    ((COUNT(`phone_time_use`.`id`) / SUM(`{$this->table}`.`clicks`)) * 100
+                    +
+                    (SUM(`{$this->table}`.`conversions`) / SUM(`{$this->table}`.`clicks`)) * 100)
+                    / 2 as total_cvr");
+                    break;
+                case 'total_cpa':
+                    $expressions[] = DB::raw("
+                    SUM(`{$this->table}`.`cost`) / COUNT(`phone_time_use`.`id`)
+                    +
+                    SUM(`{$this->table}`.`cost`) / SUM(`{$this->table}`.`conversions`) as total_cpa");
+                    break;
             }
         }
         return $expressions;
