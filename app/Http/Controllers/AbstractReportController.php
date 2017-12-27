@@ -861,4 +861,14 @@ abstract class AbstractReportController extends Controller
         }
         return $columns;
     }
+
+    public function convertDataToArray($data)
+    {
+        $array = [];
+        foreach ($data as $val) {
+            $array[] = (array) $val;
+        }
+
+        return $array;
+    }
 }

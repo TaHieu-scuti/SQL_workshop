@@ -10,13 +10,10 @@ use App\Export\Spout\SpoutExcelExporter;
 use App\Model\DirectClient;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use DateTime;
 
 class DirectClientController extends AbstractReportController
 {
-    const TIME_PERIOD_TITLE = 'timePeriodTitle';
-    const STATUS_TITLE = 'statusTitle';
-    const START_DAY = 'startDay';
-    const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
     const PREFIX_ROUTE = 'prefixRoute';
@@ -26,11 +23,6 @@ class DirectClientController extends AbstractReportController
     const SUMMARY_REPORT = "summaryReport";
     const SESSION_KEY_PREFIX = 'directClientReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
-    const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
-    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . self::STATUS_TITLE;
-    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
-    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
@@ -114,6 +106,13 @@ class DirectClientController extends AbstractReportController
         if (!session('directClientReport')) {
             $this->initializeSession($defaultColumns);
         }
+        if (!session('accountStatus')) {
+            $this->initializeStatusSession();
+        }
+        if (!session('timePeriodTitle')) {
+            $this->initializeTimeRangeSession();
+        }
+
         return $this->responseFactory->view(
             'directClient.index',
             [
@@ -312,7 +311,10 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $directClients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($directClients);
+
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -343,7 +345,9 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $directClients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($directClients);
 
         $aliases = $this->translateFieldNames($fieldNames);
 

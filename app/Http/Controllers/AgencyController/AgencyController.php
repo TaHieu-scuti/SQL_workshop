@@ -109,6 +109,13 @@ class AgencyController extends AbstractReportController
         if (!session('agencyReport')) {
             $this->initializeSession($defaultColumns);
         }
+        if (!session('accountStatus')) {
+            $this->initializeStatusSession();
+        }
+        if (!session('timePeriodTitle')) {
+            $this->initializeTimeRangeSession();
+        }
+
         return $this->responseFactory->view(
             'agencyReport.index',
             [
@@ -308,7 +315,8 @@ class AgencyController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $agencies = $this->getDataForTable();
+        $collection = $this->convertDataToArray($agencies);
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -341,7 +349,9 @@ class AgencyController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $agencies = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($agencies);
 
         $aliases = $this->translateFieldNames($fieldNames);
 

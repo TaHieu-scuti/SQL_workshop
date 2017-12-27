@@ -161,6 +161,7 @@ class ClientsController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         $fieldsOnModal = view(
@@ -253,6 +254,7 @@ class ClientsController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         // if no data found
@@ -321,7 +323,10 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
+
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -351,7 +356,9 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
 
         $aliases = $this->translateFieldNames($fieldNames);
 
