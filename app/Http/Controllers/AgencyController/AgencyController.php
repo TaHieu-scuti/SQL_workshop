@@ -324,8 +324,8 @@ class AgencyController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $datas = $this->getDataForTable();
-        $collection = $this->convertDataToArray($datas);
+        $agencies = $this->getDataForTable();
+        $collection = $this->convertDataToArray($agencies);
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -358,9 +358,9 @@ class AgencyController extends AbstractReportController
             $this->model = new RepoYssPrefectureReportCost;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $datas = $this->getDataForTable();
+        $agencies = $this->getDataForTable();
 
-        $collection = $this->convertDataToArray($datas);
+        $collection = $this->convertDataToArray($agencies);
 
         $aliases = $this->translateFieldNames($fieldNames);
 

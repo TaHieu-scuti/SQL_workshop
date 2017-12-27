@@ -311,9 +311,9 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $datas = $this->getDataForTable();
+        $directClients = $this->getDataForTable();
 
-        $collection = $this->convertDataToArray($datas);
+        $collection = $this->convertDataToArray($directClients);
 
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
@@ -345,9 +345,9 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $datas = $this->getDataForTable();
+        $directClients = $this->getDataForTable();
 
-        $collection = $this->convertDataToArray($datas);
+        $collection = $this->convertDataToArray($directClients);
 
         $aliases = $this->translateFieldNames($fieldNames);
 
