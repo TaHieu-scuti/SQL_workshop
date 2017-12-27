@@ -22,21 +22,17 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->date('startDate')->comment('APIで指定したレポートの終了日');
                 $table->date('endDate')->comment('APIで指定したレポートの終了日');
                 $table->string('account_id', 50)->comment('ADgainerシステムのアカウントID');
-                $table->string('campaign_id', 50)
-                        ->comment('ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得');
+                $table->string('campaign_id', 50)->comment('ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得');
                 $table->string('currency', 50)->comment('顧客口座の通貨。');
                 $table->text('account')->comment('カスタマーアカウントのわかりやすい名前。')->nullable();
-                $table->string('timeZone')->comment('顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、
-                    「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。')
+                $table->string('timeZone')->comment('顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。')
                         ->nullable();
                 $table->bigInteger('adGroupId', 20)->comment('広告グループのID。')->nullable();
                 $table->text('adGroup')->comment('広告グループの名前。')->nullable();
                 $table->string('adGroupState', 50)->comment('広告グループのステータス。')->nullable();
                 $table->string('network', 50)->comment('第1レベルのネットワークタイプ。')->nullable();
                 $table->string('networkWithSearchPartners', 50)->comment('第2レベルのネットワークタイプ（検索パートナーを含む）。')->nullable();
-                $table->double('allConvRate')->comment('AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。
-                        これは、広告のクリックがコンバージョンにつながった頻度です。')
-                        ->nullable();
+                $table->double('allConvRate')->comment('AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。')->nullable();
                 $table->double('allConv')->comment('第2レベルのネットワークタイプ（検索パートナーを含む）。')->nullable();
                 $table->double('allConvValue')->comment('推定されたものを含む、すべてのコンバージョンの合計値。')->nullable();
                 $table->string('approvalStatus', 50)->comment('基準の承認ステータス。')->nullable();
@@ -161,7 +157,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->index('week', 'repo_adw_keywords_report_conv53');
                 $table->index('year', 'repo_adw_keywords_report_conv54');
             }
-        )
+        );
     }
 
     /**
