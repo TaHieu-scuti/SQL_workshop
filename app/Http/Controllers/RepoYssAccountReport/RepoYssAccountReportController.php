@@ -103,9 +103,17 @@ class RepoYssAccountReportController extends AbstractReportController
         session()->forget(self::SESSION_KEY_ENGINE);
         $defaultColumns = self::DEFAULT_COLUMNS;
         array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::MEDIA_ID);
+        
         if (!session('accountReport')) {
             $this->initializeSession($defaultColumns);
         }
+        if (!session('accountStatus')) {
+            $this->initializeStatusSession();
+        }
+        if (!session('timePeriodTitle')) {
+            $this->initializeTimeRangeSession();
+        }
+
         session([self::SESSION_KEY_ACCOUNT_ID => null]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;

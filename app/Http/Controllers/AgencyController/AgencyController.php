@@ -118,6 +118,13 @@ class AgencyController extends AbstractReportController
         if (!session('agencyReport')) {
             $this->initializeSession($defaultColumns);
         }
+        if (!session('accountStatus')) {
+            $this->initializeStatusSession();
+        }
+        if (!session('timePeriodTitle')) {
+            $this->initializeTimeRangeSession();
+        }
+
         return $this->responseFactory->view(
             'agencyReport.index',
             [
