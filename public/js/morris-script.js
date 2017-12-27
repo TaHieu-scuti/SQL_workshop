@@ -18,7 +18,6 @@ var Script = function () {
                     sendingRequestTable();
                 },
                 success: function(response) {
-                    console.log(response.coloumnForLiveSearch);
                     $('.table_data_report').html(response.tableDataLayout);
                     $('.summary_report').html(response.summaryReportLayout);
                     $('#time-period').html(response.timePeriodLayout);
