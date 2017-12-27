@@ -335,8 +335,20 @@ class Account extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
-        return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
+        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
+
+        $rawExpressions = $this->getRawExpressions($fieldNames);
+        $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '!=', '');
+
+        $result = $agencyTotalsQuery->first();
+
+        if ($result === null) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function calculateSummaryData(
@@ -353,13 +365,32 @@ class Account extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        array_unshift($fieldNames, self::FOREIGN_KEY_YSS_ACCOUNTS);
-        $datas = $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
-        $data = [];
-        foreach ($datas as $key => $val) {
-            $data[$key] = $val;
+        $result = $this->calculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if (empty($result)) {
+            return [
+                'impressions' => 0,
+                'clicks' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
         }
-        return $data;
+
+        return $result->toArray();
     }
 
     protected function getQueryBuilderForTable($select, $startDay, $endDay)
@@ -456,72 +487,6 @@ class Account extends AbstractReportModel
         }
 
         return $datas;
-    }
-
-    /**
-     * @param array   $fieldNames
-     * @param string  $startDay
-     * @param string  $endDay
-     * @param string  $accountStatus
-     * @param integer $agencyId
-     * @return array
-     */
-    public function calculateAllData(array $fieldNames, $startDay, $endDay, $accountStatus, $agencyId)
-    {
-        $modelYssAccount = new RepoYssAccountReportCost;
-        $modelYdnAccount = new RepoYdnReport;
-        $modelAdwAccount = new RepoAdwAccountReportCost;
-
-        $yssAccountAgency = $modelYssAccount->getYssAccountAgency($fieldNames, $startDay, $endDay);
-        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency($fieldNames, $startDay, $endDay);
-        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency($fieldNames, $startDay, $endDay);
-
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $yssAccountAgency = $yssAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $ydnAccountAgency = $ydnAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $adwAccountAgency = $adwAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-        }
-
-        $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
-
-        $rawExpressions = $this->getRawExpressions($fieldNames);
-
-        $query = $this->select($rawExpressions)
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
-                'accounts.account_id',
-                '=',
-                'yss.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
-                'accounts.account_id',
-                '=',
-                'adw.account_id'
-            )
-            ->where('level', '=', 3)
-            ->where('agent_id', '!=', '');
-
-        $this->addConditionAgency($query, $agencyId);
-
-        $totals = $query->first();
-        if ($totals === null) {
-            return [
-                'clicks' => 0,
-                'impressions' => 0,
-                'cost' => 0,
-                'averageCpc' => 0,
-                'averagePosition' => 0
-            ];
-        }
-
-        return $totals->toArray();
     }
 
     public function getAggregatedAgency(

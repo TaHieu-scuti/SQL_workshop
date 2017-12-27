@@ -162,6 +162,7 @@ class ClientsController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         $fieldsOnModal = view(
@@ -253,6 +254,7 @@ class ClientsController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         // if no data found
