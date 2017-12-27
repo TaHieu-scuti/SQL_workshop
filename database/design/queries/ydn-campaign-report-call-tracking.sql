@@ -16,6 +16,7 @@ AND
 |11        |YDN conversion 111110|
  */
 
+
 /* Get all AG campaigns with phone number */
 SELECT
   DISTINCT
@@ -52,16 +53,18 @@ SELECT
   SUM(`conv1`.`conversions`) AS "YDN conversion 111110 CV",
   SUM(`conv2`.`conversions`) AS "YDN conversion 111111 CV",
   SUM(`conv3`.`conversions`) AS "YDN conversion 111111 CV",
-  /* TODO: add the expressions for the AG campaign_name/phone_number columns */
-  COUNT(`total_call`.`id`) AS call_cv,
+  /* add the expressions for the AG campaign_name/phone_number columns */
+  COUNT(`conv4`.`id`) AS "Campaign Name +841234567811 CV",
+  COUNT(`conv5`.`id`) AS "Campaign Name +841234567812 CV",
+  /*COUNT(`total_call`.`id`) AS call_cv,*/
   SUM(`total`.`conversions`) AS webcv,
-  SUM(`total`.`conversions`) + COUNT(`total_call`.`id`) AS cv,
-  ((SUM(`total`.`conversions`) + COUNT(`total_call`.`id`)) / SUM(`total`.`clicks`)) * 100 AS cvr,
-  SUM(`total`.`cost`) / (SUM(`total`.`conversions`) + COUNT(`total_call`.`id`)) AS cpa,
+  /*SUM(`total`.`conversions`) + COUNT(`total_call`.`id`) AS cv,*/
+  /*((SUM(`total`.`conversions`) + COUNT(`total_call`.`id`)) / SUM(`total`.`clicks`)) * 100 AS cvr,
+  SUM(`total`.`cost`) / (SUM(`total`.`conversions`) + COUNT(`total_call`.`id`)) AS cpa,*/
   AVG(`total`.`averagePosition`) AS avgPosition
 FROM
   `repo_ydn_reports` AS total
-    LEFT JOIN `phone_time_use` AS total_call
+    /*LEFT JOIN `phone_time_use` AS total_call
       ON (
           `total_call`.`account_id` = `total`.`account_id`
         AND
@@ -74,7 +77,7 @@ FROM
           `total_call`.`source` = 'ydn'
         AND
           `total_call`.`traffic_type` = 'AD'
-      )
+      )*/
     /* Add joins for every campaignID & conversionName combination */
     LEFT JOIN `repo_ydn_reports` AS conv1
       ON (
@@ -118,7 +121,35 @@ FROM
         AND
           `conv3`.`conversionName` = 'YDN conversion 111110'
       )
-    /* TODO: Add joins for every AG campaign & phone_number combination */
+    /* Add joins for every AG campaign & phone_number combination */
+    LEFT JOIN `phone_time_use` AS conv4
+      ON (
+          `total`.`account_id` = `conv4`.`account_id`
+        AND
+          `total`.`campaign_id` = `conv4`.`campaign_id`
+        AND
+          `total`.`campaignID` = `conv4`.`utm_campaign`
+        AND
+          `total`.`day` = STR_TO_DATE(`conv4`.`time_of_call`, '%Y-%m-%d')
+        AND
+          `conv4`.`utm_campaign` = 11
+        AND
+          `conv4`.`phone_number` = '+841234567811'
+      )
+    LEFT JOIN `phone_time_use` AS conv5
+      ON (
+          `total`.`account_id` = `conv5`.`account_id`
+        AND
+          `total`.`campaign_id` = `conv5`.`campaign_id`
+        AND
+          `total`.`campaignID` = `conv5`.`utm_campaign`
+        AND
+          `total`.`day` = STR_TO_DATE(`conv5`.`time_of_call`, '%Y-%m-%d')
+        AND
+          `conv5`.`utm_campaign` = 12
+        AND
+          `conv5`.`phone_number` = '+841234567812'
+      )
 WHERE
   `total`.`account_id` = 1
 AND
