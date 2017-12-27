@@ -25,14 +25,17 @@ class CreateRepoAdwAdReportConv extends Migration
                 `accentColorResponsive` VARCHAR(50) NULL COMMENT 'レスポンシブディスプレイ広告のアクセントカラー。',
                 `currency` VARCHAR(50) NULL COMMENT '顧客口座の通貨。',
                 `account` TEXT NULL COMMENT 'カスタマーアカウントのわかりやすい名前。',
-                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
+                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 
+                たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
                 `adGroupID` INT(20) NULL COMMENT '広告グループのID。',
                 `adGroup` TEXT NULL COMMENT '広告グループの名前。',
                 `adGroupState` VARCHAR(50) NULL COMMENT '広告グループのステータス。',
                 `network` VARCHAR(50) NULL COMMENT '第1レベルのネットワークタイプ。',
                 `networkWithSearchPartners` VARCHAR(50) NULL COMMENT '第2レベルのネットワークタイプ（検索パートナーを含む）。',
-                `adType` VARCHAR(50) NULL COMMENT '広告のタイプ。広告のタイプがレポートリクエストのAPIバージョンでサポートされていない場合、このフィールドの値は「不明」になります。',
-                `allConvRate` Double NULL COMMENT 'AllConversionsをコンバージョントラッキングできる合計クリック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。 ',
+                `adType` VARCHAR(50) NULL COMMENT '広告のタイプ。広告のタイプがレポートリクエストのAPIバージョン
+                でサポートされていない場合、このフィールドの値は「不明」になります。',
+                `allConvRate` Double NULL COMMENT 'AllConversionsをコンバージョントラッキングできる合計クリ
+                ック数で割ったものです。これは、広告のクリックがコンバージョンにつながった頻度です。 ',
                 `allConv` Double NULL COMMENT 'AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。',
                 `allConvValue` Double NULL COMMENT '推定されたものを含む、すべてのコンバージョンの合計値。',
                 `allowFlexibleColorResponsive` Boolean NULL COMMENT '応答性の高いディスプレイ広告の色を厳密に使用する必要があるかどうか。',
@@ -44,9 +47,12 @@ class CreateRepoAdwAdReportConv extends Migration
                 `campaignID` INT(20) NULL COMMENT 'キャンペーンのID。',
                 `campaign` TEXT NULL COMMENT 'キャンペーンの名前。',
                 `campaignState` VARCHAR(50) NULL COMMENT 'キャンペーンのステータス。',
-                `clickType` VARCHAR(50) NULL COMMENT '[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。 広告は複数のクリックタイプで表示できるため、インプレッション数は2倍になり、合計が正確でない可能性があります。',
+                `clickType` VARCHAR(50) NULL COMMENT '[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。 
+                広告は複数のクリックタイプで表示できるため、インプレッション数は2倍になり、合計が正確でない可能性があります。',
                 `approvalStatus` VARCHAR(50) NULL COMMENT 'レビューステートとステータスを組み合わせた承認ステータス。',
-                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行するアクションを表すカテゴリ。ゼロ変換の行が返されないようにします。値：「ダウンロード」、「リード」、「購入/販売」、「サインアップ」、「キーページの表示」、「その他」の値。',
+                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行す
+                るアクションを表すカテゴリ。ゼロ変換の行が返されないようにします。値：「ダウンロード」、「リード」、
+                「購入/販売」、「サインアップ」、「キーページの表示」、「その他」の値。',
                 `convRate` Double NULL COMMENT 'コンバージョン数をコンバージョンにトラッキングできる合計クリック数で割ったものです。 ',
                 `conversions` Double NULL COMMENT '最適化を選択したすべてのコンバージョンアクションのコンバージョン数。',
                 `conversionTrackerId` INT(20) NULL COMMENT 'コンバージョントラッカーのID。',
@@ -54,18 +60,24 @@ class CreateRepoAdwAdReportConv extends Migration
                 `totalConvValue` Double NULL COMMENT 'すべてのコンバージョンのコンバージョン値の合計。',
                 `costAllConv` Double NULL COMMENT '総費用をすべてのコンバージョンで割った値。',
                 `costConv` Double NULL COMMENT 'コンバージョントラッキングクリック数に起因する費用をコンバージョン数で割った値',
-                `costConvCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、過去の「CostPerConversion」データがどのように表示されるかを示します。',
+                `costConvCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、
+                過去の「CostPerConversion」データがどのように表示されるかを示します。',
                 `destinationURL` TEXT NULL COMMENT '広告のリンク先URL。',
-                `appFinalURL` TEXT NULL COMMENT '広告の最終的なアプリURLのリスト。 リストのエントリは、a）「android-app：」（Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）のいずれかで始まります。 リスト要素はJSONリスト形式で返されます。',
+                `appFinalURL` TEXT NULL COMMENT '広告の最終的なアプリURLのリスト。 リストのエントリは、
+                a）「android-app：」（Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）
+                のいずれかで始まります。 リスト要素はJSONリスト形式で返されます。',
                 `mobileFinalURL` TEXT NULL COMMENT '広告の最終的なモバイルURLのリスト。 リスト要素はJSONリスト形式で返されます。',
                 `finalURL` TEXT NULL COMMENT '広告の最終的なURLのリスト。 リスト要素はJSONリスト形式で返されます。',
                 `trackingTemplate` TEXT NULL COMMENT '広告のトラッキングテンプレート。',
                 `customParameter` TEXT NULL COMMENT '広告のカスタムパラメータのリスト。 CustomParameters要素はJSONマップ形式で返されます。',
                 `keywordID` INT(20) NULL COMMENT '基準ID。',
                 `criteriaType` VARCHAR(50) NULL COMMENT '基準のタイプ。',
-                `crossDeviceConv` Double NULL COMMENT '顧客が1つの端末でAdWords広告をクリックしてから別の端末やブラウザで変換した後のコンバージョンデバイス間のコンバージョンは既にAllConversions列に含まれています。',
+                `crossDeviceConv` Double NULL COMMENT '顧客が1つの端末でAdWords広告をクリックしてか
+                ら別の端末やブラウザで変換した後のコンバージョンデバイス間のコンバージョンは既に
+                AllConversions列に含まれています。',
                 `conversionsCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルでの過去の「コンバージョン」データの表示方法を示します。',
-                `convValueCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、過去の「ConversionValue」データがどのように表示されるかを示します。',
+                `convValueCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、
+                過去の「ConversionValue」データがどのように表示されるかを示します。',
                 `clientName` TEXT NULL COMMENT 'カスタマーのわかりやすい名前。',
                 `day` Date NULL COMMENT '日付はyyyy-MM-ddの形式になります。',
                 `dayOfWeek` VARCHAR(50) NULL COMMENT '曜日の名前です（例：「月曜日」）。',
@@ -73,7 +85,9 @@ class CreateRepoAdwAdReportConv extends Migration
                 `descriptionLine1` TEXT NULL COMMENT '広告の1行目の説明。',
                 `descriptionLine2` TEXT NULL COMMENT '広告の2行目の説明。',
                 `device` VARCHAR(50) NULL COMMENT 'インプレッションが表示されたデバイスの種類。',
-                `devicePreference` INT(20) NULL COMMENT 'デバイスプリファレンスのプラットフォームID。 Platformsリファレンスで、対応する名前やその他の情報を参照できます。 URL：https://developers.google.com/adwords/api/docs/appendix/platforms',
+                `devicePreference` INT(20) NULL COMMENT 'デバイスプリファレンスのプラットフォームID。 
+                Platformsリファレンスで、対応する名前やその他の情報を参照できます。 
+                URL：https://developers.google.com/adwords/api/docs/appendix/platforms',
                 `displayURL` TEXT NULL COMMENT '広告のURLを表示します。',
                 `landscapeLogoIDResponsive` INT(20) NULL COMMENT 'ランドスケープロゴ画像のID。',
                 `logoIDResponsive` INT(20) NULL COMMENT 'ResponsiveDisplayAdで使用されるロゴイメージのID。',
@@ -86,7 +100,8 @@ class CreateRepoAdwAdReportConv extends Migration
                 `headline1` TEXT NULL COMMENT '拡張テキスト広告の見出しの最初の部分。',
                 `headline2` TEXT NULL COMMENT '拡張テキスト広告の見出しの2番目の部分です。',
                 `adID` INT(20) NULL COMMENT 'この行の主オブジェクトのID。',
-                `imageAdURL` TEXT NULL COMMENT '完全なURLを取得するには、この値の前に「https://tpc.googlesyndication.com/pageadimg/imgad?id=」と入力します。',
+                `imageAdURL` TEXT NULL COMMENT '完全なURLを取得するには、この値の前に「
+                https://tpc.googlesyndication.com/pageadimg/imgad?id=」と入力します。',
                 `imageHeight` INT NULL COMMENT '画像広告の高さ。他の広告タイプの場合は、値はありません。',
                 `imageWidth` INT NULL COMMENT 'イメージ広告の幅他の広告タイプの場合は、値はありません。',
                 `imageMimeType` INT NULL COMMENT '画像のMIMEタイプ。イメージ広告にのみ掲載されます。',
@@ -105,10 +120,13 @@ class CreateRepoAdwAdReportConv extends Migration
                 `promotionTextResponsive` TEXT NULL COMMENT '反応性ディスプレイ広告のプロモーションテキスト。',
                 `quarter` Date NULL COMMENT '四半期の最初の日は、yyyy-MM-ddの形式です。 四半期の暦年を使用します。たとえば、2014年第2四半期は2014-04-01に開始します。',
                 `shortHeadline` TEXT NULL COMMENT 'レスポンシブディスプレイ広告の見出しの短い形式。',
-                `adState` VARCHAR(50) NULL COMMENT 'この行のメインオブジェクトのステータス。たとえば、キャンペーンの掲載結果レポートでは、これが各行のキャンペーンのステータスになります。広告グループの掲載結果レポートでは、これは各行の広告グループのステータスになります。',
+                `adState` VARCHAR(50) NULL COMMENT 'この行のメインオブジェクトのステータス。たとえば、キャンペー
+                ンの掲載結果レポートでは、これが各行のキャンペーンのステータスになります。広告グループの掲載結果レポー
+                トでは、これは各行の広告グループのステータスになります。',
                 `valueAllConv` Double NULL COMMENT 'すべてのコンバージョンの平均値です。',
                 `valueConv` Double NULL COMMENT 'コンバージョン数の合計をコンバージョン数で割った値。',
-                `valueConvCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、過去の「ValuePerConversion」データがどのように表示されるかを示します。',
+                `valueConvCurrentModel` Double NULL COMMENT '現在選択しているアトリビューションモデルで、
+                過去の「ValuePerConversion」データがどのように表示されるかを示します。',
                 `week` Date NULL COMMENT 'yyyy-MM-ddの形式の月曜日の日付。',
                 `year` INT NULL COMMENT '年はyyyyの形式です。',
                 PRIMARY KEY (`id`),

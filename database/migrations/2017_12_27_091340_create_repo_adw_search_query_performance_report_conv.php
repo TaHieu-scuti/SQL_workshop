@@ -24,20 +24,23 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `campaign_id` VARCHAR(50) NOT NULL COMMENT 'ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得',
                 `currency` VARCHAR(50) NULL COMMENT '顧客口座の通貨。',
                 `account` TEXT NULL COMMENT 'カスタマーアカウントのわかりやすい名前。',
-                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
+                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 
+                たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
                 `adType` VARCHAR(50) NULL COMMENT '広告の基礎となるメディア形式。 値は、テンプレート広告ページの書式、 またはMediaType 列挙型です。',
                 `adGroupID` INT(20) NULL COMMENT '広告グループのID。',
                 `adGroup` TEXT NULL COMMENT '広告グループの名前。',
                 `adGroupState` VARCHAR(50) NULL COMMENT '広告グループのステータス。',
                 `network` VARCHAR(50) NULL COMMENT '第1レベルのネットワークタイプ。',
                 `networkWithSearchPartners` VARCHAR(50) NULL COMMENT '第2レベルのネットワークタイプ（検索パートナーを含む）。',
-                `allConvRate` Double NULL COMMENT 'AllConversionsをコンバージョントラッキング可能な合計クリック数で割った値です。これは広告のクリックがコンバージョンにつながった頻度です。',
+                `allConvRate` Double NULL COMMENT 'AllConversionsをコンバージョントラッキング可能な合
+                計クリック数で割った値です。これは広告のクリックがコンバージョンにつながった頻度です。',
                 `allConv` Double NULL COMMENT 'AdWordsが推進するコンバージョン数の最善の見積もり。ウェブサイト、クロスデバイス、電話通話のコンバージョンが含まれます。',
                 `allConvValue` Double NULL COMMENT '推定されたものを含め、すべてのコンバージョンの合計値。',
                 `campaignID` INT(20) NULL COMMENT '「他の広告主様との広告の掲載順位。',
                 `campaign` TEXT NULL COMMENT 'キャンペーンの名前。',
                 `campaignState` VARCHAR(50) NULL COMMENT 'キャンペーンのステータス。',
-                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行するアクションを表すカテゴリ。 ゼロ変換の行が返されないようにします。 値：「ダウンロード」、「リード」、「購入/販売」、「サインアップ」、「キーページの表示」、「その他」の値。',
+                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行するアクションを表すカテゴリ。 
+                ゼロ変換の行が返されないようにします。 値：「ダウンロード」、「リード」、「購入/販売」、「サインアップ」、「キーページの表示」、「その他」の値。',
                 `convRate` Double NULL COMMENT 'コンバージョン数をコンバージョンにトラッキングできる合計クリック数で割ったもの。',
                 `conversions` Double NULL COMMENT '最適化を選択したすべてのコンバージョンアクションのコンバージョン数。',
                 `conversionTrackerId` INT(20) NULL COMMENT 'コンバージョントラッカーのID。',
@@ -46,13 +49,17 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `costAllConv` Double NULL COMMENT '総費用をすべてのコンバージョンで割った値。',
                 `costConv` Double NULL COMMENT 'コンバージョントラッキングクリック数に起因する費用をコンバージョン数で割った値',
                 `adID` INT(20) NULL COMMENT '広告のID。',
-                `crossDeviceConv` Double NULL COMMENT 'ユーザーが1つのデバイスでAdWords広告をクリックして別のデバイスやブラウザでコンバージョンを達成したときのコンバージョンデバイス間のコンバージョンは既にAllConversions列に含まれています。',
+                `crossDeviceConv` Double NULL COMMENT 'ユーザーが1つのデバイスでAdWords広告をクリックして別の
+                デバイスやブラウザでコンバージョンを達成したときのコンバージョンデバイス間のコンバージョンは既に
+                AllConversions列に含まれています。',
                 `clientName` TEXT NULL COMMENT 'カスタマーのわかりやすい名前。',
                 `day` Date NULL COMMENT '日付はyyyy-MM-ddの形式になります。',
                 `dayOfWeek` VARCHAR(50) NULL COMMENT '曜日の名前です（例：「月曜日」）。',
                 `destinationURL` TEXT NULL COMMENT 'インプレッションのリンク先URL。',
                 `device` VARCHAR(50) NULL COMMENT 'インプレッションが表示されたデバイスの種類。',
-                `conversionSource` VARCHAR(50) NULL COMMENT '約束の数。 視聴者がライトボックス広告を展開するとエンゲージメントが発生します。 また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。',
+                `conversionSource` VARCHAR(50) NULL COMMENT '約束の数。 
+                視聴者がライトボックス広告を展開するとエンゲージメントが発生します。 
+                また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。',
                 `customerID` INT(20) NULL COMMENT '顧客ID。',
                 `finalURL` TEXT NULL COMMENT 'インプレッションの最終URL。',
                 `keywordID` INT(20) NULL COMMENT '広告を表示したキーワードのID。',
@@ -61,12 +68,14 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `monthOfYear` VARCHAR(50) NULL COMMENT '月の名前です（例：「12月」）。',
                 `quarter` Date NULL COMMENT '四半期の最初の日は、yyyy-MM-ddの形式です。 四半期の暦年を使用します。たとえば、2014年第2四半期は2014-04-01に開始します。',
                 `searchTerm` TEXT NULL COMMENT 'この属性の文字列が128文字バイトより長い場合、返される結果は単一の集約行にはなりません。',
-                `matchType` VARCHAR(50) NULL COMMENT 'バリアントを含む、広告をトリガーしたキーワードのマッチタイプ。 類似パターンの詳細については、https://support.google.com/adwords/answer/2472708をご覧ください。',
+                `matchType` VARCHAR(50) NULL COMMENT 'バリアントを含む、広告をトリガーしたキーワードのマッチタイプ。 
+                類似パターンの詳細については、https://support.google.com/adwords/answer/2472708をご覧ください。',
                 `addedExcluded` VARCHAR(50) NULL COMMENT '検索語が現在ターゲットまたは除外キーワードのいずれであるかを示します。',
                 `trackingTemplate` TEXT NULL COMMENT 'この行のメインオブジェクトのトラッキングテンプレート。',
                 `valueAllConv` Double NULL COMMENT 'すべてのコンバージョンの平均値です。',
                 `valueConv` Double NULL COMMENT 'コンバージョンの合計値を総コンバージョン数で割ったものです。',
-                `viewThroughConv` INT(20) NULL COMMENT 'ビュースルーコンバージョンの合計数。 これは、ディスプレイネットワーク広告が表示された後、後で他の広告とやり取り（クリックなど）せずにサイトのコンバージョンを達成した場合に発生します。',
+                `viewThroughConv` INT(20) NULL COMMENT 'ビュースルーコンバージョンの合計数。 これは、ディスプレ
+                イネットワーク広告が表示された後、後で他の広告とやり取り（クリックなど）せずにサイトのコンバージョンを達成した場合に発生します。',
                 `week` Date NULL COMMENT 'yyyy-MM-ddの形式の月曜日の日付。',
                 `year` INT NULL COMMENT '年はyyyyの形式です。',
                 PRIMARY KEY (`id`),
