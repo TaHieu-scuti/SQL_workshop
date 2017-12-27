@@ -12,11 +12,7 @@ use Illuminate\Http\Request;
 
 class RepoYssCampaignReportController extends AbstractReportController
 {
-    const TIME_PERIOD_TITLE = 'timePeriodTitle';
-    const STATUS_TITLE = 'statusTitle';
     const GRAPH_COLUMN_NAME = 'graphColumnName';
-    const START_DAY = 'startDay';
-    const END_DAY = 'endDay';
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const CAMPAIGN_ID = 'campaignID';
@@ -24,11 +20,6 @@ class RepoYssCampaignReportController extends AbstractReportController
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
-    const SESSION_KEY_TIME_PERIOD_TITLE = self::SESSION_KEY_PREFIX. self::TIME_PERIOD_TITLE;
-    const SESSION_KEY_ACCOUNT_STATUS = self::SESSION_KEY_PREFIX . 'accountStatus';
-    const SESSION_KEY_STATUS_TITLE = self::SESSION_KEY_PREFIX . self::STATUS_TITLE;
-    const SESSION_KEY_START_DAY = self::SESSION_KEY_PREFIX . self::START_DAY;
-    const SESSION_KEY_END_DAY = self::SESSION_KEY_PREFIX . self::END_DAY;
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;

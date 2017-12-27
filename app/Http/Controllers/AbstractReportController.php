@@ -48,6 +48,15 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_AGENCY_ID = 'agencyId';
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
     const PREFECTURE = 'prefecture';
+    const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const STATUS_TITLE = 'statusTitle';
+    const START_DAY = 'startDay';
+    const END_DAY = 'endDay';
+    const SESSION_KEY_ACCOUNT_STATUS = 'accountStatus';
+    const SESSION_KEY_TIME_PERIOD_TITLE = self::TIME_PERIOD_TITLE;
+    const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
+    const SESSION_KEY_START_DAY = self::START_DAY;
+    const SESSION_KEY_END_DAY = self::END_DAY;
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -212,12 +221,6 @@ abstract class AbstractReportController extends Controller
 
     public function initializeSession(array $columns)
     {
-        $today = new DateTime;
-        $endDay = $today->format('Y-m-d');
-        $startDay = $today->modify('-90 days')->format('Y-m-d');
-        $timePeriodTitle = "Last 90 days";
-        $accountStatus = "showZero";
-        $statusTitle = "Show 0";
         $graphColumnName = "impressions";
         $summaryReport = [
             'clicks',
@@ -227,11 +230,6 @@ abstract class AbstractReportController extends Controller
             'averagePosition'
         ];
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
-        session([static::SESSION_KEY_ACCOUNT_STATUS => $accountStatus]);
-        session([static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
-        session([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
-        session([static::SESSION_KEY_START_DAY => $startDay]);
-        session([static::SESSION_KEY_END_DAY => $endDay]);
         session([static::SESSION_KEY_PAGINATION => 20]);
         session([static::SESSION_KEY_GRAPH_COLUMN_NAME => $graphColumnName]);
         session([static::SESSION_KEY_COLUMN_SORT => 'impressions']);
@@ -260,6 +258,25 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === null) {
             session([self::SESSION_KEY_ENGINE => null]);
         }
+    }
+
+    public function initializeTimeRangeSession()
+    {
+        $today = new DateTime;
+        $endDay = $today->format('Y-m-d');
+        $startDay = $today->modify('-90 days')->format('Y-m-d');
+        $timePeriodTitle = "Last 90 days";
+        session([static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+        session([static::SESSION_KEY_START_DAY => $startDay]);
+        session([static::SESSION_KEY_END_DAY => $endDay]);
+    }
+
+    public function initializeStatusSession()
+    {
+        $accountStatus = "showZero";
+        $statusTitle = "Show 0";
+        session([static::SESSION_KEY_ACCOUNT_STATUS => $accountStatus]);
+        session([static::SESSION_KEY_STATUS_TITLE => $statusTitle]);
     }
 
     public function updateGroupByFieldWhenSessionEngineChange(array $columns)
