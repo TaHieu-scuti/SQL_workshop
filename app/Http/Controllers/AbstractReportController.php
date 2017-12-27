@@ -845,10 +845,10 @@ abstract class AbstractReportController extends Controller
         return $columns;
     }
 
-    public function convertDataToArray($datas)
+    public function convertDataToArray($data)
     {
         $array = [];
-        foreach ($datas as $val) {
+        foreach ($data as $val) {
             $array[] = (array) $val;
         }
 
