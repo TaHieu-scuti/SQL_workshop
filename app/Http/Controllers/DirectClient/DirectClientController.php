@@ -10,6 +10,7 @@ use App\Export\Spout\SpoutExcelExporter;
 use App\Model\DirectClient;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use DateTime;
 
 class DirectClientController extends AbstractReportController
 {
@@ -312,7 +313,10 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $datas = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($datas);
+
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -343,7 +347,9 @@ class DirectClientController extends AbstractReportController
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $datas = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($datas);
 
         $aliases = $this->translateFieldNames($fieldNames);
 
