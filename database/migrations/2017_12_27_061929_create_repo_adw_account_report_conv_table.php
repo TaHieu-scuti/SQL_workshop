@@ -157,6 +157,6 @@ class CreateRepoAdwAccountReportConvTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('repo_adw_account_report_conv');
     }
 }
