@@ -157,7 +157,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->index('week', 'repo_adw_keywords_report_conv53');
                 $table->index('year', 'repo_adw_keywords_report_conv54');
             }
-        );T
+        );
     }
 
     /**
