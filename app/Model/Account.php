@@ -470,23 +470,25 @@ class Account extends AbstractReportModel
 
         $getAgreatedAgency = $this->getAggregatedAgency($fieldNames, 'clientName');
 
-        $query = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
+        $clientsQuery = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->orderBy($columnSort, $sort);
 
-        $this->addConditionAgency($query, $agencyId);
+        $this->addConditionAgency($clientsQuery, $agencyId);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $clientsQuery = $clientsQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
 
-        $datas = [];
-        foreach ($query->get() as $report) {
-            $datas[] = $report->toArray();
-        }
+        $outerQuery = DB::query()
+            ->from(DB::raw("({$this->getBindingSql($clientsQuery)}) AS tbl"))
+            ->orderBy($columnSort, $sort)
+            ->groupBy('clientName');
 
-        return $datas;
+        $results = $outerQuery->get();
+
+        return isset($results) ? $results->toArray() : [];
     }
 
     public function getAggregatedAgency(

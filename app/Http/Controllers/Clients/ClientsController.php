@@ -323,7 +323,10 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
+
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -353,7 +356,9 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
 
         $aliases = $this->translateFieldNames($fieldNames);
 
