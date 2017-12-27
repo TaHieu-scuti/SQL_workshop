@@ -380,12 +380,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         )
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                if ($startDay === $endDay) {
-                    $query->whereDate($this->getTable().'.day', '=', $endDay);
-                } else {
-                    $query->whereDate($this->getTable().'.day', '>=', $startDay)
-                        ->whereDate($this->getTable().'.day', '<=', $endDay);
-                }
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
             }
         )->where(
             function (Builder $query) use ($clientId) {
