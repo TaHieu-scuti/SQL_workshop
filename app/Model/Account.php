@@ -666,8 +666,10 @@ class Account extends AbstractReportModel
             && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'DirectClient'
         ) {
             return true;
-        } elseif ($title === 'Direct Client'
-            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client'
+        } elseif (($title === 'Direct Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client')
+            || ($title === 'Direct Client'
+            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === null)
         ) {
             return true;
         }
