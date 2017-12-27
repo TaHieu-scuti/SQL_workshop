@@ -18,11 +18,11 @@ var Script = function () {
                     sendingRequestTable();
                 },
                 success: function(response) {
+                    console.log(response.coloumnForLiveSearch);
                     $('.table_data_report').html(response.tableDataLayout);
                     $('.summary_report').html(response.summaryReportLayout);
                     $('#time-period').html(response.timePeriodLayout);
                     $('#status-label').html(response.statusLayout);
-                    $('.selectionOnGraph').html(response.coloumnForLiveSearch);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
                 },
