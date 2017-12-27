@@ -119,6 +119,8 @@ class AgencyController extends AbstractReportController
         return $this->responseFactory->view(
             'agencyReport.index',
             [
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
             ]
         );
@@ -171,13 +173,6 @@ class AgencyController extends AbstractReportController
                 )
             ]
         )->render();
-        $columnForLiveSearch = view(
-            'layouts.graph_items',
-            [
-                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
-                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
-            ]
-        )->render();
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
@@ -198,7 +193,6 @@ class AgencyController extends AbstractReportController
                 'summaryReportLayout' => $summaryReportLayout,
                 'tableDataLayout' => $tableDataLayout,
                 'fieldsOnModal' => $fieldsOnModal,
-                'coloumnForLiveSearch' => $columnForLiveSearch,
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'keyPagination' => $keyPagination

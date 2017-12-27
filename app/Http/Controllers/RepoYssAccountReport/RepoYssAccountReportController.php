@@ -113,7 +113,9 @@ class RepoYssAccountReportController extends AbstractReportController
         return $this->responseFactory->view(
             'yssAccountReport.index',
             [
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
             ]
         );
     }
@@ -170,13 +172,6 @@ class RepoYssAccountReportController extends AbstractReportController
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
             ]
         )->render();
-        $columnForLiveSearch = view(
-            'layouts.graph_items',
-            [
-                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
-                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
-            ]
-        )->render();
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
@@ -197,7 +192,6 @@ class RepoYssAccountReportController extends AbstractReportController
                 'summaryReportLayout' => $summaryReportLayout,
                 'tableDataLayout' => $tableDataLayout,
                 'fieldsOnModal' => $fieldsOnModal,
-                'coloumnForLiveSearch' => $columnForLiveSearch,
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'keyPagination' => $keyPagination
