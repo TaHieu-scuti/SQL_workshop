@@ -25,7 +25,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->string('campaign_id', 50)->comment('ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得');
                 $table->string('currency', 50)->comment('顧客口座の通貨。');
                 $table->text('account')->comment('カスタマーアカウントのわかりやすい名前。')->nullable();
-                $table->string('timeZone')->comment('顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。')
+                $table->string('timeZone', 50)->comment('顧客アカウント用に選択されたタイムゾーンの名前。 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。')
                         ->nullable();
                 $table->bigInteger('adGroupId', 20)->comment('広告グループのID。')->nullable();
                 $table->text('adGroup')->comment('広告グループの名前。')->nullable();
@@ -73,9 +73,9 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->double('estAddCostWkFirstPositionBid')->comment('FirstPositionCpcの値にキーワードの入札単価を変更すると、週あたりの費用の見積もりが変わる可能性があります。')->nullable();
                 $table->string('conversionSource', 50)->comment('ウェブサイトなどの変換元、通話からのインポート。')->nullable();
                 $table->bigInteger('customerID', 20)->comment('顧客ID。')->nullable();
-                $table->text('appFinalURL', 20)->comment('この行のメインオブジェクトの最終的なアプリURLのリスト。リストのエントリは、a）「android-app：」（Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）のいずれかで始まります。 AppUrlList要素はJSONリスト形式で返されます。')->nullable();
-                $table->text('mobileFinalURL', 20)->comment('この行のメインオブジェクトの最終的なモバイルURLのリスト。 UrlList要素はJSONリスト形式で返されます。')->nullable();
-                $table->text('finalURL', 20)->comment('この行の主要オブジェクトの最終的なURLのリスト。 UrlList要素はJSONリスト形式で返されます。')->nullable();
+                $table->text('appFinalURL')->comment('この行のメインオブジェクトの最終的なアプリURLのリスト。リストのエントリは、a）「android-app：」（Androidアプリの場合）またはb）「os-app：」（iOSアプリの場合）のいずれかで始まります。 AppUrlList要素はJSONリスト形式で返されます。')->nullable();
+                $table->text('mobileFinalURL')->comment('この行のメインオブジェクトの最終的なモバイルURLのリスト。 UrlList要素はJSONリスト形式で返されます。')->nullable();
+                $table->text('finalURL')->comment('この行の主要オブジェクトの最終的なURLのリスト。 UrlList要素はJSONリスト形式で返されます。')->nullable();
                 $table->double('firstPageCPC')->comment('検索結果の最初のページに広告を表示するために必要なクリック単価の見積もり。通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。')->nullable();
                 $table->double('firstPositionCPC')->comment('広告がGoogle検索結果の最初のページの最初の位置に表示されるのに必要な金額を見積もります。通常マイクロ秒単位の数字ですが、自動入札機能が使用されている場合は「auto：」という接頭辞が付いていてもよく、単に「auto」という文字列であってもかまいません。')->nullable();
                 $table->bigInteger('keywordID', 20)->comment('この行の主オブジェクトのID。')->nullable();
@@ -157,7 +157,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 $table->index('week', 'repo_adw_keywords_report_conv53');
                 $table->index('year', 'repo_adw_keywords_report_conv54');
             }
-        );
+        );T
     }
 
     /**
