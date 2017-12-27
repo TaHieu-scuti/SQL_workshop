@@ -283,13 +283,22 @@ abstract class AbstractReportModel extends Model
      * @param string  $endDay
      * @param Builder $query
      */
-    protected function addTimeRangeCondition($startDay, $endDay, Builder $query)
+    protected function addTimeRangeCondition($startDay, $endDay, Builder $query, $tableName = null)
     {
-        if ($startDay === $endDay) {
-            $query->whereDate('day', '=', $endDay);
+        if ($tableName === null) {
+            if ($startDay === $endDay) {
+                $query->whereDate($this->getTable().'.day', '=', $endDay);
+            } else {
+                $query->whereDate($this->getTable().'.day', '>=', $startDay)
+                    ->whereDate($this->getTable().'.day', '<=', $endDay);
+            }
         } else {
-            $query->whereDate('day', '>=', $startDay)
-                ->whereDate('day', '<=', $endDay);
+            if ($startDay === $endDay) {
+                $query->whereDate($tableName.'.day', '=', $endDay);
+            } else {
+                $query->whereDate($tableName.'.day', '>=', $startDay)
+                    ->whereDate($tableName.'.day', '<=', $endDay);
+            }
         }
     }
 
