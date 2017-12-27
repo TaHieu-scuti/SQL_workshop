@@ -36,9 +36,10 @@ SELECT
   SUM(`total`.`cost`) AS cost,
   AVG(`total`.`ctr`) AS ctr,
   AVG(`total`.`averageCpc`) AS cpc,
-  /* TODO: add the expressions for the conversionName columns */
+  /* add the expressions for the conversionName columns */
   SUM(`conv1`.`conversions`) AS "YDN conversion 111110 CV",
   SUM(`conv2`.`conversions`) AS "YDN conversion 111111 CV",
+  SUM(`conv3`.`conversions`) AS "YDN conversion 111111 CV",
   /* TODO: add the expressions for the AG campaign_name/phone_number columns */
   COUNT(`total_call`.`id`) AS call_cv,
   SUM(`total`.`conversions`) AS webcv,
@@ -62,7 +63,7 @@ FROM
         AND
           `total_call`.`traffic_type` = 'AD'
       )
-    /* TODO: Add joins for every campaignID & conversionName combination */
+    /* Add joins for every campaignID & conversionName combination */
     LEFT JOIN `repo_ydn_reports` AS conv1
       ON (
           `total`.`account_id` = `conv1`.`account_id`
@@ -90,6 +91,20 @@ FROM
           `conv2`.`campaignID` = 11
         AND
           `conv2`.`conversionName` = 'YDN conversion 111111'
+      )
+    LEFT JOIN `repo_ydn_reports` AS conv3
+      ON (
+          `total`.`account_id` = `conv3`.`account_id`
+        AND
+          `total`.`accountId` = `conv3`.`accountId`
+        AND
+          `total`.`day` = `conv3`.`day`
+        AND
+          `total`.`campaignID` = `conv3`.`campaignID`
+        AND
+          `conv3`.`campaignID` = 11
+        AND
+          `conv3`.`conversionName` = 'YDN conversion 111110'
       )
     /* TODO: Add joins for every AG campaign & phone_number combination */
 WHERE
