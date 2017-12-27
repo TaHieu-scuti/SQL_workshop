@@ -83,7 +83,7 @@ class PhoneTimeUseGenerator extends Seeder
         $phoneTimeUse->unique_call_id = uniqid();
 
         $phoneTimeUse->pre_call_id = '';
-        $phoneTimeUse->phone_number = '';
+        $phoneTimeUse->phone_number = '+8412345678' . $campaign_id;
         $phoneTimeUse->number_dialed = '';
 
         $phoneTimeUse->account_id = $account_id;
