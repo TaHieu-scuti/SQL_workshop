@@ -106,6 +106,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
+        $tableColumns = $this->updateTableColumns($dataReports);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -117,7 +118,7 @@ class RepoYssKeywordReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -175,11 +176,14 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        //add more columns higher layer to fieldnames
+        $tableColumns = $this->updateTableColumns($reports);
+
         $tableDataLayout = view(
             'layouts.table_data',
             [
             self::REPORTS => $reports,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::FIELD_NAMES => $tableColumns,
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
