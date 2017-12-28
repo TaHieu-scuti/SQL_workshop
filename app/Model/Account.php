@@ -341,6 +341,7 @@ class Account extends AbstractReportModel
         $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
             ->where('accounts.level', '=', 3)
             ->where('accounts.agent_id', '!=', '');
+        $this->addConditionAgency($agencyTotalsQuery, $agencyId);
 
         $result = $agencyTotalsQuery->first();
 
@@ -371,6 +372,7 @@ class Account extends AbstractReportModel
             $accountStatus,
             $startDay,
             $endDay,
+            $groupedByField = null,
             $agencyId,
             $accountId,
             $clientId,
@@ -502,12 +504,18 @@ class Account extends AbstractReportModel
             if ($fieldName === 'accountName') {
                 if ($accountNameValue === 'accountName') {
                     $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName . ' AS ' . $accountNameAlias);
+                } elseif ($accountNameValue === 'parentAccounts') {
+                    $arrayCalculate[] = DB::raw('parentAccounts.accountName AS ' . $accountNameAlias);
                 } else {
                     $arrayCalculate[] = DB::raw($accountNameValue . ' AS ' . $accountNameAlias);
                 }
             }
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
-                $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
+                if ($accountNameValue === 'parentAccounts') {
+                    $arrayCalculate[] = DB::raw('parentAccounts.account_id AS account_id');
+                } else {
+                    $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
+                }
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(

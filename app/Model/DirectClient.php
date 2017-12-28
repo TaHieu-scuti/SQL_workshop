@@ -204,6 +204,7 @@ class DirectClient extends Account
             $accountStatus,
             $startDay,
             $endDay,
+            $groupedByField = null,
             $agencyId,
             $accountId,
             $clientId,
