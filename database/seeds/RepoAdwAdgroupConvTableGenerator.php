@@ -18,8 +18,7 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
     ];
     const MIN_CURRENCY = 1;
     const MAX_CURRENCY = 100;
-    const MIN_CONVERSION_POINT = 1;
-    const MAX_CONVERSION_POINT = 3;
+    const NUMBER_OF_CONVERSION_POINTS = 3;
     /**
      * Run the database seeds.
      *
@@ -29,8 +28,7 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
     {
         $adwCostAdgroups = RepoAdwAdgroupReportCost::all();
         foreach ($adwCostAdgroups as $adwCostAdgroup) {
-            $numberOfConversionPoints = mt_rand(self::MIN_CONVERSION_POINT, self::MAX_CONVERSION_POINT);
-            for ($i=0; $i < $numberOfConversionPoints; $i++) {
+            for ($i=0; $i < (self::NUMBER_OF_CONVERSION_POINTS - 1); $i++) {
                 $adwConvAdgroup = new RepoAdwAdgroupReportConv;
                 $adwConvAdgroup->exeDate = $adwCostAdgroup->exeDate;
                 $adwConvAdgroup->startDate = $adwCostAdgroup->startDate;
@@ -54,7 +52,7 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
                 $adwConvAdgroup->campaignID = $adwCostAdgroup->campaignID;
                 $adwConvAdgroup->campaign = $adwCostAdgroup->campaign;
                 $adwConvAdgroup->campaignState = $adwCostAdgroup->campaignState;
-                $adwConvAdgroup->conversions = $adwCostAdgroup->conversions / $numberOfConversionPoints;
+                $adwConvAdgroup->conversions = $adwCostAdgroup->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $adwConvAdgroup->conversionCategory = self::CONVERSION_CATEGORY[mt_rand(
                     0,
                     count(self::CONVERSION_CATEGORY) - 1

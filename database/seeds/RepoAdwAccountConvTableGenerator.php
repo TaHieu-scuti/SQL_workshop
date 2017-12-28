@@ -17,8 +17,7 @@ class RepoAdwAccountConvTableGenerator extends Seeder
     ];
     const MIN_CURRENCY = 1;
     const MAX_CURRENCY = 100;
-    const MIN_CONVERSION_POINT = 1;
-    const MAX_CONVERSION_POINT = 3;
+    const NUMBER_OF_CONVERSION_POINTS = 3;
     /**
      * Run the database seeds.
      *
@@ -28,8 +27,7 @@ class RepoAdwAccountConvTableGenerator extends Seeder
     {
         $adwCostAccounts = RepoAdwAccountReportCost::all();
         foreach ($adwCostAccounts as $adwCostAccount) {
-            $numberOfConversionPoints = mt_rand(self::MIN_CONVERSION_POINT, self::MAX_CONVERSION_POINT);
-            for ($i = 0; $i < $numberOfConversionPoints; $i++) {
+            for ($i = 0; $i < (self::NUMBER_OF_CONVERSION_POINTS - 1); $i++) {
                 $adwConvAccount = new RepoAdwAccountReportConv;
                 $adwConvAccount->exeDate = $adwCostAccount->exeDate;
                 $adwConvAccount->startDate = $adwCostAccount->startDate;
@@ -45,7 +43,7 @@ class RepoAdwAccountConvTableGenerator extends Seeder
                     0,
                     count(self::CONVERSION_CATEGORY) - 1
                 )];
-                $adwConvAccount->conversions = $adwCostAccount->conversions / $numberOfConversionPoints;
+                $adwConvAccount->conversions = $adwCostAccount->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $adwConvAccount->conversionTrackerId = mt_rand(0, count(self::CONVERSION_NAME) -1);
                 $adwConvAccount->conversionName = self::CONVERSION_NAME[$adwConvAccount->conversionTrackerId];
                 $adwConvAccount->day = $adwCostAccount->day;
