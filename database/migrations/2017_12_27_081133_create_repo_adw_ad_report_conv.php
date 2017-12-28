@@ -15,7 +15,7 @@ class CreateRepoAdwAdReportConv extends Migration
     public function up()
     {
         DB::statement(
-            "CREATE TABLE IF NOT EXISTS `ADGAINER_db_SECURE`.`repo_adw_ad_report_conv` (
+            "CREATE TABLE `repo_adw_ad_report_conv` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `exeDate` DATE NOT NULL COMMENT 'レポートAPI実行日',
                 `startDate` DATE NOT NULL COMMENT 'APIで指定したレポートの開始日',
@@ -25,7 +25,7 @@ class CreateRepoAdwAdReportConv extends Migration
                 `accentColorResponsive` VARCHAR(50) NULL COMMENT 'レスポンシブディスプレイ広告のアクセントカラー。',
                 `currency` VARCHAR(50) NULL COMMENT '顧客口座の通貨。',
                 `account` TEXT NULL COMMENT 'カスタマーアカウントのわかりやすい名前。',
-                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 
+                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。
                 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
                 `adGroupID` INT(20) NULL COMMENT '広告グループのID。',
                 `adGroup` TEXT NULL COMMENT '広告グループの名前。',
@@ -47,7 +47,7 @@ class CreateRepoAdwAdReportConv extends Migration
                 `campaignID` INT(20) NULL COMMENT 'キャンペーンのID。',
                 `campaign` TEXT NULL COMMENT 'キャンペーンの名前。',
                 `campaignState` VARCHAR(50) NULL COMMENT 'キャンペーンのステータス。',
-                `clickType` VARCHAR(50) NULL COMMENT '[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。 
+                `clickType` VARCHAR(50) NULL COMMENT '[インプレッション数]フィールドには、そのクリックタイプで広告が配信された頻度が反映されます。
                 広告は複数のクリックタイプで表示できるため、インプレッション数は2倍になり、合計が正確でない可能性があります。',
                 `approvalStatus` VARCHAR(50) NULL COMMENT 'レビューステートとステータスを組み合わせた承認ステータス。',
                 `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行す
@@ -85,8 +85,8 @@ class CreateRepoAdwAdReportConv extends Migration
                 `descriptionLine1` TEXT NULL COMMENT '広告の1行目の説明。',
                 `descriptionLine2` TEXT NULL COMMENT '広告の2行目の説明。',
                 `device` VARCHAR(50) NULL COMMENT 'インプレッションが表示されたデバイスの種類。',
-                `devicePreference` INT(20) NULL COMMENT 'デバイスプリファレンスのプラットフォームID。 
-                Platformsリファレンスで、対応する名前やその他の情報を参照できます。 
+                `devicePreference` INT(20) NULL COMMENT 'デバイスプリファレンスのプラットフォームID。
+                Platformsリファレンスで、対応する名前やその他の情報を参照できます。
                 URL：https://developers.google.com/adwords/api/docs/appendix/platforms',
                 `displayURL` TEXT NULL COMMENT '広告のURLを表示します。',
                 `landscapeLogoIDResponsive` INT(20) NULL COMMENT 'ランドスケープロゴ画像のID。',

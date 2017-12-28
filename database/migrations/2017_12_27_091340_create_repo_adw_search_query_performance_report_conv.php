@@ -15,7 +15,7 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
     public function up()
     {
         DB::statement(
-            "CREATE TABLE IF NOT EXISTS `ADGAINER_db_SECURE`.`repo_adw_search_query_performance_report_conv` (
+            "CREATE TABLE `repo_adw_search_query_performance_report_conv` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `exeDate` DATE NOT NULL COMMENT 'レポートAPI実行日',
                 `startDate` DATE NOT NULL COMMENT 'APIで指定したレポートの開始日',
@@ -24,7 +24,7 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `campaign_id` VARCHAR(50) NOT NULL COMMENT 'ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得',
                 `currency` VARCHAR(50) NULL COMMENT '顧客口座の通貨。',
                 `account` TEXT NULL COMMENT 'カスタマーアカウントのわかりやすい名前。',
-                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 
+                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。
                 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
                 `adType` VARCHAR(50) NULL COMMENT '広告の基礎となるメディア形式。 値は、テンプレート広告ページの書式、 またはMediaType 列挙型です。',
                 `adGroupID` INT(20) NULL COMMENT '広告グループのID。',
@@ -39,7 +39,7 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `campaignID` INT(20) NULL COMMENT '「他の広告主様との広告の掲載順位。',
                 `campaign` TEXT NULL COMMENT 'キャンペーンの名前。',
                 `campaignState` VARCHAR(50) NULL COMMENT 'キャンペーンのステータス。',
-                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行するアクションを表すカテゴリ。 
+                `conversionCategory` VARCHAR(255) NULL COMMENT 'ユーザーがコンバージョンを達成するために実行するアクションを表すカテゴリ。
                 ゼロ変換の行が返されないようにします。 値：「ダウンロード」、「リード」、「購入/販売」、「サインアップ」、「キーページの表示」、「その他」の値。',
                 `convRate` Double NULL COMMENT 'コンバージョン数をコンバージョンにトラッキングできる合計クリック数で割ったもの。',
                 `conversions` Double NULL COMMENT '最適化を選択したすべてのコンバージョンアクションのコンバージョン数。',
@@ -57,8 +57,8 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `dayOfWeek` VARCHAR(50) NULL COMMENT '曜日の名前です（例：「月曜日」）。',
                 `destinationURL` TEXT NULL COMMENT 'インプレッションのリンク先URL。',
                 `device` VARCHAR(50) NULL COMMENT 'インプレッションが表示されたデバイスの種類。',
-                `conversionSource` VARCHAR(50) NULL COMMENT '約束の数。 
-                視聴者がライトボックス広告を展開するとエンゲージメントが発生します。 
+                `conversionSource` VARCHAR(50) NULL COMMENT '約束の数。
+                視聴者がライトボックス広告を展開するとエンゲージメントが発生します。
                 また、今後、他の広告タイプがエンゲージメント指標をサポートする場合もあります。',
                 `customerID` INT(20) NULL COMMENT '顧客ID。',
                 `finalURL` TEXT NULL COMMENT 'インプレッションの最終URL。',
@@ -68,7 +68,7 @@ class CreateRepoAdwSearchQueryPerformanceReportConv extends Migration
                 `monthOfYear` VARCHAR(50) NULL COMMENT '月の名前です（例：「12月」）。',
                 `quarter` Date NULL COMMENT '四半期の最初の日は、yyyy-MM-ddの形式です。 四半期の暦年を使用します。たとえば、2014年第2四半期は2014-04-01に開始します。',
                 `searchTerm` TEXT NULL COMMENT 'この属性の文字列が128文字バイトより長い場合、返される結果は単一の集約行にはなりません。',
-                `matchType` VARCHAR(50) NULL COMMENT 'バリアントを含む、広告をトリガーしたキーワードのマッチタイプ。 
+                `matchType` VARCHAR(50) NULL COMMENT 'バリアントを含む、広告をトリガーしたキーワードのマッチタイプ。
                 類似パターンの詳細については、https://support.google.com/adwords/answer/2472708をご覧ください。',
                 `addedExcluded` VARCHAR(50) NULL COMMENT '検索語が現在ターゲットまたは除外キーワードのいずれであるかを示します。',
                 `trackingTemplate` TEXT NULL COMMENT 'この行のメインオブジェクトのトラッキングテンプレート。',

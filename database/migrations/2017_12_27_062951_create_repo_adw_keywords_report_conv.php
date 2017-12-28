@@ -15,7 +15,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
     public function up()
     {
         DB::statement(
-            "CREATE TABLE IF NOT EXISTS `ADGAINER_db_SECURE`.`repo_adw_keywords_report_conv` (
+            "CREATE TABLE `repo_adw_keywords_report_conv` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `exeDate` DATE NOT NULL COMMENT 'レポートAPI実行日',
                 `startDate` DATE NOT NULL COMMENT 'APIで指定したレポートの開始日',
@@ -24,7 +24,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 `campaign_id` VARCHAR(50) NOT NULL COMMENT 'ADgainerシステムのキャンペーンID。destinationURLのクエリパラメータを分解して取得',
                 `currency` VARCHAR(50) NULL COMMENT '顧客口座の通貨。',
                 `account` TEXT NULL COMMENT 'カスタマーアカウントのわかりやすい名前。',
-                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。 
+                `timeZone` VARCHAR(50) NULL COMMENT '顧客アカウント用に選択されたタイムゾーンの名前。
                 たとえば、「（GMT-05：00）東部時間」などです。 このフィールドには、タイムゾーンの夏時間の現在の状態は反映されません。',
                 `adGroupID` INT(20) NULL COMMENT '広告グループのID。',
                 `adGroup` TEXT NULL COMMENT '広告グループの名前。',
@@ -108,7 +108,7 @@ class CreateRepoAdwKeywordsReportConv extends Migration
                 `month` Date NULL COMMENT '月の最初の日。yyyy-MM-ddの形式です。',
                 `monthOfYear` VARCHAR(50) NULL COMMENT '月の名前です（例：「12月」）。',
                 `landingPageExperience` VARCHAR(50) NULL COMMENT 'ランディングページの品質スコア。',
-                `qualityScore` INT NULL COMMENT 'AdGroupCriterionの品質スコア。範囲は1（最低）〜10（最高）です。品質スコア情報がない場合、 
+                `qualityScore` INT NULL COMMENT 'AdGroupCriterionの品質スコア。範囲は1（最低）〜10（最高）です。品質スコア情報がない場合、
                 - が返されます。 「HasQualityScore」列を使用してフィルタを適用して、QualityScoreフィールドの値
                 の有無にかかわらず条件を含めるか除外することができます。詳細については、レポートコンセプトガイド
                 （URL：https://developers.google.com/adwords/api/docs/guides/
