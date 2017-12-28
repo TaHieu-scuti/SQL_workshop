@@ -380,6 +380,21 @@
         {
             return '{{ $prefixRoute }}';
         }
+
+        function getLevelCurrentUser()
+        {
+            @php
+                $accountModel = new App\Model\Account;
+                $currentAccountId = Auth::user()->account_id;
+                $levelCurrentUser = 'directClient';
+                if ($accountModel->isAdmin($currentAccountId)) {
+                    $levelCurrentUser = 'admin';
+                } elseif ($accountModel->isAgency($currentAccountId)) {
+                    $levelCurrentUser = 'agency';
+                }
+            @endphp
+            return '{{ $levelCurrentUser }}';
+        }
     </script>
     <script src="/js/common-function.js"></script>
     <script src="/js/common.js"></script>
