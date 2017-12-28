@@ -345,12 +345,14 @@
                 }
             }
         });
+
         $(document).ready(function() {
             $(document).on('click', '.pagination a', function (e) {
                 getAccountReports($(this).attr('href').split('page=')[1]);
                 e.preventDefault();
             });
         });
+
         function getAccountReports(page) {
             $.ajaxSetup({
                 headers: {
@@ -362,16 +364,22 @@
                 type : 'POST',
                 url : getRoutePrefix() + '/update-table?page=' + page,
                 dataType: 'json',
+                beforeSend : function () {
+                    sendingRequestTable();
+                },
                 success: function (data) {
-                    console.log(data);
                     $('.table_data_report').html('');
                     $('.table_data_report').html(data.tableDataLayout);
                     $('.summary_report').html(data.summaryReportLayout);
+                    processDataTable(data);
                     history.pushState("", "", '?page=' + page);
                 },
                 error: function (data) {
-
+                    checkErrorAjax(data);
                     alert('Reports could not be loaded.');
+                },
+                complete : function () {
+                    completeRequestTable();
                 }
             });
         }
