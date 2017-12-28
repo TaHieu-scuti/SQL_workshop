@@ -12,13 +12,10 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
         'Conversion category 1', 'Conversion category 2',
         'Conversion categroy 3', 'Conversion category 4'
     ];
-    const CONVERSION_NAME = [
-        'Conversion name 1', 'Conversion name 2',
-        'Conversion name 3', 'Conversion name 4'
-    ];
     const MIN_CURRENCY = 1;
     const MAX_CURRENCY = 100;
     const NUMBER_OF_CONVERSION_POINTS = 3;
+    const CONVERSION_NAME = 'Conversion Name ';
     /**
      * Run the database seeds.
      *
@@ -28,7 +25,7 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
     {
         $adwCostAdgroups = RepoAdwAdgroupReportCost::all();
         foreach ($adwCostAdgroups as $adwCostAdgroup) {
-            for ($i=0; $i < (self::NUMBER_OF_CONVERSION_POINTS - 1); $i++) {
+            for ($i=0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
                 $adwConvAdgroup = new RepoAdwAdgroupReportConv;
                 $adwConvAdgroup->exeDate = $adwCostAdgroup->exeDate;
                 $adwConvAdgroup->startDate = $adwCostAdgroup->startDate;
@@ -58,7 +55,7 @@ class RepoAdwAdgroupConvTableGenerator extends Seeder
                     count(self::CONVERSION_CATEGORY) - 1
                 )];
                 $adwConvAdgroup->conversionTrackerId = mt_rand(0, count(self::CONVERSION_NAME) -1);
-                $adwConvAdgroup->conversionName = self::CONVERSION_NAME[$adwConvAdgroup->conversionTrackerId];
+                $adwConvAdgroup->conversionName = self::CONVERSION_NAME . ($i + 1);
                 $adwConvAdgroup->clientName = $adwCostAdgroup->clientName;
                 $adwConvAdgroup->day = $adwCostAdgroup->day;
                 $adwConvAdgroup->dayOfWeek = $adwCostAdgroup->dayOfWeek;
