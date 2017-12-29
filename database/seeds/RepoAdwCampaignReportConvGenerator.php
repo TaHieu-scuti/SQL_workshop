@@ -7,17 +7,9 @@ use App\Model\RepoAdwCampaignReportCost;
 
 class RepoAdwCampaignReportConvGenerator extends Seeder
 {
-    const CONVERSION_CATEGORY = [
-        'Conversion category 1',
-        'Conversion category 2',
-        'Conversion category 3',
-        'Conversion category 4'
-    ];
+    const NUMBER_OF_CONVERSION_POINTS = 3;
     const CONVERSION_NAME = [
-        'Conversion name 1',
-        'Conversion name 2',
-        'Conversion name 3',
-        'Conversion name 4'
+        'Conversion name'
     ];
 
     /**
@@ -29,10 +21,9 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
     {
         $campaignCostReports = RepoAdwCampaignReportCost::all();
         foreach ($campaignCostReports as $campaignCostReport) {
-            $campaignConvReport = new RepoAdwCampaignReportConv;
-
-            $numberOfConversionPoints = mt_rand(1, count(self::CONVERSION_NAME));
             for ($i = 0; $i < $numberOfConversionPoints; $i++) {
+                $campaignConvReport = new RepoAdwCampaignReportConv;
+
                 $campaignConvReport->exeDate = $campaignCostReport->exeDate;
                 $campaignConvReport->startDate = $campaignCostReport->startDate;
                 $campaignConvReport->endDate = $campaignCostReport->endDate;
@@ -64,6 +55,7 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
                 $campaignConvReport->conversionCategory = self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
                 $campaignConvReport->convRate = $campaignCostReport->convRate;
                 $campaignConvReport->conversions = $campaignCostReport->conversions / $numberOfConversionPoints;
+                $campaignConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
                 $campaignConvReport->convValueCurrentModel = $campaignCostReport->convValueCurrentModel;
                 $campaignConvReport->clientName = $campaignCostReport->clientName;
                 $campaignConvReport->day = $campaignCostReport->day;
