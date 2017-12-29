@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoAdwGeoReportConv;
 
+// @codingStandardsIgnoreLine
 class RepoAdwGeoReportConvTableGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 2;

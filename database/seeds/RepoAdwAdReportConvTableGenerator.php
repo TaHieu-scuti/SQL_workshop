@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwAdReportCost;
 use App\Model\RepoAdwAdReportConv;
 
+// @codingStandardsIgnoreLine
 class RepoAdwAdReportConvTableGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 2;
@@ -18,7 +19,7 @@ class RepoAdwAdReportConvTableGenerator extends Seeder
     {
         $adwCostAds = RepoAdwAdReportCost::all();
         foreach ($adwCostAds as $key => $adwCostAd) {
-            for ($i=0; $i < self::NUMBER_OF_CONVERSION_POINTS ; $i++) {
+            for ($i=0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
                 $adwConvAd = new RepoAdwAdReportConv;
                 $adwConvAd->exeDate = $adwCostAd->exeDate;
                 $adwConvAd->startDate = $adwCostAd->startDate;
