@@ -335,16 +335,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
     <!-- Custom js-->
     <script>
-        $(window).on('hashchange', function() {
-            if (window.location.hash) {
-                var page = window.location.hash.replace('#', '');
-                if (page == Number.NaN || page <= 0) {
-                    return false;
-                } else {
-                    getAccountReports(page);
-                }
-            }
-        });
 
         $(document).ready(function() {
             $(document).on('click', '.pagination a', function (e) {
