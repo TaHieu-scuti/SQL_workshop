@@ -47,7 +47,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYssSearchQueryPostCost::class);
         $this->call(RepoAdwSearchQueryPerformanceReportCost::class);
         $this->call(RepoAdwAccountConvTableSeeder::class);
+        $this->call(RepoAdwCampaignReportConvTable::class);
         $this->call(RepoAdwAdgroupConvTableSeeder::class);
         $this->call(RepoAdwKeywordReportConvTable::class);
+        $this->call(RepoAdwGeoReportConvTableSeeder::class);
+        $this->call(RepoAdwAdReportConvTableSeeder::class);
     }
 }
