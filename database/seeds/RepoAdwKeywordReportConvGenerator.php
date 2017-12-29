@@ -10,6 +10,12 @@ class RepoAdwKeywordReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 3;
     const CONVERSION_NAME = 'Conversion Name ';
+    const CONVERSION_CATEGORY = [
+        'Conversion category 1',
+        'Conversion category 2',
+        'Conversion category 3',
+        'Conversion category 4'
+    ];
     /**
      * Run the database seeds.
      *
@@ -49,8 +55,10 @@ class RepoAdwKeywordReportConvGenerator extends Seeder
                 $keywordConvReport->campaignID = $keywordCostReport->campaignID;
                 $keywordConvReport->campaign = $keywordCostReport->campaign;
                 $keywordConvReport->campaignState = $keywordCostReport->campaignState;
+                $keywordConvReport->conversionCategory =
+                     self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
                 $keywordConvReport->convRate = $keywordCostReport->convRate;
-                $keywordConvReport->conversions = $keywordCostReport->conversions;
+                $keywordConvReport->conversions = $keywordCostReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $keywordConvReport->conversionTrackerId = mt_rand(0, count(self::CONVERSION_NAME) -1);
                 $keywordConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
                 $keywordConvReport->totalConvValue = $keywordCostReport->totalConvValue;
