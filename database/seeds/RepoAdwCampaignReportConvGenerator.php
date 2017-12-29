@@ -8,9 +8,7 @@ use App\Model\RepoAdwCampaignReportCost;
 class RepoAdwCampaignReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 3;
-    const CONVERSION_NAME = [
-        'Conversion name'
-    ];
+    const CONVERSION_NAME = 'Conversion name';
 
     /**
      * Run the database seeds.
