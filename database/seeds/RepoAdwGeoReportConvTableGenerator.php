@@ -32,7 +32,6 @@ class RepoAdwGeoReportConvTableGenerator extends Seeder
                 $adwGeoConvRecord->adGroupID = $adwGeoCostRecord->adGroupID;
                 $adwGeoConvRecord->adGroup = $adwGeoCostRecord->adGroup;
                 $adwGeoConvRecord->network = $adwGeoCostRecord->network;
-                $adwGeoConvRecord->networkWithSearchPartners = $adwGeoCostRecord->networkWithSearchPartners;
                 $adwGeoConvRecord->campaignID = $adwGeoCostRecord->campaignID;
                 $adwGeoConvRecord->campaign = $adwGeoCostRecord->campaign;
                 $adwGeoConvRecord->city = $adwGeoCostRecord->city;
