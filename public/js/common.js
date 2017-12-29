@@ -55,23 +55,11 @@ function processDataTable(response) {
             .addClass('hidden-no-data-found-message-table');
     }
 }
-$(window).on('hashchange', function() {
-    if (window.location.hash) {
-        var page = window.location.hash.replace('#', '');
-        if (page == Number.NaN || page <= 0) {
-            return false;
-        } else {
-            getAccountReports(page);
-        }
-    }
-});
 
 function sendingRequestTable() {
     $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
-    setTimeout(function() {
-        $('.loading-gif-on-table').show();
-    }, 10);
+    $('.loading-gif-on-table').show();
 }
 
 function showLoadingImageOnTopGraph() {
