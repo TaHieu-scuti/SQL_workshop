@@ -64,9 +64,7 @@ function sendingRequestTable() {
 
 function showLoadingImageOnTopGraph() {
     $('.loading-gif-on-top-graph').removeClass('hidden-graph');
-    setTimeout(function() {
-        $('.loading-gif-on-top-graph').show();
-    }, 10);
+    $('.loading-gif-on-top-graph').show();
 }
 
 function completeRequestTable()
@@ -290,11 +288,18 @@ $('.table_data_report').delegate('th', 'click', function() {
         data : {
             'columnSort' : th.data('value'),
         },
+        beforeSend : function () {
+            sendingRequestTable();
+            showLoadingImageOnTopGraph();
+        },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
         },
         error : function (response) {
             checkErrorAjax(response);
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 })
