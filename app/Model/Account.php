@@ -231,32 +231,20 @@ class Account extends AbstractReportModel
         return $rawExpression;
     }
 
-    public function getAllClient()
+    public function getAllClient($agencyId)
     {
-        $yssClients = RepoYssAccountReportCost::select('account_id')->groupBy('account_id');
-        $ydnClients = RepoYdnReport::select('account_id')->groupBy('account_id');
-        $adwClients = RepoAdwAccountReportCost::select('account_id')->groupBy('account_id');
-        $datas = $yssClients->union($ydnClients)->union($adwClients);
-        $sql = $this->getBindingSql($datas);
-
-        $datas = DB::table(DB::raw("accounts ,({$sql}) as tbl"))
-            ->select(
-                [
-                    DB::raw('accounts.accountName'),
-                    DB::raw('accounts.account_id')
-                ]
-            )
+        $data = self::select('account_id', 'accountName')
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
-            ->whereRaw('accounts.account_id = tbl.account_id');
-        $clients = [];
-        $clients['all'] = 'All Client';
-        if ($datas) {
-            foreach ($datas->get() as $key => $client) {
-                $clients[] = (array)$client;
-            }
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            );
+        if ($agencyId !== null) {
+            $data->where('agent_id', '=', $agencyId);
         }
-        return $clients;
+        $results = $data->get();
+        $clients['all'] = 'All Client';
+        return $clients + (isset($results) ? $results->toArray() : []);
     }
 
     /**
