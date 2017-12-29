@@ -222,50 +222,16 @@ class Agency extends Account
     //get Agencies to display on breadcrumbs
     public function getAllAgencies()
     {
-        $arrayOfDirectClientsAndAgencies = self::select('account_id')
-            ->whereIn(
-                'agent_id',
-                function ($query) {
-                    $query->select(DB::raw('account_id'))
-                        ->from('accounts')
-                        ->where('agent_id', '=', '');
-                }
+        $arrayOfDirectClientsAndAgencies = self::select('account_id', 'accountName')
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) > 0"
             )
-            ->where('level', '=', 3)
             ->get()->toArray();
 
-        $yssClients = RepoYssAccountReportCost::select('account_id')
-                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
-        $ydnClients = RepoYdnReport::select('account_id')
-                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
-        $adwClients = RepoAdwAccountReportCost::select('account_id')
-                    ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)->groupBy('account_id');
         $arr = ['all' => 'All Agencies'];
 
-        $clientUnionArray = $yssClients->union($ydnClients)->union($adwClients);
-        $sql = $this->getBindingSql($clientUnionArray);
-        $data = DB::table(DB::raw("accounts ,({$sql}) as tbl"))
-            ->select(
-                [
-                    DB::raw('accounts.accountName'),
-                    DB::raw('accounts.account_id')
-                ]
-            )
-            ->where('level', '=', 3)
-            ->where('agent_id', '=', '')
-            ->whereIn(
-                'accounts.account_id',
-                function ($query) use ($arrayOfDirectClientsAndAgencies) {
-                    $query->select('agent_id')
-                        ->from('accounts')
-                        ->where('agent_id', '!=', '')
-                        ->whereIn('account_id', $arrayOfDirectClientsAndAgencies)
-                        ->whereRaw('accounts.account_id = tbl.account_id');
-                }
-            )->get();
-        foreach ($data as $key => $value) {
-            $arr[] = (array)$value;
-        }
-        return $arr;
+        return $arr + $arrayOfDirectClientsAndAgencies;
     }
 }

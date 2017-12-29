@@ -67,7 +67,9 @@ class User extends Authenticatable
             case 'Client':
                 $model = new Account();
                 $array['title'] = $title;
-                $array['contents'] = $model->getAllClient();
+                $array['contents'] = $model->getAllClient(
+                    session(AbstractReportController::SESSION_KEY_AGENCY_ID)
+                );
                 if (session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
                     $array['flag'] = 'all';
                 } else {
