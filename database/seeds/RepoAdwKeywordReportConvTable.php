@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
+// @codingStandardsIgnoreLine
 class RepoAdwKeywordReportConvTable extends Seeder
 {
     /**
@@ -20,7 +21,7 @@ class RepoAdwKeywordReportConvTable extends Seeder
             . ' '
             . Config::get('database.connections.mysql.database')
             . ' < '
-            . __DIR__ . '/../../database/resources/repo_adw_keyword_report_conv.sql';
+            . __DIR__ . '/../../database/resources/repo_adw_keywords_report_conv.sql';
 
         exec($command);
     }
