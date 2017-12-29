@@ -243,6 +243,7 @@
                 <div class="row line-chart">
                     <div class="loading-gif-on-top-graph hidden-graph"></div>
                     <div class="selection-dropdown selectionOnGraph">
+                        @include('layouts.graph_items')
                     </div>
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
@@ -378,6 +379,21 @@
         function getRoutePrefix()
         {
             return '{{ $prefixRoute }}';
+        }
+
+        function getLevelCurrentUser()
+        {
+            @php
+                $accountModel = new App\Model\Account;
+                $currentAccountId = Auth::user()->account_id;
+                $levelCurrentUser = 'directClient';
+                if ($accountModel->isAdmin($currentAccountId)) {
+                    $levelCurrentUser = 'admin';
+                } elseif ($accountModel->isAgency($currentAccountId)) {
+                    $levelCurrentUser = 'agency';
+                }
+            @endphp
+            return '{{ $levelCurrentUser }}';
         }
     </script>
     <script src="/js/common-function.js"></script>

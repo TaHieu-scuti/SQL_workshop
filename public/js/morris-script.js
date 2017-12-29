@@ -22,7 +22,6 @@ var Script = function () {
                     $('.summary_report').html(response.summaryReportLayout);
                     $('#time-period').html(response.timePeriodLayout);
                     $('#status-label').html(response.statusLayout);
-                    $('.selectionOnGraph').html(response.coloumnForLiveSearch);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
                 },

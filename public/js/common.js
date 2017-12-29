@@ -375,8 +375,16 @@ $(document).ready(function(){
     let objectAd = new Object();
     let objectUser = new Object();
 
-    objectUser['title'] = 'Admin';
-    objectUser['name'] = 'Admin';
+    if (getLevelCurrentUser() === 'admin') {
+        objectUser['title'] = 'Admin';
+        objectUser['name'] = 'Admin';
+    } else if (getLevelCurrentUser() === 'agency') {
+        objectUser['title'] = 'Agency';
+        objectUser['name'] = 'Agency';
+    } else {
+        objectUser['title'] = 'Direct Client';
+        objectUser['name'] = 'Direct Client';
+    }
     objectUser['engine'] = "";
     objectUser['value'] = $('#username').attr('value');
     array.push(objectUser);
@@ -388,15 +396,22 @@ $(document).ready(function(){
     if(engine === 'adw') {
         iconEngine = '<img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >';
     }
+
     objectAgency['title'] = 'Agency';
     objectAgency['name'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
     objectAgency['value'] = $('select.id_Agency').find(':selected').attr('data-tokens');
     objectAgency['engine'] = '';
     array.push(objectAgency);
 
-    objectClient['title'] = 'Client';
-    objectClient['name'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
-    objectClient['value'] = $('select.id_Client').find(':selected').attr('data-tokens');
+    if ($('.id_Client').length > 0) {
+        objectClient['title'] = 'Client';
+        objectClient['name'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
+        objectClient['value'] = $('select.id_Client').find(':selected').attr('data-tokens');
+    } else if ($('.id_Direct').length > 0) {
+        objectClient['title'] = 'Direct Client';
+        objectClient['name'] = $('select.id_Direct').find(':selected').attr('data-breadcumbs');
+        objectClient['value'] = $('select.id_Direct').find(':selected').attr('data-tokens');
+    }
     objectClient['engine'] = '';
     array.push(objectClient);
 
