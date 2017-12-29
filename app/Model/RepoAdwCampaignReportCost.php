@@ -2,14 +2,14 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractAdwModel;
 use App\Http\Controllers\AbstractReportController;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoAdwCampaignReportCost extends AbstractReportModel
+class RepoAdwCampaignReportCost extends AbstractAdwModel
 {
     const GROUPED_BY_FIELD_NAME = 'campaign';
     const PAGE_ID = "campaignID";
