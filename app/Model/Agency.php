@@ -60,12 +60,17 @@ class Agency extends Account
         $adReportId = null,
         $keywordId = null
     ) {
-        $agencyAggregations = $this->getAggregatedAgency($fieldNames, 'agencyName');
+        array_unshift($fieldNames, 'account_id');
+        $agencyAggregations = $this->getAggregatedAgency($fieldNames, 'agencyName', 'parentAccounts');
         $agencyClientQuery = $this->getQueryBuilderForTable($agencyAggregations, $startDay, $endDay)
-            ->where('accounts.level', '=', 3)
-            ->where('accounts.agent_id', '=', '')
+            ->leftJoin(
+                DB::raw(' accounts AS parentAccounts'),
+                'accounts.agent_id',
+                '=',
+                'parentAccounts.account_id'
+            )
             ->whereRaw(
-                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) > 0"
+                "`accounts`.`agent_id` = `parentAccounts`.`account_id`"
             );
 
         $directClientAggregations = $this->getAggregatedAgency(
@@ -88,7 +93,6 @@ class Agency extends Account
             ->from(DB::raw("({$this->getBindingSql($unionQuery)}) AS tbl"))
             ->orderBy($columnSort, $sort)
             ->groupBy('agencyName');
-
         $results = $outerQuery->get();
         return isset($results) ? $results->toArray() : [];
     }
@@ -112,8 +116,12 @@ class Agency extends Account
 
         $rawExpressions = $this->getRawExpressions($fieldNames);
         $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
-            ->where('accounts.level', '=', 3)
-            ->where('accounts.agent_id', '=', '');
+            ->leftJoin(
+                DB::raw(' accounts AS parentAccounts'),
+                'accounts.agent_id',
+                '=',
+                'parentAccounts.account_id'
+            );
 
         $result = $agencyTotalsQuery->first();
 
@@ -144,6 +152,7 @@ class Agency extends Account
             $accountStatus,
             $startDay,
             $endDay,
+            $groupedByField = null,
             $agencyId,
             $accountId,
             $clientId,
