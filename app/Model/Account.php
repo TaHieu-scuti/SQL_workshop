@@ -280,9 +280,9 @@ class Account extends AbstractReportModel
             ->whereRaw(
                 "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
             );
-            if ($agencyId !== null) {
-                $arrAccountsAgency->where('agent_id', '=', $agencyId);
-            }
+        if ($agencyId !== null) {
+            $arrAccountsAgency->where('agent_id', '=', $agencyId);
+        }
 
         $arrAccountsAgency = $arrAccountsAgency->get()->toArray();
         $modelYssAccount = new RepoYssAccountReportCost();
