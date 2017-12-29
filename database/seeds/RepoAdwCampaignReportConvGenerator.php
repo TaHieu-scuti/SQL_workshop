@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoAdwCampaignReportConv;
 use App\Model\RepoAdwCampaignReportCost;
 
+// @codingStandardsIgnoreLine
 class RepoAdwCampaignReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 3;
@@ -56,7 +57,8 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
                 $campaignConvReport->tabletBidAdj = $campaignCostReport->tabletBidAdj;
                 $campaignConvReport->campaignTrialType = $campaignCostReport->campaignTrialType;
                 $campaignConvReport->clickType = $campaignCostReport->clickType;
-                $campaignConvReport->conversionCategory = self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
+                $campaignConvReport->conversionCategory =
+                    self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
                 $campaignConvReport->convRate = $campaignCostReport->convRate;
                 $campaignConvReport->conversions = $campaignCostReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $campaignConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
