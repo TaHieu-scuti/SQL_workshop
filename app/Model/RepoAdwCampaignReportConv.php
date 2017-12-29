@@ -11,5 +11,5 @@ class RepoAdwCampaignReportConv extends Model
 {
     protected $table = 'repo_adw_campaign_report_conv';
 
-    public $timestamp = false;
+    public $timestamps = false;
 }

@@ -9,6 +9,12 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 3;
     const CONVERSION_NAME = 'Conversion name';
+    const CONVERSION_CATEGORY = [
+        'Conversion category 1',
+        'Conversion category 2',
+        'Conversion category 3',
+        'Conversion category 4'
+    ];
 
     /**
      * Run the database seeds.
@@ -19,7 +25,7 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
     {
         $campaignCostReports = RepoAdwCampaignReportCost::all();
         foreach ($campaignCostReports as $campaignCostReport) {
-            for ($i = 0; $i < $numberOfConversionPoints; $i++) {
+            for ($i = 0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
                 $campaignConvReport = new RepoAdwCampaignReportConv;
 
                 $campaignConvReport->exeDate = $campaignCostReport->exeDate;
@@ -52,7 +58,7 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
                 $campaignConvReport->clickType = $campaignCostReport->clickType;
                 $campaignConvReport->conversionCategory = self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
                 $campaignConvReport->convRate = $campaignCostReport->convRate;
-                $campaignConvReport->conversions = $campaignCostReport->conversions / $numberOfConversionPoints;
+                $campaignConvReport->conversions = $campaignCostReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $campaignConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
                 $campaignConvReport->convValueCurrentModel = $campaignCostReport->convValueCurrentModel;
                 $campaignConvReport->clientName = $campaignCostReport->clientName;
