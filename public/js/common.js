@@ -55,30 +55,16 @@ function processDataTable(response) {
             .addClass('hidden-no-data-found-message-table');
     }
 }
-$(window).on('hashchange', function() {
-    if (window.location.hash) {
-        var page = window.location.hash.replace('#', '');
-        if (page == Number.NaN || page <= 0) {
-            return false;
-        } else {
-            getAccountReports(page);
-        }
-    }
-});
 
 function sendingRequestTable() {
     $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
-    setTimeout(function() {
-        $('.loading-gif-on-table').show();
-    }, 10);
+    $('.loading-gif-on-table').show();
 }
 
 function showLoadingImageOnTopGraph() {
     $('.loading-gif-on-top-graph').removeClass('hidden-graph');
-    setTimeout(function() {
-        $('.loading-gif-on-top-graph').show();
-    }, 10);
+    $('.loading-gif-on-top-graph').show();
 }
 
 function completeRequestTable()
@@ -302,11 +288,18 @@ $('.table_data_report').delegate('th', 'click', function() {
         data : {
             'columnSort' : th.data('value'),
         },
+        beforeSend : function () {
+            sendingRequestTable();
+            showLoadingImageOnTopGraph();
+        },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
         },
         error : function (response) {
             checkErrorAjax(response);
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 })
@@ -375,8 +368,16 @@ $(document).ready(function(){
     let objectAd = new Object();
     let objectUser = new Object();
 
-    objectUser['title'] = 'Admin';
-    objectUser['name'] = 'Admin';
+    if (getLevelCurrentUser() === 'admin') {
+        objectUser['title'] = 'Admin';
+        objectUser['name'] = 'Admin';
+    } else if (getLevelCurrentUser() === 'agency') {
+        objectUser['title'] = 'Agency';
+        objectUser['name'] = 'Agency';
+    } else {
+        objectUser['title'] = 'Direct Client';
+        objectUser['name'] = 'Direct Client';
+    }
     objectUser['engine'] = "";
     objectUser['value'] = $('#username').attr('value');
     array.push(objectUser);
@@ -388,15 +389,22 @@ $(document).ready(function(){
     if(engine === 'adw') {
         iconEngine = '<img src="images/adwords.png" width="15px" height="15px" class="iconMedia" >';
     }
+
     objectAgency['title'] = 'Agency';
     objectAgency['name'] = $('select.id_Agency').find(':selected').attr('data-breadcumbs');
     objectAgency['value'] = $('select.id_Agency').find(':selected').attr('data-tokens');
     objectAgency['engine'] = '';
     array.push(objectAgency);
 
-    objectClient['title'] = 'Client';
-    objectClient['name'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
-    objectClient['value'] = $('select.id_Client').find(':selected').attr('data-tokens');
+    if ($('.id_Client').length > 0) {
+        objectClient['title'] = 'Client';
+        objectClient['name'] = $('select.id_Client').find(':selected').attr('data-breadcumbs');
+        objectClient['value'] = $('select.id_Client').find(':selected').attr('data-tokens');
+    } else if ($('.id_Direct').length > 0) {
+        objectClient['title'] = 'Direct Client';
+        objectClient['name'] = $('select.id_Direct').find(':selected').attr('data-breadcumbs');
+        objectClient['value'] = $('select.id_Direct').find(':selected').attr('data-tokens');
+    }
     objectClient['engine'] = '';
     array.push(objectClient);
 

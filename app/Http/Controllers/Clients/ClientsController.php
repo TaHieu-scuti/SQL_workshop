@@ -119,7 +119,9 @@ class ClientsController extends AbstractReportController
         return $this->responseFactory->view(
             'clients.index',
             [
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
             ]
         );
     }
@@ -161,6 +163,7 @@ class ClientsController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         $fieldsOnModal = view(
@@ -171,13 +174,6 @@ class ClientsController extends AbstractReportController
                     session(self::SESSION_KEY_FIELD_NAME),
                     self::SESSION_KEY_PREFIX_ROUTE
                 )
-            ]
-        )->render();
-        $columnForLiveSearch = view(
-            'layouts.graph_items',
-            [
-                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
-                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
             ]
         )->render();
         $timePeriodLayout = view('layouts.time-period')
@@ -200,7 +196,6 @@ class ClientsController extends AbstractReportController
                 'summaryReportLayout' => $summaryReportLayout,
                 'tableDataLayout' => $tableDataLayout,
                 'fieldsOnModal' => $fieldsOnModal,
-                'coloumnForLiveSearch' => $columnForLiveSearch,
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'keyPagination' => $keyPagination
@@ -253,6 +248,7 @@ class ClientsController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'agency' => 'agency'
             ]
         )->render();
         // if no data found
@@ -321,7 +317,10 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
+
         $aliases = $this->translateFieldNames($fieldNames);
         $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
         $csvData = $exporter->export();
@@ -351,7 +350,9 @@ class ClientsController extends AbstractReportController
         );
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        $clients = $this->getDataForTable();
+
+        $collection = $this->convertDataToArray($clients);
 
         $aliases = $this->translateFieldNames($fieldNames);
 

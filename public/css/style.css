@@ -5917,10 +5917,10 @@ a.guest-on i {
     width: 100%;
     height: 320px;
     background-color: #fff;
-    background-image:url('/images/Loading_icon.gif');
-    background-repeat:no-repeat;
-    background-position:center;
-    z-index:1050;
+    background-image: url('/images/Loading_icon.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
 }
 
 .loading-gif-on-graph {
@@ -5930,10 +5930,10 @@ a.guest-on i {
     width: 100%;
     height: 279px;
     background-color: #fff;
-    background-image:url('/images/Loading_icon.gif');
-    background-repeat:no-repeat;
-    background-position:center;
-    z-index:1050;
+    background-image: url('/images/Loading_icon.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
 }
 
 .loading-gif-on-top-graph {

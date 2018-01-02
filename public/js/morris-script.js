@@ -8,8 +8,11 @@ var Script = function () {
         getDataForLayouts();
 
         function getDataForLayouts() {
+            let url = new URL(window.location.href);
+            let numberOfPage = url.searchParams.get('page');
+            let page = numberOfPage ? '?page=' + numberOfPage : '';
             $.ajax({
-                url: prefixRoute + "/getDataForLayouts",
+                url: prefixRoute + "/getDataForLayouts" + page,
                 type: "GET",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -22,7 +25,6 @@ var Script = function () {
                     $('.summary_report').html(response.summaryReportLayout);
                     $('#time-period').html(response.timePeriodLayout);
                     $('#status-label').html(response.statusLayout);
-                    $('.selectionOnGraph').html(response.coloumnForLiveSearch);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
                 },
@@ -497,19 +499,5 @@ var Script = function () {
         });
 
     });
-
-    function sendingRequestTable() {
-        $('.report-table').css('display', 'none');
-        $('.loading-gif-on-table').removeClass('hidden-table');
-        setTimeout(function() {
-            $('.loading-gif-on-table').show();
-        }, 10);
-    }
-
-    function completeRequestTable()
-    {
-        $('.loading-gif-on-table').addClass('hidden-table');
-        $('.loading-gif-on-top-graph').addClass('hidden-graph');
-    }
 
 }();

@@ -243,6 +243,7 @@
                 <div class="row line-chart">
                     <div class="loading-gif-on-top-graph hidden-graph"></div>
                     <div class="selection-dropdown selectionOnGraph">
+                        @include('layouts.graph_items')
                     </div>
                     <div class="loading-gif-on-graph hidden-graph"></div>
                     <div class="no-data-found-graph hidden-no-data-found-message-graph">
@@ -334,22 +335,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
     <!-- Custom js-->
     <script>
-        $(window).on('hashchange', function() {
-            if (window.location.hash) {
-                var page = window.location.hash.replace('#', '');
-                if (page == Number.NaN || page <= 0) {
-                    return false;
-                } else {
-                    getAccountReports(page);
-                }
-            }
-        });
+
         $(document).ready(function() {
             $(document).on('click', '.pagination a', function (e) {
                 getAccountReports($(this).attr('href').split('page=')[1]);
                 e.preventDefault();
             });
         });
+
         function getAccountReports(page) {
             $.ajaxSetup({
                 headers: {
@@ -361,16 +354,22 @@
                 type : 'POST',
                 url : getRoutePrefix() + '/update-table?page=' + page,
                 dataType: 'json',
+                beforeSend : function () {
+                    sendingRequestTable();
+                },
                 success: function (data) {
-                    console.log(data);
                     $('.table_data_report').html('');
                     $('.table_data_report').html(data.tableDataLayout);
                     $('.summary_report').html(data.summaryReportLayout);
+                    processDataTable(data);
                     history.pushState("", "", '?page=' + page);
                 },
                 error: function (data) {
-
+                    checkErrorAjax(data);
                     alert('Reports could not be loaded.');
+                },
+                complete : function () {
+                    completeRequestTable();
                 }
             });
         }
@@ -378,6 +377,21 @@
         function getRoutePrefix()
         {
             return '{{ $prefixRoute }}';
+        }
+
+        function getLevelCurrentUser()
+        {
+            @php
+                $accountModel = new App\Model\Account;
+                $currentAccountId = Auth::user()->account_id;
+                $levelCurrentUser = 'directClient';
+                if ($accountModel->isAdmin($currentAccountId)) {
+                    $levelCurrentUser = 'admin';
+                } elseif ($accountModel->isAgency($currentAccountId)) {
+                    $levelCurrentUser = 'agency';
+                }
+            @endphp
+            return '{{ $levelCurrentUser }}';
         }
     </script>
     <script src="/js/common-function.js"></script>

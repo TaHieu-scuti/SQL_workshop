@@ -57,6 +57,16 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::START_DAY;
     const SESSION_KEY_END_DAY = self::END_DAY;
+
+    const DEFAULT_COLUMNS_GRAPH = [
+        'impressions',
+        'cost',
+        'clicks',
+        'ctr',
+        'averageCpc',
+        'averagePosition',
+    ];
+
     private $adgainerId;
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
@@ -860,5 +870,15 @@ abstract class AbstractReportController extends Controller
             }
         }
         return $columns;
+    }
+
+    public function convertDataToArray($data)
+    {
+        $array = [];
+        foreach ($data as $val) {
+            $array[] = (array) $val;
+        }
+
+        return $array;
     }
 }

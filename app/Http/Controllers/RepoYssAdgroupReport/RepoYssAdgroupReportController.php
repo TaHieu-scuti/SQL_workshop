@@ -120,7 +120,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
         return $this->responseFactory->view(
             'yssAdgroupReport.index',
             [
-                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
+                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
             ]
         );
     }
@@ -133,6 +135,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
+        $tableColumns = $this->updateTableColumns($dataReports);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -143,7 +146,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $tableColumns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -155,13 +158,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             [
                 self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
                 self::FIELD_NAMES => self::DEFAULT_COLUMNS
-            ]
-        )->render();
-        $columnForLiveSearch = view(
-            'layouts.graph_items',
-            [
-                self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS,
-                self::GRAPH_COLUMN_NAME => session(self::SESSION_KEY_GRAPH_COLUMN_NAME)
             ]
         )->render();
         $timePeriodLayout = view('layouts.time-period')
@@ -184,7 +180,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 'summaryReportLayout' => $summaryReportLayout,
                 'tableDataLayout' => $tableDataLayout,
                 'fieldsOnModal' => $fieldsOnModal,
-                'coloumnForLiveSearch' => $columnForLiveSearch,
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'keyPagination' => $keyPagination
@@ -219,15 +214,17 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
 
         $reports = $this->getDataForTable();
-
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        //add more columns higher layer to fieldnames
+        $tableColumns = $this->updateTableColumns($reports);
+
         $tableDataLayout = view(
             'layouts.table_data',
             [
             self::REPORTS => $reports,
-            self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+            self::FIELD_NAMES => $tableColumns,
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,

@@ -231,32 +231,20 @@ class Account extends AbstractReportModel
         return $rawExpression;
     }
 
-    public function getAllClient()
+    public function getAllClient($agencyId)
     {
-        $yssClients = RepoYssAccountReportCost::select('account_id')->groupBy('account_id');
-        $ydnClients = RepoYdnReport::select('account_id')->groupBy('account_id');
-        $adwClients = RepoAdwAccountReportCost::select('account_id')->groupBy('account_id');
-        $datas = $yssClients->union($ydnClients)->union($adwClients);
-        $sql = $this->getBindingSql($datas);
-
-        $datas = DB::table(DB::raw("accounts ,({$sql}) as tbl"))
-            ->select(
-                [
-                    DB::raw('accounts.accountName'),
-                    DB::raw('accounts.account_id')
-                ]
-            )
+        $data = self::select('account_id', 'accountName')
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
-            ->whereRaw('accounts.account_id = tbl.account_id');
-        $clients = [];
-        $clients['all'] = 'All Client';
-        if ($datas) {
-            foreach ($datas->get() as $key => $client) {
-                $clients[] = (array)$client;
-            }
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            );
+        if ($agencyId !== null) {
+            $data->where('agent_id', '=', $agencyId);
         }
-        return $clients;
+        $results = $data->get();
+        $clients['all'] = 'All Client';
+        return $clients + (isset($results) ? $results->toArray() : []);
     }
 
     /**
@@ -288,7 +276,15 @@ class Account extends AbstractReportModel
         }
         $arrAccountsAgency = self::select('account_id')
             ->where('level', '=', '3')
-            ->where('agent_id', '!=', '')->get()->toArray();
+            ->where('agent_id', '!=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            );
+        if ($agencyId !== null) {
+            $arrAccountsAgency->where('agent_id', '=', $agencyId);
+        }
+
+        $arrAccountsAgency = $arrAccountsAgency->get()->toArray();
         $modelYssAccount = new RepoYssAccountReportCost();
         $modelYdnAccount = new RepoYdnReport();
         $modelAdwAccount = new RepoAdwAccountReportCost();
@@ -307,9 +303,7 @@ class Account extends AbstractReportModel
         $data = DB::table(DB::raw("accounts,({$sql}) as tbl"))
             ->select(DB::raw('day, sum(data) as data'))
             ->groupBy('day');
-        if ($agencyId !== null) {
-            $data->where('agent_id', '=', $agencyId);
-        }
+
         return $data->get();
     }
 
@@ -335,8 +329,21 @@ class Account extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
-        return $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
+        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
+
+        $rawExpressions = $this->getRawExpressions($fieldNames);
+        $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
+            ->where('accounts.level', '=', 3)
+            ->where('accounts.agent_id', '!=', '');
+        $this->addConditionAgency($agencyTotalsQuery, $agencyId);
+
+        $result = $agencyTotalsQuery->first();
+
+        if ($result === null) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function calculateSummaryData(
@@ -353,13 +360,33 @@ class Account extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        array_unshift($fieldNames, self::FOREIGN_KEY_YSS_ACCOUNTS);
-        $datas = $this->calculateAllData($fieldNames, $startDay, $endDay, $accountStatus, $agencyId);
-        $data = [];
-        foreach ($datas as $key => $val) {
-            $data[$key] = $val;
+        $result = $this->calculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField = null,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if (empty($result)) {
+            return [
+                'impressions' => 0,
+                'clicks' => 0,
+                'cost' => 0,
+                'averageCpc' => 0,
+                'averagePosition' => 0
+            ];
         }
-        return $data;
+
+        return $result->toArray();
     }
 
     protected function getQueryBuilderForTable($select, $startDay, $endDay)
@@ -439,89 +466,25 @@ class Account extends AbstractReportModel
 
         $getAgreatedAgency = $this->getAggregatedAgency($fieldNames, 'clientName');
 
-        $query = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
+        $clientsQuery = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '')
             ->orderBy($columnSort, $sort);
 
-        $this->addConditionAgency($query, $agencyId);
+        $this->addConditionAgency($clientsQuery, $agencyId);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $query = $query->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $clientsQuery = $clientsQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
 
-        $datas = [];
-        foreach ($query->get() as $report) {
-            $datas[] = $report->toArray();
-        }
+        $outerQuery = DB::query()
+            ->from(DB::raw("({$this->getBindingSql($clientsQuery)}) AS tbl"))
+            ->orderBy($columnSort, $sort)
+            ->groupBy('clientName');
 
-        return $datas;
-    }
+        $results = $outerQuery->get();
 
-    /**
-     * @param array   $fieldNames
-     * @param string  $startDay
-     * @param string  $endDay
-     * @param string  $accountStatus
-     * @param integer $agencyId
-     * @return array
-     */
-    public function calculateAllData(array $fieldNames, $startDay, $endDay, $accountStatus, $agencyId)
-    {
-        $modelYssAccount = new RepoYssAccountReportCost;
-        $modelYdnAccount = new RepoYdnReport;
-        $modelAdwAccount = new RepoAdwAccountReportCost;
-
-        $yssAccountAgency = $modelYssAccount->getYssAccountAgency($fieldNames, $startDay, $endDay);
-        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency($fieldNames, $startDay, $endDay);
-        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency($fieldNames, $startDay, $endDay);
-
-        if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $yssAccountAgency = $yssAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $ydnAccountAgency = $ydnAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-            $adwAccountAgency = $adwAccountAgency->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
-        }
-
-        $fieldNames = $this->unsetColumns($fieldNames, ['account_id']);
-
-        $rawExpressions = $this->getRawExpressions($fieldNames);
-
-        $query = $this->select($rawExpressions)
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
-                'accounts.account_id',
-                '=',
-                'yss.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
-                'accounts.account_id',
-                '=',
-                'adw.account_id'
-            )
-            ->where('level', '=', 3)
-            ->where('agent_id', '!=', '');
-
-        $this->addConditionAgency($query, $agencyId);
-
-        $totals = $query->first();
-        if ($totals === null) {
-            return [
-                'clicks' => 0,
-                'impressions' => 0,
-                'cost' => 0,
-                'averageCpc' => 0,
-                'averagePosition' => 0
-            ];
-        }
-
-        return $totals->toArray();
+        return isset($results) ? $results->toArray() : [];
     }
 
     public function getAggregatedAgency(
@@ -535,12 +498,18 @@ class Account extends AbstractReportModel
             if ($fieldName === 'accountName') {
                 if ($accountNameValue === 'accountName') {
                     $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName . ' AS ' . $accountNameAlias);
+                } elseif ($accountNameValue === 'parentAccounts') {
+                    $arrayCalculate[] = DB::raw('parentAccounts.accountName AS ' . $accountNameAlias);
                 } else {
                     $arrayCalculate[] = DB::raw($accountNameValue . ' AS ' . $accountNameAlias);
                 }
             }
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
-                $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
+                if ($accountNameValue === 'parentAccounts') {
+                    $arrayCalculate[] = DB::raw('parentAccounts.account_id AS account_id');
+                } else {
+                    $arrayCalculate[] = DB::raw('accounts.account_id AS account_id');
+                }
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
@@ -695,13 +664,10 @@ class Account extends AbstractReportModel
 
     public function isDirectClient($title)
     {
-        if ($title === 'Client'
-            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'DirectClient'
-        ) {
+        $sessionDirectClient = session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT);
+        if ($title === 'Client' && $sessionDirectClient === 'DirectClient') {
             return true;
-        } elseif ($title === 'Direct Client'
-            && session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT) === 'Client'
-        ) {
+        } elseif ($title === 'Direct Client' && ($sessionDirectClient === 'Client' || $sessionDirectClient === null)) {
             return true;
         }
         return false;

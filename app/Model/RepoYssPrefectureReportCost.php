@@ -100,7 +100,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_ydn_reports');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -128,7 +128,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 )
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_geo_report_cost');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -217,7 +217,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_ydn_reports');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -243,7 +243,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 )
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_geo_report_cost');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -326,7 +326,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             $ydnPrefectureData = RepoYdnPrefecture::select($ydnAggregations)
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_ydn_reports');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
@@ -345,7 +345,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
                 )
                 ->where(
                     function (Builder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                        $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_geo_report_cost');
                     }
                 )->where(
                     function (Builder $query) use ($clientId) {
