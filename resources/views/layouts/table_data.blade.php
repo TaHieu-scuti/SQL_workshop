@@ -69,31 +69,25 @@
                     @if ($fieldName === 'agencyName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                               data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
-                               data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                               data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                                @if ($report[$fieldName] === 'directClients')
                                     data-table="direct-client"
                                @else
                                     data-table="agency-report"
+                                    data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                                @endif
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'clientName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'directClients')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="direct-client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
