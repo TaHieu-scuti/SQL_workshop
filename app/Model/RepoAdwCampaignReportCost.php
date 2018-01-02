@@ -21,16 +21,6 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
      **/
     public $timestamps = false;
 
-    private function addJoin(EloquentBuilder $builder)
-    {
-        $builder->leftJoin(
-            'phone_time_use',
-            function (JoinClause $join) {
-                $this->addJoinConditions($join);
-            }
-        );
-    }
-
     protected function addJoinConditions(JoinClause $join)
     {
         $join->on('phone_time_use.account_id', '=', $this->table . '.account_id')
@@ -61,82 +51,6 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
                 . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
             )
         ];
-    }
-
-    protected function getBuilderForGetDataForTable(
-        $engine,
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForGetDataForTable(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $columnSort,
-            $sort,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
-    }
-
-    protected function getBuilderForCalculateData(
-        $engine,
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
     }
 
     public function getAllAdwCampaign(
