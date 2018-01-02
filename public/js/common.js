@@ -120,7 +120,7 @@ $(".apply-button").click(function () {
     });
 });
 
-$('input[name="fieldName"]:checkbox').change(function() {
+$('#fieldsOnModal').delegate('input[name="fieldName"]:checkbox', 'change', function() {
     filterColumnChecked();
 });
 
@@ -129,13 +129,17 @@ function filterColumnChecked() {
     $.each($("input[name='fieldName']:checked"), function() {
         array.push($(this).val());
     });
+
+    if ($("input[name='fieldName']:checked").length == $("input[name='fieldName']:checkbox").length) {
+        $('#selectAll').prop('checked', true);
+    }
+
     if (array.length === 1) {
         $("input[name='fieldName']:checked").attr("disabled", true);
     } else if(array.length > 1) {
         $("input[name='fieldName']:checkbox").removeAttr('disabled');
     }
 }
-filterColumnChecked();
 /*
 *
 * onclicking date button
@@ -265,11 +269,12 @@ $("#selectAll").click(function () {
       filterColumnChecked();
     }
     else {
-        $(':checkbox').each(function () {
+        $('#selectAll').prop('checked', false);
+        $("input[name='fieldName']:checkbox").each(function () {
             this.checked = false;
-            $("input[name='fieldName']:checkbox")[0].checked = true;
-            filterColumnChecked();
         });
+        $("input[name='fieldName']:checkbox")[0].checked = true;
+        filterColumnChecked();
     }
 })
 /*
