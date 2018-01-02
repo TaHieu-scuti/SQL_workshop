@@ -155,7 +155,8 @@
                         || $fieldName === 'yss_web_cv'
                         || $fieldName === 'adw_web_cv'
                         || $fieldName === 'web_cv'
-                        || $fieldName === 'total_cv')
+                        || $fieldName === 'total_cv'
+                        || $fieldName === 'dailySpendingLimit')
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' ||
                             $fieldName === 'web_cpa' ||
@@ -227,8 +228,13 @@
                     @endif
 
                     @if(isset($totalDataArray->$fieldName))
-                        @if (ctype_digit($totalDataArray->$fieldName))
-                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                        @if (ctype_digit($totalDataArray->$fieldName)
+                            || $fieldName === 'yss_web_cv'
+                            || $fieldName === 'adw_web_cv'
+                            || $fieldName === 'web_cv'
+                            || $fieldName === 'total_cv'
+                            || $fieldName === 'dailySpendingLimit')
+                            <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'cost' ||
                             $fieldName === 'web_cpa' ||
                             $fieldName === 'call_cpa' ||
