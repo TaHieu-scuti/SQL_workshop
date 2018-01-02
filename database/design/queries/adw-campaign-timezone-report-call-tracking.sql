@@ -22,10 +22,10 @@ FROM
 				`phone_time_use`.`campaign_id` = `repo_adw_campaign_report_cost`.`campaign_id`
 			AND
 				`phone_time_use`.`utm_campaign` = `repo_adw_campaign_report_cost`.`campaignID`
-			AND
-				`phone_time_use`.`time_of_call` >= '2017-01-01'
-			AND
-				`phone_time_use`.`time_of_call` <= '2017-12-01'
+			#AND
+				#`phone_time_use`.`time_of_call` >= '2017-01-01'
+			#AND
+				#`phone_time_use`.`time_of_call` <= '2017-12-01'
 			AND
 				`phone_time_use`.`source` = 'adw'
 			AND

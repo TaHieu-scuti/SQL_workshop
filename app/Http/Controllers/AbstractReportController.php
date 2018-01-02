@@ -17,6 +17,7 @@ use App\Model\RepoYssAdgroupTimezone;
 use App\Model\RepoYssCampaignTimezone;
 use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
+use App\Model\RepoAdwCampaignTimezone;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -752,7 +753,9 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnTimezone;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            // TODO: change model to adw hourOfDay if needed
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignTimezone;
+            }
         }
     }
 
