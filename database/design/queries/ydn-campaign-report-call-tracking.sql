@@ -32,7 +32,9 @@ WHERE
 AND
   `c`.`account_id` = `ptu`.`account_id`
 AND
-  `c`.`account_id` = 1;
+  `c`.`account_id` = 1
+AND
+  `ptu`.`source` = 'ydn';
 /* Result from query above:
 |campaign_id|campaign_name|utm_campaign|phone_number |
 |11         |Campaign Name|11          |+841234567811|
@@ -64,20 +66,6 @@ SELECT
   AVG(`total`.`averagePosition`) AS avgPosition
 FROM
   `repo_ydn_reports` AS total
-    /*LEFT JOIN `phone_time_use` AS total_call
-      ON (
-          `total_call`.`account_id` = `total`.`account_id`
-        AND
-          `total_call`.`campaign_id` = `total`.`campaign_id`
-        AND
-          `total_call`.`utm_campaign` = `total`.`campaignID`
-        AND
-          STR_TO_DATE(`total_call`.`time_of_call`, '%Y-%m-%d') = `total`.`day`
-        AND
-          `total_call`.`source` = 'ydn'
-        AND
-          `total_call`.`traffic_type` = 'AD'
-      )*/
     /* Add joins for every campaignID & conversionName combination */
     LEFT JOIN `repo_ydn_reports` AS conv1
       ON (
@@ -162,3 +150,10 @@ GROUP BY
   `total`.`account_id`,
   `total`.`accountId`,
   `total`.`campaignID`
+
+/* Execution time without indexes: 659 seconds */
+/* Execution time with index on repo_ydn_report: account_id and accountId: 616 seconds */
+/* Execution time with index on repo_ydn_report: account_id, accountId and day: 258 seconds */
+/* Execution time with index on repo_ydn_report: account_id, accountId, campaignID, conversionName and day: 254 seconds */
+/* Execution time with index on repo_ydn_report: account_id, accountId, campaignID, conversionName and day:
+   phone_time_use: account_id, campaign_id, utm_campaign, phone_number, time_of_call: 92 seconds */
