@@ -4,10 +4,15 @@ namespace App\Model;
 
 use App\AbstractReportModel;
 
-use DB;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 
 abstract class AbstractAdwModel extends AbstractReportModel
 {
+
+    abstract protected function addJoinConditions(JoinClause $join);
+
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
@@ -56,5 +61,91 @@ abstract class AbstractAdwModel extends AbstractReportModel
             }
         }
         return $expressions;
+    }
+
+    protected function addJoin(EloquentBuilder $builder)
+    {
+        $builder->leftJoin(
+            'phone_time_use',
+            function (JoinClause $join) {
+                $this->addJoinConditions($join);
+            }
+        );
+    }
+
+    protected function getBuilderForGetDataForTable(
+        $engine,
+        array $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $builder = parent::getBuilderForGetDataForTable(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $columnSort,
+            $sort,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        $this->addJoin($builder);
+
+        return $builder;
+    }
+
+    protected function getBuilderForCalculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $builder = parent::getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        $this->addJoin($builder);
+
+        return $builder;
     }
 }
