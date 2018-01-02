@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AbstractAdwModel extends AbstractReportModel
 {
+
+    abstract protected function addJoinConditions(JoinClause $join);
+
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
