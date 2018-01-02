@@ -32,8 +32,9 @@ abstract class AbstractAdwModel extends AbstractReportModel
                     SUM(`{$this->table}`.`clicks`)) * 100 as web_cvr");
                     break;
                 case 'web_cpa':
-                    $expressions[] = DB::raw("SUM(`{$this->table}`.`cost`) /
-                    SUM(`{$this->table}`.`conversions`) as web_cpa");
+                    $expressions[] = DB::raw("
+                    IFNULL(SUM(`{$this->table}`.`cost`) /
+                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
                     break;
                 case 'total_cv':
                     $expressions[] = DB::raw("SUM(`{$this->table}`.`conversions`) +
