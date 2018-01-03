@@ -176,7 +176,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 || $fieldName === self::PREFECTURE
                 || $fieldName === self::PAGE_ID
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
                 continue;
             }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME_ADW) {
@@ -302,7 +302,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid']);
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, 'accountid']);
         //YSS
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated(self::DEFAULT_COLUMNS);
@@ -677,7 +677,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $this->addJoinConditionForAdw($adwData);
         $this->addJoinConditonCampaignReportCostForAdw($adwData);
         $data = $adwData->union($ydnData)->union($yssData);
-
         if (in_array($groupedByField, $this->groupByFieldName)) {
             $sql = $this->getBindingSql($data);
             $rawExpression = $this->getRawExpressions($fieldNames);
