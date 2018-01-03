@@ -5,12 +5,10 @@
                 <span class="title">@lang('language.Impr')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff fa fa-circle"></i>
-                    @if (ctype_digit($summaryReport['impressions']))
+                    @if (ctype_digit($summaryReport['impressions']) || $summaryReport['impressions'] === null)
                         <td>{{ number_format($summaryReport['impressions'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['impressions']))
                         <td>{{ number_format($summaryReport['impressions'], 2, '.', ',') }}</td>
-                    @else
-                        <td>{{ $summaryReport['impressions'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -25,12 +23,10 @@
                 <span class="title">@lang('language.clicks')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
-                    @if (ctype_digit($summaryReport['clicks']))
+                    @if (ctype_digit($summaryReport['clicks']) || $summaryReport['clicks'] === null)
                         <td>{{ number_format($summaryReport['clicks'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['clicks']))
                         <td>{{ number_format($summaryReport['clicks'], 2, '.', ',') }}</td>
-                    @else
-                        <td>{{ $summaryReport['clicks'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -61,12 +57,10 @@
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>
-                    @if (ctype_digit($summaryReport['averageCpc']))
+                    @if (ctype_digit($summaryReport['averageCpc']) || $summaryReport['averageCpc'] === null)
                         <td>{{ number_format($summaryReport['averageCpc'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['averageCpc']))
                         <td>{{ number_format($summaryReport['averageCpc'], 2, '.', ',') }}</td>
-                    @else
-                        <td>{{ $summaryReport['averageCpc'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -81,12 +75,10 @@
                 <span class="title">@lang('language.Avg_pos')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
-                    @if (ctype_digit($summaryReport['averagePosition']))
+                    @if (ctype_digit($summaryReport['averagePosition']) || $summaryReport['averagePosition'] === null)
                         <td>{{ number_format($summaryReport['averagePosition'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['averagePosition']))
                         <td>{{ number_format($summaryReport['averagePosition'], 2, '.', ',') }}</td>
-                    @else
-                        <td>{{ $summaryReport['averagePosition'] }}</td>
                     @endif
                     <br>
                 </span>
