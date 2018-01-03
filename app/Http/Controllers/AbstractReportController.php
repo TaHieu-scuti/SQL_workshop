@@ -721,21 +721,12 @@ abstract class AbstractReportController extends Controller
         );
     }
 
-    public function getModelForPrefecture()
-    {
-        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
-            $this->updateModelForPrefecture();
-        } else {
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
-        }
-    }
-
     public function updateModelForPrefecture()
     {
+        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+        session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssPrefectureReportCost;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
