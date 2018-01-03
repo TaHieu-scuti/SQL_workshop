@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use Exception;
 use Auth;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 class RepoYssAccountReportController extends AbstractReportController
 {

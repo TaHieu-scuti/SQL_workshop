@@ -7,7 +7,7 @@ use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\Account;
 use DateTime;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 

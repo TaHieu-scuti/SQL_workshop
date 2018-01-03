@@ -11,7 +11,7 @@ use App\Model\DirectClient;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 class DirectClientController extends AbstractReportController
 {

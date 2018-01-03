@@ -12,7 +12,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
 use DateTime;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 class AgencyController extends AbstractReportController
 {
