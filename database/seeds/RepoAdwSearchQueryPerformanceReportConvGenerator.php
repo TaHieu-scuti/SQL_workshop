@@ -34,7 +34,8 @@ class RepoAdwSearchQueryPerformanceReportConvGenerator extends Seeder
                     $searchQueryPerformanceConvReport->adGroup = $searchQueryPerformanceReport->adGroup;
                     $searchQueryPerformanceConvReport->adGroupState = $searchQueryPerformanceReport->adGroupState;
                     $searchQueryPerformanceConvReport->network = $searchQueryPerformanceReport->network;
-                    $searchQueryPerformanceConvReport->networkWithSearchPartners = $searchQueryPerformanceReport->networkWithSearchPartners;
+                    $searchQueryPerformanceConvReport->networkWithSearchPartners =
+                        $searchQueryPerformanceReport->networkWithSearchPartners;
                     $searchQueryPerformanceConvReport->allConvRate = $searchQueryPerformanceReport->allConvRate;
                     $searchQueryPerformanceConvReport->allConv = $searchQueryPerformanceReport->allConv;
                     $searchQueryPerformanceConvReport->allConvValue = $searchQueryPerformanceReport->allConvValue;
@@ -64,7 +65,8 @@ class RepoAdwSearchQueryPerformanceReportConvGenerator extends Seeder
                     $searchQueryPerformanceConvReport->searchTerm = $searchQueryPerformanceReport->searchTerm;
                     $searchQueryPerformanceConvReport->matchType = $searchQueryPerformanceReport->matchType;
                     $searchQueryPerformanceConvReport->addedExcluded = $searchQueryPerformanceReport->addedExcluded;
-                    $searchQueryPerformanceConvReport->trackingTemplate = $searchQueryPerformanceReport->trackingTemplate;
+                    $searchQueryPerformanceConvReport->trackingTemplate =
+                        $searchQueryPerformanceReport->trackingTemplate;
                     $searchQueryPerformanceConvReport->valueAllConv = $searchQueryPerformanceReport->valueAllConv;
                     $searchQueryPerformanceConvReport->valueConv = $searchQueryPerformanceReport->valueConv;
                     $searchQueryPerformanceConvReport->viewThroughConv = $searchQueryPerformanceReport->viewThroughConv;
