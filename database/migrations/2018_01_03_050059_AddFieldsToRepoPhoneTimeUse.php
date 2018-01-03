@@ -22,6 +22,7 @@ class AddFieldsToRepoPhoneTimeUse extends Migration
                 $table->mediumText('utm_campaign');
                 $table->string('time_of_call', 255);
                 $table->string('source', 255);
+                $table->string('phone_number', 255);
             }
         );
     }
@@ -41,7 +42,8 @@ class AddFieldsToRepoPhoneTimeUse extends Migration
                     'campaign_id',
                     'utm_campaign',
                     'time_of_call',
-                    'source'
+                    'source',
+                    'phone_number'
                 ]);
             }
         );
