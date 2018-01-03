@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddIndexForConversionPointsOnRepoYDNReports extends Migration
 {
+    const INDEX_NAME = 'repo_ydn_reports_convName_day_campaignID_idx';
+
     /**
      * Run the migrations.
      *
@@ -15,7 +18,7 @@ class AddIndexForConversionPointsOnRepoYDNReports extends Migration
     public function up()
     {
         DB::statement(
-            "CREATE INDEX `convPoint` "
+            "CREATE INDEX `" . self::INDEX_NAME . "` "
             . "ON `repo_ydn_reports` (conversionName(100), day, campaignID) "
             . "COMMENT '' "
             . "ALGORITHM DEFAULT "
@@ -33,7 +36,7 @@ class AddIndexForConversionPointsOnRepoYDNReports extends Migration
         Schema::table(
             'repo_ydn_reports',
             function (Blueprint $table) {
-                $table->dropIndex('convPoint');
+                $table->dropIndex(self::INDEX_NAME);
             }
         );
     }
