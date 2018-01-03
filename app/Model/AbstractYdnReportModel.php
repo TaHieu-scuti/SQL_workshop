@@ -216,4 +216,13 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
         return $builder;
     }
+
+    public function getAllDistinctConversionNames($account_id, $accountId)
+    {
+        return $this->distinct()
+            ->select(['campaignID', 'conversionName'])
+            ->where('account_id', '=', $account_id)
+            ->where('accountId', '=', $accountId)
+            ->all();
+    }
 }
