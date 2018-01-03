@@ -57,9 +57,9 @@
                 <span class="content">
                     <i class="small-blue-stuff"></i>
                     <i class="fa fa-rmb"></i>
-                    @if (ctype_digit($summaryReport['averageCpc']) || $summaryReport['averageCpc'] === null)
+                    @if (ctype_digit($summaryReport['averageCpc']))
                         <td>{{ number_format($summaryReport['averageCpc'], 0, '', ',') }}</td>
-                    @elseif (is_float($summaryReport['averageCpc']))
+                    @elseif (is_float($summaryReport['averageCpc']) || $summaryReport['averageCpc'] === null)
                         <td>{{ number_format($summaryReport['averageCpc'], 2, '.', ',') }}</td>
                     @endif
                     <br>
@@ -75,9 +75,9 @@
                 <span class="title">@lang('language.Avg_pos')<br></span>
                 <span class="content">
                     <i class="small-blue-stuff"></i>
-                    @if (ctype_digit($summaryReport['averagePosition']) || $summaryReport['averagePosition'] === null)
+                    @if (ctype_digit($summaryReport['averagePosition']))
                         <td>{{ number_format($summaryReport['averagePosition'], 0, '', ',') }}</td>
-                    @elseif (is_float($summaryReport['averagePosition']))
+                    @elseif (is_float($summaryReport['averagePosition']) || $summaryReport['averagePosition'] === null)
                         <td>{{ number_format($summaryReport['averagePosition'], 2, '.', ',') }}</td>
                     @endif
                     <br>
