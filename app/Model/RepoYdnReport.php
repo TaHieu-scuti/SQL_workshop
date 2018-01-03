@@ -51,7 +51,7 @@ class RepoYdnReport extends AbstractAccountReportModel
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::PREFECTURE
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
                 continue;
             }
             if ($fieldName === self::DAY_OF_WEEK) {
