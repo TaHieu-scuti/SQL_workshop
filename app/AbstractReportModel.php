@@ -174,7 +174,12 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::YSS_SEARCH_QUERY
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
-                $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
+                if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                    $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                } else {
+                    $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
+                }
+
                 continue;
             }
 
@@ -351,6 +356,7 @@ abstract class AbstractReportModel extends Model
         ) {
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
+
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
             array_push($this->groupBy, DB::raw('DAYNAME(day)'));
