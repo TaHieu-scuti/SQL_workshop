@@ -64,9 +64,7 @@ function sendingRequestTable() {
 
 function showLoadingImageOnTopGraph() {
     $('.loading-gif-on-top-graph').removeClass('hidden-graph');
-    setTimeout(function() {
-        $('.loading-gif-on-top-graph').show();
-    }, 10);
+    $('.loading-gif-on-top-graph').show();
 }
 
 function completeRequestTable()
@@ -122,7 +120,7 @@ $(".apply-button").click(function () {
     });
 });
 
-$('input[name="fieldName"]:checkbox').change(function() {
+$('#fieldsOnModal').delegate('input[name="fieldName"]:checkbox', 'change', function() {
     filterColumnChecked();
 });
 
@@ -131,13 +129,17 @@ function filterColumnChecked() {
     $.each($("input[name='fieldName']:checked"), function() {
         array.push($(this).val());
     });
+
+    if ($("input[name='fieldName']:checked").length == $("input[name='fieldName']:checkbox").length) {
+        $('#selectAll').prop('checked', true);
+    }
+
     if (array.length === 1) {
         $("input[name='fieldName']:checked").attr("disabled", true);
     } else if(array.length > 1) {
         $("input[name='fieldName']:checkbox").removeAttr('disabled');
     }
 }
-filterColumnChecked();
 /*
 *
 * onclicking date button
@@ -267,11 +269,12 @@ $("#selectAll").click(function () {
       filterColumnChecked();
     }
     else {
-        $(':checkbox').each(function () {
+        $('#selectAll').prop('checked', false);
+        $("input[name='fieldName']:checkbox").each(function () {
             this.checked = false;
-            $("input[name='fieldName']:checkbox")[0].checked = true;
-            filterColumnChecked();
         });
+        $("input[name='fieldName']:checkbox")[0].checked = true;
+        filterColumnChecked();
     }
 })
 /*
@@ -290,11 +293,18 @@ $('.table_data_report').delegate('th', 'click', function() {
         data : {
             'columnSort' : th.data('value'),
         },
+        beforeSend : function () {
+            sendingRequestTable();
+            showLoadingImageOnTopGraph();
+        },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
         },
         error : function (response) {
             checkErrorAjax(response);
+        },
+        complete : function () {
+            completeRequestTable();
         }
     });
 })
