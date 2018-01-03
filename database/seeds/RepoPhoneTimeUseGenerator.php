@@ -56,6 +56,7 @@ class RepoPhoneTimeUseGenerator extends Seeder
             $repoPhoneTimeUse->utm_campaign = $value->utm_campaign;
             $repoPhoneTimeUse->time_of_call = $value->time_of_call;
             $repoPhoneTimeUse->source = $value->source;
+            $repoPhoneTimeUse->phone_number = $value->phone_number;
 
             $repoPhoneTimeUse->saveOrFail();
         }
