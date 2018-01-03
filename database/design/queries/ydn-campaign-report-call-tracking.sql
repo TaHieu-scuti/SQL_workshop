@@ -34,6 +34,8 @@ AND
 AND
   `c`.`account_id` = 1
 AND
+  `ptu`.`utm_campaign` IN (11, 12)
+AND
   `ptu`.`source` = 'ydn';
 /* Result from query above:
 |campaign_id|campaign_name|utm_campaign|phone_number |
