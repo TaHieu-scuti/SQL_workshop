@@ -44,11 +44,19 @@ class RepoPhoneTimeUseGenerator extends Seeder
             $repoPhoneTimeUse = new RepoPhoneTimeUse;
             $repoPhoneTimeUse->phone_time_use_id = $value->id;
             $repoPhoneTimeUse->visitor_city_state = $value->visitor_city_state;
+
             if ($value->mobile === 'Yes') {
                 $repoPhoneTimeUse->platform = self::MOBILES[rand(0, (count(self::MOBILES))-1)];
             } else {
                 $repoPhoneTimeUse->platform = self::TABLETS_AND_PC[rand(0, (count(self::TABLETS_AND_PC))-1)];
             }
+
+            $repoPhoneTimeUse->account_id = $value->account_id;
+            $repoPhoneTimeUse->campaign_id = $value->campaign_id;
+            $repoPhoneTimeUse->utm_campaign = $value->utm_campaign;
+            $repoPhoneTimeUse->time_of_call = $value->time_of_call;
+            $repoPhoneTimeUse->source = $value->source;
+
             $repoPhoneTimeUse->saveOrFail();
         }
     }
