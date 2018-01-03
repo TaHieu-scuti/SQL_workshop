@@ -26,7 +26,7 @@ use DateTime;
 use Exception;
 use StdClass;
 use Auth;
-use Lang;
+use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractReportController extends Controller
 {
