@@ -1,5 +1,9 @@
 <?php
 return [
+    'to' => 'To',
+    'from' => 'From',
+    'cancel' => 'Cancel',
+    'apply' => 'Apply',
     'account' => 'Account',
     'searchquery' => 'Search Query',
     'Search_for_account' => 'Search for account',

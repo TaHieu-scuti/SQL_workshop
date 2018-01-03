@@ -26,6 +26,7 @@ use DateTime;
 use Exception;
 use StdClass;
 use Auth;
+use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractReportController extends Controller
 {
@@ -124,6 +125,7 @@ abstract class AbstractReportController extends Controller
         } catch (Exception $exception) {
             return $this->generateJSONErrorResponse($exception);
         }
+        $column = Lang::get('language.'.str_slug(session(static::SESSION_KEY_GRAPH_COLUMN_NAME)));
         $timePeriodLayout = view('layouts.time-period')
                         ->with(static::START_DAY, session(static::SESSION_KEY_START_DAY))
                         ->with(static::END_DAY, session(static::SESSION_KEY_END_DAY))
@@ -145,7 +147,8 @@ abstract class AbstractReportController extends Controller
                 'field' => session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
-                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'column' => $column
             ]
         );
     }

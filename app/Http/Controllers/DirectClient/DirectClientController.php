@@ -11,6 +11,7 @@ use App\Model\DirectClient;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use DateTime;
+use Illuminate\Support\Facades\Lang;
 
 class DirectClientController extends AbstractReportController
 {
@@ -261,7 +262,7 @@ class DirectClientController extends AbstractReportController
     public function displayGraph(Request $request)
     {
         $this->updateSessionData($request);
-
+        $column = Lang::get('language.'.str_slug(session(self::SESSION_KEY_GRAPH_COLUMN_NAME)));
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
@@ -289,6 +290,7 @@ class DirectClientController extends AbstractReportController
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'column' => $column
             ]
         );
     }
