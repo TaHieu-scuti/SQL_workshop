@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractAdwModel;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 
-class RepoAdwKeywordReportCost extends AbstractReportModel
+class RepoAdwKeywordReportCost extends AbstractAdwModel
 {
     const GROUPED_BY_FIELD_NAME = 'keyword';
     const PAGE_ID = "keywordID";
@@ -39,7 +39,7 @@ class RepoAdwKeywordReportCost extends AbstractReportModel
      */
     public $timestamps = false;
 
-    private function addJoin(EloquentBuilder $builder)
+    protected function addJoin(EloquentBuilder $builder)
     {
         $builder->leftJoin(
             DB::raw('(`phone_time_use`, `campaigns`)'),
@@ -120,99 +120,5 @@ class RepoAdwKeywordReportCost extends AbstractReportModel
             ->on('phone_time_use.matchtype', '=', $this->table . '.matchType')
             ->on('phone_time_use.j_keyword', '=', $this->table . '.keyword')
             ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
-
-    /**
-     * @return Expression[]
-     */
-    protected function getAggregatedForTable()
-    {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
-            DB::raw(
-                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            )
-        ];
-    }
-
-    protected function getBuilderForGetDataForTable(
-        $engine,
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForGetDataForTable(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $columnSort,
-            $sort,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
-    }
-
-    protected function getBuilderForCalculateData(
-        $engine,
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
     }
 }

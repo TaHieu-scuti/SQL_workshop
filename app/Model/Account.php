@@ -276,7 +276,15 @@ class Account extends AbstractReportModel
         }
         $arrAccountsAgency = self::select('account_id')
             ->where('level', '=', '3')
-            ->where('agent_id', '!=', '')->get()->toArray();
+            ->where('agent_id', '!=', '')
+            ->whereRaw(
+                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
+            );
+        if ($agencyId !== null) {
+            $arrAccountsAgency->where('agent_id', '=', $agencyId);
+        }
+
+        $arrAccountsAgency = $arrAccountsAgency->get()->toArray();
         $modelYssAccount = new RepoYssAccountReportCost();
         $modelYdnAccount = new RepoYdnReport();
         $modelAdwAccount = new RepoAdwAccountReportCost();
@@ -295,9 +303,7 @@ class Account extends AbstractReportModel
         $data = DB::table(DB::raw("accounts,({$sql}) as tbl"))
             ->select(DB::raw('day, sum(data) as data'))
             ->groupBy('day');
-        if ($agencyId !== null) {
-            $data->where('agent_id', '=', $agencyId);
-        }
+
         return $data->get();
     }
 

@@ -27,6 +27,7 @@ var Script = function () {
                     $('#status-label').html(response.statusLayout);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
+                    filterColumnChecked();
                 },
                 error : function (response) {
                     checkErrorAjax(response);
