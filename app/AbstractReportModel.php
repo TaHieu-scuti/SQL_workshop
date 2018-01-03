@@ -351,6 +351,9 @@ abstract class AbstractReportModel extends Model
         ) {
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
+        if ($groupedByField === 'prefecture' && $engine === 'adw') {
+            array_push($this->groupBy, 'criteria.Name');
+        }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
             array_push($this->groupBy, DB::raw('DAYNAME(day)'));
