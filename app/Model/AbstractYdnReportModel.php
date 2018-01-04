@@ -19,27 +19,27 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         if ($this->conversionPoints !== null) {
             foreach ($this->conversionPoints as $i => $point) {
                 $expressions[] = DB::raw(
-                    'SUM(`conv'
+                    'IFNULL(SUM(`conv'
                     . $i
-                    . "`.`conversions`) AS 'YDN "
+                    . "`.`conversions`), 0) AS 'YDN "
                     . $point->conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
-                    '(SUM(`conv'
+                    'IFNULL((SUM(`conv'
                     . $i
                     . '`.`conversions`) / SUM(`conv'
                     . $i
-                    . "`.`clicks`)) * 100 AS 'YDN "
+                    . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $point->conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
-                    'SUM(`conv'
+                    'IFNULL(SUM(`conv'
                     . $i
                     . '`.`cost`) / SUM(`conv'
                     . $i
-                    . "`.`conversions`) AS 'YDN "
+                    . "`.`conversions`), 0) AS 'YDN "
                     . $point->conversionName
                     . " CPA'"
                 );
@@ -54,31 +54,31 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         if ($this->adGainerCampaigns !== null) {
             foreach ($this->adGainerCampaigns as $i => $campaign) {
                 $expressions[] = DB::raw(
-                    'COUNT(`call'
+                    'IFNULL(COUNT(`call'
                     . $i
-                    . "`.`id`) AS 'YDN "
+                    . "`.`id`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
-                    'COUNT(`call'
+                    'IFNULL(COUNT(`call'
                     . $i
                     . '`.`id`) / SUM(`'
                     . $this->table
-                    . "`.`clicks`) AS 'YDN "
+                    . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
-                    'SUM(`'
+                    'IFNULL(SUM(`'
                     . $this->table
                     . '`.`cost`) / COUNT(`call'
                     . $i
-                    . "`.`id`) AS 'YDN "
+                    . "`.`id`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -92,13 +92,13 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionCallConversions(array $expressions)
     {
-        $expression = '';
+        $expression = 'IFNULL(';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call' . $i . '`.`id`) + ';
         }
 
-        $expression .= 'COUNT(`call' . ($numberOfCampaigns - 1) . '`.`id`) AS call_cv';
+        $expression .= 'COUNT(`call' . ($numberOfCampaigns - 1) . '`.`id`), 0) AS call_cv';
 
         $expressions[] = DB::raw($expression);
 
@@ -107,7 +107,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionCallConversionRate(array $expressions)
     {
-        $expression = '(';
+        $expression = 'IFNULL((';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call'
@@ -119,7 +119,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             . ($numberOfCampaigns - 1)
             . '`.`id`)) / '
             . $numberOfCampaigns
-            . ' AS call_cvr';
+            . ', 0) AS call_cvr';
 
         $expressions[] = DB::raw($expression);
 
@@ -128,7 +128,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionCallCostPerAction(array $expressions)
     {
-        $expression = 'SUM(`' . $this->table . '`.`cost`) / (';
+        $expression = 'IFNULL(SUM(`' . $this->table . '`.`cost`) / (';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call'
@@ -138,7 +138,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
         $expression .= 'COUNT(`call'
             . ($numberOfCampaigns - 1)
-            . '`.`id`)) AS call_cpa';
+            . '`.`id`)), 0) AS call_cpa';
 
         $expressions[] = DB::raw($expression);
 
@@ -147,7 +147,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionTotalConversions(array $expressions)
     {
-        $expression = 'SUM(`' . $this->table . '`.`conversions`) + ';
+        $expression = 'IFNULL(SUM(`' . $this->table . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call'
@@ -157,7 +157,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
         $expression .= 'COUNT(`call'
             . ($numberOfCampaigns - 1)
-            . '`.`id`) AS total_cv';
+            . '`.`id`), 0) AS total_cv';
 
         $expressions[] = DB::raw($expression);
 
@@ -166,7 +166,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionTotalConversionRate(array $expressions)
     {
-        $expression = '(SUM(`' . $this->table . '`.`conversions`) + ';
+        $expression = 'IFNULL((SUM(`' . $this->table . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call'
@@ -179,7 +179,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             . '`.`id`)) / '
             . 'SUM(`'
             . $this->table
-            . '`.`clicks`) AS total_cvr';
+            . '`.`clicks`), 0) AS total_cvr';
 
         $expressions[] = DB::raw($expression);
 
@@ -188,7 +188,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionTotalCostPerAction(array $expressions)
     {
-        $expression = 'SUM(`' . $this->table . '`.`cost`) / (';
+        $expression = 'IFNULL(SUM(`' . $this->table . '`.`cost`) / (SUM(`' . $this->table . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= 'COUNT(`call'
@@ -198,7 +198,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
         $expression .= 'COUNT(`call'
             . ($numberOfCampaigns - 1)
-            . '`.`id`)) AS total_cpa';
+            . '`.`id`)), 0) AS total_cpa';
 
         $expressions[] = DB::raw($expression);
 
@@ -291,7 +291,6 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
-        $joinTableName = (new RepoPhoneTimeUse)->getTable();
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
                 case '[conversionValues]':
@@ -301,7 +300,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
                     break;
                 case 'call_cv':
-                    $expressions = $this->addRawExpressionCallConversions($expressions);//DB::raw("COUNT(`{$joinTableName}`.`id`) as call_cv");
+                    $expressions = $this->addRawExpressionCallConversions($expressions);
                     break;
                 case 'call_cvr':
                     $expressions = $this->addRawExpressionCallConversionRate($expressions);
@@ -310,15 +309,15 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     $expressions = $this->addRawExpressionCallCostPerAction($expressions);
                     break;
                 case 'web_cv':
-                    $expressions[] = DB::raw("SUM(`{$this->table}`.`conversions`) as web_cv");
+                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
                     break;
                 case 'web_cvr':
-                    $expressions[] = DB::raw("(SUM(`{$this->table}`.`conversions`) /
-                    SUM(`{$this->table}`.`clicks`)) * 100 as web_cvr");
+                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
+                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
                     break;
                 case 'web_cpa':
-                    $expressions[] = DB::raw("SUM(`{$this->table}`.`cost`) /
-                    SUM(`{$this->table}`.`conversions`) as web_cpa");
+                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
+                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
                     break;
                 case 'total_cv':
                     $expressions = $this->addRawExpressionTotalConversions($expressions);
@@ -416,7 +415,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder);
+        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
 
         return $builder;
     }
