@@ -382,7 +382,7 @@ abstract class AbstractReportModel extends Model
             }
         }
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
-            //remove prefecture out of groupedBy
+            //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
             unset($groupBy[$key]);
             $groupedByField = 'criteria.Name';
