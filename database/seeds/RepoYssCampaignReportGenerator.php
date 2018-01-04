@@ -72,7 +72,8 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportConv->campaign_id = $campaignReportCost->campaign_id;
             $campaignReportConv->campaignID = $campaignReportCost->campaign_id;
             $campaignReportConv->campaignName = 'YSS Campaign Name ' . $campaignReportCost->campaign_id;
-            $campaignReportConv->campaignDistributionSettings = 'Distribution Settings ' . $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignDistributionSettings = 'Distribution Settings '
+                . $campaignReportCost->campaign_id;
             $campaignReportConv->campaignDistributionStatus = 'Distribution Status' . $campaignReportCost->campaign_id;
             $campaignReportConv->dailySpendingLimit = $campaignReportCost->dailySpendingLimit;
             $campaignReportConv->campaignStartDate = $campaignReportCost->startDate;
@@ -87,17 +88,17 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportConv->desktopBidAdj = $campaignReportCost->desktopBidAdj;
             $campaignReportConv->tabletBidAdj = $campaignReportCost->tabletBidAdj;
             $campaignReportConv->valuePerAllConv = mt_rand(
-                    self::MIN_VALUE_PER_ALL_CONV,
-                    self::MAX_VALUE_PER_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_VALUE_PER_ALL_CONV,
+                self::MAX_VALUE_PER_ALL_CONV
+            ) / mt_getrandmax();
             $campaignReportConv->allConv = mt_rand(
-                    self::MIN_ALL_CONV,
-                    self::MAX_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV,
+                self::MAX_ALL_CONV
+            ) / mt_getrandmax();
             $campaignReportConv->allConvValue = mt_rand(
-                    self::MIN_ALL_CONV_VALUE,
-                    self::MAX_ALL_CONV_VALUE
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV_VALUE,
+                self::MAX_ALL_CONV_VALUE
+            ) / mt_getrandmax();
             $campaignReportConv->network = $campaignReportCost->network;
             $campaignReportConv->device = $campaignReportCost->device;
             $campaignReportConv->day = $campaignReportCost->day;
@@ -185,18 +186,14 @@ class RepoYssCampaignReportGenerator extends Seeder
             $campaignReportCost->budgetLostImpressionShare = mt_rand(
 
                 self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
-
                 self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-
-                ) / mt_getrandmax();
+            ) / mt_getrandmax();
 
             $campaignReportCost->qualityLostImpressionShare = mt_rand(
 
                 self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
-
                 self::MAX_QUALITY_LOST_IMPRESSION_SHARE
-
-                ) / mt_getrandmax();
+            ) / mt_getrandmax();
 
             $campaignReportCost->trackingURL = self::TRACKING_URL;
 
