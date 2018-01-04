@@ -11,6 +11,8 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const START_DATE = '2017-01-01 00:00:00';
     const INTERVAL = 'P1D';
     const END_DATE = '2018-02-03 00:00:00';
+    const MIN_DAILY_SPENDING_LIMIT = 1;
+    const MAX_DAILY_SPENDING_LIMIT = 1004;
     const NUMBER_OF_ACCOUNTS = 2;
     const NUMBER_OF_MEDIA_ACCOUNTS = [
         2,
@@ -77,6 +79,11 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
             $campaignReportCost->conversions = mt_rand(
                 self::MIN_CONVERSIONS,
                 $campaignReportCost->clicks
+            );
+
+            $campaignReportCost->budget = mt_rand(
+                self::MIN_DAILY_SPENDING_LIMIT,
+                self::MAX_DAILY_SPENDING_LIMIT
             );
 
             $campaignReportCost->month = $accountReport->month;

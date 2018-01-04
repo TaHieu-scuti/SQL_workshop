@@ -52,5 +52,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoAdwKeywordReportConvTable::class);
         $this->call(RepoAdwGeoReportConvTableSeeder::class);
         $this->call(RepoAdwAdReportConvTableSeeder::class);
+        $this->call(RepoAdwSearchQueryPerformanceReportConvTable::class);
     }
 }

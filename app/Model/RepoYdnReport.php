@@ -51,7 +51,7 @@ class RepoYdnReport extends AbstractAccountReportModel
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::PREFECTURE
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
                 continue;
             }
             if ($fieldName === self::DAY_OF_WEEK) {
@@ -64,12 +64,12 @@ class RepoYdnReport extends AbstractAccountReportModel
             }
             if ($fieldName === self::DAILY_SPENDING_LIMIT) {
                 $arrayCalculate[] = DB::raw(
-                    'SUM( ' .$fieldName. ' ) AS ' . $fieldName
+                    'IFNULL(SUM( ' .$fieldName. ' ), 0) AS ' . $fieldName
                 );
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG('. $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
+                    'IFNULL(ROUND(AVG('. $tableName. '.' .$fieldName . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -77,11 +77,11 @@ class RepoYdnReport extends AbstractAccountReportModel
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName. '.' .$fieldName . '), 2) AS ' . $fieldName
+                        'IFNULL(ROUND(SUM(' . $tableName. '.' .$fieldName . '), 2), 0) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName. '.' .$fieldName . ' ) AS ' . $fieldName
+                        'IFNULL(SUM( ' . $tableName. '.' .$fieldName . ' ), 0) AS ' . $fieldName
                     );
                 }
             }

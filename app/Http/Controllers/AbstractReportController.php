@@ -17,6 +17,8 @@ use App\Model\RepoYssAdgroupTimezone;
 use App\Model\RepoYssCampaignTimezone;
 use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
+use App\Model\RepoAdwCampaignTimezone;
+use App\Model\RepoAdwCampaignDayOfWeek;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -24,6 +26,7 @@ use DateTime;
 use Exception;
 use StdClass;
 use Auth;
+use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractReportController extends Controller
 {
@@ -122,6 +125,7 @@ abstract class AbstractReportController extends Controller
         } catch (Exception $exception) {
             return $this->generateJSONErrorResponse($exception);
         }
+        $column = Lang::get('language.'.str_slug(session(static::SESSION_KEY_GRAPH_COLUMN_NAME)));
         $timePeriodLayout = view('layouts.time-period')
                         ->with(static::START_DAY, session(static::SESSION_KEY_START_DAY))
                         ->with(static::END_DAY, session(static::SESSION_KEY_END_DAY))
@@ -143,7 +147,8 @@ abstract class AbstractReportController extends Controller
                 'field' => session(static::SESSION_KEY_GRAPH_COLUMN_NAME),
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
-                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'column' => $column
             ]
         );
     }
@@ -654,7 +659,10 @@ abstract class AbstractReportController extends Controller
     public function getDataForTable()
     {
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
-            if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName') {
+            if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName'
+                && session(static::SESSION_KEY_COLUMN_SORT) !== 'clientName'
+                && session(static::SESSION_KEY_COLUMN_SORT) !== 'directClients'
+            ) {
                 session([static::SESSION_KEY_COLUMN_SORT => session(static::SESSION_KEY_FIELD_NAME)[0]]);
             }
         }
@@ -716,21 +724,12 @@ abstract class AbstractReportController extends Controller
         );
     }
 
-    public function getModelForPrefecture()
-    {
-        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
-            $this->updateModelForPrefecture();
-        } else {
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
-        }
-    }
-
     public function updateModelForPrefecture()
     {
+        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+        session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssPrefectureReportCost;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
@@ -752,7 +751,9 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnTimezone;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            // TODO: change model to adw hourOfDay if needed
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignTimezone;
+            }
         }
     }
 
@@ -768,7 +769,9 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnDayOfWeek;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            // TODO: change model to adw dayOfWeek if needed
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignDayOfWeek;
+            }
         }
     }
     public function exportSearchQueryToCsv()

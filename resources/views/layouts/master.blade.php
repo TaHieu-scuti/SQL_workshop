@@ -183,7 +183,7 @@
                                 <div class="form-group row">
                                     <div class='col-sm-6'>
                                         <div class="form-group">
-                                            <span style="width: 100%; float: right;">From</span>
+                                            <span style="width: 100%; float: right;">@lang('language.from')</span>
                                             <div class='input-group date' id='datetimepicker1'>
                                                 <input type='text' class="form-control dpd1" id ="from" name="from" />
                                                 <span class="input-group-addon dpd1-from">
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class='col-sm-6'>
                                         <div class="form-group">
-                                            <span style="width: 100%; float: right;">To</span>
+                                            <span style="width: 100%; float: right;">@lang('language.to')</span>
                                             <div class='input-group date' id='datetimepicker1'>
                                                 <input type='text' class="form-control dpd2" id ="to" name="to" />
                                                 <span class="input-group-addon dpd2-to">
@@ -204,8 +204,8 @@
                                         </div>
                                     </div>
                                     <div style="clear: both;">
-                                        <button type="button" class="btn btn-primary apply-custom-period">Apply</button>
-                                        <button type="button" class="btn btn-danger">Cancel</button>
+                                        <button type="button" class="btn btn-primary apply-custom-period">@lang('language.apply')</button>
+                                        <button type="button" class="btn btn-danger">@lang('language.cancel')</button>
                                     </div>
                                 </div>
                             </form>

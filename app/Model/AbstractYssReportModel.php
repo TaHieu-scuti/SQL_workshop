@@ -21,8 +21,9 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     SUM(`{$this->table}`.`clicks`)) * 100 as call_cvr");
                     break;
                 case 'call_cpa':
-                    $expressions[] = DB::raw("SUM(`{$this->table}`.`cost`) /
-                    COUNT(`phone_time_use`.`id`) as call_cpa");
+                    $expressions[] = DB::raw("
+                    IFNULL(SUM(`{$this->table}`.`cost`) /
+                    COUNT(`phone_time_use`.`id`), 0) as call_cpa");
                     break;
                 case 'web_cv':
                     $expressions[] = DB::raw("SUM(`{$this->table}`.`conversions`) as web_cv");
@@ -32,8 +33,9 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     SUM(`{$this->table}`.`clicks`)) * 100 as web_cvr");
                     break;
                 case 'web_cpa':
-                    $expressions[] = DB::raw("SUM(`{$this->table}`.`cost`) /
-                    SUM(`{$this->table}`.`conversions`) as web_cpa");
+                    $expressions[] = DB::raw("
+                    IFNULL(SUM(`{$this->table}`.`cost`) /
+                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
                     break;
                 case 'total_cv':
                     $expressions[] = DB::raw("SUM(`{$this->table}`.`conversions`) +
@@ -48,9 +50,9 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     break;
                 case 'total_cpa':
                     $expressions[] = DB::raw("
-                    SUM(`{$this->table}`.`cost`) / COUNT(`phone_time_use`.`id`)
+                    IFNULL(SUM(`{$this->table}`.`cost`) / COUNT(`phone_time_use`.`id`), 0)
                     +
-                    SUM(`{$this->table}`.`cost`) / SUM(`{$this->table}`.`conversions`) as total_cpa");
+                    IFNULL(SUM(`{$this->table}`.`cost`) / SUM(`{$this->table}`.`conversions`), 0) as total_cpa");
                     break;
             }
         }

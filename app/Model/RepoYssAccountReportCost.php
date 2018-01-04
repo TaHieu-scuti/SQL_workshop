@@ -136,7 +136,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
     private function getAggregatedOfGoogle(array $fieldNames)
     {
-        $tableName = 'repo_adw_account_report_cost';
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         if (array_search('accountName', $fieldNames) === false) {
             $key = array_search(static::GROUPED_BY_FIELD_NAME_ADW, $fieldNames);
@@ -168,7 +167,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === self::PAGE_ID) {
-                $arrayCalculate[] = self::ADW_CUSTOMER_ID.' as accountid';
+                $arrayCalculate[] = $tableName.'.'.self::ADW_CUSTOMER_ID.' as accountid';
                 continue;
             }
             if ($fieldName === self::DEVICE
@@ -177,16 +176,21 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 || $fieldName === self::PREFECTURE
                 || $fieldName === self::PAGE_ID
             ) {
-                $arrayCalculate[] = $fieldName;
+                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
                 continue;
             }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME_ADW) {
-                $arrayCalculate[] = $fieldName .' AS accountName';
+                $arrayCalculate[] = $tableName.'.'.$fieldName .' AS accountName';
                 continue;
+            }
+            if ($fieldName === 'dailySpendingLimit') {
+                $arrayCalculate[] = DB::raw(
+                    'IFNULL(SUM(repo_adw_campaign_report_cost.budget), 0) AS dailySpendingLimit'
+                );
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG('. $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                    'IFNULL(ROUND(AVG('. $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -194,11 +198,12 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                        'IFNULL(ROUND(SUM(' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2), 0) 
+                        AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . ' ) AS ' . $fieldName
+                        'IFNULL(SUM( ' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . ' ), 0) AS ' . $fieldName
                     );
                 }
             }
@@ -300,7 +305,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'accountid']);
+        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField, 'accountid']);
         //YSS
         $joinTableName = 'repo_yss_accounts';
         $yssAggregations = $this->getAggregated(self::DEFAULT_COLUMNS);
@@ -332,10 +337,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwAggregations = $this->getAggregatedOfGoogle(self::DEFAULT_COLUMNS);
         $adwAggregations = array_merge(
             $this->getAggregatedForAccounts('repo_adw_account_report_cost', self::DEFAULT_COLUMNS),
-            $adwAggregations,
-            [
-                DB::raw("sum('0') as dailySpendingLimit")
-            ]
+            $adwAggregations
         );
         $adwData = RepoAdwAccountReportCost::select($adwAggregations)
         ->where(
@@ -353,6 +355,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             }
         );
         $this->addJoinConditionForAdw($adwData);
+        $this->addJoinConditonCampaignReportCostForAdw($adwData);
         //YDN
         $modelYdnReport = new RepoYdnReport;
         $ydnData = $modelYdnReport->ydnAccountCalculate(self::DEFAULT_COLUMNS, $startDay, $endDay, $clientId);
@@ -427,6 +430,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             }
         );
         $this->addJoinConditionForAdw($adwData);
+        $this->addJoinConditonCampaignReportCostForAdw($adwData);
         //YDN
         $modelYdnReport = new RepoYdnReport;
         $ydnData = $modelYdnReport->calculateSummaryDataYdn($fieldNames, $startDay, $endDay, $clientId);
@@ -649,10 +653,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $adwAggregations = $this->getAggregatedOfGoogle($fieldNames);
         $adwAggregations = array_merge(
             $this->getAggregatedForAccounts('repo_adw_account_report_cost', $fieldNames),
-            $adwAggregations,
-            [
-                DB::raw("sum('0') as dailySpendingLimit")
-            ]
+            $adwAggregations
         );
         $adwData = RepoAdwAccountReportCost::select(
             array_merge([DB::raw("'adw' as engine")], $adwAggregations)
@@ -674,12 +675,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->orderBy($columnSort, $sort);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
-            $adwData = $adwData->groupBy(self::ADW_CUSTOMER_ID);
+            $adwData = $adwData->groupBy('repo_adw_account_report_cost.'.self::ADW_CUSTOMER_ID);
         }
         $this->addJoinConditionForAdw($adwData);
-
+        $this->addJoinConditonCampaignReportCostForAdw($adwData);
         $data = $adwData->union($ydnData)->union($yssData);
-
         if (in_array($groupedByField, $this->groupByFieldName)) {
             $sql = $this->getBindingSql($data);
             $rawExpression = $this->getRawExpressions($fieldNames);
@@ -827,6 +827,28 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                             `repo_yss_account_report_cost`.`campaign_id`"
                         )
                         ->whereRaw("`repo_yss_campaign_report_cost`.`day` = `repo_yss_account_report_cost`.`day`");
+                    }
+                );
+            }
+        );
+    }
+
+    private function addJoinConditonCampaignReportCostForAdw(Builder $builder)
+    {
+        $builder->leftJoin(
+            DB::raw("`repo_adw_campaign_report_cost`"),
+            function (JoinClause $join) {
+                $join->on(
+                    function (JoinClause $builder) {
+                        $builder->whereRaw(
+                            "`repo_adw_campaign_report_cost`.`account_id` =
+                            `repo_adw_account_report_cost`.`account_id`"
+                        )
+                            ->whereRaw(
+                                "`repo_adw_campaign_report_cost`.`campaign_id`=
+                            `repo_adw_account_report_cost`.`campaign_id`"
+                            )
+                            ->whereRaw("`repo_adw_campaign_report_cost`.`day` = `repo_adw_account_report_cost`.`day`");
                     }
                 );
             }

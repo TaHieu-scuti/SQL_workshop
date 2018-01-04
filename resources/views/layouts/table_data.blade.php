@@ -74,31 +74,25 @@
                     @if ($fieldName === 'agencyName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                               data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
-                               data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                               data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                                @if ($report[$fieldName] === 'directClients')
                                     data-table="direct-client"
                                @else
                                     data-table="agency-report"
+                                    data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
                                @endif
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'clientName')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
                     @elseif ($fieldName === 'directClients')
                         <td>
                             <a href="javascript:void(0)" class="table-redirect"
-                            data-engine = "{{isset($report['engine']) ? $report['engine'] : ''}}"
                             data-adgainerid = "{{isset($report['account_id']) ? $report['account_id'] : ''}}"
-                            data-id = "{{isset($report['accountid']) ? $report['accountid'] : ''}}"
                             data-table="direct-client-report"
                             >{{ $report[$fieldName] }}</a>
                         </td>
@@ -158,6 +152,7 @@
                         @endif
                     @elseif (ctype_digit($report[$fieldName])
                         || strrpos($fieldName, '_cv') === strlen($fieldName) - 3)
+                        || $fieldName === 'dailySpendingLimit')
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' ||
                             strrpos(strtolower($fieldName), 'cpa') === strlen($fieldName) - 3)
@@ -213,8 +208,13 @@
                     @endif
 
                     @if(isset($totalDataArray->$fieldName))
-                        @if (ctype_digit($totalDataArray->$fieldName))
-                    <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
+                        @if (ctype_digit($totalDataArray->$fieldName)
+                            || $fieldName === 'yss_web_cv'
+                            || $fieldName === 'adw_web_cv'
+                            || $fieldName === 'web_cv'
+                            || $fieldName === 'total_cv'
+                            || $fieldName === 'dailySpendingLimit')
+                            <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'cost' ||
                             strrpos(strtolower($fieldName), 'cpa') === strlen($fieldName) - 3)
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>

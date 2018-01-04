@@ -27,6 +27,7 @@ var Script = function () {
                     $('#status-label').html(response.statusLayout);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
+                    filterColumnChecked();
                 },
                 error : function (response) {
                     checkErrorAjax(response);
@@ -273,7 +274,7 @@ var Script = function () {
                     $('.summary_report fields active').removeClass('active');
                     $('#selectpickerGraph').find("option:selected").attr('selected', false);
                     $('#selectpickerGraph option[data-column="'+ columnName +'"]').attr('selected',true);
-                    $('button[data-id=selectpickerGraph] span.filter-option').text(columnName);
+                    $('button[data-id=selectpickerGraph] span.filter-option').text(response.column);
                 },
                 error : function (response) {
                     checkErrorAjax(response);
