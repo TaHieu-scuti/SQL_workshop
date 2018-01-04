@@ -18,6 +18,9 @@ abstract class AbstractAdwModel extends AbstractReportModel
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
+                case 'criteria.Name':
+                    $expressions[] = DB::raw("(`criteria`.`Name`) as prefecture");
+                    break;
                 case 'call_cv':
                     $expressions[] = DB::raw("COUNT(`phone_time_use`.`id`) as call_cv");
                     break;
