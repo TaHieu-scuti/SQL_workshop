@@ -184,7 +184,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 continue;
             }
             if ($fieldName === 'dailySpendingLimit') {
-                $arrayCalculate[] = DB::raw('IFNULL(SUM(repo_adw_campaign_report_cost.budget), 0) AS dailySpendingLimit');
+                $arrayCalculate[] = DB::raw(
+                    'IFNULL(SUM(repo_adw_campaign_report_cost.budget), 0) AS dailySpendingLimit'
+                );
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
@@ -196,7 +198,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                         ->getName()
                     === self::FIELD_TYPE) {
                     $arrayCalculate[] = DB::raw(
-                        'IFNULL(ROUND(SUM(' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2), 0) AS ' . $fieldName
+                        'IFNULL(ROUND(SUM(' . $tableName. '.' . self::ADW_FIELDS[$fieldName] . '), 2), 0) 
+                        AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
