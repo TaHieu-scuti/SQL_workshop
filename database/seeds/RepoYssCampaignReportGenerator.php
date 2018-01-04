@@ -59,10 +59,65 @@ class RepoYssCampaignReportGenerator extends Seeder
         'Click Type 3', 'Click Type 4'
     ];
     const OBJECTIVE_OF_CONVERSION_TRACKING = 'Objective of conversion tracking';
-    const CONVERSION_NAME = [
-        'Conversion Name 1', 'Conversion Name 2',
-        'Conversion Name 3', 'Conversion Name 4'
-    ];
+    const NUMBER_OF_CONV_POINTS = 3;
+
+    private function seedConv($campaignReportCost)
+    {
+        for ($i = 0; $i < self::NUMBER_OF_CONV_POINTS; $i++) {
+            $campaignReportConv = new RepoYssCampaignReportConv;
+            $campaignReportConv->exeDate = $campaignReportCost->exeDate;
+            $campaignReportConv->startDate = $campaignReportCost->startDate;
+            $campaignReportConv->endDate = $campaignReportCost->endDate;
+            $campaignReportConv->account_id = $campaignReportCost->account_id;
+            $campaignReportConv->campaign_id = $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignID = $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignName = 'YSS Campaign Name ' . $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignDistributionSettings = 'Distribution Settings ' . $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignDistributionStatus = 'Distribution Status' . $campaignReportCost->campaign_id;
+            $campaignReportConv->dailySpendingLimit = $campaignReportCost->dailySpendingLimit;
+            $campaignReportConv->campaignStartDate = $campaignReportCost->startDate;
+            $campaignReportConv->campaignEndDate = $campaignReportCost->endDate;
+            $campaignReportConv->trackingURL = self::TRACKING_URL;
+            $campaignReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $campaignReportCost->campaign_id;
+            $campaignReportConv->campaignTrackingID = $campaignReportCost->campaign_id;
+            $campaignReportConv->conversions = $campaignReportCost->conversions / self::NUMBER_OF_CONV_POINTS;
+            $campaignReportConv->convValue = $campaignReportCost->convValue;
+            $campaignReportConv->valuePerConv = $campaignReportCost->valuePerConv;
+            $campaignReportConv->mobileBidAdj = $campaignReportCost->mobileBidAdj;
+            $campaignReportConv->desktopBidAdj = $campaignReportCost->desktopBidAdj;
+            $campaignReportConv->tabletBidAdj = $campaignReportCost->tabletBidAdj;
+            $campaignReportConv->valuePerAllConv = mt_rand(
+                    self::MIN_VALUE_PER_ALL_CONV,
+                    self::MAX_VALUE_PER_ALL_CONV
+                ) / mt_getrandmax();
+            $campaignReportConv->allConv = mt_rand(
+                    self::MIN_ALL_CONV,
+                    self::MAX_ALL_CONV
+                ) / mt_getrandmax();
+            $campaignReportConv->allConvValue = mt_rand(
+                    self::MIN_ALL_CONV_VALUE,
+                    self::MAX_ALL_CONV_VALUE
+                ) / mt_getrandmax();
+            $campaignReportConv->network = $campaignReportCost->network;
+            $campaignReportConv->device = $campaignReportCost->device;
+            $campaignReportConv->day = $campaignReportCost->day;
+            $campaignReportConv->dayOfWeek = $campaignReportCost->dayOfWeek;
+            $campaignReportConv->quarter = $campaignReportCost->quarter;
+            $campaignReportConv->month = $campaignReportCost->month;
+            $campaignReportConv->week = $campaignReportCost->week;
+            $campaignReportConv->campaignType = $campaignReportCost->campaignType;
+            $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+            $campaignReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+            $campaignReportConv->conversionName = 'YSS conversion '
+                . (string) $campaignReportCost->account_id
+                . (string) $campaignReportCost->campaign_id
+                . (string) $campaignReportCost->accountid
+                . $i;
+            $campaignReportConv->accountid = $campaignReportCost->accountid;
+            $campaignReportConv->saveOrFail();
+        }
+    }
+
     /**
      * Run the database seeds.
      *
@@ -73,34 +128,21 @@ class RepoYssCampaignReportGenerator extends Seeder
         $accountReports = RepoYssAccountReportCost::all();
         foreach ($accountReports as $accountReport) {
             $campaignReportCost = new RepoYssCampaignReportCost;
-            $campaignReportConv = new RepoYssCampaignReportConv;
             $campaignReportCost->exeDate = $accountReport->exeDate;
-            $campaignReportConv->exeDate = $accountReport->exeDate;
             $campaignReportCost->startDate = $accountReport->startDate;
-            $campaignReportConv->startDate = $accountReport->startDate;
             $campaignReportCost->endDate = $accountReport->endDate;
-            $campaignReportConv->endDate = $accountReport->endDate;
             $campaignReportCost->account_id = $accountReport->account_id;
-            $campaignReportConv->account_id = $accountReport->account_id;
             $campaignReportCost->campaign_id = $accountReport->campaign_id;
-            $campaignReportConv->campaign_id = $accountReport->campaign_id;
             $campaignReportCost->campaignID = $accountReport->campaign_id;
-            $campaignReportConv->campaignID = $accountReport->campaign_id;
             $campaignReportCost->campaignName = 'YSS Campaign Name ' . $accountReport->campaign_id;
-            $campaignReportConv->campaignName = 'YSS Campaign Name ' . $accountReport->campaign_id;
             $campaignReportCost->campaignDistributionSettings = 'Distribution Settings ' . $accountReport->campaign_id;
-            $campaignReportConv->campaignDistributionSettings = 'Distribution Settings ' . $accountReport->campaign_id;
             $campaignReportCost->campaignDistributionStatus = 'Distribution Status' . $accountReport->campaign_id;
-            $campaignReportConv->campaignDistributionStatus = 'Distribution Status' . $accountReport->campaign_id;
             $campaignReportCost->dailySpendingLimit = mt_rand(
                 self::MIN_DAILY_SPENDING_LIMIT,
                 self::MAX_DAILY_SPENDING_LIMIT
             );
-            $campaignReportConv->dailySpendingLimit = $campaignReportCost->dailySpendingLimit;
             $campaignReportCost->campaignStartDate = $accountReport->startDate;
             $campaignReportCost->campaignEndDate = $accountReport->endDate;
-            $campaignReportConv->campaignStartDate = $accountReport->startDate;
-            $campaignReportConv->campaignEndDate = $accountReport->endDate;
             $campaignReportCost->cost = mt_rand(
                 self::MIN_COST,
                 self::MAX_COST
@@ -139,27 +181,33 @@ class RepoYssCampaignReportGenerator extends Seeder
                 self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
                 self::MAX_EXACT_MATCH_IMPRESSION_SHARE
             ) / mt_getrandmax();
+
             $campaignReportCost->budgetLostImpressionShare = mt_rand(
+
                 self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
+
                 self::MAX_BUDGET_LOST_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+
+                ) / mt_getrandmax();
+
             $campaignReportCost->qualityLostImpressionShare = mt_rand(
+
                 self::MIN_QUALITY_LOST_IMPRESSION_SHARE,
+
                 self::MAX_QUALITY_LOST_IMPRESSION_SHARE
-            ) / mt_getrandmax();
+
+                ) / mt_getrandmax();
+
             $campaignReportCost->trackingURL = self::TRACKING_URL;
-            $campaignReportConv->trackingURL = self::TRACKING_URL;
+
             $campaignReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . $accountReport->campaign_id;
-            $campaignReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $accountReport->campaign_id;
+
             $campaignReportCost->campaignTrackingID = $accountReport->campaign_id;
-            $campaignReportConv->campaignTrackingID = $accountReport->campaign_id;
 
             $campaignReportCost->conversions = mt_rand(
                 self::MIN_CONVERSIONS,
                 $campaignReportCost->clicks
             );
-
-            $campaignReportConv->conversions = $campaignReportCost->conversions;
 
             if ($campaignReportCost->clicks === 0) {
                 $campaignReportCost->convRate = 0;
@@ -171,7 +219,6 @@ class RepoYssCampaignReportGenerator extends Seeder
                 self::MIN_CONV_VALUE,
                 self::MAX_CONV_VALUE
             ) / mt_getrandmax();
-            $campaignReportConv->convValue = $campaignReportCost->convValue;
             $campaignReportCost->costPerConv = mt_rand(
                 self::MIN_COST_PER_CONV,
                 self::MAX_COST_PER_CONV
@@ -180,59 +227,34 @@ class RepoYssCampaignReportGenerator extends Seeder
                 self::MIN_VALUE_PER_CONV,
                 self::MAX_VALUE_PER_CONV
             ) / mt_getrandmax();
-            $campaignReportConv->valuePerConv = $campaignReportCost->valuePerConv;
             $campaignReportCost->mobileBidAdj = mt_rand(
                 self::MIN_MOBILE_BID_ADJ,
                 self::MAX_MOBILE_BID_ADJ
             ) / mt_getrandmax();
-            $campaignReportConv->mobileBidAdj = $campaignReportCost->mobileBidAdj;
             $campaignReportCost->desktopBidAdj = mt_rand(
                 self::MIN_DESKTOP_BID_ADJ,
                 self::MAX_DESKTOP_BID_ADJ
             ) / mt_getrandmax();
-            $campaignReportConv->desktopBidAdj = $campaignReportCost->desktopBidAdj;
             $campaignReportCost->tabletBidAdj = mt_rand(
                 self::MIN_TABLET_BID_ADJ,
                 self::MAX_TABLET_BID_ADJ
             ) / mt_getrandmax();
-            $campaignReportConv->tabletBidAdj = $campaignReportCost->tabletBidAdj;
-            $campaignReportConv->valuePerAllConv = mt_rand(
-                self::MIN_VALUE_PER_ALL_CONV,
-                self::MAX_VALUE_PER_ALL_CONV
-            ) / mt_getrandmax();
-            $campaignReportConv->allConv = mt_rand(
-                self::MIN_ALL_CONV,
-                self::MAX_ALL_CONV
-            ) / mt_getrandmax();
-            $campaignReportConv->allConvValue = mt_rand(
-                self::MIN_ALL_CONV_VALUE,
-                self::MAX_ALL_CONV_VALUE
-            ) / mt_getrandmax();
+
             $campaignReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
-            $campaignReportConv->network = $campaignReportCost->network;
             $campaignReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-            $campaignReportConv->device = $campaignReportCost->device;
             $campaignReportCost->day = $accountReport->day;
-            $campaignReportConv->day = $campaignReportCost->day;
             $campaignReportCost->dayOfWeek = $accountReport->dayOfWeek;
-            $campaignReportConv->dayOfWeek = $campaignReportCost->dayOfWeek;
             $campaignReportCost->quarter = $accountReport->quarter;
-            $campaignReportConv->quarter = $campaignReportCost->quarter;
             $campaignReportCost->month = $accountReport->month;
-            $campaignReportConv->month = $campaignReportCost->month;
             $campaignReportCost->week = $accountReport->week;
-            $campaignReportConv->week = $campaignReportCost->week;
             $campaignReportCost->hourofday = $accountReport->hourofday;
             $campaignReportCost->campaignType = self::CAMPAIGN_TYPE[mt_rand(0, count(self::CAMPAIGN_TYPE) - 1)];
-            $campaignReportConv->campaignType = $campaignReportCost->campaignType;
-            $campaignReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
-            $campaignReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-            $campaignReportConv->conversionName = self::CONVERSION_NAME[mt_rand(0, count(self::CONVERSION_NAME) - 1)];
+
             $campaignReportCost->accountid = $accountReport->accountid;
-            $campaignReportConv->accountid = $accountReport->accountid;
 
             $campaignReportCost->saveOrFail();
-            $campaignReportConv->saveOrFail();
+
+            $this->seedConv($campaignReportCost);
         }
     }
 }
