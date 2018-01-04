@@ -37,19 +37,24 @@
                         @if($fieldName === 'accountName')
                             <th></th>
                         @endif
+                        @php
+                            if (($translation = __('language.' .str_slug($fieldName,'_'))) === 'language.' .str_slug($fieldName,'_')) {
+                                $translation = $fieldName;
+                            }
+                        @endphp
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-down"></i>{{ __('language.' .str_slug($fieldName,'_'))}}</a>
+                                <i class="fa fa-arrow-down"></i>{{$translation}}</a>
                             </th>
                         @elseif ($columnSort === $fieldName && $sort === "asc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-up"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
+                                <i class="fa fa-arrow-up"></i>{{$translation}}</a>
                             </th>
                         @else
                             <th data-value="{{ $fieldName }}">
-                                <a href="javascript:void(0)"></i>{{  __('language.' .str_slug($fieldName,'_')) }}</a>
+                                <a href="javascript:void(0)"></i>{{$translation}}</a>
                             </th>
                         @endif
                     @endforeach
@@ -152,35 +157,16 @@
                         </td>
                         @endif
                     @elseif (ctype_digit($report[$fieldName])
-                        || $fieldName === 'yss_web_cv'
-                        || $fieldName === 'adw_web_cv'
-                        || $fieldName === 'web_cv'
-                        || $fieldName === 'total_cv')
+                        || strrpos($fieldName, '_cv') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' ||
-                            $fieldName === 'web_cpa' ||
-                            $fieldName === 'call_cpa' ||
-                            $fieldName === 'total_cpa' ||
-                            $fieldName === 'ydn_web_cpa' ||
-                            $fieldName === 'yss_web_cpa' ||
-                            $fieldName === 'adw_web_cpa' ||
-                            $fieldName === 'ydn_call_cpa' ||
-                            $fieldName === 'yss_call_cpa' ||
-                            $fieldName === 'adw_call_cpa')
+                            strrpos(strtolower($fieldName), 'cpa') === strlen($fieldName) - 3)
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'averageCpc')
                         <td><i class="fa fa-rmb"></i>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @elseif ($fieldName === 'ctr'
                         || $fieldName === 'impressionShare'
-                        || $fieldName === 'web_cvr'
-                        || $fieldName === 'call_cvr'
-                        || $fieldName === 'total_cvr'
-                        || $fieldName === 'ydn_web_cvr'
-                        || $fieldName === 'yss_web_cvr'
-                        || $fieldName === 'adw_web_cvr'
-                        || $fieldName === 'ydn_call_cvr'
-                        || $fieldName === 'yss_call_cvr'
-                        || $fieldName === 'adw_call_cvr')
+                        || strrpos(strtolower($fieldName), 'cvr') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
                     @elseif ($fieldName === 'averagePosition')
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
@@ -230,29 +216,13 @@
                         @if (ctype_digit($totalDataArray->$fieldName))
                     <td>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'cost' ||
-                            $fieldName === 'web_cpa' ||
-                            $fieldName === 'call_cpa' ||
-                            $fieldName === 'total_cpa' ||
-                            $fieldName === 'ydn_web_cpa' ||
-                            $fieldName === 'yss_web_cpa' ||
-                            $fieldName === 'adw_web_cpa' ||
-                            $fieldName === 'ydn_call_cpa' ||
-                            $fieldName === 'yss_call_cpa' ||
-                            $fieldName === 'adw_call_cpa')
+                            strrpos(strtolower($fieldName), 'cpa') === strlen($fieldName) - 3)
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 0, '', ',') }}</td>
                         @elseif ($fieldName === 'averageCpc')
                     <td><i class="fa fa-rmb"></i>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
                         @elseif ($fieldName === 'ctr' ||
                                 $fieldName === 'impressionShare' ||
-                                $fieldName === 'web_cvr' ||
-                                $fieldName === 'call_cvr' ||
-                                $fieldName === 'total_cvr' ||
-                                $fieldName === 'ydn_web_cvr' ||
-                                $fieldName === 'yss_web_cvr' ||
-                                $fieldName === 'adw_web_cvr' ||
-                                $fieldName === 'ydn_call_cvr' ||
-                                $fieldName === 'yss_call_cvr' ||
-                                $fieldName === 'adw_call_cvr')
+                                strrpos(strtolower($fieldName), 'cvr') === strlen($fieldName) - 3)
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}%</td>
                         @elseif (is_float($totalDataArray->$fieldName) || $fieldName === 'call_cvr' || $fieldName === 'call_cpa')
                     <td>{{ number_format($totalDataArray->$fieldName, 2, '.', ',') }}</td>
