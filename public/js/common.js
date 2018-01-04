@@ -326,6 +326,8 @@ $('.specific-filter-item').click(function() {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            let url = location.protocol + "//" + location.host + location.pathname;
+            history.pushState(null, '', url);
         },
         error : function (response) {
             checkErrorAjax(response);
