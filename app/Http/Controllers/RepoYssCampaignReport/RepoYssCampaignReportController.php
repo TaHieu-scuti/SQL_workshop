@@ -117,7 +117,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     }
 
     public function getDataForLayouts()
-    {   
+    {
         $this->updateModel();
         $this->getModelForPrefecture();
         $dataReports = $this->getDataForTable();

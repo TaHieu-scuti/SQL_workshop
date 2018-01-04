@@ -15,11 +15,9 @@ class RepoAdwGeoReportCost extends AbstractAdwModel
     protected function addJoin(EloquentBuilder $builder)
     {
         parent::addJoin($builder);
-        $builder->join('criteria',
-            function (JoinClause $join) {
+        $builder->join('criteria', function (JoinClause $join) {
                 $this->addCriteriaJoinConditions($join);
-            }
-        );
+        });
     }
 
     protected function addJoinConditions(JoinClause $join)
@@ -29,8 +27,11 @@ class RepoAdwGeoReportCost extends AbstractAdwModel
             ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
             ->where('phone_time_use.source', '=', 'adw')
             ->where('phone_time_use.traffic_type', '=', 'AD')
-            ->where('phone_time_use.visitor_city_state', 'like',
-                DB::raw("CONCAT('%', 'criteria.Name', ' (Japan)')"));
+            ->where(
+                'phone_time_use.visitor_city_state',
+                'like',
+                DB::raw("CONCAT('%', 'criteria.Name', ' (Japan)')")
+            );
     }
 
     private function addCriteriaJoinConditions(JoinClause $join)
