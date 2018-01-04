@@ -137,7 +137,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
