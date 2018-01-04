@@ -174,7 +174,12 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::YSS_SEARCH_QUERY
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
-                $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
+                if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                    $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                } else {
+                    $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
+                }
+
                 continue;
             }
 
@@ -184,7 +189,7 @@ abstract class AbstractReportModel extends Model
 
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG(' . $tableName . '.' . $key . '), 2) AS ' . $fieldName
+                    'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -193,11 +198,11 @@ abstract class AbstractReportModel extends Model
                     === self::FIELD_TYPE
                 ) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName . '.' . $key . '), 2) AS ' . $fieldName
+                        'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName . '.' . $key . ' ) AS ' . $fieldName
+                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                     );
                 }
             }
@@ -213,7 +218,8 @@ abstract class AbstractReportModel extends Model
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'ROUND(AVG(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                    'IFNULL(ROUND(AVG(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0) 
+                    AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
@@ -222,11 +228,12 @@ abstract class AbstractReportModel extends Model
                     === self::FIELD_TYPE
                 ) {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(SUM(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2) AS ' . $fieldName
+                        'IFNULL(ROUND(SUM(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0) 
+                        AS ' . $fieldName
                     );
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'SUM( ' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . ' ) AS ' . $fieldName
+                        'IFNULL(SUM( ' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . ' ), 0) AS ' . $fieldName
                     );
                 }
             }

@@ -1,5 +1,9 @@
 <?php
 return [
+    'to' => 'に',
+    'from' => 'から',
+    'cancel' => 'キャンセル',
+    'apply' => '適用',
     'account' => 'アカウント名',
     'searchquery' => '検索クエリ',
     'Search_for_account' => 'アカウント名で検索',

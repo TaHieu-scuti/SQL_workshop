@@ -48,9 +48,11 @@ class RepoYssCampaignReportController extends AbstractReportController
         'averageCpc',
         'averagePosition',
         'impressionShare',
+        '[conversionValues]',
         'web_cv',
         'web_cvr',
         'web_cpa',
+        '[phoneNumberValues]',
         'call_cv',
         'call_cvr',
         'call_cpa',
@@ -119,7 +121,6 @@ class RepoYssCampaignReportController extends AbstractReportController
     public function getDataForLayouts()
     {
         $this->updateModel();
-        $this->getModelForPrefecture();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -135,7 +136,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -185,29 +186,16 @@ class RepoYssCampaignReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if ($request->specificItem === self::PREFECTURE) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->updateModelForPrefecture();
         }
 
-        if ($request->specificItem === 'hourofday') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'hourofday']);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->updateModelForTimezone();
         }
 
-        if ($request->specificItem === 'dayOfWeek') {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => 'dayOfWeek']);
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->updateModelForDayOfWeek();
-        }
-
-        $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        if ($request->specificItem === self::PREFECTURE) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
-            session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
-            $this->updateModelForPrefecture();
-        } else {
-            session()->put([self::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
 
         $reports = $this->getDataForTable();

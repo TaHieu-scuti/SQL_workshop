@@ -7,6 +7,7 @@ use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\Account;
 use DateTime;
+use Illuminate\Support\Facades\Lang;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -272,6 +273,7 @@ class ClientsController extends AbstractReportController
     public function displayGraph(Request $request)
     {
         $this->updateSessionData($request);
+        $column = Lang::get('language.'.str_slug(session(self::SESSION_KEY_GRAPH_COLUMN_NAME)));
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
@@ -302,6 +304,7 @@ class ClientsController extends AbstractReportController
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'column' => $column
             ]
         );
     }
