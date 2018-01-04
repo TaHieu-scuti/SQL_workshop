@@ -724,6 +724,21 @@ abstract class AbstractReportController extends Controller
         );
     }
 
+    protected function updateSpecificModel()
+    {
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->updateModelForPrefecture();
+        }
+
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+            $this->updateModelForTimezone();
+        }
+
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->updateModelForDayOfWeek();
+        }
+    }
+
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
