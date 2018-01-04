@@ -18,7 +18,6 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        // TODO: add the authorization code, will do in next PR
         $model = new Account();
 
         if ($model->isAgency(Auth::user()->account_id)) {
