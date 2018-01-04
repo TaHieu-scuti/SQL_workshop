@@ -9,6 +9,8 @@
                         <td>{{ number_format($summaryReport['impressions'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['impressions']))
                         <td>{{ number_format($summaryReport['impressions'], 2, '.', ',') }}</td>
+                    @else
+                        <td>{{ $summaryReport['impressions'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -27,6 +29,8 @@
                         <td>{{ number_format($summaryReport['clicks'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['clicks']))
                         <td>{{ number_format($summaryReport['clicks'], 2, '.', ',') }}</td>
+                    @else
+                        <td>{{ $summaryReport['clicks'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -61,6 +65,8 @@
                         <td>{{ number_format($summaryReport['averageCpc'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['averageCpc']))
                         <td>{{ number_format($summaryReport['averageCpc'], 2, '.', ',') }}</td>
+                    @else
+                        <td>{{ $summaryReport['averageCpc'] }}</td>
                     @endif
                     <br>
                 </span>
@@ -79,6 +85,8 @@
                         <td>{{ number_format($summaryReport['averagePosition'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['averagePosition']))
                         <td>{{ number_format($summaryReport['averagePosition'], 2, '.', ',') }}</td>
+                    @else
+                        <td>{{ $summaryReport['averagePosition'] }}</td>
                     @endif
                     <br>
                 </span>
