@@ -352,7 +352,9 @@ abstract class AbstractReportModel extends Model
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
-            array_push($this->groupBy, 'criteria.Name');
+            //replace prefecture with criteria.Name
+            $key = array_search('prefecture', $fieldNames);
+            $fieldNames[$key] = 'criteria.Name';
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
@@ -378,6 +380,13 @@ abstract class AbstractReportModel extends Model
             if (is_string($item)) {
                 $item = $this->getTable() . '.' . $item;
             }
+        }
+        if ($groupedByField === 'prefecture' && $engine === 'adw') {
+            //remove prefecture out of groupedBy
+            $key = array_search($this->getTable() . '.prefecture', $groupBy);
+            unset($groupBy[$key]);
+            $groupedByField = 'criteria.Name';
+            array_push($groupBy, $groupedByField);
         }
         foreach ($aggregations as &$aggregation) {
             if (is_string($aggregation)) {
