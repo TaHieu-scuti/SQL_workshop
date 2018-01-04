@@ -103,18 +103,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
         }
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
-            $this->updateModelForTimezone();
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
-            $this->updateModelForDayOfWeek();
-        }
-
         $this->checkOldId();
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
@@ -130,6 +118,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
     public function getDataForLayouts()
     {
         $this->updateModel();
+        $this->updateSpecificModel();
+
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -195,17 +185,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->updateModelForPrefecture();
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
-            $this->updateModelForTimezone();
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
-            $this->updateModelForDayOfWeek();
-        }
+        //after update session, update specific model
+        $this->updateSpecificModel();
 
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
