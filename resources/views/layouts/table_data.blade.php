@@ -151,7 +151,7 @@
                         </td>
                         @endif
                     @elseif (ctype_digit($report[$fieldName])
-                        || strrpos($fieldName, '_cv') === strlen($fieldName) - 3)
+                        || strrpos($fieldName, '_cv') === strlen($fieldName) - 3
                         || $fieldName === 'dailySpendingLimit')
                         <td>{{ number_format($report[$fieldName], 0, '', ',') }}</td>
                     @elseif ($fieldName === 'cost' ||

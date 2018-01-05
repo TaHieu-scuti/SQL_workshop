@@ -240,12 +240,19 @@ var Script = function () {
         {
             var field = response.field;
             var data = [];
-            if(response.displayNoDataFoundMessageOnGraph) {
-                $('.no-data-found-graph.hidden-no-data-found-message-graph')
-                    .removeClass('hidden-no-data-found-message-graph');
+            if (response.displayNoDataFoundMessageOnGraph) {
+                if (response.status === 'showZero') {
+                    response.data = [{day: response.data[0].day, data: 0}, {day: response.data[1].day, data: 0}];
+                    if (response.data[0].day === response.data[1].day) {
+                        response.data.pop();
+                    }
+                    $('.no-data-found-graph').addClass('hidden-no-data-found-message-graph');
+                } else {
+                    $('.no-data-found-graph.hidden-no-data-found-message-graph')
+                        .removeClass('hidden-no-data-found-message-graph');
+                }
             } else {
-                $('.no-data-found-graph')
-                    .addClass('hidden-no-data-found-message-graph');
+                $('.no-data-found-graph').addClass('hidden-no-data-found-message-graph');
             }
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
