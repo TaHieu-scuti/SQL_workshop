@@ -26,7 +26,7 @@ SELECT
   `ptu`.`phone_number`
 FROM
   `campaigns` c,
-  `phone_time_use` ptu
+  `phone_time_use` ptua
 WHERE
   `c`.`campaign_id` = `ptu`.`campaign_id`
 AND
