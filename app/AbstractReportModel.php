@@ -272,7 +272,7 @@ abstract class AbstractReportModel extends Model
             $query->where($this->getTable().'.campaignID', '=', $campaignId);
         }
         if ($adGroupId !== null && $adReportId === null) {
-            $query->where('adgroupID', '=', $adGroupId);
+            $query->where($this->getTable().'.adgroupID', '=', $adGroupId);
         }
         if ($adReportId !== null) {
             $query->where($this->getTable().'.adID', '=', $adReportId);
@@ -400,7 +400,13 @@ abstract class AbstractReportModel extends Model
                 $aggregation = $this->getTable() . '.' . $aggregation;
             }
         }
-        $builder = $this->select(array_merge(static::FIELDS, $aggregations))
+        $selectBy = static::FIELDS;
+        foreach ($selectBy as &$item) {
+            if (is_string($item)) {
+                $item = $this->getTable() . '.' . $item;
+            }
+        }
+        $builder = $this->select(array_merge($selectBy, $aggregations))
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
