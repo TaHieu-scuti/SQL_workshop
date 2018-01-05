@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class UpdateColumnForRepoAdwCampaignReportConv extends Migration
 {
     /**
@@ -31,7 +32,7 @@ class UpdateColumnForRepoAdwCampaignReportConv extends Migration
         Schema::table(
             'repo_adw_campaign_report_conv',
             function (Blueprint $table) {
-            $table->boolean('enhancedCPVEnabled')->nullable()
+                $table->boolean('enhancedCPVEnabled')->nullable()
                 ->comment('入札戦略でエンハンストCPVが有効になっているかどうかを示します。')
                 ->index('repo_adw_campaign_report_conv34');
             }
