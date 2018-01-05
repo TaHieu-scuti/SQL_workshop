@@ -298,12 +298,13 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'data' => $data,
-                            'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
-                            'timePeriodLayout' => $timePeriodLayout,
-                            'statusLayout' => $statusLayout,
-                            'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
-                            'column' => $column
+                'data' => $data,
+                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'timePeriodLayout' => $timePeriodLayout,
+                'statusLayout' => $statusLayout,
+                'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
+                'column' => $column,
+                'status' => session(static::SESSION_KEY_ACCOUNT_STATUS)
             ]
         );
     }

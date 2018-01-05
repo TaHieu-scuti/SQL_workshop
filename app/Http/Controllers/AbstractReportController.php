@@ -148,7 +148,8 @@ abstract class AbstractReportController extends Controller
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,
-                'column' => $column
+                'column' => $column,
+                'status' => session(static::SESSION_KEY_ACCOUNT_STATUS)
             ]
         );
     }
