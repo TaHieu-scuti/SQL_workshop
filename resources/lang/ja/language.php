@@ -41,6 +41,7 @@ return [
     'AvgCPC' => '平均CPC',
     'Avg_pos' => '平均掲載順位',
     'impression_Share' => 'インプレッション',
+    'impressionShare' => 'インプレッション',
     'yesterday' => '昨日',
     'last_7_days' => '過去7日間',
     'including_today' => '今日を含む',

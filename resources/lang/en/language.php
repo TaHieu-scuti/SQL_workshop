@@ -41,6 +41,7 @@ return [
     'AvgCPC' => 'AvgCPC',
     'Avg_pos' => 'Avg pos',
     'impression_Share' => 'impression Share',
+    'impressionShare' => 'Impression Share',
     'yesterday' => 'Yesterday',
     'last_7_days' => 'Last 7 days',
     'including_today' => 'including today',
