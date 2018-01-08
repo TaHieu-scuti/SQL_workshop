@@ -53,7 +53,7 @@
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
-                            <li><a href="/logout"><i class="fa fa-key"></i>Log Out</a></li>
+                            <li><a href="/logout"><i class="fa fa-key"></i>@lang('language.log_out')</a></li>
                         </ul>
                     </li>
                     <!-- user login dropdown end -->
@@ -283,7 +283,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">Customize</h4>
+                                        <h4 class="modal-title">@lang('language.customize')</h4>
                                     </div>
                                     <div class="modal-body">
                                         <form class="form-horizontal">
@@ -291,10 +291,10 @@
 
                                         </div>
                                         <div class="items-to-display">
-                                            <p>Items to display</p>
+                                            <p>@lang('language.items_to_display')</p>
                                             <div>
                                                 <div class="form-group">
-                                                    <input type="checkbox" id="selectAll"> Select all
+                                                    <input type="checkbox" id="selectAll"> @lang('language.select_all')
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>
@@ -304,7 +304,7 @@
                                             <div class="clearfix"></div>
                                         </div>
                                         <div>
-                                            <button type="button" class="apply-button btn btn-primary">Apply</button>
+                                            <button type="button" class="apply-button btn btn-primary">@lang('language.apply')</button>
                                         </div>
                                         </form>
                                     </div>
