@@ -258,6 +258,10 @@ var Script = function () {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
             setMorris(data, field);
+
+            let selectedField = $('div.summary_report .fields[data-name='+response.field+']');
+            $(selectedField).addClass('active');
+            $(selectedField).find('.small-blue-stuff').addClass('fa fa-circle');
         }
 
         function updateMorris(columnName)
