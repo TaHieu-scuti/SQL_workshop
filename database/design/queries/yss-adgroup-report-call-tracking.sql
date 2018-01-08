@@ -89,143 +89,124 @@ FROM
   /* Add joins for the conversion points */
     LEFT JOIN `repo_yss_adgroup_report_conv` AS conv0
       ON (
-          `total`.`account_id` = `conv0`.`account_id`
-        AND
-          `total`.`accountid` = `conv0`.`accountid`
+          `conv0`.`conversionName` = 'YSS conversion 111110'
         AND
           `total`.`day` = `conv0`.`day`
         AND
-          `total`.`campaignID` = `conv0`.`campaignID`
-        AND (
-            `conv0`.`adgroupID` = 11111111
-          OR
-            `conv0`.`adgroupID` = 11111112
-          OR
-            `conv0`.`adgroupID` = 11111113
-          OR
-            `conv0`.`adgroupID` = 11111114
-        )
+          `conv0`.`adgroupID` IN (11111111, 11111112, 11111113, 11111114)
         AND
-        `conv0`.`conversionName` = 'YSS conversion 111110'
+          `total`.`campaignID` = `conv0`.`campaignID`
+        AND
+          `total`.`accountid` = `conv0`.`accountid`
+        AND
+          `total`.`account_id` = `conv0`.`account_id`
       )
     LEFT JOIN `repo_yss_adgroup_report_conv` AS conv1
       ON (
-          `total`.`account_id` = `conv1`.`account_id`
-        AND
-          `total`.`accountid` = `conv1`.`accountid`
+          `conv1`.`conversionName` = 'YSS conversion 111111'
         AND
           `total`.`day` = `conv1`.`day`
         AND
-          `total`.`campaignID` = `conv1`.`campaignID`
-        AND (
-            `conv1`.`adgroupID` = 11111111
-          OR
-            `conv1`.`adgroupID` = 11111112
-          OR
-            `conv1`.`adgroupID` = 11111113
-          OR
-            `conv1`.`adgroupID` = 11111114
-        )
+          `conv1`.`adgroupID` IN (11111111, 11111112, 11111113, 11111114)
         AND
-          `conv1`.`conversionName` = 'YSS conversion 111111'
+          `total`.`campaignID` = `conv1`.`campaignID`
+        AND
+          `total`.`accountid` = `conv1`.`accountid`
+        AND
+          `total`.`account_id` = `conv1`.`account_id`
       )
     LEFT JOIN `repo_yss_adgroup_report_conv` AS conv2
       ON (
-          `total`.`account_id` = `conv2`.`account_id`
-        AND
-          `total`.`accountid` = `conv2`.`accountid`
+          `conv2`.`conversionName` = 'YSS conversion 111112'
         AND
           `total`.`day` = `conv2`.`day`
         AND
-          `total`.`campaignID` = `conv2`.`campaignID`
-        AND (
-            `conv2`.`adgroupID` = 11111111
-          OR
-            `conv2`.`adgroupID` = 11111112
-          OR
-            `conv2`.`adgroupID` = 11111113
-          OR
-            `conv2`.`adgroupID` = 11111114
-        )
+          `conv2`.`adgroupID` IN (11111111, 11111112, 11111113, 11111114)
         AND
-          `conv2`.`conversionName` = 'YSS conversion 111112'
+          `total`.`campaignID` = `conv2`.`campaignID`
+        AND
+          `total`.`accountid` = `conv2`.`accountid`
+        AND
+          `total`.`account_id` = `conv2`.`account_id`
       )
     /* Add joins for every AG campaign & phone_number combination */
     LEFT JOIN (`campaigns` AS call0_campaigns, `phone_time_use` AS call0_ptu)
       ON (
-            `call0_campaigns`.`account_id` = `total`.`account_id`
-          AND
-            `call0_campaigns`.`campaign_id` = `total`.`campaign_id`
-          AND
+          `call0_campaigns`.`campaign_id` = `total`.`campaign_id`
+        AND
+          `call0_campaigns`.`account_id` = `total`.`account_id`
+        AND
+          (
             (
-              (
-                `call0_campaigns`.`camp_custom1` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom1` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom2` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom2` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom3` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom3` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom4` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom4` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom5` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom5` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom6` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom6` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom7` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom7` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom8` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom8` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom9` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom9` = `total`.`adgroupID`
-              )
-            OR
-              (
-                `call0_campaigns`.`camp_custom10` = 'adgroupid'
-              AND
-                `call0_ptu`.`custom10` = `total`.`adgroupID`
-              )
+              `call0_campaigns`.`camp_custom1` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom1` = `total`.`adgroupID`
             )
+          OR
+            (
+              `call0_campaigns`.`camp_custom2` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom2` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom3` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom3` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom4` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom4` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom5` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom5` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom6` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom6` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom7` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom7` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom8` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom8` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom9` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom9` = `total`.`adgroupID`
+            )
+          OR
+            (
+              `call0_campaigns`.`camp_custom10` = 'adgroupid'
+            AND
+              `call0_ptu`.`custom10` = `total`.`adgroupID`
+            )
+          )
+        AND
+          `call0_ptu`.`utm_campaign` = `total`.`campaignID`
         AND
           `call0_ptu`.`account_id` = `total`.`account_id`
         AND
           `call0_ptu`.`campaign_id` = `total`.`campaign_id`
         AND
-          `call0_ptu`.`utm_campaign` = `total`.`campaignID`
-        AND
           STR_TO_DATE(`call0_ptu`.`time_of_call`, '%Y-%m-%d') = `total`.`day`
+        AND
+          `call0_ptu`.`phone_number` = '+841234567811'
         AND
           `call0_ptu`.`source` = 'yss'
         AND
@@ -240,7 +221,7 @@ AND
 AND
   `total`.`day` >= '2017-01-01'
 AND
-  `total`.`day` <= '2017-12-01'
+  `total`.`day` <= '2017-01-02'
 GROUP BY
   `total`.`account_id`,
   `total`.`accountid`,
