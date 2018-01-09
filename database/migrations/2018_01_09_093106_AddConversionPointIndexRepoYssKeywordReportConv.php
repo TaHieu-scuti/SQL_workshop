@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddConversionPointIndexRepoYssKeywordReportConv extends Migration
 {
     const TABLE_NAME = 'repo_yss_keyword_report_conv';
