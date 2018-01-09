@@ -101,6 +101,8 @@ function sendingRequest()
 {
     $('.loading-gif-on-graph').removeClass('hidden-graph');
     $('.loading-gif-on-graph').show();
+    global_graph_field_selected = '';
+    global_is_loaded_summary_report = false;
 }
 
 function completeRequest()
