@@ -380,6 +380,8 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        var_dump($builder->getBindings());die;
+
         return $builder;
     }
 
