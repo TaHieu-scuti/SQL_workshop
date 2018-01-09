@@ -53,10 +53,18 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
                             $this->table . '.campaignID',
                             '=',
                             $joinAlias . '.campaignID'
+                        )->on(
+                            $this->table . '.adgroupID',
+                            '=',
+                            $joinAlias . '.adgroupID'
                         )->where(
                             $joinAlias . '.campaignID',
                             '=',
                             $point->campaignID
+                        )->where(
+                            $joinAlias . '.adgroupID',
+                            '=',
+                            $point->adgroupID
                         )->where(
                             $joinAlias . '.conversionName',
                             '=',
@@ -109,6 +117,12 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
 
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
+        $builder->leftJoin(
+            DB::raw('(`phone_time_use`, `campaigns`)'),
+            function (JoinClause $join) {
+                $this->addJoinConditions($join);
+            }
+        );
         $this->addJoinsForConversionPoints($builder, $conversionPoints);
         $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
     }

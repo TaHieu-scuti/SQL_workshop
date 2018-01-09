@@ -351,7 +351,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $this->conversionPoints = $this->getAllDistinctConversionNames($clientId, $accountId);
+        $this->conversionPoints = $this->getAllDistinctConversionNames($clientId, $accountId, $campaignId, $adGroupId);
 
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
@@ -380,6 +380,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+
         return $builder;
     }
 
@@ -419,12 +420,47 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
     {
-        return $this->select(['campaignID', 'conversionName'])
+        $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
+        return $this->select($aggregation)
             ->distinct()
-            ->where('account_id', '=', $account_id)
-            ->where('accountId', '=', $accountId)
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
             ->get();
+    }
+
+    private function addConditonForConversionName(
+        EloquentBuilder $query,
+        $account_id = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null
+    ) {
+        if ($account_id !== null && $accountId !== null) {
+            $query->where('account_id', '=', $account_id)
+                ->where('accountId', '=', $accountId);
+        } elseif ($campaignId !== null) {
+            $query->where('campaignID', '=', $campaignId);
+        } elseif ($adGroupId !== null) {
+            $query->where('adgroupID', '=', $adGroupId);
+        }
+    }
+
+    private function getAggregatedConversionName ($campaignId, $adGroupId)
+    {
+        $arraySelect = ['campaignID', 'conversionName'];
+        if ($campaignId !== null) {
+            $arraySelect[] = 'adgroupID';
+        }
+
+        if ($adGroupId !== null) {
+            $arraySelect[] = 'adID';
+        }
+
+        return $arraySelect;
     }
 }
