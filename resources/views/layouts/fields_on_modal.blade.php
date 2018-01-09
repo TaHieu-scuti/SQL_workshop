@@ -16,7 +16,7 @@ if (isset($fieldNames)) {
     @foreach($columnsChunked as $column)
     <div class="form-group">
         <input type="checkbox" name="fieldName" value="{{$column}}" {{!empty($arrField) && isset($arrField[$column]) ? "checked" : '' }} >
-        {{$column}}
+        @lang('language.'.$column)
     </div>
     @endforeach
 </div>
