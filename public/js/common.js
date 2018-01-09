@@ -60,6 +60,8 @@ function sendingRequestTable() {
     $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
     $('.loading-gif-on-table').show();
+    global_graph_field_selected = '';
+    global_is_loaded_summary_report = false;
 }
 
 function showLoadingImageOnTopGraph() {
@@ -108,6 +110,8 @@ $(".apply-button").click(function () {
         success: function(response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            global_is_loaded_summary_report = true;
+            setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
         },
@@ -165,6 +169,8 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            global_is_loaded_summary_report = true;
+            setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
         },
@@ -199,6 +205,8 @@ $('.apply-custom-period').click(function() {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            global_is_loaded_summary_report = true;
+            setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
         },
@@ -245,6 +253,8 @@ $('.status-option li').click(function () {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            global_is_loaded_summary_report = true;
+            setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
         },
@@ -326,6 +336,8 @@ $('.specific-filter-item').click(function() {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            global_is_loaded_summary_report = true;
+            setSelectedGraphColumn();
             let url = location.protocol + "//" + location.host + location.pathname;
             history.pushState(null, '', url);
         },
