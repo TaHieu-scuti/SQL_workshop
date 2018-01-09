@@ -42,17 +42,15 @@ class AddIndexesPhoneTimeUse extends Migration
         Schema::table(
             self::TABLE_NAME,
             function (Blueprint $table) {
-                $table->dropIndex([
-                    'account_id',
-                    'campaign_id',
-                    'PhoneNumber',
-                    'IP_INDEX',
-                    'unique_call_id',
-                    'time',
-                    'SESSIONID',
-                    'time_of_call_index',
-                    'update_key'
-                ]);
+                $table->dropIndex('account_id');
+                $table->dropIndex('campaign_id');
+                $table->dropIndex('PhoneNumber');
+                $table->dropIndex('IP_INDEX');
+                $table->dropIndex('unique_call_id');
+                $table->dropIndex('time');
+                $table->dropIndex('SESSIONID');
+                $table->dropIndex('time_of_call_index');
+                $table->dropIndex('update_key');
             }
         );
     }

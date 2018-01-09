@@ -35,7 +35,8 @@ class AddIndexesCampaigns extends Migration
         Schema::table(
             self::TABLE_NAME,
             function (Blueprint $table) {
-                $table->dropIndex(['campaigns_campaign_id_idx', 'campaigns_account_id_idx']);
+                $table->dropIndex('campaigns_campaign_id_idx');
+                $table->dropIndex('campaigns_account_id_idx');
             }
         );
     }
