@@ -450,7 +450,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         }
     }
 
-    private function getAggregatedConversionName ($campaignId, $adGroupId)
+    private function getAggregatedConversionName($campaignId, $adGroupId)
     {
         $arraySelect = ['campaignID', 'conversionName'];
         if ($campaignId !== null) {
