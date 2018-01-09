@@ -112,17 +112,18 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
                     );
                 }
             );
+            $builder->leftJoin(
+                DB::raw('(`phone_time_use`, `campaigns`)'),
+                function (JoinClause $join) use ($campaign) {
+                    $this->addJoinConditions($join);
+                    $join->where('phone_time_use.phone_number', '=', $campaign->phone_number);
+                }
+            );
         }
     }
 
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
-        $builder->leftJoin(
-            DB::raw('(`phone_time_use`, `campaigns`)'),
-            function (JoinClause $join) {
-                $this->addJoinConditions($join);
-            }
-        );
         $this->addJoinsForConversionPoints($builder, $conversionPoints);
         $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
     }

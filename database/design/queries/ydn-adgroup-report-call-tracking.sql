@@ -87,35 +87,6 @@ SELECT `repo_ydn_reports`.`adgroupID`,
        IFNULL((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`call0`.`id`)) / SUM(`repo_ydn_reports`.`clicks`), 0) AS total_cvr,
        IFNULL(SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) + COUNT(`call0`.`id`)), 0) AS total_cpa
 FROM `repo_ydn_reports`
-LEFT JOIN (`phone_time_use`,
-           `campaigns`) ON `campaigns`.`account_id` = `repo_ydn_reports`.`account_id`
-AND `campaigns`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
-AND ((campaigns.camp_custom1 = "creative"
-      AND phone_time_use.custom1 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom2 = "creative"
-         AND phone_time_use.custom2 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom3 = "creative"
-         AND phone_time_use.custom3 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom4 = "creative"
-         AND phone_time_use.custom4 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom5 = "creative"
-         AND phone_time_use.custom5 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom6 = "creative"
-         AND phone_time_use.custom6 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom7 = "creative"
-         AND phone_time_use.custom7 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom8 = "creative"
-         AND phone_time_use.custom8 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom9 = "creative"
-         AND phone_time_use.custom9 = repo_ydn_reports.adID)
-     OR (campaigns.camp_custom10 = "creative"
-         AND phone_time_use.custom10 = repo_ydn_reports.adID))
-AND `phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
-AND `phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
-AND `phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
-AND STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
-AND `phone_time_use`.`source` = 'ydn'
-AND `phone_time_use`.`traffic_type` = 'AD'
 LEFT JOIN `repo_ydn_reports` AS `conv0` ON `repo_ydn_reports`.`account_id` = `conv0`.`account_id`
 AND `repo_ydn_reports`.`accountId` = `conv0`.`accountId`
 AND `repo_ydn_reports`.`day` = `conv0`.`day`
@@ -171,7 +142,38 @@ AND `repo_ydn_reports`.`day` = STR_TO_DATE(`call0`.`time_of_call`, '%Y-%m-%d')
 AND `call0`.`utm_campaign` = 21
 AND `call0`.`phone_number` = '+841234567821'
 AND `call0`.`source` = 'ydn'
-WHERE (date(`repo_ydn_reports`.`day`) = '2018-01-09')
+LEFT JOIN (`phone_time_use`,
+           `campaigns`) ON `campaigns`.`account_id` = `repo_ydn_reports`.`account_id`
+AND `campaigns`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+AND ((campaigns.camp_custom1 = "creative"
+      AND phone_time_use.custom1 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom2 = "creative"
+         AND phone_time_use.custom2 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom3 = "creative"
+         AND phone_time_use.custom3 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom4 = "creative"
+         AND phone_time_use.custom4 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom5 = "creative"
+         AND phone_time_use.custom5 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom6 = "creative"
+         AND phone_time_use.custom6 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom7 = "creative"
+         AND phone_time_use.custom7 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom8 = "creative"
+         AND phone_time_use.custom8 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom9 = "creative"
+         AND phone_time_use.custom9 = repo_ydn_reports.adID)
+     OR (campaigns.camp_custom10 = "creative"
+         AND phone_time_use.custom10 = repo_ydn_reports.adID))
+AND `phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
+AND `phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+AND `phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
+AND STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
+AND `phone_time_use`.`source` = 'ydn'
+AND `phone_time_use`.`traffic_type` = 'AD'
+AND `phone_time_use`.`phone_number` = '+841234567821'
+WHERE (date(`repo_ydn_reports`.`day`) >= '2017-10-11'
+       AND date(`repo_ydn_reports`.`day`) <= '2018-01-09')
   AND (`repo_ydn_reports`.`campaignID` = 21)
 GROUP BY `repo_ydn_reports`.`adgroupID`,
          `repo_ydn_reports`.`adgroupName`
