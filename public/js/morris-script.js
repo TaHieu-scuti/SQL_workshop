@@ -194,6 +194,7 @@ var Script = function () {
         $('#selectpickerGraph').on('change', function() {
             let columnName = $(this).find("option:selected").data('column');
             updateMorris(columnName);
+            global_is_loaded_summary_report = true;
         });
 
         $('.specific-filter-item').click(function(){
@@ -236,6 +237,10 @@ var Script = function () {
         {
             lineChart.setData(data);
             lineChart.options.labels = [fieldName];
+            if (data.length === 1) {
+                $('.morris-hover').css('display', 'none');
+                $('#report-graph svg circle').attr('r', 3);
+            }
         }
 
         function processData(response)
@@ -268,11 +273,6 @@ var Script = function () {
 
             global_graph_field_selected = response.field;
             setSelectedGraphColumn();
-
-            if (response.data.length === 1) {
-                $('#report-graph svg circle').attr('r', 3);
-            }
-
         }
 
         function updateMorris(columnName)
@@ -527,6 +527,8 @@ var Script = function () {
 
 function setSelectedGraphColumn() {
     if (global_graph_field_selected && global_is_loaded_summary_report) {
+        $('div.summary_report .fields').removeClass('active');
+        $('div.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
         let selectedField = $('div.summary_report .fields[data-name='+global_graph_field_selected+']');
         $(selectedField).addClass('active');
         $(selectedField).find('.small-blue-stuff').addClass('fa fa-circle');
