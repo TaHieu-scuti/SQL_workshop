@@ -288,7 +288,7 @@ class AgencyController extends AbstractReportController
         return $this->responseFactory->json(
             [
                 'data' => $data,
-                'field' => session(self::SESSION_KEY_GRAPH_COLUMN_NAME),
+                'field' => Lang::get('language.'.session(self::SESSION_KEY_GRAPH_COLUMN_NAME)),
                 'timePeriodLayout' => $timePeriodLayout,
                 'statusLayout' => $statusLayout,
                 'displayNoDataFoundMessageOnGraph' => $this->displayNoDataFoundMessageOnGraph,

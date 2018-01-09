@@ -1,8 +1,8 @@
 var prefixRoute = getRoutePrefix();
+var lineChart;
 var Script = function () {
     //morris chart
     $(function () {
-        var lineChart;
         initMorris();
 
         getDataForLayouts();
@@ -88,6 +88,7 @@ var Script = function () {
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -122,6 +123,7 @@ var Script = function () {
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -168,6 +170,7 @@ var Script = function () {
                     'statusTitle' : statusTitle,
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -228,6 +231,9 @@ var Script = function () {
 
         $(window).on('resize', function() {
             lineChart.redraw();
+            if (lineChart.data.length === 1) {
+                $('#report-graph svg circle').attr('r', 3);
+            }
         });
 
         function setMorris(data, fieldName)
@@ -254,10 +260,18 @@ var Script = function () {
             } else {
                 $('.no-data-found-graph').addClass('hidden-no-data-found-message-graph');
             }
+            if (response.data.length === 1) {
+                lineChart.options.hideHover = false;
+            } else {
+                lineChart.options.hideHover = 'auto';
+            }
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
             setMorris(data, field);
+            if (response.data.length === 1) {
+                $('#report-graph svg circle').attr('r', 3);
+            }
         }
 
         function updateMorris(columnName)
@@ -272,6 +286,7 @@ var Script = function () {
                     'graphColumnName' : columnName,
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function(response)

@@ -1,4 +1,4 @@
-<p>Results per page</p>
+<p>@lang('language.results_per_page')</p>
 <div class="form-group">
     <input type="radio" name="resultPerPage" value="20" {{(int)$keyPagination === 20 ? 'checked' : ''}} > 20<br>
 </div>
