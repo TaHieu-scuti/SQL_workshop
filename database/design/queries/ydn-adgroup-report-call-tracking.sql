@@ -176,10 +176,3 @@ WHERE (date(`repo_ydn_reports`.`day`) = '2018-01-09')
 GROUP BY `repo_ydn_reports`.`adgroupID`,
          `repo_ydn_reports`.`adgroupName`
 ORDER BY `impressions` DESC
-
-/* Execution time without indexes: 659 seconds */
-/* Execution time with index on repo_ydn_report: account_id and accountId: 616 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId and day: 258 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId, adgroupID, conversionName and day: 254 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId, adgroupID, conversionName and day:
-   phone_time_use: account_id, campaign_id, utm_campaign, phone_number, time_of_call: 92 seconds */
