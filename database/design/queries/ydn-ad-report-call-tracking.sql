@@ -71,9 +71,9 @@ AND
 		(
 			`c`.`camp_custom4` = 'creative'
 		AND
-			`ptu`.`custom4` IN ('1111111111111111', '1111111111111112', '1111111111111113')
+			`ptu`.`custom4` IN (1111111111111111, 1111111111111112, 1111111111111113)
 		)
-OR
+	OR
 		(
 			`c`.`camp_custom5` = 'creative'
 		AND
