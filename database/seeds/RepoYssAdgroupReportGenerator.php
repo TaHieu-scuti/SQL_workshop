@@ -2,8 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Model\RepoYssAccountReportCost;
-use App\Model\RepoYssCampaignReportConv;
 use App\Model\RepoYssCampaignReportCost;
 use App\Model\RepoYssAdgroupReportCost;
 use App\Model\RepoYssAdgroupReportConv;
@@ -65,10 +63,65 @@ class RepoYssAdgroupReportGenerator extends Seeder
         'Click Type 3', 'Click Type 4'
     ];
     const OBJECTIVE_OF_CONVERSION_TRACKING = 'Objective of conversion tracking';
-    const CONVERSION_NAME = [
-        'Conversion Name 1', 'Conversion Name 2',
-        'Conversion Name 3', 'Conversion Name 4'
-    ];
+    const NUMBER_OF_CONVERSIONS = RepoYssCampaignReportGenerator::NUMBER_OF_CONV_POINTS;
+
+    private function seedConv($adgroupReportCost)
+    {
+        for ($i = 0; $i < self::NUMBER_OF_CONVERSIONS; $i++) {
+            $adgroupReportConv = new RepoYssAdgroupReportConv;
+            $adgroupReportConv->exeDate = $adgroupReportCost->exeDate;
+            $adgroupReportConv->startDate = $adgroupReportCost->startDate;
+            $adgroupReportConv->endDate = $adgroupReportCost->endDate;
+            $adgroupReportConv->account_id = $adgroupReportCost->account_id;
+            $adgroupReportConv->campaign_id = $adgroupReportCost->campaign_id;
+            $adgroupReportConv->campaignID = $adgroupReportCost->campaignID;
+            $adgroupReportConv->adgroupID = $adgroupReportCost->adgroupID;
+            $adgroupReportConv->campaignName = $adgroupReportCost->campaignName;
+            $adgroupReportConv->adgroupName = $adgroupReportCost->adgroupName;
+            $adgroupReportConv->adgroupDistributionSettings = $adgroupReportCost->adgroupDistributionSettings;
+            $adgroupReportConv->adGroupBid = $adgroupReportCost->adGroupBid;
+            $adgroupReportConv->trackingURL = self::TRACKING_URL;
+            $adgroupReportConv->conversions = $adgroupReportCost->conversions / self::NUMBER_OF_CONVERSIONS;
+            $adgroupReportConv->convValue = $adgroupReportConv->convValue;
+            $adgroupReportConv->valuePerConv = $adgroupReportCost->valuePerConv;
+            $adgroupReportConv->mobileBidAdj = $adgroupReportCost->mobileBidAdj;
+            $adgroupReportConv->desktopBidAdj = $adgroupReportCost->desktopBidAdj;
+            $adgroupReportConv->tabletBidAdj = $adgroupReportCost->tabletBidAdj;
+            $adgroupReportConv->network = $adgroupReportCost->network;
+            $adgroupReportConv->device = $adgroupReportCost->device;
+            $adgroupReportConv->day = $adgroupReportCost->day;
+            $adgroupReportConv->dayOfWeek = $adgroupReportCost->dayOfWeek;
+            $adgroupReportConv->quarter = $adgroupReportCost->quarter;
+            $adgroupReportConv->month = $adgroupReportCost->month;
+            $adgroupReportConv->week = $adgroupReportCost->week;
+            $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
+            $adgroupReportConv->allConv = mt_rand(
+                self::MIN_ALL_CONV,
+                self::MAX_ALL_CONV
+            ) / mt_getrandmax();
+            $adgroupReportConv->allConvValue = mt_rand(
+                self::MIN_ALL_CONV_VALUE,
+                self::MAX_ALL_CONV_VALUE
+            ) / mt_getrandmax();
+            $adgroupReportConv->convValue = mt_rand(
+                self::MIN_CONV_VALUE,
+                self::MAX_CONV_VALUE
+            ) / mt_getrandmax();
+            $adgroupReportConv->valuePerAllConv = mt_rand(
+                self::MIN_VALUE_PER_ALL_CONV,
+                self::MAX_VALUE_PER_ALL_CONV
+            ) / mt_getrandmax();
+            $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+            $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+            $adgroupReportConv->conversionName = 'YSS conversion '
+                . $adgroupReportCost->account_id
+                . $adgroupReportCost->campaign_id
+                . $adgroupReportCost->accountid
+                . $i;
+            $adgroupReportConv->accountid = $adgroupReportCost->accountid;
+            $adgroupReportConv->saveOrFail();
+        }
+    }
     /**
      * Run the database seeds.
      *
@@ -84,33 +137,25 @@ class RepoYssAdgroupReportGenerator extends Seeder
             );
             for ($i = 0; $i < $ammountOfAdgroup + 1; $i++) {
                 $adgroupReportCost = new RepoYssAdgroupReportCost;
-                $adgroupReportConv = new RepoYssAdgroupReportConv;
                 $adgroupReportCost->exeDate = $campaignReport->exeDate;
-                $adgroupReportConv->exeDate = $campaignReport->exeDate;
                 $adgroupReportCost->startDate = $campaignReport->startDate;
-                $adgroupReportConv->startDate = $campaignReport->startDate;
                 $adgroupReportCost->endDate = $campaignReport->endDate;
-                $adgroupReportConv->endDate = $campaignReport->endDate;
                 $adgroupReportCost->account_id = $campaignReport->account_id;
-                $adgroupReportConv->account_id = $campaignReport->account_id;
                 $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
-                $adgroupReportConv->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->campaignID = $campaignReport->campaignID;
-                $adgroupReportConv->campaignID = $campaignReport->campaignID;
-                $adgroupReportCost->adgroupID = $i;
-                $adgroupReportConv->adgroupID = $i;
+                $adgroupReportCost->adgroupID = (string) $campaignReport->account_id
+                    . (string) $campaignReport->campaign_id
+                    . (string) $campaignReport->accountid
+                    . (string) $campaignReport->campaignID
+                    . ($i + 1);
                 $adgroupReportCost->campaignName = $campaignReport->campaignName;
-                $adgroupReportConv->campaignName = $campaignReport->campaignName;
-                $adgroupReportCost->adgroupName = 'YSS Adgroup Name ' . $i;
-                $adgroupReportConv->adgroupName = 'YSS Adgroup Name ' . $i;
+                $adgroupReportCost->adgroupName = 'YSS Adgroup Name ' . $adgroupReportCost->adgroupID;
                 $adgroupReportCost->adgroupDistributionSettings = 'Adgroup Distribution setting';
-                $adgroupReportConv->adgroupDistributionSettings = $adgroupReportCost->adgroupDistributionSettings;
                 $adgroupReportCost->adGroupBid = mt_rand(
                     self::MIN_ADGROUP_BID,
                     self::MAX_ADGROUP_BID
                 );
 
-                $adgroupReportConv->adGroupBid = $adgroupReportCost->adGroupBid;
                 $adgroupReportCost->cost = mt_rand(
                     self::MIN_COST,
                     self::MAX_COST
@@ -154,15 +199,12 @@ class RepoYssAdgroupReportGenerator extends Seeder
                     self::MAX_BUDGET_LOST_IMPRESSION_SHARE
                 ) / mt_getrandmax();
                 $adgroupReportCost->trackingURL = self::TRACKING_URL;
-                $adgroupReportConv->trackingURL = self::TRACKING_URL;
                 $adgroupReportCost->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
 
                 $adgroupReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     $adgroupReportCost->clicks
                 );
-
-                $adgroupReportConv->conversions = $adgroupReportCost->conversions;
 
                 if ($adgroupReportCost->clicks === 0) {
                     $adgroupReportCost->convRate = 0;
@@ -174,7 +216,6 @@ class RepoYssAdgroupReportGenerator extends Seeder
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE
                 ) / mt_getrandmax();
-                $adgroupReportConv->convValue = $adgroupReportConv->convValue;
                 $adgroupReportCost->costPerConv = mt_rand(
                     self::MIN_COST_PER_CONV,
                     self::MAX_COST_PER_CONV
@@ -183,64 +224,30 @@ class RepoYssAdgroupReportGenerator extends Seeder
                     self::MIN_VALUE_PER_CONV,
                     self::MAX_VALUE_PER_CONV
                 ) / mt_getrandmax();
-                $adgroupReportConv->valuePerConv = $adgroupReportCost->valuePerConv;
                 $adgroupReportCost->mobileBidAdj = mt_rand(
                     self::MIN_MOBILE_BID_ADJ,
                     self::MAX_MOBILE_BID_ADJ
                 ) / mt_getrandmax();
-                $adgroupReportConv->mobileBidAdj = $adgroupReportCost->mobileBidAdj;
                 $adgroupReportCost->desktopBidAdj = mt_rand(
                     self::MIN_DESKTOP_BID_ADJ,
                     self::MAX_DESKTOP_BID_ADJ
                 ) / mt_getrandmax();
-                $adgroupReportConv->desktopBidAdj = $adgroupReportCost->desktopBidAdj;
                 $adgroupReportCost->tabletBidAdj = mt_rand(
                     self::MIN_TABLET_BID_ADJ,
                     self::MAX_TABLET_BID_ADJ
                 ) / mt_getrandmax();
-                $adgroupReportConv->tabletBidAdj = $adgroupReportCost->tabletBidAdj;
                 $adgroupReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
-                $adgroupReportConv->network = $adgroupReportCost->network;
                 $adgroupReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-                $adgroupReportConv->device = $adgroupReportCost->device;
                 $adgroupReportCost->day = $campaignReport->day;
-                $adgroupReportConv->day = $campaignReport->day;
                 $adgroupReportCost->dayOfWeek = $campaignReport->dayOfWeek;
-                $adgroupReportConv->dayOfWeek = $campaignReport->dayOfWeek;
                 $adgroupReportCost->quarter = $campaignReport->quarter;
-                $adgroupReportConv->quarter = $campaignReport->quarter;
                 $adgroupReportCost->month = $campaignReport->month;
-                $adgroupReportConv->month = $campaignReport->month;
                 $adgroupReportCost->week = $campaignReport->week;
-                $adgroupReportConv->week = $campaignReport->week;
                 $adgroupReportCost->hourofday = $campaignReport->hourofday;
-                $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
-                $adgroupReportConv->allConv = mt_rand(
-                    self::MIN_ALL_CONV,
-                    self::MAX_ALL_CONV
-                ) / mt_getrandmax();
-                $adgroupReportConv->allConvValue = mt_rand(
-                    self::MIN_ALL_CONV_VALUE,
-                    self::MAX_ALL_CONV_VALUE
-                ) / mt_getrandmax();
-                $adgroupReportConv->convValue = mt_rand(
-                    self::MIN_CONV_VALUE,
-                    self::MAX_CONV_VALUE
-                ) / mt_getrandmax();
-                $adgroupReportConv->valuePerAllConv = mt_rand(
-                    self::MIN_VALUE_PER_ALL_CONV,
-                    self::MAX_VALUE_PER_ALL_CONV
-                ) / mt_getrandmax();
-                $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
-                $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-                $adgroupReportConv->conversionName = self::CONVERSION_NAME[
-                    mt_rand(0, count(self::CONVERSION_NAME) - 1)
-                ];
-                $adgroupReportConv->accountid = $campaignReport->accountid;
                 $adgroupReportCost->accountid = $campaignReport->accountid;
 
                 $adgroupReportCost->saveOrFail();
-                $adgroupReportConv->saveOrFail();
+                $this->seedConv($adgroupReportCost);
             }
         }
     }

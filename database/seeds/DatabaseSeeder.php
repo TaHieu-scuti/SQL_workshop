@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYdnReportsTable::class);
         $this->call(RepoYdnAccountsTable::class);
 
-        $this->call(CampaignsGenerator::class);
+        $this->call(CampaignsSeeder::class);
         $this->call(PhoneTimeUseTable::class);
         $this->call(RepoPhoneTimeUseTable::class);
         $this->call(AccountsTableSeeder::class);
