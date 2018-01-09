@@ -96,21 +96,21 @@ class RepoYssAdgroupReportGenerator extends Seeder
             $adgroupReportConv->week = $adgroupReportCost->week;
             $adgroupReportConv->customParameters = self::CUSTOM_PARAMETERS . ' ' . $i;
             $adgroupReportConv->allConv = mt_rand(
-                    self::MIN_ALL_CONV,
-                    self::MAX_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV,
+                self::MAX_ALL_CONV
+            ) / mt_getrandmax();
             $adgroupReportConv->allConvValue = mt_rand(
-                    self::MIN_ALL_CONV_VALUE,
-                    self::MAX_ALL_CONV_VALUE
-                ) / mt_getrandmax();
+                self::MIN_ALL_CONV_VALUE,
+                self::MAX_ALL_CONV_VALUE
+            ) / mt_getrandmax();
             $adgroupReportConv->convValue = mt_rand(
-                    self::MIN_CONV_VALUE,
-                    self::MAX_CONV_VALUE
-                ) / mt_getrandmax();
+                self::MIN_CONV_VALUE,
+                self::MAX_CONV_VALUE
+            ) / mt_getrandmax();
             $adgroupReportConv->valuePerAllConv = mt_rand(
-                    self::MIN_VALUE_PER_ALL_CONV,
-                    self::MAX_VALUE_PER_ALL_CONV
-                ) / mt_getrandmax();
+                self::MIN_VALUE_PER_ALL_CONV,
+                self::MAX_VALUE_PER_ALL_CONV
+            ) / mt_getrandmax();
             $adgroupReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
             $adgroupReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
             $adgroupReportConv->conversionName = 'YSS conversion '
