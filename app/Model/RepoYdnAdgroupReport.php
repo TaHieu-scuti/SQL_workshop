@@ -31,17 +31,13 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
         EloquentBuilder $builder,
         $conversionPoints
     ) {
-        $arrAdgroupID = [];
-        foreach ($conversionPoints as $val) {
-            if (!in_array($val->adgroupID, $arrAdgroupID)) {
-                $arrAdgroupID[] = $val->adgroupID;
-            }
-        }
-        foreach ($conversionPoints as $i => $point) {
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
+        foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
                 $this->table . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $point, $arrAdgroupID) {
+                function (JoinClause $join) use ($joinAlias, $conversionName, $adgroupIDs) {
                     $join->on(
                         $this->table . '.account_id',
                         '=',
@@ -61,11 +57,11 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
                             $joinAlias . '.campaignID'
                         )->whereIn(
                             $joinAlias . '.adgroupID',
-                            $arrAdgroupID
+                            $adgroupIDs
                         )->where(
                             $joinAlias . '.conversionName',
                             '=',
-                            $point->conversionName
+                            $conversionName
                         );
                 }
             );

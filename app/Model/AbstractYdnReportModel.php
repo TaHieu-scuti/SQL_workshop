@@ -16,13 +16,14 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionsConversionPoint(array $expressions)
     {
-        if ($this->conversionPoints !== null) {
-            foreach ($this->conversionPoints as $i => $point) {
+        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        if ($conversionNames !== null) {
+            foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -31,7 +32,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`conversions`) / SUM(`conv'
                     . $i
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -40,7 +41,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`cost`) / SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CPA'"
                 );
             }
@@ -351,9 +352,13 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $this->conversionPoints = $this->getAllDistinctConversionNames($clientId, $accountId, $campaignId, $adGroupId);
-
-        $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $this->conversionPoints = $this->getAllDistinctConversionNames(
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId
+        );
+        $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());;
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
@@ -423,7 +428,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
     {
         $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
-        return $this->select($aggregation)
+        $conversionPoints = $this->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -431,6 +436,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                 }
             )
             ->get();
+        return $conversionPoints;
     }
 
     private function addConditonForConversionName(
