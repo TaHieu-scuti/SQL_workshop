@@ -17,7 +17,7 @@ class AddIndexConversionNameOnRepoYdnReports extends Migration
     {
         DB::statement(
             "CREATE INDEX `" . self::INDEX_NAME . "` "
-            . "ON `repo_ydn_reports` (conversionName(100), day, conversionName) "
+            . "ON `repo_ydn_reports` (conversionName(100), day) "
             . "COMMENT '' "
             . "ALGORITHM DEFAULT "
             . "LOCK DEFAULT;"
