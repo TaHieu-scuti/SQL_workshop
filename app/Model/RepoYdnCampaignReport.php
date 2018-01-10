@@ -20,11 +20,13 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
         EloquentBuilder $builder,
         $conversionPoints
     ) {
-        foreach ($conversionPoints as $i => $point) {
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
                 $this->table . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $point) {
+                function (JoinClause $join) use ($joinAlias, $conversionName, $campaignIDs) {
                     $join->on(
                         $this->table . '.account_id',
                         '=',
@@ -42,14 +44,13 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
                             $this->table . '.campaignID',
                             '=',
                             $joinAlias . '.campaignID'
-                        )->where(
+                        )->whereIn(
                             $joinAlias . '.campaignID',
-                            '=',
-                            $point->campaignID
+                            $campaignIDs
                         )->where(
                             $joinAlias . '.conversionName',
                             '=',
-                            $point->conversionName
+                            $conversionName
                         );
                 }
             );

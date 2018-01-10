@@ -16,13 +16,14 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionsConversionPoint(array $expressions)
     {
-        if ($this->conversionPoints !== null) {
-            foreach ($this->conversionPoints as $i => $point) {
+        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        if ($conversionNames !== null) {
+            foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -31,7 +32,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`conversions`) / SUM(`conv'
                     . $i
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -40,7 +41,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`cost`) / SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CPA'"
                 );
             }
@@ -351,8 +352,12 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $this->conversionPoints = $this->getAllDistinctConversionNames($clientId, $accountId);
-
+        $this->conversionPoints = $this->getAllDistinctConversionNames(
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId
+        );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
@@ -420,12 +425,48 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
     {
-        return $this->select(['campaignID', 'conversionName'])
+        $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
+        $conversionPoints = $this->select($aggregation)
             ->distinct()
-            ->where('account_id', '=', $account_id)
-            ->where('accountId', '=', $accountId)
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
             ->get();
+        return $conversionPoints;
+    }
+
+    private function addConditonForConversionName(
+        EloquentBuilder $query,
+        $account_id = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null
+    ) {
+        if ($account_id !== null && $accountId !== null) {
+            $query->where('account_id', '=', $account_id)
+                ->where('accountId', '=', $accountId);
+        } elseif ($campaignId !== null) {
+            $query->where('campaignID', '=', $campaignId);
+        } elseif ($adGroupId !== null) {
+            $query->where('adgroupID', '=', $adGroupId);
+        }
+    }
+
+    private function getAggregatedConversionName($campaignId, $adGroupId)
+    {
+        $arraySelect = ['campaignID', 'conversionName'];
+        if ($campaignId !== null) {
+            $arraySelect[] = 'adgroupID';
+        }
+
+        if ($adGroupId !== null) {
+            $arraySelect[] = 'adID';
+        }
+
+        return $arraySelect;
     }
 }
