@@ -16,13 +16,14 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
 
     private function addRawExpressionsConversionPoint(array $expressions)
     {
-        if ($this->conversionPoints !== null) {
-            foreach ($this->conversionPoints as $i => $point) {
+        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        if ($conversionNames !== null) {
+            foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -31,7 +32,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`conversions`) / SUM(`conv'
                     . $i
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -40,7 +41,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                     . '`.`cost`) / SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
-                    . $point->conversionName
+                    . $conversionName
                     . " CPA'"
                 );
             }
@@ -351,8 +352,12 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $this->conversionPoints = $this->getAllDistinctConversionNames($clientId, $accountId);
-
+        $this->conversionPoints = $this->getAllDistinctConversionNames(
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId
+        );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
@@ -380,6 +385,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+
         return $builder;
     }
 
@@ -419,92 +425,48 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
     {
-        return $this->select(['campaignID', 'conversionName'])
+        $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
+        $conversionPoints = $this->select($aggregation)
             ->distinct()
-            ->where('account_id', '=', $account_id)
-            ->where('accountId', '=', $accountId)
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
             ->get();
+        return $conversionPoints;
     }
 
-    protected function addJoinsForConversionPoints(
-        EloquentBuilder $builder,
-        $conversionPoints
+    private function addConditonForConversionName(
+        EloquentBuilder $query,
+        $account_id = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null
     ) {
-        foreach ($conversionPoints as $i => $point) {
-            $joinAlias = 'conv' . $i;
-            $builder->leftJoin(
-                $this->table . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $point) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $joinAlias . '.account_id'
-                    )
-                        ->on(
-                            $this->table . '.accountId',
-                            '=',
-                            $joinAlias . '.accountId'
-                        )->on(
-                            $this->table . '.day',
-                            '=',
-                            $joinAlias . '.day'
-                        )->on(
-                            $this->table . '.campaignID',
-                            '=',
-                            $joinAlias . '.campaignID'
-                        )->where(
-                            $joinAlias . '.campaignID',
-                            '=',
-                            $point->campaignID
-                        )->where(
-                            $joinAlias . '.conversionName',
-                            '=',
-                            $point->conversionName
-                        );
-                }
-            );
+        if ($account_id !== null && $accountId !== null) {
+            $query->where('account_id', '=', $account_id)
+                ->where('accountId', '=', $accountId);
+        } elseif ($campaignId !== null) {
+            $query->where('campaignID', '=', $campaignId);
+        } elseif ($adGroupId !== null) {
+            $query->where('adgroupID', '=', $adGroupId);
         }
     }
 
-    protected function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
+    private function getAggregatedConversionName($campaignId, $adGroupId)
     {
-        $joinTableName = (new RepoPhoneTimeUse)->getTable();
-        foreach ($adGainerCampaigns as $i => $campaign) {
-            $joinAlias = 'call' . $i;
-            $builder->leftJoin(
-                $joinTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $campaign) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $joinAlias . '.account_id'
-                    )->on(
-                        $this->table . '.campaign_id',
-                        '=',
-                        $joinAlias . '.campaign_id'
-                    )->on(
-                        $this->table . '.campaignID',
-                        '=',
-                        $joinAlias . '.utm_campaign'
-                    )->on(
-                        $this->table . '.day',
-                        '=',
-                        DB::raw("STR_TO_DATE(`" . $joinAlias . "`.`time_of_call`, '%Y-%m-%d')")
-                    )->where(
-                        $joinAlias . '.utm_campaign',
-                        '=',
-                        $campaign->utm_campaign
-                    )->whereRaw(
-                        '`' . $joinAlias . "`.`phone_number` = '" . $campaign->phone_number . "'"
-                    )->where(
-                        $joinAlias . '.source',
-                        '=',
-                        'ydn'
-                    );
-                }
-            );
+        $arraySelect = ['campaignID', 'conversionName'];
+        if ($campaignId !== null) {
+            $arraySelect[] = 'adgroupID';
         }
+
+        if ($adGroupId !== null) {
+            $arraySelect[] = 'adID';
+        }
+
+        return $arraySelect;
     }
 }

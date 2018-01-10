@@ -294,17 +294,17 @@ abstract class AbstractReportModel extends Model
     {
         if ($tableName === null) {
             if ($startDay === $endDay) {
-                $query->whereDate($this->getTable().'.day', '=', $endDay);
+                $query->where($this->getTable().'.day', '=', $endDay);
             } else {
-                $query->whereDate($this->getTable().'.day', '>=', $startDay)
-                    ->whereDate($this->getTable().'.day', '<=', $endDay);
+                $query->where($this->getTable().'.day', '>=', $startDay)
+                    ->where($this->getTable().'.day', '<=', $endDay);
             }
         } else {
             if ($startDay === $endDay) {
-                $query->whereDate($tableName.'.day', '=', $endDay);
+                $query->where($tableName.'.day', '=', $endDay);
             } else {
-                $query->whereDate($tableName.'.day', '>=', $startDay)
-                    ->whereDate($tableName.'.day', '<=', $endDay);
+                $query->where($tableName.'.day', '>=', $startDay)
+                    ->where($tableName.'.day', '<=', $endDay);
             }
         }
     }

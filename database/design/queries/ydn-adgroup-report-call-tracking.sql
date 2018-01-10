@@ -1,22 +1,23 @@
 /* Get all unique conversion names */
 SELECT
   DISTINCT
+  campaignID,
   adgroupID,
   conversionName
 FROM
   `repo_ydn_reports`
 WHERE
-  account_id = 1
+  account_id = 2
 AND
-  accountId = 11;
+  accountId = 23;
 /* Result from query above:
-|adgroupID     |conversionName       |
-|111111        |YDN conversion 111110|
-|111111        |YDN conversion 111111|
-|111112        |YDN conversion 111110|
-|111112        |YDN conversion 111111|
-|111113        |YDN conversion 111111|
-|111113        |YDN conversion 111110|
+campaignID |adgroupID       |conversionName       |
+21         |22123211        |YDN conversion 221230|
+21         |22123211        |YDN conversion 221231|
+21         |22123212        |YDN conversion 221230|
+21         |22123212        |YDN conversion 221231|
+21         |22123213        |YDN conversion 221230|
+21         |22123213        |YDN conversion 221231|
  */
 
 
@@ -35,134 +36,89 @@ WHERE
 AND
   `c`.`account_id` = `ptu`.`account_id`
 AND
-  `c`.`account_id` = 1
+  `c`.`account_id` = 2
 AND
-  `ptu`.`utm_campaign` IN (11, 12)
+  `ptu`.`utm_campaign` IN (21)
 AND
   `ptu`.`source` = 'ydn';
 /* Result from query above:
 |campaign_id|campaign_name|utm_campaign|phone_number |
-|11         |Campaign Name|11          |+841234567811|
-|12         |Campaign Name|12          |+841234567812|
+|21         |Campaign Name|21          |+841234567821|
  */
 
 
-SELECT
-  `total`.`account_id`,
-  `total`.`accountId`,
-  `total`.`adgroupID`,
-  SUM(`total`.`impressions`) AS impressions,
-  SUM(`total`.`clicks`) AS clicks,
-  SUM(`total`.`cost`) AS cost,
-  AVG(`total`.`ctr`) AS ctr,
-  AVG(`total`.`averageCpc`) AS cpc,
-  /* add the expressions for the conversionName columns */
-  SUM(`conv1`.`conversions`) AS 'YDN conversion 111110 CV',
-  SUM(`conv2`.`conversions`) AS 'YDN conversion 111111 CV',
-  SUM(`conv3`.`conversions`) AS 'YDN conversion 111111 CV',
-  /* add the expressions for the AG campaign_name/phone_number columns */
-  COUNT(`conv4`.`id`) AS 'Campaign Name +841234567811 CV',
-  COUNT(`conv5`.`id`) AS 'Campaign Name +841234567812 CV',
-  COUNT(`conv4`.`id`) + COUNT(`conv5`.`id`) AS call_cv,
-  SUM(`total`.`conversions`) AS webcv,
-  SUM(`total`.`conversions`) + COUNT(`conv4`.`id`) + COUNT(`conv5`.`id`) AS cv,
-  ((SUM(`total`.`conversions`) + COUNT(`conv4`.`id`) + COUNT(`conv5`.`id`)) / SUM(`total`.`clicks`)) * 100 AS cvr,
-  SUM(`total`.`cost`) / (SUM(`total`.`conversions`) + COUNT(`conv4`.`id`) + COUNT(`conv5`.`id`)) AS cpa,
-  AVG(`total`.`averagePosition`) AS avgPosition
-FROM
-  `repo_ydn_reports` AS total
-    /* Add joins for every campaignID & conversionName combination */
-    LEFT JOIN `repo_ydn_reports` AS conv1
-      ON (
-          `total`.`account_id` = `conv1`.`account_id`
-        AND
-          `total`.`accountId` = `conv1`.`accountId`
-        AND
-          `total`.`day` = `conv1`.`day`
-        AND
-          `total`.`campaignID` = `conv1`.`campaignID`
-        AND
-          `conv1`.`campaignID` = 12
-        AND
-          `conv1`.`conversionName` = 'YDN conversion 111110'
-      )
-    LEFT JOIN `repo_ydn_reports` AS conv2
-      ON (
-          `total`.`account_id` = `conv2`.`account_id`
-        AND
-          `total`.`accountId` = `conv2`.`accountId`
-        AND
-          `total`.`day` = `conv2`.`day`
-        AND
-          `total`.`campaignID` = `conv2`.`campaignID`
-        AND
-          `conv2`.`campaignID` = 11
-        AND
-          `conv2`.`conversionName` = 'YDN conversion 111111'
-      )
-    LEFT JOIN `repo_ydn_reports` AS conv3
-      ON (
-          `total`.`account_id` = `conv3`.`account_id`
-        AND
-          `total`.`accountId` = `conv3`.`accountId`
-        AND
-          `total`.`day` = `conv3`.`day`
-        AND
-          `total`.`campaignID` = `conv3`.`campaignID`
-        AND
-          `conv3`.`campaignID` = 11
-        AND
-          `conv3`.`conversionName` = 'YDN conversion 111110'
-      )
-    /* Add joins for every AG campaign & phone_number combination */
-    LEFT JOIN `repo_phone_time_use` AS conv4
-      ON (
-          `total`.`account_id` = `conv4`.`account_id`
-        AND
-          `total`.`campaign_id` = `conv4`.`campaign_id`
-        AND
-          `total`.`campaignID` = `conv4`.`utm_campaign`
-        AND
-          `total`.`day` = STR_TO_DATE(`conv4`.`time_of_call`, '%Y-%m-%d')
-        AND
-          `conv4`.`utm_campaign` = 11
-        AND
-          `conv4`.`phone_number` = '+841234567811'
-        AND
-          `conv4`.`source` = 'ydn'
-      )
-    LEFT JOIN `repo_phone_time_use` AS conv5
-      ON (
-          `total`.`account_id` = `conv5`.`account_id`
-        AND
-          `total`.`campaign_id` = `conv5`.`campaign_id`
-        AND
-          `total`.`campaignID` = `conv5`.`utm_campaign`
-        AND
-          `total`.`day` = STR_TO_DATE(`conv5`.`time_of_call`, '%Y-%m-%d')
-        AND
-          `conv5`.`utm_campaign` = 12
-        AND
-          `conv5`.`phone_number` = '+841234567812'
-        AND
-          `conv5`.`source` = 'ydn'
-      )
-WHERE
-  `total`.`account_id` = 1
-AND
-  `total`.`accountId` = 11
-AND
-  `total`.`day` >= '2017-01-01'
-AND
-  `total`.`day` <= '2017-12-31'
-GROUP BY
-  `total`.`account_id`,
-  `total`.`accountId`,
-  `total`.`adgroupID`
-
-/* Execution time without indexes: 659 seconds */
-/* Execution time with index on repo_ydn_report: account_id and accountId: 616 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId and day: 258 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId, adgroupID, conversionName and day: 254 seconds */
-/* Execution time with index on repo_ydn_report: account_id, accountId, adgroupID, conversionName and day:
-   phone_time_use: account_id, campaign_id, utm_campaign, phone_number, time_of_call: 92 seconds */
+explain SELECT `repo_ydn_reports`.`adgroupID`,
+       `repo_ydn_reports`.`adgroupName`,
+       IFNULL(SUM(repo_ydn_reports.impressions), 0) AS impressions,
+       IFNULL(SUM(repo_ydn_reports.clicks), 0) AS clicks,
+       IFNULL(SUM(repo_ydn_reports.cost), 0) AS cost,
+       IFNULL(ROUND(AVG(repo_ydn_reports.ctr), 2), 0) AS ctr,
+       IFNULL(ROUND(AVG(repo_ydn_reports.averageCpc), 2), 0) AS averageCpc,
+       IFNULL(ROUND(AVG(repo_ydn_reports.averagePosition), 2), 0) AS averagePosition,
+       IFNULL(SUM(`conv0`.`conversions`), 0) AS 'YDN YDN conversion 221230 CV',
+       IFNULL((SUM(`conv0`.`conversions`) / SUM(`conv0`.`clicks`)) * 100, 0) AS 'YDN YDN conversion 221230 CVR',
+       IFNULL(SUM(`conv0`.`cost`) / SUM(`conv0`.`conversions`), 0) AS 'YDN YDN conversion 221230 CPA',
+       IFNULL(SUM(`conv1`.`conversions`), 0) AS 'YDN YDN conversion 221231 CV',
+       IFNULL((SUM(`conv1`.`conversions`) / SUM(`conv1`.`clicks`)) * 100, 0) AS 'YDN YDN conversion 221231 CVR',
+       IFNULL(SUM(`conv1`.`cost`) / SUM(`conv1`.`conversions`), 0) AS 'YDN YDN conversion 221231 CPA',
+       IFNULL(SUM(`repo_ydn_reports`.`conversions`), 0) AS web_cv,
+       IFNULL((SUM(`repo_ydn_reports`.`conversions`) / SUM(`repo_ydn_reports`.`clicks`)) * 100, 0) AS web_cvr,
+       IFNULL(SUM(`repo_ydn_reports`.`cost`) / SUM(`repo_ydn_reports`.`conversions`), 0) AS web_cpa,
+       IFNULL(COUNT(`call0`.`id`), 0) AS 'YDN Campaign Name +841234567821 CV',
+       IFNULL(COUNT(`call0`.`id`) / SUM(`repo_ydn_reports`.`clicks`), 0) AS 'YDN Campaign Name +841234567821 CVR',
+       IFNULL(SUM(`repo_ydn_reports`.`cost`) / COUNT(`call0`.`id`), 0) AS 'YDN Campaign Name +841234567821 CPA',
+       IFNULL(COUNT(`call0`.`id`), 0) AS call_cv,
+       IFNULL((COUNT(`call0`.`id`)) / 1, 0) AS call_cvr,
+       IFNULL(SUM(`repo_ydn_reports`.`cost`) / (COUNT(`call0`.`id`)), 0) AS call_cpa,
+       IFNULL(SUM(`repo_ydn_reports`.`conversions`) + COUNT(`call0`.`id`), 0) AS total_cv,
+       IFNULL((SUM(`repo_ydn_reports`.`conversions`) + COUNT(`call0`.`id`)) / SUM(`repo_ydn_reports`.`clicks`), 0) AS total_cvr,
+       IFNULL(SUM(`repo_ydn_reports`.`cost`) / (SUM(`repo_ydn_reports`.`conversions`) + COUNT(`call0`.`id`)), 0) AS total_cpa
+FROM `repo_ydn_reports` FORCE INDEX (repo_ydn_reports_day_campaignID_idx)
+LEFT JOIN `repo_ydn_reports` AS `conv0` ON `repo_ydn_reports`.`account_id` = `conv0`.`account_id`
+AND `repo_ydn_reports`.`accountId` = `conv0`.`accountId`
+AND `repo_ydn_reports`.`day` = `conv0`.`day`
+AND `repo_ydn_reports`.`campaignID` = `conv0`.`campaignID`
+AND `conv0`.`adgroupID` IN ('22123211', '22123212', '22123213')
+AND `conv0`.`conversionName` = 'YDN conversion 221230'
+LEFT JOIN `repo_ydn_reports` AS `conv1` ON `repo_ydn_reports`.`account_id` = `conv1`.`account_id`
+AND `repo_ydn_reports`.`accountId` = `conv1`.`accountId`
+AND `repo_ydn_reports`.`day` = `conv1`.`day`
+AND `repo_ydn_reports`.`campaignID` = `conv1`.`campaignID`
+AND `conv1`.`adgroupID` IN ('22123211', '22123212', '22123213')
+AND `conv1`.`conversionName` = 'YDN conversion 221231'
+LEFT JOIN (`phone_time_use` AS call0,
+           `campaigns` AS call0_campaigns) ON `call0_campaigns`.`account_id` = `repo_ydn_reports`.`account_id`
+AND `call0_campaigns`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+AND ((call0_campaigns.camp_custom1 = "creative"
+      AND call0.custom1 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom2 = "creative"
+         AND call0.custom2 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom3 = "creative"
+         AND call0.custom3 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom4 = "creative"
+         AND call0.custom4 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom5 = "creative"
+         AND call0.custom5 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom6 = "creative"
+         AND call0.custom6 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom7 = "creative"
+         AND call0.custom7 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom8 = "creative"
+         AND call0.custom8 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom9 = "creative"
+         AND call0.custom9 = repo_ydn_reports.adID)
+     OR (call0_campaigns.camp_custom10 = "creative"
+         AND call0.custom10 = repo_ydn_reports.adID))
+AND `call0`.`account_id` = `repo_ydn_reports`.`account_id`
+AND `call0`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+AND `call0`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
+AND STR_TO_DATE(`call0`.`time_of_call`, '%Y-%m-%d') = `repo_ydn_reports`.`day`
+AND `call0`.`phone_number` = '+841234567821'
+AND `call0`.`source` = 'ydn'
+AND `call0`.`traffic_type` = 'AD'
+WHERE (`repo_ydn_reports`.`day` >= '2017-10-12'
+       AND `repo_ydn_reports`.`day` <= '2018-01-10')
+  AND (`repo_ydn_reports`.`campaignID` = 21)
+GROUP BY `repo_ydn_reports`.`adgroupID`,
+         `repo_ydn_reports`.`adgroupName`
+ORDER BY `impressions` DESC

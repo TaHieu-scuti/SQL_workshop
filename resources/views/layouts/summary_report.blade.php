@@ -1,10 +1,10 @@
-<div class="col-md-3 fields active" data-name="impressions">
+<div class="col-md-3 fields" data-name="impressions">
     <a href="javascript:void(0)">
         <section class="panel">
             <div class="panel-body">
                 <span class="title">@lang('language.Impr')<br></span>
                 <span class="content">
-                    <i class="small-blue-stuff fa fa-circle"></i>
+                    <i class="small-blue-stuff"></i>
                     @if (ctype_digit($summaryReport['impressions']))
                         <td>{{ number_format($summaryReport['impressions'], 0, '', ',') }}</td>
                     @elseif (is_float($summaryReport['impressions']))
