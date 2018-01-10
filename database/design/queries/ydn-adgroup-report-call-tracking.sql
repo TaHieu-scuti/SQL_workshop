@@ -36,15 +36,14 @@ WHERE
 AND
   `c`.`account_id` = `ptu`.`account_id`
 AND
-  `c`.`account_id` = 1
+  `c`.`account_id` = 2
 AND
-  `ptu`.`utm_campaign` IN (11, 12)
+  `ptu`.`utm_campaign` IN (21)
 AND
   `ptu`.`source` = 'ydn';
 /* Result from query above:
 |campaign_id|campaign_name|utm_campaign|phone_number |
-|11         |Campaign Name|11          |+841234567811|
-|12         |Campaign Name|12          |+841234567812|
+|21         |Campaign Name|21          |+841234567821|
  */
 
 
