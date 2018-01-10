@@ -113,14 +113,19 @@ campaign_id	campaign_name	utm_campaign	phone_number
 */
 
 SELECT
+  `total`.`customerId`,
+  `total`.`campaignId`,
+  `total`.`adGroupId`,
   `total`.`adId`,
   SUM(`conv1`.`conversions`) as 'ADW Conversion Name 1 CV',
-  SUM(`conv2`.`conversions`) as 'ADW Conversion Name 2 CV'
+  SUM(`conv2`.`conversions`) as 'ADW Conversion Name 2 CV',
+  COUNT(`ptu1`.`id`) as 'Phone number +841234567811 CV',
+  SUM(`total`.`conversions`) as web_cv
 FROM
   `repo_adw_ad_report_cost` as total
 LEFT JOIN
   `repo_adw_ad_report_conv` as conv1
-ON (
+ON
     `total`.`account_id` = `conv1`.`account_id`
   AND
     `total`.`customerId` = `conv1`.`customerId`
@@ -129,42 +134,30 @@ ON (
   AND
     `total`.`adGroupId` = `conv1`.`adGroupId`
   AND
-    `conv1`.`account_id` = 1
+    `total`.`adID` = `conv1`.`adID`
   AND
-    `conv1`.`campaignId` = 11
-  AND
-    `conv1`.`adGroupId` = 1
-  AND
-    `conv1`.`customerId` = 11
-  AND
-    `conv1`.`adID` IN (1,2,3)
+    `total`.`day` = `conv1`.`day`
   AND
     `conv1`.`conversionName` = 'Conversion name 1'
-)
 LEFT JOIN
   `repo_adw_ad_report_conv` as conv2
-ON (
+ON
     `total`.`account_id` = `conv2`.`account_id`
+  AND
+    `total`.`customerId` = `conv1`.`customerId`
   AND
     `total`.`campaign_id` = `conv2`.`campaign_id`
   AND
     `total`.`adGroupId` = `conv2`.`adGroupId`
   AND
-    `conv2`.`account_id` = 1
+    `total`.`adID` = `conv2`.`adID`
   AND
-    `conv2`.`campaignId` = 11
-  AND
-    `conv2`.`adGroupId` = 1
-  AND
-    `conv2`.`customerId` = 11
-  AND
-    `conv2`.`adID` IN (1,2,3)
+    `total`.`day` = `conv2`.`day`
   AND
     `conv2`.`conversionName` = 'Conversion name 2'
-)
 LEFT JOIN
   (`phone_time_use` as ptu1, `campaigns` as c1)
-ON (
+ON
   `c1`.`account_id` = `ptu1`.`account_id`
 AND
   `c1`.`campaign_id` = `ptu1`.`campaign_id`
@@ -179,68 +172,65 @@ AND
 AND
   `ptu1`.`phone_number` = '+841234567811'
 AND
-  (
     (
         `c1`.`camp_custom1` = 'creative'
       AND
-        `ptu1`.`custom1` IN (1,2,3)
+        `ptu1`.`custom1` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom2` = 'creative'
       AND
-        `ptu1`.`custom2` IN (1,2,3)
+        `ptu1`.`custom2` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom3` = 'creative'
       AND
-        `ptu1`.`custom3` IN (1,2,3)
+        `ptu1`.`custom3` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom4` = 'creative'
       AND
-        `ptu1`.`custom4` IN (1,2,3)
+        `ptu1`.`custom4` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom5` = 'creative'
       AND
-        `ptu1`.`custom5` IN (1,2,3)
+        `ptu1`.`custom5` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom6` = 'creative'
       AND
-        `ptu1`.`custom6` IN (1,2,3)
+        `ptu1`.`custom6` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom7` = 'creative'
       AND
-        `ptu1`.`custom7` IN (1,2,3)
+        `ptu1`.`custom7` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom8` = 'creative'
       AND
-        `ptu1`.`custom8` IN (1,2,3)
+        `ptu1`.`custom8` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom9` = 'creative'
       AND
-        `ptu1`.`custom9` IN (1,2,3)
+        `ptu1`.`custom9` = `total`.`adID`
     )
     OR
     (
         `c1`.`camp_custom10` = 'creative'
       AND
-        `ptu1`.`custom10` IN (1,2,3)
+        `ptu1`.`custom10` = `total`.`adID`
     )
-  )
-)
 WHERE
   `total`.`account_id` = 1
 AND
@@ -252,9 +242,9 @@ AND
 AND
 	`total`.`day` >= '2017-01-01'
 AND
-	`total`.`day` <= '2017-01-10'
+	`total`.`day` <= '2017-02-01'
 GROUP BY
   `total`.`customerId`,
   `total`.`campaignId`,
   `total`.`adGroupId`,
-  `total`.`adId`
+  `total`.`adId`;
