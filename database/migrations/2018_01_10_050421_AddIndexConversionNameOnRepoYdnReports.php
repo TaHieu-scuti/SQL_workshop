@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddIndexConversionNameOnRepoYdnReports extends Migration
 {
     const INDEX_NAME = 'repo_ydn_reports_convName_day_convName_idx';
