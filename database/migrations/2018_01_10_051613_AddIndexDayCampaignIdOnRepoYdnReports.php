@@ -17,7 +17,7 @@ class AddIndexDayCampaignIdOnRepoYdnReports extends Migration
     {
         DB::statement(
             "CREATE INDEX `" . self::INDEX_NAME . "` "
-            . "ON `repo_ydn_reports` (conversionName(100), day, campaignID) "
+            . "ON `repo_ydn_reports` (day, campaignID) "
             . "COMMENT '' "
             . "ALGORITHM DEFAULT "
             . "LOCK DEFAULT;"
