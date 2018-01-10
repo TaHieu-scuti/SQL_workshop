@@ -358,7 +358,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             $campaignId,
             $adGroupId
         );
-        $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());;
+        $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
