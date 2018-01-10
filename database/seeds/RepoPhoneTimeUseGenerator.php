@@ -57,6 +57,8 @@ class RepoPhoneTimeUseGenerator extends Seeder
             $repoPhoneTimeUse->time_of_call = $value->time_of_call;
             $repoPhoneTimeUse->source = $value->source;
             $repoPhoneTimeUse->phone_number = $value->phone_number;
+            $repoPhoneTimeUse->traffic_type = $value->traffic_type;
+            $repoPhoneTimeUse->mobile = $value->mobile;
 
             $repoPhoneTimeUse->saveOrFail();
         }
