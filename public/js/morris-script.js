@@ -1,8 +1,10 @@
 var prefixRoute = getRoutePrefix();
+var global_graph_field_selected = '';
+var global_is_loaded_summary_report = false;
+var lineChart;
 var Script = function () {
     //morris chart
     $(function () {
-        var lineChart;
         initMorris();
 
         getDataForLayouts();
@@ -23,6 +25,8 @@ var Script = function () {
                 success: function(response) {
                     $('.table_data_report').html(response.tableDataLayout);
                     $('.summary_report').html(response.summaryReportLayout);
+                    global_is_loaded_summary_report = true;
+                    setSelectedGraphColumn();
                     $('#time-period').html(response.timePeriodLayout);
                     $('#status-label').html(response.statusLayout);
                     $('#fieldsOnModal').html(response.fieldsOnModal);
@@ -67,10 +71,6 @@ var Script = function () {
             $('.panel .panel-body a').css('color','#797979');
             let columnName = $('#selectpickerGraph').find("option:selected").data('column');
             updateMorris(columnName);
-            $('.summary_report .fields').removeClass('active');
-            $('.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
-            $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
-            $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
         })
 
         $('.date-option li:not(.custom-li, .custom-date)').click(function() {
@@ -88,6 +88,7 @@ var Script = function () {
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -122,6 +123,7 @@ var Script = function () {
                     'timePeriodTitle' : milestone['timePeriodTitle'],
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -168,6 +170,7 @@ var Script = function () {
                     'statusTitle' : statusTitle,
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function (response) {
@@ -191,10 +194,7 @@ var Script = function () {
         $('#selectpickerGraph').on('change', function() {
             let columnName = $(this).find("option:selected").data('column');
             updateMorris(columnName);
-            $('.summary_report .fields').removeClass('active');
-            $('.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
-            $('.summary_report [data-name="'+ columnName +'"]').addClass('active');
-            $('.summary_report [data-name="'+ columnName +'"]').find('.small-blue-stuff').addClass('fa fa-circle');
+            global_is_loaded_summary_report = true;
         });
 
         $('.specific-filter-item').click(function(){
@@ -228,12 +228,19 @@ var Script = function () {
 
         $(window).on('resize', function() {
             lineChart.redraw();
+            if (lineChart.data.length === 1) {
+                $('#report-graph svg circle').attr('r', 3);
+            }
         });
 
         function setMorris(data, fieldName)
         {
             lineChart.setData(data);
             lineChart.options.labels = [fieldName];
+            if (data.length === 1) {
+                $('.morris-hover').css('display', 'none');
+                $('#report-graph svg circle').attr('r', 3);
+            }
         }
 
         function processData(response)
@@ -254,10 +261,18 @@ var Script = function () {
             } else {
                 $('.no-data-found-graph').addClass('hidden-no-data-found-message-graph');
             }
+            if (response.data.length === 1) {
+                lineChart.options.hideHover = false;
+            } else {
+                lineChart.options.hideHover = 'auto';
+            }
             for(var i = 0; i < response.data.length; i++) {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
             setMorris(data, field);
+
+            global_graph_field_selected = response.field;
+            setSelectedGraphColumn();
         }
 
         function updateMorris(columnName)
@@ -272,13 +287,13 @@ var Script = function () {
                     'graphColumnName' : columnName,
                 },
                 beforeSend : function () {
+                    $('.morris-hover').css('display', 'none');
                     sendingRequest();
                 },
                 success : function(response)
                 {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('.summary_report fields active').removeClass('active');
                     $('#selectpickerGraph').find("option:selected").attr('selected', false);
                     $('#selectpickerGraph option[data-column="'+ columnName +'"]').attr('selected',true);
                     $('button[data-id=selectpickerGraph] span.filter-option').text(response.column);
@@ -509,3 +524,13 @@ var Script = function () {
     });
 
 }();
+
+function setSelectedGraphColumn() {
+    if (global_graph_field_selected && global_is_loaded_summary_report) {
+        $('div.summary_report .fields').removeClass('active');
+        $('div.summary_report .fields').find('.small-blue-stuff').removeClass('fa fa-circle');
+        let selectedField = $('div.summary_report .fields[data-name='+global_graph_field_selected+']');
+        $(selectedField).addClass('active');
+        $(selectedField).find('.small-blue-stuff').addClass('fa fa-circle');
+    }
+}

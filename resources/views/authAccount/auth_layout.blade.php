@@ -53,7 +53,7 @@
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
-                            <li><a href="/logout"><i class="fa fa-key"></i>Log Out</a></li>
+                            <li><a href="/logout"><i class="fa fa-key"></i>@lang('language.log_out')</a></li>
                         </ul>
                     </li>
                     <!-- user login dropdown end -->

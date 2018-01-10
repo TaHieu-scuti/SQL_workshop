@@ -67,10 +67,62 @@ class RepoYssKeywordReportGenerator extends Seeder
         'Click Type 3', 'Click Type 4'
     ];
     const OBJECTIVE_OF_CONVERSION_TRACKING = 'Objective of conversion tracking';
-    const CONVERSION_NAME = [
-        'Conversion Name 1', 'Conversion Name 2',
-        'Conversion Name 3', 'Conversion Name 4'
-    ];
+    const NUMBER_OF_CONVERSION_POINTS = RepoYssAdgroupReportGenerator::NUMBER_OF_CONVERSIONS;
+
+    private function seedConv($keywordReportCost)
+    {
+        for ($i = 0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
+            $keywordReportConv = new RepoYssKeywordReportConv;
+            $keywordReportConv->exeDate = $keywordReportCost->exeDate;
+            $keywordReportConv->startDate = $keywordReportCost->startDate;
+            $keywordReportConv->endDate = $keywordReportCost->endDate;
+            $keywordReportConv->account_id = $keywordReportCost->account_id;
+            $keywordReportConv->campaign_id = $keywordReportCost->campaign_id;
+            $keywordReportConv->campaignID = $keywordReportCost->campaignID;
+            $keywordReportConv->adgroupID = $keywordReportCost->adgroupID;
+            $keywordReportConv->keywordID = $i;
+            $keywordReportConv->campaignName = $keywordReportCost->campaignName;
+            $keywordReportConv->adgroupName = $keywordReportCost->adgroupName;
+            $keywordReportConv->customURL = self::CUSTOM_URL . $i;
+            $keywordReportConv->keyword = self::KEYWORD . $i;
+            $keywordReportConv->keywordDistributionSettings = self::KEYWORD_DISTRIBUTION_SETTINGS;
+            $keywordReportConv->kwEditorialStatus = self::KEYWORD_EDITORIAL_STATUS;
+            $keywordReportConv->adGroupBid = $keywordReportCost->adGroupBid;
+            $keywordReportConv->bid = $keywordReportCost->bid;
+            $keywordReportConv->negativeKeywords = self::NEGATIVE_KEY_WORDS;
+            $keywordReportConv->qualityIndex = $keywordReportCost->qualityIndex;
+            $keywordReportConv->firstPageBidEstimate = $keywordReportCost->firstPageBidEstimate;
+            $keywordReportConv->keywordMatchType = self::KEYWORD_MATCH_TYPE;
+            $keywordReportConv->topOfPageBidEstimate = $keywordReportCost->topOfPageBidEstimate;
+            $keywordReportConv->trackingURL = self::TRACKING_URL;
+            $keywordReportConv->customParameters = self::CUSTOM_PARAMETERS;
+            $keywordReportConv->landingPageURL = self::LANDING_PAGE_URL;
+            $keywordReportConv->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
+            $keywordReportConv->conversions = $keywordReportCost->conversions / self::NUMBER_OF_CONVERSION_POINTS;
+            $keywordReportConv->convValue = $keywordReportCost->convValue;
+            $keywordReportConv->valuePerConv = $keywordReportCost->valuePerConv;
+            $keywordReportConv->allConv = $keywordReportCost->allConv;
+            $keywordReportConv->allConvValue = $keywordReportCost->allConvValue;
+            $keywordReportConv->valuePerAllConv = $keywordReportCost->valuePerAllConv;
+            $keywordReportConv->network = $keywordReportCost->network;
+            $keywordReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
+            $keywordReportConv->device = $keywordReportCost->device;
+            $keywordReportConv->day = $keywordReportCost->day;
+            $keywordReportConv->dayOfWeek = $keywordReportCost->dayOfWeek;
+            $keywordReportConv->quarter = $keywordReportCost->quarter;
+            $keywordReportConv->quarter = $keywordReportCost->quarter;
+            $keywordReportConv->month = $keywordReportCost->month;
+            $keywordReportConv->week = $keywordReportCost->week;
+            $keywordReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
+            $keywordReportConv->conversionName = 'YSS conversion '
+                . $keywordReportCost->account_id
+                . $keywordReportCost->campaign_id
+                . $keywordReportCost->accountid
+                . $i;
+            $keywordReportConv->accountid = $keywordReportCost->accountid;
+            $keywordReportConv->saveOrFail();
+        }
+    }
 
     /**
      * Run the database seeds.
@@ -87,95 +139,50 @@ class RepoYssKeywordReportGenerator extends Seeder
             );
             for ($i = 0; $i < $ammountOfKeyword + 1; $i++) {
                 $keywordReportCost = new RepoYssKeywordReportCost;
-                $keywordReportConv = new RepoYssKeywordReportConv;
-
                 $keywordReportCost->exeDate = $adgroupReport->exeDate;
-                $keywordReportConv->exeDate = $adgroupReport->exeDate;
-
                 $keywordReportCost->startDate = $adgroupReport->startDate;
-                $keywordReportConv->startDate = $adgroupReport->startDate;
-
                 $keywordReportCost->endDate = $adgroupReport->endDate;
-                $keywordReportConv->endDate = $adgroupReport->endDate;
-
                 $keywordReportCost->account_id = $adgroupReport->account_id;
-                $keywordReportConv->account_id = $adgroupReport->account_id;
-
                 $keywordReportCost->campaign_id = $adgroupReport->campaign_id;
-                $keywordReportConv->campaign_id = $adgroupReport->campaign_id;
-
                 $keywordReportCost->campaignID = $adgroupReport->campaignID;
-                $keywordReportConv->campaignID = $adgroupReport->campaignID;
-
                 $keywordReportCost->adgroupID = $adgroupReport->adgroupID;
-                $keywordReportConv->adgroupID = $adgroupReport->adgroupID;
-
                 $keywordReportCost->keywordID = $i;
-                $keywordReportConv->keywordID = $i;
-
                 $keywordReportCost->campaignName = $adgroupReport->campaignName;
-                $keywordReportConv->campaignName = $adgroupReport->campaignName;
-
                 $keywordReportCost->adgroupName = $adgroupReport->adgroupName;
-                $keywordReportConv->adgroupName = $adgroupReport->adgroupName;
-
                 $keywordReportCost->customURL = self::CUSTOM_URL . $i;
-                $keywordReportConv->customURL = self::CUSTOM_URL . $i;
-
                 $keywordReportCost->keyword = self::KEYWORD . $i;
-                $keywordReportConv->keyword = self::KEYWORD . $i;
-
                 $keywordReportCost->keywordDistributionSettings = self::KEYWORD_DISTRIBUTION_SETTINGS;
-                $keywordReportConv->keywordDistributionSettings = self::KEYWORD_DISTRIBUTION_SETTINGS;
-
                 $keywordReportCost->kwEditorialStatus = self::KEYWORD_EDITORIAL_STATUS;
-                $keywordReportConv->kwEditorialStatus = self::KEYWORD_EDITORIAL_STATUS;
-
                 $keywordReportCost->adGroupBid = mt_rand(
                     self::MIN_ADGROUP_BID,
                     self::MAX_ADGROUP_BID
                 );
-                $keywordReportConv->adGroupBid = $keywordReportCost->adGroupBid;
-
                 $keywordReportCost->bid = mt_rand(
                     self::MIN_BID,
                     self::MAX_BID
                 );
-                $keywordReportConv->bid = $keywordReportCost->bid;
-
                 $keywordReportCost->negativeKeywords = self::NEGATIVE_KEY_WORDS;
-                $keywordReportConv->negativeKeywords = self::NEGATIVE_KEY_WORDS;
-
                 $keywordReportCost->qualityIndex = mt_rand(
                     self::MIN_QUALITY_INDEX,
                     self::MAX_QUALITY_INDEX
                 );
-                $keywordReportConv->qualityIndex = $keywordReportCost->qualityIndex;
-
                 $keywordReportCost->firstPageBidEstimate = mt_rand(
                     self::MIN_FIRST_PAGE_BID_ESTIMATE,
                     self::MAX_FIRST_PAGE_BID_ESTIMATE
                 );
-                $keywordReportConv->firstPageBidEstimate = $keywordReportCost->firstPageBidEstimate;
-
                 $keywordReportCost->keywordMatchType = self::KEYWORD_MATCH_TYPE;
-                $keywordReportConv->keywordMatchType = self::KEYWORD_MATCH_TYPE;
-
                 $keywordReportCost->cost = mt_rand(
                     self::MIN_COST,
                     self::MAX_COST
                 );
-
                 $keywordReportCost->impressions = mt_rand(
                     self::MIN_IMPRESSIONS,
                     $adgroupReport->impressions
                 );
-
                 $keywordReportCost->clicks = mt_rand(
                     self::MIN_CLICKS,
                     $keywordReportCost->impressions
                 );
-
                 if ($keywordReportCost->impressions === 0) {
                     $keywordReportCost->ctr = 0;
                 } else {
@@ -192,47 +199,31 @@ class RepoYssKeywordReportGenerator extends Seeder
                     self::MIN_AVERAGE_POSITION * 100000,
                     self::MAX_AVERAGE_POSITION * 100000
                 ) / 100000;
-
                 $keywordReportCost->impressionShare = mt_rand(
                     self::MIN_IMPRESSION_SHARE,
                     self::MAX_IMPRESSION_SHARE
                 ) / mt_getrandmax();
-
                 $keywordReportCost->exactMatchImpressionShare = mt_rand(
                     self::MIN_EXACT_MATCH_IMPRESSION_SHARE,
                     self::MAX_EXACT_MATCH_IMPRESSION_SHARE
                 ) / mt_getrandmax();
-
                 $keywordReportCost->qualityLostImpressionShare = mt_rand(
                     self::MIN_BUDGET_LOST_IMPRESSION_SHARE,
                     self::MAX_BUDGET_LOST_IMPRESSION_SHARE
                 ) / mt_getrandmax();
-
                 $keywordReportCost->topOfPageBidEstimate = mt_rand(
                     self::MIN_TOP_OF_PAGE_BID_ESTIMATE,
                     self::MAX_TOP_OF_PAGE_BID_ESTIMATE
                 );
-
-                $keywordReportConv->topOfPageBidEstimate = $keywordReportCost->topOfPageBidEstimate;
-
                 $keywordReportCost->trackingURL = self::TRACKING_URL;
-                $keywordReportConv->trackingURL = self::TRACKING_URL;
-
                 $keywordReportCost->customParameters = self::CUSTOM_PARAMETERS;
-                $keywordReportConv->customParameters = self::CUSTOM_PARAMETERS;
-
                 $keywordReportCost->landingPageURL = self::LANDING_PAGE_URL;
-                $keywordReportConv->landingPageURL = self::LANDING_PAGE_URL;
-
                 $keywordReportCost->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
-                $keywordReportConv->landingPageURLSmartphone = self::LANDING_PAGE_URL_SMART_PHONE;
 
                 $keywordReportCost->conversions = mt_rand(
                     self::MIN_CONVERSIONS,
                     $keywordReportCost->clicks
                 );
-
-                $keywordReportConv->conversions = $keywordReportCost->conversions;
 
                 if ($keywordReportCost->clicks === 0) {
                     $keywordReportCost->convRate = 0;
@@ -244,81 +235,47 @@ class RepoYssKeywordReportGenerator extends Seeder
                     self::MIN_CONV_VALUE,
                     self::MAX_CONV_VALUE
                 ) / mt_getrandmax();
-                $keywordReportConv->convValue = $keywordReportCost->convValue;
-
                 $keywordReportCost->costPerConv = mt_rand(
                     self::MIN_COST_PER_CONV,
                     self::MAX_COST_PER_CONV
                 ) / mt_getrandmax();
-
                 $keywordReportCost->valuePerConv = mt_rand(
                     self::MIN_VALUE_PER_CONV,
                     self::MAX_VALUE_PER_CONV
                 ) / mt_getrandmax();
-                $keywordReportConv->valuePerConv = $keywordReportCost->valuePerConv;
-
                 $keywordReportCost->allConv = mt_rand(
                     self::MIN_ALL_CONV,
                     self::MAX_ALL_CONV
                 ) / mt_getrandmax();
-                $keywordReportConv->allConv = $keywordReportCost->allConv;
-
                 $keywordReportCost->allConvRate = mt_rand(
                     self::MIN_ALL_CONV_RATE,
                     self::MAX_ALL_CONV_RATE
                 ) / mt_getrandmax();
-
                 $keywordReportCost->allConvValue = mt_rand(
                     self::MIN_ALL_CONV_VALUE,
                     self::MAX_ALL_CONV_VALUE
                 ) / mt_getrandmax();
-                $keywordReportConv->allConvValue = $keywordReportCost->allConvValue;
-
                 $keywordReportCost->costPerAllConv = mt_rand(
                     self::MIN_COST_PER_ALL_CONV,
                     self::MAX_COST_PER_ALL_CONV
                 ) / mt_getrandmax();
-
                 $keywordReportCost->valuePerAllConv = mt_rand(
                     self::MIN_VALUE_PER_ALL_CONV,
                     self::MAX_VALUE_PER_ALL_CONV
                 ) / mt_getrandmax();
-                $keywordReportConv->valuePerAllConv = $keywordReportCost->valuePerAllConv;
-
                 $keywordReportCost->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
-                $keywordReportConv->network = $keywordReportCost->network;
-
-                $keywordReportConv->clickType = self::CLICK_TYPE[mt_rand(0, count(self::CLICK_TYPE) - 1)];
-
                 $keywordReportCost->device = self::DEVICES[mt_rand(0, count(self::DEVICES) - 1)];
-                $keywordReportConv->device = $keywordReportCost->device;
-
                 $keywordReportCost->day = $adgroupReport->day;
-                $keywordReportConv->day = $adgroupReport->day;
-
                 $keywordReportCost->dayOfWeek = $adgroupReport->dayOfWeek;
-                $keywordReportConv->dayOfWeek = $adgroupReport->dayOfWeek;
-
                 $keywordReportCost->quarter = $adgroupReport->quarter;
-                $keywordReportConv->quarter = $adgroupReport->quarter;
-
                 $keywordReportCost->month = $adgroupReport->month;
-                $keywordReportConv->month = $adgroupReport->month;
-
                 $keywordReportCost->week = $adgroupReport->week;
-                $keywordReportConv->week = $adgroupReport->week;
 
-                $keywordReportConv->objectiveOfConversionTracking = self::OBJECTIVE_OF_CONVERSION_TRACKING;
-
-                $keywordReportConv->conversionName = self::CONVERSION_NAME[
-                    mt_rand(0, count(self::CONVERSION_NAME) - 1)
-                ];
-
-                $keywordReportConv->accountid = $adgroupReport->accountid;
                 $keywordReportCost->accountid = $adgroupReport->accountid;
 
                 $keywordReportCost->saveOrFail();
-                $keywordReportConv->saveOrFail();
+
+                $this->seedConv($keywordReportCost);
             }
         }
     }

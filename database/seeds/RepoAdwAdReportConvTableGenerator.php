@@ -37,6 +37,8 @@ class RepoAdwAdReportConvTableGenerator extends Seeder
                 $adwConvAd->conversions = $adwCostAd->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                 $adwConvAd->conversionTrackerId = $i + 1;
                 $adwConvAd->conversionName = self::CONVERSION_NAME . ($i + 1);
+                $adwConvAd->ad = $adwCostAd->ad;
+                $adwConvAd->adID = $adwCostAd->adID;
                 $adwConvAd->day = $adwCostAd->day;
                 $adwConvAd->dayOfWeek = $adwCostAd->dayOfWeek;
                 $adwConvAd->device = $adwCostAd->device;
