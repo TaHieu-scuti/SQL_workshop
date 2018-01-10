@@ -47,7 +47,7 @@ AND
  */
 
 
-explain SELECT `repo_ydn_reports`.`adgroupID`,
+SELECT `repo_ydn_reports`.`adgroupID`,
        `repo_ydn_reports`.`adgroupName`,
        IFNULL(SUM(repo_ydn_reports.impressions), 0) AS impressions,
        IFNULL(SUM(repo_ydn_reports.clicks), 0) AS clicks,
