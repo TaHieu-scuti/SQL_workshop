@@ -428,7 +428,7 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
     {
         $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
-        $conversionPoints = $this->select($aggregation)
+        return $this->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -436,7 +436,6 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                 }
             )
             ->get();
-        return $conversionPoints;
     }
 
     private function addConditonForConversionName(
