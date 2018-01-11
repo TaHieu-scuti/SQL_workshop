@@ -120,7 +120,8 @@ SELECT
   SUM(`conv1`.`conversions`) as 'ADW Conversion Name 1 CV',
   SUM(`conv2`.`conversions`) as 'ADW Conversion Name 2 CV',
   COUNT(`ptu1`.`id`) as 'Phone number +841234567811 CV',
-  SUM(`total`.`conversions`) as web_cv
+  SUM(`total`.`conversions`) as web_cv,
+  COUNT(`ptu1`.`id`) as call_cv
 FROM
   `repo_adw_ad_report_cost` as total
 LEFT JOIN
