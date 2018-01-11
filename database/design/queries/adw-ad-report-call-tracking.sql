@@ -144,7 +144,7 @@ LEFT JOIN
 ON
     `total`.`account_id` = `conv2`.`account_id`
   AND
-    `total`.`customerId` = `conv1`.`customerId`
+    `total`.`customerId` = `conv2`.`customerId`
   AND
     `total`.`campaign_id` = `conv2`.`campaign_id`
   AND
