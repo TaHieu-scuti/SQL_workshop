@@ -49,9 +49,11 @@ class RepoYssAdReportController extends AbstractReportController
         'ctr',
         'averageCpc',
         'averagePosition',
+        '[conversionValues]',
         'web_cv',
         'web_cvr',
         'web_cpa',
+        '[phoneNumberValues]',
         'call_cv',
         'call_cvr',
         'call_cpa',
@@ -106,7 +108,6 @@ class RepoYssAdReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -117,7 +118,7 @@ class RepoYssAdReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => $tableColumns,
+                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -168,12 +169,11 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($reports);
         $tableDataLayout = view(
             'layouts.table_data',
             [
             self::REPORTS => $reports,
-            self::FIELD_NAMES => $tableColumns,
+            self::FIELD_NAMES => array_keys($reports[0]->getAttributes()),
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
