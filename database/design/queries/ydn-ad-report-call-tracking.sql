@@ -6,12 +6,6 @@ SELECT
 FROM
 	`repo_ydn_reports`
 WHERE
-  `repo_ydn_reports`.`account_id` = 1
-AND
-  `repo_ydn_reports`.`accountId` = 11
-AND
-  `repo_ydn_reports`.`campaignID` = 11
-AND
   `repo_ydn_reports`.`adGroupID` = 11111111;
 
 /*

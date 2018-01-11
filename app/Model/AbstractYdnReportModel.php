@@ -356,14 +356,18 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             $clientId,
             $accountId,
             $campaignId,
-            $adGroupId
+            $adGroupId,
+            static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'ydn',
-            $campaignIDs
+            $campaignIDs,
+            $adIDs,
+            static::PAGE_ID
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -385,7 +389,6 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
-
         return $builder;
     }
 
@@ -425,10 +428,10 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
-        $conversionPoints = $this->select($aggregation)
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $this->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -436,7 +439,6 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
                 }
             )
             ->get();
-        return $conversionPoints;
     }
 
     private function addConditonForConversionName(
@@ -449,22 +451,28 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
                 ->where('accountId', '=', $accountId);
-        } elseif ($campaignId !== null) {
+        }
+        if ($campaignId !== null) {
             $query->where('campaignID', '=', $campaignId);
-        } elseif ($adGroupId !== null) {
+        }
+        if ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
         }
     }
 
-    public function getAggregatedConversionName($campaignId, $adGroupId)
+    private function getAggregatedConversionName($column)
     {
-        $arraySelect = ['campaignID', 'conversionName'];
-        if ($campaignId !== null) {
-            $arraySelect[] = 'adgroupID';
+        $arraySelect = ['conversionName'];
+        if ($column === 'campaignID') {
+            array_unshift($arraySelect, 'campaignID');
         }
 
-        if ($adGroupId !== null) {
-            $arraySelect[] = 'adID';
+        if ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
+        }
+
+        if ($column === 'adID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
         }
 
         return $arraySelect;

@@ -68,6 +68,8 @@ AND
 AND
   `repo_ydn_reports`.`accountId` = 11
 AND
+  `repo_ydn_reports`.`campaignID` = 11
+AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
@@ -126,6 +128,8 @@ AND
   `repo_ydn_reports`.`account_id` = 1
 AND
   `repo_ydn_reports`.`accountId` = 11
+AND
+  `repo_ydn_reports`.`campaignID` = 11
 AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
@@ -186,6 +190,8 @@ AND
 AND
   `repo_ydn_reports`.`accountId` = 11
 AND
+  `repo_ydn_reports`.`campaignID` = 11
+AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
@@ -237,6 +243,8 @@ AND
 AND
   `repo_ydn_reports`.`accountId` = 11
 AND
+  `repo_ydn_reports`.`campaignID` = 11
+AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
@@ -285,6 +293,8 @@ AND
   `repo_ydn_reports`.`account_id` = 1
 AND
   `repo_ydn_reports`.`accountId` = 11
+AND
+  `repo_ydn_reports`.`campaignID` = 11
 AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
