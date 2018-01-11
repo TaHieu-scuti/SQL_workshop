@@ -117,7 +117,9 @@ SELECT
   `total`.`keyword`,
   SUM(`conv1`.`conversions`) as 'Conversion Name 1 CV',
   SUM(`conv2`.`conversions`) as 'Conversion Name 2 CV',
-  SUM(`total`.`conversions`) as web_cv
+  SUM(`total`.`conversions`) as web_cv,
+  COUNT(`ptu1`.`id`) as 'Campaign Name +841234567811 CV',
+  COUNT(`ptu1`.`id`) as call_cv
 FROM
   `repo_adw_keywords_report_cost` as total
 LEFT JOIN
