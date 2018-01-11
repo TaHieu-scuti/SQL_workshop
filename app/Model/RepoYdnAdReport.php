@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 
 class RepoYdnAdReport extends AbstractYdnReportModel
 {
@@ -39,12 +41,12 @@ class RepoYdnAdReport extends AbstractYdnReportModel
         $conversionPoints
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
                 $this->table . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $conversionName, $adgroupIDs) {
+                function (JoinClause $join) use ($joinAlias, $conversionName, $adIDs) {
                     $join->on(
                         $this->table . '.account_id',
                         '=',
@@ -67,8 +69,8 @@ class RepoYdnAdReport extends AbstractYdnReportModel
                             '=',
                             $joinAlias . '.adgroupID'
                         )->whereIn(
-                            $joinAlias . '.adgroupID',
-                            $adgroupIDs
+                            $this->table . '.adID',
+                            $adIDs
                         )->where(
                             $joinAlias . '.conversionName',
                             '=',
@@ -79,66 +81,67 @@ class RepoYdnAdReport extends AbstractYdnReportModel
         }
     }
 
-    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
+    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns, $conversionPoints)
     {
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($adGainerCampaigns as $i => $campaign) {
             $joinAlias = 'call' . $i;
             $builder->leftJoin(
                 DB::raw('(`phone_time_use` AS '.$joinAlias.', `campaigns` AS '.$joinAlias.'_campaigns)'),
-                function (JoinClause $join) use ($campaign, $joinAlias) {
+                function (JoinClause $join) use ($campaign, $joinAlias, $adIDs) {
                     $join->on($joinAlias.'_campaigns.account_id', '=', $this->table . '.account_id')
                         ->on($joinAlias.'_campaigns.campaign_id', '=', $this->table . '.campaign_id')
                         ->on(
-                            function (JoinClause $builder) use ($joinAlias) {
+                            function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                 $builder->where(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom1 = "creative"')
-                                            ->whereRaw($joinAlias.".custom1 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom1", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom2 = "creative"')
-                                            ->whereRaw($joinAlias.".custom2 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom2", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom3 = "creative"')
-                                            ->whereRaw($joinAlias.".custom3 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom3", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom4 = "creative"')
-                                            ->whereRaw($joinAlias.".custom4 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom4", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom5 = "creative"')
-                                            ->whereRaw($joinAlias.".custom5 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom5", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom6 = "creative"')
-                                            ->whereRaw($joinAlias.".custom6 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom6", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom7 = "creative"')
-                                            ->whereRaw($joinAlias.".custom7 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom7", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom8 = "creative"')
-                                            ->whereRaw($joinAlias.".custom8 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom8", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom9 = "creative"')
-                                            ->whereRaw($joinAlias.".custom9 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom9", $adIDs);
                                     }
                                 )->orWhere(
-                                    function (JoinClause $builder) use ($joinAlias) {
+                                    function (JoinClause $builder) use ($joinAlias, $adIDs) {
                                         $builder->whereRaw($joinAlias.'_campaigns.camp_custom10 = "creative"')
-                                            ->whereRaw($joinAlias.".custom10 = {$this->table}.adID");
+                                            ->whereIn($joinAlias.".custom10", $adIDs);
                                     }
                                 );
                             }
@@ -162,6 +165,6 @@ class RepoYdnAdReport extends AbstractYdnReportModel
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
         $this->addJoinsForConversionPoints($builder, $conversionPoints);
-        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
+        $this->addJoinsForCallConversions($builder, $adGainerCampaigns, $conversionPoints);
     }
 }
