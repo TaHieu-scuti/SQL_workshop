@@ -34,10 +34,10 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         'web_cpa' => 'integer'
     ];
 
-    private function addJoin(EloquentBuilder $builder)
+    protected function addJoin(EloquentBuilder $builder)
     {
         $builder->leftJoin(
-            'phone_time_use',
+            DB::raw('(`phone_time_use`, `campaigns`)'),
             function (JoinClause $join) {
                 $this->addJoinConditions($join);
             }
@@ -173,4 +173,20 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
 
         return $arrCampaigns;
     }
+
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
+    {
+        $aggregation = $this->getAggregatedConversionName($campaignId, $adGroupId);
+        $yss_campaign_model = new RepoYssCampaignReportConv();
+        $conversionPoints = $yss_campaign_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+        return $conversionPoints;
+    }
+
 }
