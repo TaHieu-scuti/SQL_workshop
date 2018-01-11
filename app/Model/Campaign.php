@@ -11,8 +11,13 @@ class Campaign extends Model
     /** @var bool */
     public $timestamps = false;
 
-    public function getAdGainerCampaignsWithPhoneNumber($account_id, $source, array $campaignIDs,array $adIDs = null, $flag = null)
-    {
+    public function getAdGainerCampaignsWithPhoneNumber(
+        $account_id,
+        $source,
+        array $campaignIDs,
+        array $adIDs = null,
+        $flag = null
+    ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
         if ($flag === 'adID') {
