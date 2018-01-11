@@ -19,7 +19,14 @@
             <tr>
                 @if($export)
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
+                        @if($fieldName === "accountid"
+                            || $fieldName === "campaignID"
+                            || $fieldName === "adgroupID"
+                            || $fieldName === "account_id"
+                            || $fieldName === 'adType'
+                            || $fieldName === 'displayURL'
+                            || $fieldName === 'description1'
+                            || $fieldName === 'adID')
                             @continue
                         @endif
                         <th>
@@ -28,7 +35,14 @@
                     @endforeach
                 @else
                     @foreach($fieldNames as $fieldName)
-                        @if($fieldName === "accountid" || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === "account_id" || $fieldName === 'adType')
+                        @if($fieldName === "accountid"
+                            || $fieldName === "campaignID"
+                            || $fieldName === "adgroupID"
+                            || $fieldName === "account_id"
+                            || $fieldName === 'adType'
+                            || $fieldName === 'displayURL'
+                            || $fieldName === 'description1'
+                            || $fieldName === 'adID')
                             @continue
                         @endif
                         @if($groupedByField === 'prefecture' && $fieldName === 'impressionShare')
@@ -68,7 +82,14 @@
                 @endphp
                 <tr>
                 @foreach($fieldNames as $fieldName)
-                    @if($fieldName === 'accountid' || $fieldName === "campaignID" || $fieldName === "adgroupID" || $fieldName === 'account_id' || $fieldName === 'adType')
+                    @if($fieldName === 'accountid'
+                        || $fieldName === "campaignID"
+                        || $fieldName === "adgroupID"
+                        || $fieldName === 'account_id'
+                        || $fieldName === 'adType'
+                        || $fieldName === 'displayURL'
+                        || $fieldName === 'description1'
+                        || $fieldName === 'adID')
                         @continue
                     @endif
                     @if ($fieldName === 'agencyName')
