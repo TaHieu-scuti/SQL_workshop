@@ -125,15 +125,15 @@ FROM
 LEFT JOIN
   `repo_adw_keywords_report_conv` as conv1
 ON
-  (`total`.`account_id` = `conv1`.`account_id`
+  (`total`.`account_id` = `conv1`.`account_id` /* we can remove this when keywordId is unique */
 AND
-  `total`.`campaign_id` = `conv1`.`campaign_id`
+  `total`.`campaign_id` = `conv1`.`campaign_id` /* we can remove this when keywordId is unique */
 AND
-  `total`.`customerId` = `conv1`.`customerID`
+  `total`.`customerId` = `conv1`.`customerID` /* we can remove this when keywordId is unique */
 AND
-  `total`.`campaignID` = `conv1`.`campaignID`
+  `total`.`campaignID` = `conv1`.`campaignID` /* we can remove this when keywordId is unique */
 AND
-  `total`.`adGroupID` = `conv1`.`adGroupID`
+  `total`.`adGroupID` = `conv1`.`adGroupID` /* we can remove this when keywordId is unique */
 AND
   `total`.`day` = `conv1`.`day`
 AND
@@ -143,15 +143,15 @@ AND
 LEFT JOIN
   `repo_adw_keywords_report_conv` as conv2
 ON
-  (`total`.`account_id` = `conv2`.`account_id`
+  (`total`.`account_id` = `conv2`.`account_id` /* we can remove this when keywordId is unique */
 AND
-  `total`.`campaign_id` = `conv2`.`campaign_id`
+  `total`.`campaign_id` = `conv2`.`campaign_id` /* we can remove this when keywordId is unique */
 AND
-  `total`.`customerId` = `conv2`.`customerID`
+  `total`.`customerId` = `conv2`.`customerID` /* we can remove this when keywordId is unique */
 AND
-  `total`.`campaignID` = `conv2`.`campaignID`
+  `total`.`campaignID` = `conv2`.`campaignID` /* we can remove this when keywordId is unique */
 AND
-  `total`.`adGroupID` = `conv2`.`adGroupID`
+  `total`.`adGroupID` = `conv2`.`adGroupID` /* we can remove this when keywordId is unique */
 AND
   `total`.`day` = `conv2`.`day`
 AND
