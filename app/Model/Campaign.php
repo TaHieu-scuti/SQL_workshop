@@ -20,7 +20,7 @@ class Campaign extends Model
     ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
-        if ($flag === 'adID') {
+        if ($flag === 'adID' || $flag === 'adgroupID') {
             $repoPhoneTimeUseTableName = (new PhoneTimeUse)->getTable();
         }
         return $this->distinct()
