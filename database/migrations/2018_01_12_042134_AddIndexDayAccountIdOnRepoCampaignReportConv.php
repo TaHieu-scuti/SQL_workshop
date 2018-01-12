@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 // @codingStandardsIgnoreLine
-class AddIndexesDayAccountIdOnRepoYssCampaignReportCost extends Migration
+class AddIndexDayAccountIdOnRepoCampaignReportConv extends Migration
 {
-    const INDEX_NAME = 'repo_yss_campaign_report_cost_day_accountId_idx';
+    const INDEX_NAME = 'repo_yss_campaign_report_conv_day_accountId_idx';
     /**
      * Run the migrations.
      *
@@ -17,7 +17,7 @@ class AddIndexesDayAccountIdOnRepoYssCampaignReportCost extends Migration
     {
         DB::statement(
             "CREATE INDEX `" . self::INDEX_NAME . "` "
-            . "ON `repo_yss_campaign_report_cost` (day, accountid) "
+            . "ON `repo_yss_campaign_report_conv` (day, accountid) "
             . "COMMENT '' "
             . "ALGORITHM DEFAULT "
             . "LOCK DEFAULT;"
@@ -32,7 +32,7 @@ class AddIndexesDayAccountIdOnRepoYssCampaignReportCost extends Migration
     public function down()
     {
         Schema::table(
-            'repo_yss_campaign_report_cost',
+            'repo_yss_campaign_report_conv',
             function (Blueprint $table) {
                 $table->dropIndex(self::INDEX_NAME);
             }
