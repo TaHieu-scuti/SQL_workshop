@@ -20,33 +20,21 @@ FROM
       `repo_phone_time_use`.`mobile` = 'No'
       AND
       (
-        (
         `repo_phone_time_use`.`platform` NOT LIKE 'Windows Phone%'
         AND
+        (
         `repo_phone_time_use`.`platform` LIKE 'Windows%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Linux%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Mac OS%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'FreeBSD%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Unknown Windows OS%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'NetBSD%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'FreeBSD%'
         )
       )
@@ -99,13 +87,9 @@ FROM
       (
         (
         `repo_phone_time_use`.`platform` LIKE 'iOS%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Android%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Blackberry%'
         )
       )
@@ -156,17 +140,11 @@ FROM
       `repo_phone_time_use`.`mobile` LIKE 'Yes%'
       AND
       (
-        (
         `repo_phone_time_use`.`platform` LIKE 'iOS%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Android%'
-        )
         OR
-        (
         `repo_phone_time_use`.`platform` LIKE 'Blackberry%'
-        )
       )
       AND
         `repo_ydn_reports`.`day` = STR_TO_DATE(`repo_phone_time_use`.`time_of_call`, '%Y-%m-%d')
@@ -215,9 +193,7 @@ FROM
       `repo_phone_time_use`.`mobile` LIKE 'Yes%'
       AND
       (
-        (
         `repo_phone_time_use`.`platform` LIKE 'Symbian%'
-        )
       )
       AND
         `repo_ydn_reports`.`day` = STR_TO_DATE(`repo_phone_time_use`.`time_of_call`, '%Y-%m-%d')
@@ -262,23 +238,19 @@ SELECT
 FROM
   `repo_ydn_reports`
     JOIN (`repo_phone_time_use`)
-    ON (
-      (
-        (
+      ON (
         `repo_phone_time_use`.`platform` LIKE 'Unknown Platform%'
-        )
-      )
       AND
         `repo_ydn_reports`.`day` = STR_TO_DATE(`repo_phone_time_use`.`time_of_call`, '%Y-%m-%d')
-    AND
-      `repo_phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
-    AND
-      `repo_phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
-    AND
-      `repo_phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
-    AND
-      `repo_phone_time_use`.`source` = 'ydn'
-  )
+      AND
+        `repo_phone_time_use`.`account_id` = `repo_ydn_reports`.`account_id`
+      AND
+        `repo_phone_time_use`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+      AND
+        `repo_phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
+      AND
+        `repo_phone_time_use`.`source` = 'ydn'
+    )
 WHERE
   `repo_ydn_reports.devices` = 'Other'
 AND
