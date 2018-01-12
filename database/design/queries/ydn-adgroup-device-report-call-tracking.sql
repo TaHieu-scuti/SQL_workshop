@@ -1,5 +1,5 @@
 SELECT
-  'PC' as devices,
+  'PC' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -62,7 +62,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'PC'
+  `repo_ydn_reports`.`device` = 'PC'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -73,12 +73,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Tablet' as devices,
+  'Tablet' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -123,7 +123,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'Tablet'
+  `repo_ydn_reports`.`device` = 'Tablet'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -134,12 +134,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'SmartPhone' as devices,
+  'SmartPhone' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -184,7 +184,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'SmartPhone'
+  `repo_ydn_reports`.`device` = 'SmartPhone'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -195,12 +195,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Mobile' as devices,
+  'Mobile' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -237,7 +237,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'Mobile'
+  `repo_ydn_reports`.`device` = 'Mobile'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -248,12 +248,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Other' as devices,
+  'Other' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -286,9 +286,77 @@ FROM
       `repo_phone_time_use`.`utm_campaign` = `repo_ydn_reports`.`campaignID`
     AND
       `repo_phone_time_use`.`source` = 'ydn'
-  )
+    )
+    LEFT JOIN (`phone_time_use`, `campaigns`)
+      ON (
+          `campaigns`.`account_id` = `repo_ydn_reports`.`account_id`
+        AND
+          `campaigns`.`campaign_id` = `repo_ydn_reports`.`campaign_id`
+        AND
+          (
+            (
+              `campaigns`.`camp_custom1` = 'creative'
+            AND
+              `phone_time_use`.`custom1` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom2` = 'creative'
+            AND
+              `phone_time_use`.`custom2` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom3` = 'creative'
+            AND
+              `phone_time_use`.`custom3` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom4` = 'creative'
+            AND
+              `phone_time_use`.`custom4` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom5` = 'creative'
+            AND
+              `phone_time_use`.`custom5` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom6` = 'creative'
+            AND
+              `phone_time_use`.`custom6` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom7` = 'creative'
+            AND
+              `phone_time_use`.`custom7` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom8` = 'creative'
+            AND
+              `phone_time_use`.`custom8` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom9` = 'creative'
+            AND
+              `phone_time_use`.`custom9` = `repo_ydn_reports`.`adID`
+            )
+          OR
+            (
+              `campaigns`.`camp_custom10` = 'creative'
+            AND
+              `phone_time_use`.`custom10` = `repo_ydn_reports`.`adID`
+            )
+          )
+        )
 WHERE
-  `repo_ydn_reports.devices` = 'Other'
+  `repo_ydn_reports`.`device` = 'Other'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -299,4 +367,4 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device

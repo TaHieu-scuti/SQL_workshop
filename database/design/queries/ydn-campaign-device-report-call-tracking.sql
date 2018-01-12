@@ -1,5 +1,5 @@
 SELECT
-  'PC' as devices,
+  'PC' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -62,7 +62,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'PC'
+  `repo_ydn_reports`.`device` = 'PC'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -71,12 +71,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Tablet' as devices,
+  'Tablet' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -121,7 +121,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'Tablet'
+  `repo_ydn_reports`.`device` = 'Tablet'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -130,12 +130,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'SmartPhone' as devices,
+  'SmartPhone' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -180,7 +180,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'SmartPhone'
+  `repo_ydn_reports`.`device` = 'SmartPhone'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -189,12 +189,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Mobile' as devices,
+  'Mobile' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -231,7 +231,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'Mobile'
+  `repo_ydn_reports`.`device` = 'Mobile'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -240,12 +240,12 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
 
 UNION
 
 SELECT
-  'Other' as devices,
+  'Other' as device,
   IFNULL(SUM(`repo_ydn_reports`.`impressions`), 0) AS impressions,
   IFNULL(SUM(`repo_ydn_reports`.`clicks`), 0) AS clicks,
   IFNULL(SUM(`repo_ydn_reports`.`cost`), 0) AS cost,
@@ -280,7 +280,7 @@ FROM
       `repo_phone_time_use`.`source` = 'ydn'
   )
 WHERE
-  `repo_ydn_reports.devices` = 'Other'
+  `repo_ydn_reports`.`device` = 'Other'
 AND
   `repo_ydn_reports`.`account_id` = 1
 AND
@@ -289,4 +289,4 @@ AND
   `repo_ydn_reports`.`day` >= '2017-01-01'
 AND
   `repo_ydn_reports`.`day` <= '2017-12-01'
-GROUP BY  devices
+GROUP BY  device
