@@ -176,10 +176,11 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         return $arrCampaigns;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
         $yss_campaign_model = new RepoYssCampaignReportConv();
-        $conversionPoints = $yss_campaign_model->select(['campaignID', 'conversionName'])
+        $aggregation = $this->getAggregatedConversionName($column);
+        $conversionPoints = $yss_campaign_model->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {

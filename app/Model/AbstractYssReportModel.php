@@ -270,15 +270,16 @@ abstract class AbstractYssReportModel extends AbstractReportModel
             $clientId,
             $accountId,
             $campaignId,
-            $adGroupId
+            $adGroupId,
+            static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'yss',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID
         );
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
@@ -338,20 +339,6 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         return $builder;
     }
 
-    protected function getAggregatedConversionName($campaignId, $adGroupId)
-    {
-        $arraySelect = ['campaignID', 'conversionName'];
-        if ($campaignId !== null) {
-            $arraySelect[] = 'adgroupID';
-        }
-
-        if ($adGroupId !== null) {
-            $arraySelect[] = 'adID';
-        }
-
-        return $arraySelect;
-    }
-
     protected function addConditonForConversionName(
         EloquentBuilder $query,
         $account_id = null,
@@ -367,5 +354,23 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         } elseif ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
         }
+    }
+
+    protected function getAggregatedConversionName($column)
+    {
+        $arraySelect = ['conversionName'];
+        if ($column === 'campaignID') {
+            array_unshift($arraySelect, 'campaignID');
+        }
+
+        if ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
+        }
+
+        if ($column === 'keyword') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
+        }
+
+        return $arraySelect;
     }
 }

@@ -237,4 +237,18 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
 
         return $arrAdgroups;
     }
+
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $yss_campaign_model = new RepoYssAdgroupReportConv();
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $yss_campaign_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
 }
