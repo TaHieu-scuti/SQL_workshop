@@ -54,10 +54,11 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
         $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        $campaignReportConvTableName = (new RepoYssCampaignReportConv)->getTable();
         foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
-                $this->table . ' AS ' . $joinAlias,
+                $campaignReportConvTableName . ' AS ' . $joinAlias,
                 function (JoinClause $join) use ($joinAlias, $conversionName, $campaignIDs) {
                     $join->on(
                         $this->table . '.account_id',
@@ -188,5 +189,4 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
             ->get();
         return $conversionPoints;
     }
-
 }

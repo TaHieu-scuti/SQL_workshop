@@ -299,7 +299,6 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
-
         return $builder;
     }
 
@@ -369,5 +368,4 @@ abstract class AbstractYssReportModel extends AbstractReportModel
             $query->where('adgroupID', '=', $adGroupId);
         }
     }
-
 }
