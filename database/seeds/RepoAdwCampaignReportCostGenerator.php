@@ -35,7 +35,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
     const MAX_CONV_VALUE = 89489437437880;
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['UNKNOWN', 'DESKTOP', 'HIGH_END_MOBILE', 'TABLET'];
     /**
      * Run the database seeds.
      *
