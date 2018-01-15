@@ -4,6 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use App\AbstractReportModel;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
@@ -11,6 +13,77 @@ abstract class AbstractYssReportModel extends AbstractReportModel
 {
     private $conversionPoints;
     private $adGainerCampaigns;
+
+    protected function addJoinConditions(JoinClause $join, $joinAlias)
+    {
+        $join->on($joinAlias.'_campaigns.account_id', '=', $this->table . '.account_id')
+            ->on($joinAlias.'_campaigns.campaign_id', '=', $this->table . '.campaign_id')
+            ->on(
+                function (Builder $builder) use ($joinAlias) {
+                    $builder->where(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom1` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom1` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom2` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom2` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom3` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom3` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom4` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom4` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom5` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom5` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom6` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom6` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom7` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom7` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom8` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom8` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom9` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom9` = `{$this->table}`.`adgroupID`");
+                        }
+                    )->orWhere(
+                        function (Builder $builder) use ($joinAlias) {
+                            $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom10` = 'adgroupid'")
+                                ->whereRaw("`".$joinAlias."`.`custom10` = `{$this->table}`.`adgroupID`");
+                        }
+                    );
+                }
+            )
+            ->on($joinAlias.'.account_id', '=', $this->table . '.account_id')
+            ->on($joinAlias.'.campaign_id', '=', $this->table . '.campaign_id')
+            ->on($joinAlias.'.utm_campaign', '=', $this->table . '.campaignID')
+            ->on(
+                DB::raw("STR_TO_DATE(`".$joinAlias."`.`time_of_call`, '%Y-%m-%d')"),
+                '=',
+                $this->table . '.day'
+            )
+            ->where($joinAlias.'.source', '=', 'yss')
+            ->where($joinAlias.'.traffic_type', '=', 'AD');
+    }
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
@@ -270,15 +343,16 @@ abstract class AbstractYssReportModel extends AbstractReportModel
             $clientId,
             $accountId,
             $campaignId,
-            $adGroupId
+            $adGroupId,
+            static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'yss',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID
         );
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
@@ -338,20 +412,6 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         return $builder;
     }
 
-    protected function getAggregatedConversionName($campaignId, $adGroupId)
-    {
-        $arraySelect = ['campaignID', 'conversionName'];
-        if ($campaignId !== null) {
-            $arraySelect[] = 'adgroupID';
-        }
-
-        if ($adGroupId !== null) {
-            $arraySelect[] = 'adID';
-        }
-
-        return $arraySelect;
-    }
-
     protected function addConditonForConversionName(
         EloquentBuilder $query,
         $account_id = null,
@@ -362,10 +422,30 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
                 ->where('accountId', '=', $accountId);
-        } elseif ($campaignId !== null) {
+        }
+        if ($campaignId !== null) {
             $query->where('campaignID', '=', $campaignId);
-        } elseif ($adGroupId !== null) {
+        }
+        if ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
         }
+    }
+
+    protected function getAggregatedConversionName($column)
+    {
+        $arraySelect = ['conversionName'];
+        if ($column === 'campaignID') {
+            array_unshift($arraySelect, 'campaignID');
+        }
+
+        if ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
+        }
+
+        if ($column === 'keyword') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
+        }
+
+        return $arraySelect;
     }
 }

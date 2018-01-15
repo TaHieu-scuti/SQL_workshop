@@ -34,20 +34,6 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         'web_cpa' => 'integer'
     ];
 
-    protected function addJoinConditions(JoinClause $join)
-    {
-        $join->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d')"),
-                '=',
-                $this->table . '.day'
-            )
-            ->where('phone_time_use.source', '=', 'yss')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
-
     private function addJoinsForConversionPoints(
         EloquentBuilder $builder,
         $conversionPoints
@@ -176,10 +162,11 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         return $arrCampaigns;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId)
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
         $yss_campaign_model = new RepoYssCampaignReportConv();
-        $conversionPoints = $yss_campaign_model->select(['campaignID', 'conversionName'])
+        $aggregation = $this->getAggregatedConversionName($column);
+        $conversionPoints = $yss_campaign_model->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {

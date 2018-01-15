@@ -366,8 +366,8 @@ abstract class AbstractYdnReportModel extends AbstractReportModel
             $clientId,
             'ydn',
             $campaignIDs,
-            $adIDs,
-            static::PAGE_ID
+            static::PAGE_ID,
+            $adIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(

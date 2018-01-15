@@ -36,163 +36,6 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
      */
     protected $table = 'repo_yss_adgroup_report_cost';
 
-    private function addJoin(EloquentBuilder $builder)
-    {
-        $builder->leftJoin(
-            DB::raw('(`phone_time_use`, `campaigns`)'),
-            function (JoinClause $join) {
-                $this->addJoinConditions($join);
-            }
-        );
-    }
-
-    protected function addJoinConditions(JoinClause $join)
-    {
-        $join->on('campaigns.account_id', '=', $this->table . '.account_id')
-            ->on('campaigns.campaign_id', '=', $this->table . '.campaign_id')
-            ->on(
-                function (Builder $builder) {
-                    $builder->where(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom1` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom1` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom2` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom2` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom3` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom3` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom4` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom4` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom5` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom5` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom6` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom6` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom7` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom7` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom8` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom8` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom9` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom9` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom10` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom10` = `{$this->table}`.`adgroupID`");
-                        }
-                    );
-                }
-            )
-            ->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d')"),
-                '=',
-                $this->table . '.day'
-            )
-            ->where('phone_time_use.source', '=', 'yss')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
-
-    protected function getBuilderForGetDataForTable(
-        $engine,
-        array $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $columnSort,
-        $sort,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForGetDataForTable(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $columnSort,
-            $sort,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
-    }
-
-    protected function getBuilderForCalculateData(
-        $engine,
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder);
-
-        return $builder;
-    }
-
     public function getAllAdgroup(
         $accountId = null,
         $campaignId = null
@@ -236,5 +79,80 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         }
 
         return $arrAdgroups;
+    }
+
+    private function addJoinsForConversionPoints(
+        EloquentBuilder $builder,
+        $conversionPoints
+    ) {
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
+        $campaignReportConvTableName = (new RepoYssAdgroupReportConv())->getTable();
+        foreach ($conversionNames as $i => $conversionName) {
+            $joinAlias = 'conv' . $i;
+            $builder->leftJoin(
+                $campaignReportConvTableName . ' AS ' . $joinAlias,
+                function (JoinClause $join) use ($joinAlias, $conversionName, $adgroupIDs) {
+                    $join->on(
+                        $this->table . '.account_id',
+                        '=',
+                        $joinAlias . '.account_id'
+                    )
+                        ->on(
+                            $this->table . '.accountId',
+                            '=',
+                            $joinAlias . '.accountId'
+                        )->on(
+                            $this->table . '.day',
+                            '=',
+                            $joinAlias . '.day'
+                        )->on(
+                            $this->table . '.campaignID',
+                            '=',
+                            $joinAlias . '.campaignID'
+                        )->whereIn(
+                            $joinAlias . '.adgroupID',
+                            $adgroupIDs
+                        )->where(
+                            $joinAlias . '.conversionName',
+                            '=',
+                            $conversionName
+                        );
+                }
+            );
+        }
+    }
+
+    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
+    {
+        foreach ($adGainerCampaigns as $i => $campaign) {
+            $joinAlias = 'call' . $i;
+            $builder->leftJoin(
+                DB::raw('(`phone_time_use` AS '.$joinAlias.', `campaigns` AS '.$joinAlias.'_campaigns)'),
+                function (JoinClause $join) use ($joinAlias) {
+                    $this->addJoinConditions($join, $joinAlias);
+                }
+            );
+        }
+    }
+
+    protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
+    {
+        $this->addJoinsForConversionPoints($builder, $conversionPoints);
+        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
+    }
+
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $yss_campaign_model = new RepoYssAdgroupReportConv();
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $yss_campaign_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
     }
 }
