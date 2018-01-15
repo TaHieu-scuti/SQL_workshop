@@ -73,16 +73,16 @@ abstract class AbstractYssReportModel extends AbstractReportModel
                     );
                 }
             )
-            ->on(''.$joinAlias.'.account_id', '=', $this->table . '.account_id')
-            ->on(''.$joinAlias.'.campaign_id', '=', $this->table . '.campaign_id')
-            ->on(''.$joinAlias.'.utm_campaign', '=', $this->table . '.campaignID')
+            ->on($joinAlias.'.account_id', '=', $this->table . '.account_id')
+            ->on($joinAlias.'.campaign_id', '=', $this->table . '.campaign_id')
+            ->on($joinAlias.'.utm_campaign', '=', $this->table . '.campaignID')
             ->on(
                 DB::raw("STR_TO_DATE(`".$joinAlias."`.`time_of_call`, '%Y-%m-%d')"),
                 '=',
                 $this->table . '.day'
             )
-            ->where(''.$joinAlias.'.source', '=', 'yss')
-            ->where(''.$joinAlias.'.traffic_type', '=', 'AD');
+            ->where($joinAlias.'.source', '=', 'yss')
+            ->where($joinAlias.'.traffic_type', '=', 'AD');
     }
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
