@@ -4,6 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use App\AbstractReportModel;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
@@ -371,7 +373,6 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         );
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
-        var_dump($builder->getBindings());die;
         return $builder;
     }
 
