@@ -80,18 +80,6 @@ FROM
           `phone_time_use`.`custom10` = `repo_yss_adgroup_report_cost`.`adGroupId`
         )
       )
-    AND
-      `phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
-    AND
-      `phone_time_use`.`campaign_id` = `repo_yss_adgroup_report_cost`.`campaign_id`
-    AND
-      `phone_time_use`.`utm_campaign` = `repo_yss_adgroup_report_cost`.`campaignID`
-    AND
-      STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_adgroup_report_cost`.`day`
-    AND
-      `phone_time_use`.`source` = 'yss'
-    AND
-      `phone_time_use`.`traffic_type` = 'AD'
     )
   JOIN `repo_phone_time_use`
       ON (
@@ -123,18 +111,18 @@ FROM
                 `repo_phone_time_use`.`platform` LIKE 'Blackberry%'
                 )
             )
-            AND
-                `repo_phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
-            AND
-                `repo_phone_time_use`.`campaign_id` = `repo_yss_adgroup_report_cost`.`campaign_id`
-            AND
-                `repo_phone_time_use`.`utm_campaign` = `repo_yss_adgroup_report_cost`.`campaignID`
-            AND
-                `repo_yss_adgroup_report_cost`.`day` = STR_TO_DATE(`repo_phone_time_use`.`time_of_call`, '%Y-%m-%d')
-            AND
-                `repo_phone_time_use`.`source` = 'yss'
-            AND
-                `repo_phone_time_use`.`traffic_type` = 'AD'
+          AND
+            `phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
+          AND
+            `phone_time_use`.`campaign_id` = `repo_yss_adgroup_report_cost`.`campaign_id`
+          AND
+            `phone_time_use`.`utm_campaign` = `repo_yss_adgroup_report_cost`.`campaignID`
+          AND
+            STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_adgroup_report_cost`.`day`
+          AND
+            `phone_time_use`.`source` = 'yss'
+          AND
+            `phone_time_use`.`traffic_type` = 'AD'
       )
 WHERE
     `repo_yss_adgroup_report_cost`.`device` = 'DESKTOP'
@@ -236,18 +224,6 @@ FROM
           `phone_time_use`.`custom10` = `repo_yss_adgroup_report_cost`.`adGroupId`
         )
       )
-    AND
-      `phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
-    AND
-      `phone_time_use`.`campaign_id` = `repo_yss_adgroup_report_cost`.`campaign_id`
-    AND
-      `phone_time_use`.`utm_campaign` = `repo_yss_adgroup_report_cost`.`campaignID`
-    AND
-      STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_adgroup_report_cost`.`day`
-    AND
-      `phone_time_use`.`source` = 'yss'
-    AND
-      `phone_time_use`.`traffic_type` = 'AD'
     )
   JOIN `repo_phone_time_use`
       ON (
@@ -379,18 +355,6 @@ FROM
           `phone_time_use`.`custom10` = `repo_yss_adgroup_report_cost`.`adGroupId`
         )
       )
-    AND
-      `phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
-    AND
-      `phone_time_use`.`campaign_id` = `repo_yss_adgroup_report_cost`.`campaign_id`
-    AND
-      `phone_time_use`.`utm_campaign` = `repo_yss_adgroup_report_cost`.`campaignID`
-    AND
-      STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d') = `repo_yss_adgroup_report_cost`.`day`
-    AND
-      `phone_time_use`.`source` = 'yss'
-    AND
-      `phone_time_use`.`traffic_type` = 'AD'
     )
   JOIN `repo_phone_time_use`
       ON (
