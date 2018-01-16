@@ -64,7 +64,7 @@ class RepoAdwKeywordReportGenerator extends Seeder
                 $keywordReportCost->adGroup = $adgroupReport->adGroup;
                 $keywordReportCost->campaignID = $adgroupReport->campaignID;
                 $keywordReportCost->campaign = $adgroupReport->campaign;
-                $keywordReportCost->keywordID = $i + 1;
+                $keywordReportCost->keywordID = (string)$keywordReportCost->adGroupID . ($i + 1);
                 $keywordReportCost->keyword = self::KEYWORD . ($i + 1);
                 $keywordReportCost->cost = mt_rand(
                     self::MIN_COST,
