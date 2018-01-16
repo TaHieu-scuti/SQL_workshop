@@ -358,6 +358,8 @@ FROM
     )
   JOIN `repo_phone_time_use`
       ON (
+                `repo_phone_time_use`.`phone_time_use_id` = `phone_time_use`.`id`
+            AND
                 `repo_phone_time_use`.`platform` LIKE 'Unknown Platform%'
             AND
                 `repo_phone_time_use`.`account_id` = `repo_yss_adgroup_report_cost`.`account_id`
