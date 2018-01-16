@@ -433,6 +433,12 @@ AND
   `repo_adw_account_report_cost`.`day` >= '2017-01-01'
 AND
   `repo_adw_account_report_cost`.`day` <= '2017-12-01'
+AND
+(
+  `repo_adw_account_report_cost`.`network` = 'SEARCH'
+OR
+  `repo_adw_account_report_cost`.`network` = 'CONTENT'
+)
 GROUP BY
   device
 
@@ -499,6 +505,12 @@ AND
   `repo_adw_account_report_cost`.`day` >= '2017-01-01'
 AND
   `repo_adw_account_report_cost`.`day` <= '2017-12-01'
+AND
+(
+  `repo_adw_account_report_cost`.`network` = 'SEARCH'
+OR
+  `repo_adw_account_report_cost`.`network` = 'CONTENT'
+)
 GROUP BY
   device
 
@@ -547,6 +559,12 @@ AND
   `repo_adw_account_report_cost`.`day` >= '2017-01-01'
 AND
   `repo_adw_account_report_cost`.`day` <= '2017-12-01'
+AND
+(
+  `repo_adw_account_report_cost`.`network` = 'SEARCH'
+OR
+  `repo_adw_account_report_cost`.`network` = 'CONTENT'
+)
 GROUP BY
   device
 
@@ -610,5 +628,11 @@ AND
   `repo_adw_account_report_cost`.`day` >= '2017-01-01'
 AND
   `repo_adw_account_report_cost`.`day` <= '2017-12-01'
+AND
+(
+  `repo_adw_account_report_cost`.`network` = 'SEARCH'
+OR
+  `repo_adw_account_report_cost`.`network` = 'CONTENT'
+)
 GROUP BY
   device;
