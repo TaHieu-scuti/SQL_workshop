@@ -442,7 +442,7 @@ abstract class AbstractYssReportModel extends AbstractReportModel
             array_unshift($arraySelect, 'campaignID', 'adgroupID');
         }
 
-        if ($column === 'keyword') {
+        if ($column === 'keywordID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
         }
 
