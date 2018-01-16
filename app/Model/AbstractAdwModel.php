@@ -355,4 +355,27 @@ abstract class AbstractAdwModel extends AbstractReportModel
 
         return $builder;
     }
+
+    private function addConditonForConversionName(
+        EloquentBuilder $query,
+        $account_id = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null
+    ) {
+        if ($account_id !== null && $accountId !== null) {
+            $query->where('account_id', '=', $account_id)
+                ->where('accountId', '=', $accountId);
+        }
+    }
+
+    private function getAggregatedConversionName($column)
+    {
+        $arraySelect = ['conversionName'];
+        if ($column === 'campaignID') {
+            array_unshift($arraySelect, 'campaignID');
+        }
+
+        return $arraySelect;
+    }
 }
