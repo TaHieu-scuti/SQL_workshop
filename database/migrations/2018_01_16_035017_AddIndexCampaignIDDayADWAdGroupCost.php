@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+// @codingStandardsIgnoreLine
 class AddIndexCampaignIDDayADWAdGroupCost extends Migration
 {
     const TABLE_NAME = 'repo_adw_adgroup_report_cost';
