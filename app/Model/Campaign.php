@@ -15,12 +15,12 @@ class Campaign extends Model
         $account_id,
         $source,
         array $campaignIDs,
-        array $adIDs = null,
-        $flag = null
+        $flag = null,
+        array $adIDs = null
     ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
-        if ($flag === 'adID') {
+        if ($flag === 'adID' || $flag === 'adgroupID') {
             $repoPhoneTimeUseTableName = (new PhoneTimeUse)->getTable();
         }
         return $this->distinct()
