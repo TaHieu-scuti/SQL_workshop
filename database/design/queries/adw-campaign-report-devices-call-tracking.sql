@@ -35,7 +35,7 @@ AND
 AND
   (
     `repo_adw_campaign_report_cost`.`network` = 'SEARCH'
-  AND
+  OR
     `repo_adw_campaign_report_cost`.`network` = 'CONTENT'
   )
 GROUP BY
@@ -99,7 +99,7 @@ AND
 AND
   (
     `repo_adw_campaign_report_cost`.`network` = 'SEARCH'
-  AND
+  OR
     `repo_adw_campaign_report_cost`.`network` = 'CONTENT'
   )
 GROUP BY
@@ -145,7 +145,7 @@ AND
 AND
   (
     `repo_adw_campaign_report_cost`.`network` = 'SEARCH'
-  AND
+  OR
     `repo_adw_campaign_report_cost`.`network` = 'CONTENT'
   )
 GROUP BY
@@ -205,7 +205,7 @@ AND
 AND
   (
     `repo_adw_campaign_report_cost`.`network` = 'SEARCH'
-  AND
+  OR
     `repo_adw_campaign_report_cost`.`network` = 'CONTENT'
   )
 GROUP BY
