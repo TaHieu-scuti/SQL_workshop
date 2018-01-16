@@ -365,7 +365,7 @@ abstract class AbstractAdwModel extends AbstractReportModel
     ) {
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
-                ->where('accountId', '=', $accountId);
+                ->where('customerID', '=', $accountId);
         }
     }
 

@@ -140,7 +140,7 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yss_campaign_model = new RepoYssCampaignReportConv();
+        $yss_campaign_model = new RepoAdwCampaignReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         $conversionPoints = $yss_campaign_model->select($aggregation)
             ->distinct()
