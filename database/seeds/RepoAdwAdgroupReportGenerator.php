@@ -21,7 +21,7 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MIN_CONVERSIONS = 0;
     const MIN_ALL_CONV_VALUE = 1000000;
     const MAX_ALL_CONV_VALUE = 894894374;
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['UNKNOWN', 'DESKTOP', 'HIGH_END_MOBILE', 'TABLET'];
     /**
      * Run the database seeds.
      *
