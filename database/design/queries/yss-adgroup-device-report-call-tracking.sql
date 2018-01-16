@@ -95,8 +95,10 @@ FROM
     )
   JOIN `repo_phone_time_use`
       ON (
-          `repo_phone_time_use`.`mobile` = 'No'
-            AND
+            `repo_phone_time_use`.`phone_time_use_id` = `phone_time_use`.`id`
+          AND
+            `repo_phone_time_use`.`mobile` = 'No'
+          AND
             (`repo_phone_time_use`.`platform` NOT LIKE 'Windows Phone%'
             AND
                 (
@@ -153,7 +155,7 @@ GROUP BY device
 UNION
 
 SELECT
-    'SMART_PHONE' as device,
+    'SMART PHONE' as device,
     SUM(`repo_yss_adgroup_report_cost`.`impressions`) AS impressions,
     SUM(`repo_yss_adgroup_report_cost`.`clicks`) AS clicks,
     SUM(`repo_yss_adgroup_report_cost`.`cost`) AS cost,
@@ -249,6 +251,8 @@ FROM
     )
   JOIN `repo_phone_time_use`
       ON (
+            `repo_phone_time_use`.`phone_time_use_id` = `phone_time_use`.`id`
+          AND
           `repo_phone_time_use`.`mobile` LIKE 'Yes%'
             AND
            (
@@ -276,7 +280,7 @@ FROM
                 `repo_phone_time_use`.`traffic_type` = 'AD'
       )
 WHERE
-    `repo_yss_adgroup_report_cost`.`device` = 'SMART_PHONE'
+    `repo_yss_adgroup_report_cost`.`device` = 'SMART PHONE'
 AND
   `repo_yss_adgroup_report_cost`.`account_id` = 1
 AND
