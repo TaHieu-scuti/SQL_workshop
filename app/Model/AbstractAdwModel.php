@@ -76,15 +76,15 @@ abstract class AbstractAdwModel extends AbstractReportModel
                 $expressions[] = DB::raw(
                     'IFNULL((SUM(`conv'
                     . $i
-                    . '`.`conversions`) / SUM(`conv'
-                    . $i
+                    . '`.`conversions`) / SUM(`'
+                    . $this->getTable()
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
-                    'IFNULL(SUM(`conv'
-                    . $i
+                    'IFNULL(SUM(`'
+                    . $this->getTable()
                     . '`.`cost`) / SUM(`conv'
                     . $i
                     . "`.`conversions`), 0) AS 'YDN "
@@ -356,7 +356,7 @@ abstract class AbstractAdwModel extends AbstractReportModel
         return $builder;
     }
 
-    private function addConditonForConversionName(
+    protected function addConditonForConversionName(
         EloquentBuilder $query,
         $account_id = null,
         $accountId = null,
@@ -369,7 +369,7 @@ abstract class AbstractAdwModel extends AbstractReportModel
         }
     }
 
-    private function getAggregatedConversionName($column)
+    protected function getAggregatedConversionName($column)
     {
         $arraySelect = ['conversionName'];
         if ($column === 'campaignID') {
