@@ -1,8 +1,7 @@
 SELECT
   DISTINCT
   `repo_yss_adgroup_report_conv`.`dayOfWeek`,
-  `repo_yss_adgroup_report_conv`.`conversionName`,
-  `repo_yss_adgroup_report_conv`.`adGroupId`
+  `repo_yss_adgroup_report_conv`.`conversionName`
 FROM
   `repo_yss_adgroup_report_conv`
 WHERE
@@ -13,6 +12,31 @@ AND
   `repo_yss_adgroup_report_conv`.`accountid` = 11
 AND
   `repo_yss_adgroup_report_conv`.`campaignId` = 11;
+
+/* result of query
+dayOfWeek	conversionName
+Sunday	YSS conversion 111110
+Sunday	YSS conversion 111111
+Sunday	YSS conversion 111112
+Monday	YSS conversion 111110
+Monday	YSS conversion 111111
+Monday	YSS conversion 111112
+Tuesday	YSS conversion 111110
+Tuesday	YSS conversion 111111
+Tuesday	YSS conversion 111112
+Wednesday	YSS conversion 111110
+Wednesday	YSS conversion 111111
+Wednesday	YSS conversion 111112
+Thursday	YSS conversion 111110
+Thursday	YSS conversion 111111
+Thursday	YSS conversion 111112
+Friday	YSS conversion 111110
+Friday	YSS conversion 111111
+Friday	YSS conversion 111112
+Saturday	YSS conversion 111110
+Saturday	YSS conversion 111111
+Saturday	YSS conversion 111112
+*/
 
 SELECT
   DISTINCT
@@ -32,6 +56,16 @@ AND
   `repo_phone_time_use`.`source` = 'yss'
 AND
   `repo_phone_time_use`.`traffic_type` = 'AD';
+/*result of query
+account_id	utm_campaign	phone_number	dayOfWeek
+1	11	+841234567811	Thursday
+1	11	+841234567811	Friday
+1	11	+841234567811	Tuesday
+1	11	+841234567811	Wednesday
+1	11	+841234567811	Saturday
+1	11	+841234567811	Monday
+1	11	+841234567811	Sunday
+*/
 
 SELECT
   `total`.`dayOfWeek`,
