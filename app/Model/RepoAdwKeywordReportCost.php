@@ -39,86 +39,154 @@ class RepoAdwKeywordReportCost extends AbstractAdwModel
      */
     public $timestamps = false;
 
-    protected function addJoin(EloquentBuilder $builder)
+    protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
-        $builder->leftJoin(
-            DB::raw('(`phone_time_use`, `campaigns`)'),
-            function (JoinClause $join) {
-                $this->addJoinConditions($join);
-            }
-        );
+        $this->addJoinsForConversionPoints($builder, $conversionPoints);
+        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
     }
 
-    protected function addJoinConditions(JoinClause $join)
+    private function addJoinsForConversionPoints(
+        EloquentBuilder $builder,
+        $conversionPoints
+    ) {
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $keywordReportConvTableName = (new RepoAdwKeywordReportConv)->getTable();
+        foreach ($conversionNames as $i => $conversionName) {
+            $joinAlias = 'conv' . $i;
+            $builder->leftJoin(
+                $keywordReportConvTableName . ' AS ' . $joinAlias,
+                function (JoinClause $join) use ($joinAlias, $conversionName) {
+                    $join->where(
+                        $joinAlias . '.conversionName',
+                        '=',
+                        $conversionName
+                    )
+                        ->on(
+                            $this->table . '.day',
+                            '=',
+                            $joinAlias . '.day'
+                        )->on(
+                            $this->table . '.keywordID',
+                            '=',
+                            $joinAlias . '.keywordID'
+                        )->on(
+                            $this->table . '.adGroupID',
+                            '=',
+                            $joinAlias . '.adGroupID'
+                        )->on(
+                            $this->table . '.campaignID',
+                            '=',
+                            $joinAlias . '.campaignID'
+                        )->on(
+                            $this->table . '.customerId',
+                            '=',
+                            $joinAlias . '.customerID'
+                        )->on(
+                            $this->table . '.campaign_id',
+                            '=',
+                            $joinAlias . '.campaign_id'
+                        )->on(
+                            $this->table . '.account_id',
+                            '=',
+                            $joinAlias . '.account_id'
+                        );
+                }
+            );
+        }
+    }
+
+    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
     {
-        $join->on('campaigns.account_id', '=', $this->table . '.account_id')
-            ->on('campaigns.campaign_id', '=', $this->table . '.campaign_id')
-            ->on(
-                function (Builder $builder) {
-                    $builder->where(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom1` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom1` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom2` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom2` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom3` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom3` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom4` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom4` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom5` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom5` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom6` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom6` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom7` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom7` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom8` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom8` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom9` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom9` = `{$this->table}`.`adgroupID`");
-                        }
-                    )->orWhere(
-                        function (Builder $builder) {
-                            $builder->whereRaw("`campaigns`.`camp_custom10` = 'adgroupid'")
-                                ->whereRaw("`phone_time_use`.`custom10` = `{$this->table}`.`adgroupID`");
-                        }
-                    );
+        foreach ($adGainerCampaigns as $i => $campaign) {
+            $joinAlias = 'call' . $i;
+            $builder->leftJoin(
+                DB::raw('(`phone_time_use` AS '.$joinAlias.', `campaigns` AS '.$joinAlias.'_campaigns)'),
+                function (JoinClause $join) use ($joinAlias, $campaign) {
+                    $join->on($joinAlias.'_campaigns.account_id', '=', $joinAlias . '.account_id')
+                        ->on($joinAlias.'_campaigns.campaign_id', '=', $joinAlias . '.campaign_id')
+                        ->on(
+                            function (Builder $builder) use ($joinAlias) {
+                                $builder->where(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom1` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom1` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom2` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom2` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom3` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom3` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom4` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom4` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom5` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom5` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom6` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom6` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom7` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom7` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom8` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom8` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom9` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom9` = `{$this->table}`.`adGroupID`");
+                                    }
+                                )->orWhere(
+                                    function (Builder $builder) use ($joinAlias) {
+                                        $builder->whereRaw("`".$joinAlias."_campaigns`.`camp_custom10` = 'adgroupid'")
+                                            ->whereRaw("`".$joinAlias."`.`custom10` = `{$this->table}`.`adGroupID`");
+                                    }
+                                );
+                            }
+                        )
+                        ->on($joinAlias.'.account_id', '=', $this->table . '.account_id')
+                        ->on($joinAlias.'.utm_campaign', '=', $this->table . '.campaignID')
+                        ->on($joinAlias.'.phone_number', '=', $campaign->phone_number)
+                        ->on($joinAlias.'.j_keyword', '=', $this->table . 'keyword')
+                        ->on($joinAlias.'.matchtype', '=', $this->table . 'matchtype')
+                        ->on(
+                            DB::raw("STR_TO_DATE(`".$joinAlias."`.`time_of_call`, '%Y-%m-%d')"),
+                            '=',
+                            $this->table . '.day'
+                        )
+                        ->where($joinAlias.'.source', '=', 'adw')
+                        ->where($joinAlias.'.traffic_type', '=', 'AD');
+                }
+            );
+        }
+    }
+
+    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $adw_keyword_conv_model = new RepoAdwKeywordReportConv();
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $adw_keyword_conv_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
                 }
             )
-            ->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d')"),
-                '=',
-                $this->table . '.day'
-            )
-            ->where('phone_time_use.source', '=', 'adw')
-            ->on('phone_time_use.matchtype', '=', $this->table . '.matchType')
-            ->on('phone_time_use.j_keyword', '=', $this->table . '.keyword')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
+            ->get();
     }
 }
