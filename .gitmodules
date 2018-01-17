@@ -1,0 +1,3 @@
+[submodule "database/resources"]
+	path = database/resources
+	url = git@gitlab.com:scuti-vn/adgainer-database-resources.git
