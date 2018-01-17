@@ -45,7 +45,7 @@ class RepoAdwAdReportCost extends AbstractReportModel
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
         $this->addJoinsForConversionPoints($builder, $conversionPoints);
-        $this->addJoinsForCallConversions($builder, $adGainerCampaigns, $conversionPoints);
+        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
     }
 
     private function addJoinsForConversionPoints(
@@ -94,7 +94,7 @@ class RepoAdwAdReportCost extends AbstractReportModel
         }
     }
 
-    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns, $conversionPoints)
+    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
     {
         foreach ($adGainerCampaigns as $i => $campaign) {
             $joinAlias = 'call' . $i;
