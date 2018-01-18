@@ -28,7 +28,7 @@ WHERE
 |15        |Conversion name3|
 |16        |Conversion name1|
 |16        |Conversion name2|
-|16        |Conversion name3|
+|16        |Conversion name3|*/
 
 
 /* Get all AG campaigns with phone number */
