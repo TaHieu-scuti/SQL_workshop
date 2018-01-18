@@ -177,7 +177,7 @@ class RepoAdwAdReportCost extends AbstractReportModel
     {
         $adw_ad_conv_model = new RepoAdwAdReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        $conversionPoints = $adw_ad_conv_model->select($aggregation)
+        return $adw_ad_conv_model->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -185,6 +185,5 @@ class RepoAdwAdReportCost extends AbstractReportModel
                 }
             )
             ->get();
-        return $conversionPoints;
     }
 }
