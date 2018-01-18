@@ -78,7 +78,7 @@ class RepoAdwKeywordReportCost extends AbstractAdwModel
                             '=',
                             $joinAlias . '.campaignID'
                         )->on(
-                            $this->table . '.customerId',
+                            $this->table . '.customerID',
                             '=',
                             $joinAlias . '.customerID'
                         )->on(
@@ -102,9 +102,7 @@ class RepoAdwKeywordReportCost extends AbstractAdwModel
             $builder->leftJoin(
                 DB::raw('(`phone_time_use` AS '.$joinAlias.', `campaigns` AS '.$joinAlias.'_campaigns)'),
                 function (JoinClause $join) use ($joinAlias, $campaign) {
-                    $join->on($joinAlias.'_campaigns.account_id', '=', $joinAlias . '.account_id')
-                        ->on($joinAlias.'_campaigns.campaign_id', '=', $joinAlias . '.campaign_id')
-                        ->on(
+                    $join->on(
                             function (Builder $builder) use ($joinAlias) {
                                 $builder->where(
                                     function (Builder $builder) use ($joinAlias) {
@@ -159,16 +157,18 @@ class RepoAdwKeywordReportCost extends AbstractAdwModel
                                 );
                             }
                         )
+                        ->on($joinAlias.'.account_id', '=', $joinAlias . '_campaigns.account_id')
+                        ->on($joinAlias.'.campaign_id', '=', $joinAlias . '_campaigns.campaign_id')
                         ->on($joinAlias.'.account_id', '=', $this->table . '.account_id')
                         ->on($joinAlias.'.utm_campaign', '=', $this->table . '.campaignID')
-                        ->on($joinAlias.'.phone_number', '=', $campaign->phone_number)
-                        ->on($joinAlias.'.j_keyword', '=', $this->table . 'keyword')
-                        ->on($joinAlias.'.matchtype', '=', $this->table . 'matchtype')
+                        ->on($joinAlias.'.j_keyword', '=', $this->table . '.keyword')
+                        ->on($joinAlias.'.matchtype', '=', $this->table . '.matchtype')
                         ->on(
                             DB::raw("STR_TO_DATE(`".$joinAlias."`.`time_of_call`, '%Y-%m-%d')"),
                             '=',
                             $this->table . '.day'
                         )
+                        ->where($joinAlias.'.phone_number', '=', $campaign->phone_number)
                         ->where($joinAlias.'.source', '=', 'adw')
                         ->where($joinAlias.'.traffic_type', '=', 'AD');
                 }
