@@ -3,7 +3,8 @@
 SELECT
   DISTINCT
   `repo_adw_campaign_report_conv`.`conversionName`,
-  `repo_adw_campaign_report_conv`.`dayOfWeek`
+  `repo_adw_campaign_report_conv`.`dayOfWeek`,
+  `repo_adw_campaign_report_conv`.`campaignID`
 FROM
   `repo_adw_campaign_report_conv`
 WHERE
@@ -13,28 +14,28 @@ AND
 AND
   `repo_adw_campaign_report_conv`.`customerID` = 11;
 /* result of query above
-conversionName	dayOfWeek
-Conversion name1	Sunday
-Conversion name2	Sunday
-Conversion name3	Sunday
-Conversion name1	Monday
-Conversion name2	Monday
-Conversion name3	Monday
-Conversion name1	Tuesday
-Conversion name2	Tuesday
-Conversion name3	Tuesday
-Conversion name1	Wednesday
-Conversion name2	Wednesday
-Conversion name3	Wednesday
-Conversion name1	Thursday
-Conversion name2	Thursday
-Conversion name3	Thursday
-Conversion name1	Friday
-Conversion name2	Friday
-Conversion name3	Friday
-Conversion name1	Saturday
-Conversion name2	Saturday
-Conversion name3	Saturday
+conversionName	dayOfWeek	campaignID
+Conversion name1	Sunday	11
+Conversion name2	Sunday	11
+Conversion name3	Sunday	11
+Conversion name1	Monday	11
+Conversion name2	Monday	11
+Conversion name3	Monday	11
+Conversion name1	Tuesday	11
+Conversion name2	Tuesday	11
+Conversion name3	Tuesday	11
+Conversion name1	Wednesday	11
+Conversion name2	Wednesday	11
+Conversion name3	Wednesday	11
+Conversion name1	Thursday	11
+Conversion name2	Thursday	11
+Conversion name3	Thursday	11
+Conversion name1	Friday	11
+Conversion name2	Friday	11
+Conversion name3	Friday	11
+Conversion name1	Saturday	11
+Conversion name2	Saturday	11
+Conversion name3	Saturday	11
 */
 
 SELECT
