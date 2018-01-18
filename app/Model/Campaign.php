@@ -16,7 +16,8 @@ class Campaign extends Model
         $source,
         array $campaignIDs,
         $flag = null,
-        array $adIDs = null
+        array $adIDs = null,
+        array $keywordIDs = null
     ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
