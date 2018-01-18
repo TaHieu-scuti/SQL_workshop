@@ -138,7 +138,7 @@ LEFT JOIN
     AND
       `conv4`.`traffic_type` = 'AD'
     AND
-      `total`.`day` = STR_TO_DATE(`conv4`.`time_of_call`, '%Y-%m-%d')
+      `total`.`dayOfWeek` = DAYNAME(`conv4`.`time_of_call`)
     AND
       `conv4`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
     AND
