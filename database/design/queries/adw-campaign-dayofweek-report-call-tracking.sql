@@ -141,6 +141,8 @@ LEFT JOIN
       `conv4`.`phone_number` = '+841234567811'
     AND
       DAYNAME(`conv4`.`time_of_call`) = `total`.`dayOfWeek`
+    AND
+      `conv4`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
 LEFT JOIN
   `repo_phone_time_use` as conv5
   ON
@@ -157,6 +159,8 @@ LEFT JOIN
       `conv5`.`phone_number` = '+841234567813'
     AND
       DAYNAME(`conv5`.`time_of_call`) = `total`.`dayOfWeek`
+    AND
+      `conv5`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
 LEFT JOIN
   `repo_phone_time_use` as conv6
   ON
@@ -173,6 +177,8 @@ LEFT JOIN
       `conv6`.`phone_number` = '+841234567815'
     AND
       DAYNAME(`conv6`.`time_of_call`) = `total`.`dayOfWeek`
+    AND
+      `conv6`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
 WHERE
   `total`.`account_id` = 1
 AND
@@ -182,7 +188,7 @@ AND
 AND
   `total`.`day` >= '2017-01-01'
 AND
-  `total`.`day` <= '2017-02-01'
+  `total`.`day` <= '2017-12-01'
 GROUP BY
   `total`.`account_id`,
   `total`.`campaign_id`,
