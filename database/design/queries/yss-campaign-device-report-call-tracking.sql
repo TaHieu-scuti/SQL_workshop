@@ -48,9 +48,7 @@ FROM
             AND
                 `repo_phone_time_use`.`utm_campaign` = `repo_yss_campaign_report_cost`.`campaignID`
             AND
-                `repo_phone_time_use`.`time_of_call` >= '2017-01-01'
-            AND
-                `repo_phone_time_use`.`time_of_call` <= '2017-12-01'
+                `repo_yss_campaign_report_cost`.`day` = STR_TO_DATE(`repo_phone_time_use`.`time_of_call`, '%Y-%m-%d')
             AND
                 `repo_phone_time_use`.`source` = 'yss'
             AND

@@ -44,11 +44,11 @@ class RepoAdwAdReportGenerator extends Seeder
             ->where('network', 'LIKE', 'CONTENT')
             ->get();
         foreach ($adgroupReports as $adgroupReport) {
-            $ammountOfKeyword = rand(
+            $amountOfAds = rand(
                 self::MIN_NUMBER_OF_AD,
                 self::MAX_NUMBER_OF_AD
             );
-            for ($i = 0; $i < $ammountOfKeyword + 1; $i++) {
+            for ($i = 0; $i < $amountOfAds + 1; $i++) {
                 $adReportCost = new RepoAdwAdReportCost;
                 $adReportCost->exeDate = $adgroupReport->exeDate;
                 $adReportCost->startDate = $adgroupReport->startDate;
@@ -61,7 +61,7 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->campaignID = $adgroupReport->campaignID;
                 $adReportCost->campaign = $adgroupReport->campaign;
 
-                $adReportCost->adID = $i + 1;
+                $adReportCost->adID = (string)$adReportCost->adGroupID . ($i + 1);
 
                 if ($i % 2 === 0) {
                     $adReportCost->ad = 'Some text advertisement';

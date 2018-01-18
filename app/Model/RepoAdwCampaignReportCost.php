@@ -58,13 +58,12 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
         $conversionPoints
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         $campaignConvTableName = (new RepoAdwCampaignReportConv())->getTable();
         foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
                 $campaignConvTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $conversionName, $campaignIDs) {
+                function (JoinClause $join) use ($joinAlias, $conversionName) {
                     $join->on(
                         $this->table . '.account_id',
                         '=',
@@ -140,9 +139,9 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yss_campaign_model = new RepoYssCampaignReportConv();
+        $yss_campaign_model = new RepoAdwCampaignReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        $conversionPoints = $yss_campaign_model->select($aggregation)
+        return $yss_campaign_model->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -150,7 +149,6 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
                 }
             )
             ->get();
-        return $conversionPoints;
     }
 
     public function getAllAdwCampaign(
