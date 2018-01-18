@@ -289,12 +289,16 @@ abstract class AbstractAdwModel extends AbstractReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
+        $keywordIDs = array_unique($this->conversionPoints->pluck('keywordID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
             $campaignIDs,
-            static::PAGE_ID
+            static::PAGE_ID,
+            $adIDs,
+            $keywordIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -374,8 +378,9 @@ abstract class AbstractAdwModel extends AbstractReportModel
         $arraySelect = ['conversionName'];
         if ($column === 'campaignID') {
             array_unshift($arraySelect, 'campaignID');
+        } elseif ($column === 'adID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
         }
-
         return $arraySelect;
     }
 }
