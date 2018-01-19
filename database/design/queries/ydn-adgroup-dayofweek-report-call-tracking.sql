@@ -177,8 +177,6 @@ FROM
         AND
           DAYNAME(`total`.`day`) = DAYNAME(`conv1`.`day`)
         AND
-          `conv1`.`campaignID` = 11
-        AND
           `conv1`.`conversionName` = 'YDN conversion 111110'
       )
     LEFT JOIN `repo_ydn_reports` AS conv2
@@ -193,8 +191,6 @@ FROM
         AND
           DAYNAME(`total`.`day`) = DAYNAME(`conv2`.`day`)
         AND
-          `conv2`.`campaignID` = 11
-        AND
           `conv2`.`conversionName` = 'YDN conversion 111111'
       )
     -- /* Add joins for every AG campaign & phone_number combination */
@@ -207,8 +203,6 @@ FROM
           `total`.`campaignID` = `conv3`.`utm_campaign`
         AND
           `total`.`day` = STR_TO_DATE(`conv3`.`time_of_call`, '%Y-%m-%d')
-        AND
-          `conv3`.`utm_campaign` = 11
         AND
           `conv3`.`phone_number` = '+841234567811'
         AND
