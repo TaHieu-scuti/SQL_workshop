@@ -21,7 +21,7 @@ class Campaign extends Model
     ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
-        if ($flag === 'adID' || $flag === 'adgroupID') {
+        if ($flag === 'adID' || $flag === 'adgroupID' || $flag === 'keywordID') {
             $repoPhoneTimeUseTableName = (new PhoneTimeUse)->getTable();
         }
         return $this->distinct()
@@ -46,13 +46,28 @@ class Campaign extends Model
                 }
             )
             ->where(
-                function (Builder $query) use ($flag, $campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
+                function (Builder $query) use (
+                    $flag,
+                    $campaignsTableName,
+                    $repoPhoneTimeUseTableName,
+                    $adIDs,
+                    $keywordIDs
+                ) {
                     if ($flag === 'adID') {
                         $this->addConditionForCampaignsWithPhoneNumber(
                             $query,
                             $campaignsTableName,
                             $repoPhoneTimeUseTableName,
-                            $adIDs
+                            $adIDs,
+                            'creative'
+                        );
+                    } elseif ($flag === 'keywordID') {
+                        $this->addConditionForCampaignsWithPhoneNumber(
+                            $query,
+                            $campaignsTableName,
+                            $repoPhoneTimeUseTableName,
+                            $keywordIDs,
+                            'adgroupid'
                         );
                     }
                 }
@@ -75,57 +90,108 @@ class Campaign extends Model
         Builder $query,
         $campaignsTableName,
         $repoPhoneTimeUseTableName,
-        $adIDs
+        array $arrayIds,
+        $campCustomValue
     ) {
         $query->where(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom1 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom1", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom1', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom1", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom2 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom2", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom2', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom2", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom3 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom3", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom3', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom3", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom4 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom4", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom4', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom4", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom5 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom5", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom5', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom5", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom6 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom6", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom6', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom6", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom7 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom7", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom7', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom7", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom8 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom8", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom8', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom8", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom9 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom9", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom9', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom9", $arrayIds);
             }
         )->orWhere(
-            function (Builder $query) use ($campaignsTableName, $repoPhoneTimeUseTableName, $adIDs) {
-                $query->whereRaw($campaignsTableName.'.camp_custom10 = "creative"')
-                    ->whereIn($repoPhoneTimeUseTableName.".custom10", $adIDs);
+            function (Builder $query) use (
+                $campaignsTableName,
+                $repoPhoneTimeUseTableName,
+                $arrayIds,
+                $campCustomValue
+            ) {
+                $query->where($campaignsTableName.'.camp_custom10', $campCustomValue)
+                    ->whereIn($repoPhoneTimeUseTableName.".custom10", $arrayIds);
             }
         );
     }

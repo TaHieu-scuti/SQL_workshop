@@ -380,6 +380,8 @@ abstract class AbstractAdwModel extends AbstractReportModel
             array_unshift($arraySelect, 'campaignID');
         } elseif ($column === 'adID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
+        } elseif ($column === 'keywordID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keywordID');
         }
         return $arraySelect;
     }
