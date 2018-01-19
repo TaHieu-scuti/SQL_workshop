@@ -133,6 +133,8 @@ FROM
           `conv3`.`phone_number` = '+841234567811'
         AND
           `conv3`.`source` = 'ydn'
+        AND
+          `conv3`.`traffic_type` = 'AD';
       )
 WHERE
   `total`.`account_id` = 1
