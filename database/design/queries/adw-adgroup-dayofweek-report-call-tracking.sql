@@ -104,71 +104,175 @@ AND
   `ptu`.`utm_campaign` = 11;
 
 /*
-campaign_id	campaign_name	utm_campaign	phone_number
-11	Campaign Name	11	+841234567811
+campaign_id	campaign_name	utm_campaign	phone_number	DAYNAME(`ptu`.`time_of_call`)
+11	Campaign Name	11	+841234567811	Sunday
+11	Campaign Name	11	+841234567811	Saturday
+11	Campaign Name	11	+841234567811	Tuesday
+11	Campaign Name	11	+841234567811	Monday
+11	Campaign Name	11	+841234567811	Friday
+11	Campaign Name	11	+841234567811	Wednesday
+11	Campaign Name	11	+841234567811	Thursday
 */
+
 SELECT
   `tbl`.`dayOfWeek`,
   SUM(`Conversion Name 1 CV`),
   SUM(`Conversion Name 2 CV`),
-  SUM(`Conversion Name 3 CV`)
-FROM
-(
-SELECT
+  SUM(`Conversion Name 3 CV`),
+  SUM(`Campaign Name +841234567811 CV`)
+from
+(SELECT
   `total`.`dayOfWeek`,
   SUM(`conv1`.`conversions`) as 'Conversion Name 1 CV',
   SUM(`conv2`.`conversions`) as 'Conversion Name 2 CV',
-  SUM(`conv3`.`conversions`) as 'Conversion Name 3 CV'
+  SUM(`conv3`.`conversions`) as 'Conversion Name 3 CV',
+  COUNT(`ptu1`.`id`) as 'Campaign Name +841234567811 CV'
 FROM
   `repo_adw_adgroup_report_cost` as total
 LEFT JOIN
   `repo_adw_adgroup_report_conv` as conv1
-  ON
-      `total`.`account_id` = `conv1`.`account_id`
-    AND
-      `total`.`campaign_id` = `conv1`.`campaign_id`
-    AND
-      `total`.`customerID` = `conv1`.`customerID`
-    AND
-      `total`.`campaignID` = `conv1`.`campaignID`
-    AND
-      `total`.`day` = `conv1`.`day`
-    AND
-      `total`.`dayOfWeek` = `conv1`.`dayOfWeek`
-    AND
-      `conv1`.`conversionName` = 'Conversion Name 1'
+ON
+  `total`.`account_id` = `conv1`.`account_id`
+AND
+  `total`.`campaign_id` = `conv1`.`campaign_id`
+AND
+  `total`.`customerID` = `conv1`.`customerID`
+AND
+  `total`.`campaignID` = `conv1`.`campaignID`
+AND
+  `total`.`adGroupID` = `conv1`.`adGroupID`
+AND
+  `total`.`day` = `conv1`.`day`
+AND
+  `total`.`dayOfWeek` = `conv1`.`dayOfWeek`
+AND
+  `total`.`network` = `conv1`.`network`
+AND
+  `conv1`.`conversionName` = 'Conversion Name 1'
 LEFT JOIN
   `repo_adw_adgroup_report_conv` as conv2
-  ON
-      `total`.`account_id` = `conv2`.`account_id`
-    AND
-      `total`.`campaign_id` = `conv2`.`campaign_id`
-    AND
-      `total`.`customerID` = `conv2`.`customerID`
-    AND
-      `total`.`campaignID` = `conv2`.`campaignID`
-    AND
-      `total`.`day` = `conv2`.`day`
-    AND
-      `total`.`dayOfWeek` = `conv2`.`dayOfWeek`
-    AND
-      `conv1`.`conversionName` = 'Conversion Name 2'
+ON
+  `total`.`account_id` = `conv2`.`account_id`
+AND
+  `total`.`campaign_id` = `conv2`.`campaign_id`
+AND
+  `total`.`customerID` = `conv2`.`customerID`
+AND
+  `total`.`campaignID` = `conv2`.`campaignID`
+AND
+  `total`.`adGroupID` = `conv2`.`adGroupID`
+AND
+  `total`.`day` = `conv2`.`day`
+AND
+  `total`.`dayOfWeek` = `conv2`.`dayOfWeek`
+AND
+  `total`.`network` = `conv2`.`network`
+AND
+  `conv2`.`conversionName` = 'Conversion Name 2'
 LEFT JOIN
   `repo_adw_adgroup_report_conv` as conv3
-  ON
-      `total`.`account_id` = `conv3`.`account_id`
-    AND
-      `total`.`campaign_id` = `conv3`.`campaign_id`
-    AND
-      `total`.`customerID` = `conv3`.`customerID`
-    AND
-      `total`.`campaignID` = `conv3`.`campaignID`
-    AND
-      `total`.`day` = `conv3`.`day`
-    AND
-      `total`.`dayOfWeek` = `conv3`.`dayOfWeek`
-    AND
-      `conv3`.`conversionName` = 'Conversion Name 3'
+ON
+  `total`.`account_id` = `conv3`.`account_id`
+AND
+  `total`.`campaign_id` = `conv3`.`campaign_id`
+AND
+  `total`.`customerID` = `conv3`.`customerID`
+AND
+  `total`.`campaignID` = `conv3`.`campaignID`
+AND
+  `total`.`adGroupID` = `conv3`.`adGroupID`
+AND
+  `total`.`day` = `conv3`.`day`
+AND
+  `total`.`dayOfWeek` = `conv3`.`dayOfWeek`
+AND
+  `total`.`network` = `conv3`.`network`
+AND
+  `conv3`.`conversionName` = 'Conversion Name 3'
+LEFT JOIN
+  (`phone_time_use` as ptu1, `campaigns` as c1)
+ON
+  `ptu1`.`account_id` = `c1`.`account_id`
+AND
+  `ptu1`.`campaign_id` = `c1`.`campaign_id`
+AND
+  `ptu1`.`account_id` = `total`.`account_id`
+AND
+  `ptu1`.`campaign_id` = `total`.`campaign_id`
+AND
+  `ptu1`.`utm_campaign` = `total`.`campaignID`
+AND
+  `ptu1`.`source` = 'adw'
+AND
+  `ptu1`.`traffic_type` = 'AD'
+AND
+  `ptu1`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
+AND
+  DAYNAME(`ptu1`.`time_of_call`) = `total`.`dayOfWeek`
+AND
+  `ptu1`.`phone_number` = '+841234567811'
+AND
+  (
+    (
+        `c1`.`camp_custom1` = 'adgroupid'
+      AND
+        `ptu1`.`custom1` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom2` = 'adgroupid'
+      AND
+        `ptu1`.`custom2` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom3` = 'adgroupid'
+      AND
+        `ptu1`.`custom3` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom4` = 'adgroupid'
+      AND
+        `ptu1`.`custom4` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom5` = 'adgroupid'
+      AND
+        `ptu1`.`custom5` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom6` = 'adgroupid'
+      AND
+        `ptu1`.`custom6` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom7` = 'adgroupid'
+      AND
+        `ptu1`.`custom7` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom8` = 'adgroupid'
+      AND
+        `ptu1`.`custom8` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom9` = 'adgroupid'
+      AND
+        `ptu1`.`custom9` = `total`.`adGroupID`
+    )
+    OR
+    (
+        `c1`.`camp_custom10` = 'adgroupid'
+      AND
+        `ptu1`.`custom10` = `total`.`adGroupID`
+    )
+  )
 WHERE
   `total`.`account_id` = 1
 AND
@@ -178,11 +282,11 @@ AND
 AND
   `total`.`campaignID` = 11
 AND
-  `total`.`network` = 'CONTENT'
-AND
   `total`.`day` >= '2017-01-01'
 AND
   `total`.`day` <= '2017-04-01'
+AND
+  `total`.`network` = 'SEARCH'
 GROUP BY
   `total`.`account_id`,
   `total`.`campaign_id`,
@@ -196,11 +300,12 @@ SELECT
   `total`.`dayOfWeek`,
   SUM(`conv1`.`conversions`) as 'Conversion Name 1 CV',
   SUM(`conv2`.`conversions`) as 'Conversion Name 2 CV',
-  SUM(`conv3`.`conversions`) as 'Conversion Name 3 CV'
+  SUM(`conv3`.`conversions`) as 'Conversion Name 3 CV',
+  COUNT(`ptu1`.`id`) as 'Campaign Name +841234567811 CV'
 FROM
-  `repo_adw_adgroup_report_cost` as total
+  `repo_adw_ad_report_cost` as total
 LEFT JOIN
-  `repo_adw_adgroup_report_conv` as conv1
+  `repo_adw_ad_report_conv` as conv1
   ON
       `total`.`account_id` = `conv1`.`account_id`
     AND
@@ -210,13 +315,15 @@ LEFT JOIN
     AND
       `total`.`campaignID` = `conv1`.`campaignID`
     AND
+      `total`.`adGroupID` = `conv1`.`adGroupID`
+    AND
       `total`.`day` = `conv1`.`day`
     AND
       `total`.`dayOfWeek` = `conv1`.`dayOfWeek`
     AND
       `conv1`.`conversionName` = 'Conversion Name 1'
 LEFT JOIN
-  `repo_adw_adgroup_report_conv` as conv2
+  `repo_adw_ad_report_conv` as conv2
   ON
       `total`.`account_id` = `conv2`.`account_id`
     AND
@@ -226,13 +333,15 @@ LEFT JOIN
     AND
       `total`.`campaignID` = `conv2`.`campaignID`
     AND
+      `total`.`adGroupID` = `conv2`.`adGroupID`
+    AND
       `total`.`day` = `conv2`.`day`
     AND
       `total`.`dayOfWeek` = `conv2`.`dayOfWeek`
     AND
-      `conv1`.`conversionName` = 'Conversion Name 2'
+      `conv2`.`conversionName` = 'Conversion Name 2'
 LEFT JOIN
-  `repo_adw_adgroup_report_conv` as conv3
+  `repo_adw_ad_report_conv` as conv3
   ON
       `total`.`account_id` = `conv3`.`account_id`
     AND
@@ -242,31 +351,115 @@ LEFT JOIN
     AND
       `total`.`campaignID` = `conv3`.`campaignID`
     AND
+      `total`.`adGroupID` = `conv3`.`adGroupID`
+    AND
       `total`.`day` = `conv3`.`day`
     AND
       `total`.`dayOfWeek` = `conv3`.`dayOfWeek`
     AND
       `conv3`.`conversionName` = 'Conversion Name 3'
+LEFT JOIN
+  (`phone_time_use` as ptu1, `campaigns` as c1)
+  ON
+      `ptu1`.`account_id` = `c1`.`account_id`
+    AND
+      `ptu1`.`campaign_id` = `c1`.`campaign_id`
+    AND
+      `ptu1`.`account_id` = `total`.`account_id`
+    AND
+      `ptu1`.`campaign_id` = `total`.`campaign_id`
+    AND
+      `ptu1`.`utm_campaign` = `total`.`campaignID`
+    AND
+      `ptu1`.`source` = 'adw'
+    AND
+      `ptu1`.`traffic_type` = 'AD'
+    AND
+      `ptu1`.`time_of_call` LIKE CONCAT(`total`.`day`, '%')
+    AND
+      DAYNAME(`ptu1`.`time_of_call`) = `total`.`dayOfWeek`
+    AND
+      `ptu1`.`phone_number` = '+841234567811'
+    AND
+      (
+        (
+          `c1`.`camp_custom1` = 'creative'
+        AND
+          `ptu1`.`custom1` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom2` = 'creative'
+        AND
+          `ptu1`.`custom2` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom3` = 'creative'
+        AND
+          `ptu1`.`custom3` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom4` = 'creative'
+        AND
+          `ptu1`.`custom4` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom5` = 'creative'
+        AND
+          `ptu1`.`custom5` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom6` = 'creative'
+        AND
+          `ptu1`.`custom6` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom7` = 'creative'
+        AND
+          `ptu1`.`custom7` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom8` = 'creative'
+        AND
+          `ptu1`.`custom8` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom9` = 'creative'
+        AND
+          `ptu1`.`custom9` = `total`.`adId`
+        )
+        OR
+        (
+          `c1`.`camp_custom10` = 'creative'
+        AND
+          `ptu1`.`custom10` = `total`.`adId`
+        )
+      )
 WHERE
   `total`.`account_id` = 1
 AND
-  `total`.`campaign_id` = 11
+  `total`.`campaign_id`= 11
 AND
   `total`.`customerID` = 11
 AND
   `total`.`campaignID` = 11
 AND
-  `total`.`network` = 'SEARCH'
-AND
   `total`.`day` >= '2017-01-01'
 AND
   `total`.`day` <= '2017-04-01'
+AND
+  `total`.`network` = 'CONTENT'
 GROUP BY
   `total`.`account_id`,
   `total`.`campaign_id`,
   `total`.`customerID`,
   `total`.`campaignID`,
   `total`.`dayOfWeek`
-) as tbl
-GROUP BY
-  `tbl`.`dayOfWeek`
+) as tbl GROUP BY dayOfWeek;
