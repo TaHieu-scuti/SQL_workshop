@@ -126,6 +126,8 @@ FROM
         AND
           `total`.`day` = STR_TO_DATE(`conv3`.`time_of_call`, '%Y-%m-%d')
         AND
+          DAYNAME(`total`.`day`) = DAYNAME(`conv3`.`day`)
+        AND
           `conv3`.`utm_campaign` = 11
         AND
           `conv3`.`phone_number` = '+841234567811'
