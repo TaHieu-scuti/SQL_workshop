@@ -14,32 +14,32 @@ AND
   `repo_ydn_reports`.`accountid` = 11;
 
 /*Query result:
-|hourofday	conversionName 		 |campaignID|
-|14			YDN conversion 111110|11		|
-|8			YDN conversion 111111|11		|
-|2			YDN conversion 111110|11		|
-|0			YDN conversion 111111|11		|
-|11			YDN conversion 111110|11		|
-|11			YDN conversion 111111|11		|
-|5			YDN conversion 111110|11		|
-|17			YDN conversion 111111|11		|
-|10			YDN conversion 111111|11		|
-|0			YDN conversion 111110|11		|
-|15			YDN conversion 111111|11		|
-|16			YDN conversion 111110|11		|
-|4			YDN conversion 111111|11		|
-|5			YDN conversion 111111|11		|
-|22			YDN conversion 111111|11		|
-|9			YDN conversion 111110|11		|
-|20			YDN conversion 111111|11		|
-|19			YDN conversion 111110|11		|
-|2			YDN conversion 111111|11		|
-|21			YDN conversion 111110|11		|
-|20			YDN conversion 111110|11		|
-|3			YDN conversion 111110|11		|
-|3			YDN conversion 111111|11		|
-|12			YDN conversion 111111|11		|
-|12			YDN conversion 111110|11		|
+|hourofday	|conversionName 	  |campaignID|
+|14			|YDN conversion 111110|11		 |
+|8			|YDN conversion 111111|11		 |
+|2			|YDN conversion 111110|11		 |
+|0			|YDN conversion 111111|11		 |
+|11			|YDN conversion 111110|11		 |
+|11			|YDN conversion 111111|11		 |
+|5			|YDN conversion 111110|11		 |
+|17			|YDN conversion 111111|11	 	 |
+|10			|YDN conversion 111111|11	 	 |
+|0			|YDN conversion 111110|11		 |
+|15			|YDN conversion 111111|11		 |
+|16			|YDN conversion 111110|11		 |
+|4			|YDN conversion 111111|11		 |
+|5			|YDN conversion 111111|11		 |
+|22			|YDN conversion 111111|11		 |
+|9			|YDN conversion 111110|11		 |
+|20			|YDN conversion 111111|11		 |
+|19			|YDN conversion 111110|11		 |
+|2			|YDN conversion 111111|11		 |
+|21			|YDN conversion 111110|11		 |
+|20			|YDN conversion 111110|11		 |
+|3			|YDN conversion 111110|11		 |
+|3			|YDN conversion 111111|11		 |
+|12			|YDN conversion 111111|11		 |
+|12			|YDN conversion 111110|11		 |
 */
 
 /* Get all AG campaigns with phone number */
@@ -63,19 +63,19 @@ AND
   `repo_phone_time_use`.`traffic_type` = 'AD';
 
 /*Query result:
-|account_id |utm_campaign 	phone_number |hourOfDay |
-|1			|11				+841234567811|20		|
-|1			|11				+841234567811|13		|
-|1			|11				+841234567811|21		|
-|1			|11				+841234567811|22		|
-|1			|11				+841234567811|0			|
-|1			|11				+841234567811|2			|
-|1			|11				+841234567811|18		|
-|1			|11				+841234567811|8			|
-|1			|11				+841234567811|12		|
-|1			|11				+841234567811|5			|
-|1			|11				+841234567811|14		|
-|1			|11				+841234567811|11		|
+|account_id |utm_campaign 	|phone_number |hourOfDay |
+|1			|11				|+841234567811|20		|
+|1			|11				|+841234567811|13		|
+|1			|11				|+841234567811|21		|
+|1			|11				|+841234567811|22		|
+|1			|11				|+841234567811|0			|
+|1			|11				|+841234567811|2			|
+|1			|11				|+841234567811|18		|
+|1			|11				|+841234567811|8			|
+|1			|11				|+841234567811|12		|
+|1			|11				|+841234567811|5			|
+|1			|11				|+841234567811|14		|
+|1			|11				|+841234567811|11		|
 */
 
 
