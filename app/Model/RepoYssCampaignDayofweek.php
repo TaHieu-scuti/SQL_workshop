@@ -27,13 +27,12 @@ class RepoYssCampaignDayofweek extends AbstractYssSpecificReportModel
         $conversionPoints
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         $campaignReportConvTableName = (new RepoYssCampaignReportConv)->getTable();
         foreach ($conversionNames as $i => $conversionName) {
             $joinAlias = 'conv' . $i;
             $builder->leftJoin(
                 $campaignReportConvTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $conversionName, $campaignIDs) {
+                function (JoinClause $join) use ($joinAlias, $conversionName) {
                     $join->on(
                         $this->table . '.account_id',
                         '=',
