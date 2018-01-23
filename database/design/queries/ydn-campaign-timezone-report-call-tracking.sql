@@ -109,8 +109,6 @@ FROM
         AND
             `total`.`hourofday` = `conv1`.`hourofday`
         AND
-            `total`.`campaignID` = `conv1`.`campaignID`
-        AND
             `conv1`.`conversionName` = 'YDN conversion 111110'
     )
     LEFT JOIN `repo_ydn_reports` AS conv2
@@ -122,8 +120,6 @@ FROM
             `total`.`day` = `conv2`.`day`
         AND
             `total`.`hourofday` = `conv2`.`hourofday`
-        AND
-            `total`.`campaignID` = `conv2`.`campaignID`
         AND
             `conv2`.`conversionName` = 'YDN conversion 111111'
     )
@@ -142,6 +138,8 @@ FROM
         AND
             `conv3`.`phone_number` = '+841234567811'
         AND
+          `conv3`.`utm_campaign` IN (11, 12, 13)
+        AND
             `conv3`.`source` = 'ydn'
         AND
             `conv3`.`traffic_type` = 'AD'
@@ -149,9 +147,9 @@ FROM
 WHERE
     `total`.`account_id` = 1
 AND
-    `total`.`accountid` = 11
+    `total`.`accountId` = 11
 AND
-    `total`.`campaignId` = 11
+    `total`.`campaign_id` = 11
 AND
     `total`.`day` >= '2017-01-01'
 AND
@@ -159,6 +157,6 @@ AND
 GROUP BY
     `total`.`account_id`,
     `total`.`accountId`,
-    `total`.`campaignID`,
+    `total`.`campaign_id`,
     `total`.`hourofday`
 
