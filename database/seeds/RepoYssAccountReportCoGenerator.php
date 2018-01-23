@@ -247,7 +247,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
         $costReport->endDate = $day->format('Y-m-d');
         $convReport->endDate = $costReport->endDate;
 
-        $costReport->hourofday = rand(0, 23);
+        $costReport->hourofday = $day->format('H');
 
         $costReport->saveOrFail();
         $convReport->saveOrFail();
@@ -267,6 +267,8 @@ class RepoYssAccountReportCoGenerator extends Seeder
         $period = new DatePeriod($start, $interval, $end);
 
         foreach ($period as $date) {
+            $hourRandom = mt_rand(0, 23);
+            $date->modify('+'. $hourRandom .' hour');
             $this->processDay($date);
         }
     }
