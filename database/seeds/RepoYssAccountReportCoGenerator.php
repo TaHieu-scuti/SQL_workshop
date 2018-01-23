@@ -57,7 +57,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
     const MIN_VALUE_PER_ALL_CONV = 1000000;
     const MAX_VALUE_PER_ALL_CONV = 89489437437880;
     const NETWORKS = ['network1', 'network2', 'network3'];
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['DESKTOP', 'SMART_PHONE', 'NONE'];
 
     private function processDay(DateTime $day)
     {
