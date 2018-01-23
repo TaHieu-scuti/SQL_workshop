@@ -129,6 +129,8 @@ FROM
 WHERE
   `total`.`account_id` = 1
 AND
+  `total`.`campaign_id` = 11
+AND
   `total`.`accountId` = 11
 AND
   `total`.`day` >= '2017-01-01'
