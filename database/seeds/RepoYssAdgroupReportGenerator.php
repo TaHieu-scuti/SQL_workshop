@@ -53,7 +53,7 @@ class RepoYssAdgroupReportGenerator extends Seeder
     const MIN_ALL_CONV_VALUE = 1000000;
     const MAX_ALL_CONV_VALUE = 89489437437880;
     const NETWORKS = ['network1', 'network2', 'network3'];
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['DESKTOP', 'SMART_PHONE', 'NONE'];
     const CAMPAIGN_TYPE = [
         'Campaign Type 1', 'Campaign Type 2',
         'Campaign Type 3', 'Campaign Type 4'
