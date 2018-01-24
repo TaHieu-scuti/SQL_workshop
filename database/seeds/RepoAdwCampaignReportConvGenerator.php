@@ -69,7 +69,6 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
                 $campaignConvReport->device = $campaignCostReport->device;
                 $campaignConvReport->campaignEndDate = $campaignCostReport->campaignEndDate;
                 $campaignConvReport->enhancedCPCEnabled = $campaignCostReport->enhancedCPCEnabled;
-                $campaignConvReport->enhancedCPVEnabled = $campaignCostReport->enhancedCPVEnabled;
                 $campaignConvReport->customerID = $campaignCostReport->customerID;
                 $campaignConvReport->budgetExplicitlyShared = $campaignCostReport->budgetExplicitlyShared;
                 $campaignConvReport->labelIDs = $campaignCostReport->labelIDs;
