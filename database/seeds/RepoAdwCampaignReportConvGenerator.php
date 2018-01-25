@@ -24,7 +24,7 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
      */
     public function run()
     {
-       RepoAdwCampaignReportCost::chunk(100, function($campaignCostReports) {
+        RepoAdwCampaignReportCost::chunk(100, function ($campaignCostReports) {
             foreach ($campaignCostReports as $campaignCostReport) {
                 for ($i = 0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
                     $campaignConvReport = new RepoAdwCampaignReportConv;
@@ -60,7 +60,8 @@ class RepoAdwCampaignReportConvGenerator extends Seeder
                     $campaignConvReport->conversionCategory =
                         self::CONVERSION_CATEGORY[rand(0, count(self::CONVERSION_CATEGORY) -1)];
                     $campaignConvReport->convRate = $campaignCostReport->convRate;
-                    $campaignConvReport->conversions = $campaignCostReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
+                    $campaignConvReport->conversions =
+                        $campaignCostReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
                     $campaignConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
                     $campaignConvReport->convValueCurrentModel = $campaignCostReport->convValueCurrentModel;
                     $campaignConvReport->clientName = $campaignCostReport->clientName;
