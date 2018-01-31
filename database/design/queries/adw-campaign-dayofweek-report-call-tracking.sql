@@ -14,28 +14,28 @@ AND
 AND
   `repo_adw_campaign_report_conv`.`customerID` = 11;
 /* result of query above
-conversionName	dayOfWeek	campaignID
-Conversion name1	Sunday	11
-Conversion name2	Sunday	11
-Conversion name3	Sunday	11
-Conversion name1	Monday	11
-Conversion name2	Monday	11
-Conversion name3	Monday	11
-Conversion name1	Tuesday	11
-Conversion name2	Tuesday	11
-Conversion name3	Tuesday	11
-Conversion name1	Wednesday	11
-Conversion name2	Wednesday	11
-Conversion name3	Wednesday	11
-Conversion name1	Thursday	11
-Conversion name2	Thursday	11
-Conversion name3	Thursday	11
-Conversion name1	Friday	11
-Conversion name2	Friday	11
-Conversion name3	Friday	11
-Conversion name1	Saturday	11
-Conversion name2	Saturday	11
-Conversion name3	Saturday	11
+conversionName  dayOfWeek campaignID
+Conversion name1  Sunday  11
+Conversion name2  Sunday  11
+Conversion name3  Sunday  11
+Conversion name1  Monday  11
+Conversion name2  Monday  11
+Conversion name3  Monday  11
+Conversion name1  Tuesday 11
+Conversion name2  Tuesday 11
+Conversion name3  Tuesday 11
+Conversion name1  Wednesday 11
+Conversion name2  Wednesday 11
+Conversion name3  Wednesday 11
+Conversion name1  Thursday  11
+Conversion name2  Thursday  11
+Conversion name3  Thursday  11
+Conversion name1  Friday  11
+Conversion name2  Friday  11
+Conversion name3  Friday  11
+Conversion name1  Saturday  11
+Conversion name2  Saturday  11
+Conversion name3  Saturday  11
 */
 
 SELECT
@@ -55,20 +55,20 @@ AND
 AND
   `repo_phone_time_use`.`source` = 'adw'
 AND
-  `repo_phone_time_use`.`traffic_type` = 'AD';
+  `repo_phone_time_use`.`traffic_type` = 'AD'
 
 /*
   result of query
-phone_number	campaign_id	account_id	dayOfWeek
-+841234567811	11	1	Thursday
-+841234567811	11	1	Sunday
-+841234567811	11	1	Friday
-+841234567811	11	1	Wednesday
-+841234567811	11	1	Tuesday
-+841234567811	11	1	Saturday
-+841234567811	11	1	Monday
-+841234567813	11	1	Saturday
-+841234567815	11	1	Saturday
+phone_number  campaign_id account_id  dayOfWeek
++841234567811 11  1 Thursday
++841234567811 11  1 Sunday
++841234567811 11  1 Friday
++841234567811 11  1 Wednesday
++841234567811 11  1 Tuesday
++841234567811 11  1 Saturday
++841234567811 11  1 Monday
++841234567813 11  1 Saturday
++841234567815 11  1 Saturday
 */
 
 SELECT
@@ -189,6 +189,12 @@ AND
   `total`.`day` >= '2017-01-01'
 AND
   `total`.`day` <= '2017-12-01'
+AND
+  (
+    `total`.`network` = 'CONTENT'
+    OR
+    `total`.`network` = 'SEARCH'
+  )
 GROUP BY
   `total`.`account_id`,
   `total`.`campaign_id`,
