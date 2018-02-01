@@ -9,10 +9,12 @@ use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
-abstract class AbstractYssReportModel extends AbstractReportModel
+abstract class AbstractYssReportModel extends AbstractTemporaryModel
 {
     private $conversionPoints;
     private $adGainerCampaigns;
+    private $isConv = false;
+    private $isCallTracking = false;
 
     protected function addJoinConditions(JoinClause $join, $joinAlias)
     {
@@ -354,6 +356,16 @@ abstract class AbstractYssReportModel extends AbstractReportModel
             $campaignIDs,
             static::PAGE_ID
         );
+        $this->checkconditionfieldName($fieldNames);
+        if ($this->isConv || $this->isCallTracking) {
+            $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+        }
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -447,5 +459,16 @@ abstract class AbstractYssReportModel extends AbstractReportModel
         }
 
         return $arraySelect;
+    }
+
+    private function checkconditionfieldName($fieldNames)
+    {
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === '[conversionValues]') {
+                $this->isConv = true;
+            } elseif (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
+                $this->isCallTracking = true;
+            }
+        }
     }
 }
