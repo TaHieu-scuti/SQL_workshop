@@ -128,7 +128,7 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         }
     }
 
-    protected function insertConversionToTemporaryTable(
+    protected function updateTemporaryTableWithConversion(
         $conversionPoints,
         $groupedByField,
         $startDay,
@@ -144,12 +144,13 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
         $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = DB::table('repo_yss_campaign_report_conv')
-            ->select(
+            $convModel = new RepoYssCampaignReportConv();
+            $queryGetConversion = $convModel->select(
                 DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
             ->where(
                 function (EloquentBuilder $query) use (
+                    $convModel,
                     $startDay,
                     $endDay,
                     $engine,
@@ -160,7 +161,7 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
                     $adReportId,
                     $keywordId
                 ) {
-                    $this->getCondition(
+                    $convModel->getCondition(
                         $query,
                         $startDay,
                         $endDay,
@@ -177,8 +178,9 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         }
     }
 
-    protected function getAllCallTrackingJoined(
+    protected function updateTemporaryTableWithCallTracking(
         $adGainerCampaigns,
+        $groupedByField,
         $startDay,
         $endDay,
         $engine,
@@ -189,14 +191,12 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $callTrackingArray = [];
         $tableJoin = (new RepoPhoneTimeUse)->getTable();
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
         foreach ($phoneList as $i => $phoneNumber) {
-            $callTrackingArray[] = $this->select(
-                DB::raw($this->table.".dayOfWeek,
-                    COUNT(".$tableJoin.".`id`) as total, '".$phoneNumber."' as phoneNumber")
+            $queryGetCallTracking = $this->select(
+                DB::raw($this->table.".". $groupedByField .", COUNT(".$tableJoin.".`id`)")
             )->leftJoin(
                 $tableJoin,
                 function (JoinClause $join) use ($tableJoin, $phoneNumber, $utmCampaignList) {
@@ -208,17 +208,16 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
                         $this->table . '.campaign_id',
                         '=',
                         $tableJoin . '.campaign_id'
+                    )->on(
+                        $this->table . '.campaignID',
+                        '=',
+                        $tableJoin . '.utm_campaign'
                     )->whereIn(
                         $tableJoin . '.utm_campaign',
                         $utmCampaignList
-                    )->on(
-                        $this->table . '.dayOfWeek',
-                        '=',
-                        DB::raw('DAYNAME(' . $tableJoin . '.time_of_call)')
                     )->whereRaw($tableJoin . ".phone_number = '" . $phoneNumber . "'")
-                    ->whereRaw($tableJoin . ".time_of_call LIKE CONCAT(".$this->table.".`day`, '%')")
-                    ->where($tableJoin . '.source', '=', 'yss')
-                    ->where($tableJoin . '.traffic_type', '=', 'AD');
+                    ->whereRaw($this->table.".`day` = STR_TO_DATE(".$tableJoin.".`time_of_call`, '%Y-%m-%d')")
+                    ->where($tableJoin . '.source', '=', 'yss');
                 }
             )->where(
                 function (EloquentBuilder $query) use (
@@ -245,8 +244,7 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
                         $keywordId
                     );
                 }
-            )->groupBy($this->table . '.dayOfWeek')
-            ->get();
+            )->groupBy($groupedByField);
         }
         return $callTrackingArray;
     }

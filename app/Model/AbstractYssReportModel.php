@@ -390,7 +390,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
         // $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
         if ($this->isConv) {
-            $this->insertConversionToTemporaryTable(
+            $this->updateTemporaryTableWithConversion(
                 $this->conversionPoints,
                 $groupedByField,
                 $startDay,
@@ -404,6 +404,23 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $keywordId
             );
         }
+
+        if ($this->isCallTracking) {
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
+            );
+        }
+        exit('ok');
         return $builder;
     }
 
