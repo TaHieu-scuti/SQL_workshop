@@ -408,33 +408,29 @@ abstract class AbstractReportModel extends Model
         }
         $builder = $this->select(array_merge($selectBy, $aggregations))
             ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
                 function (Builder $query) use (
+                    $startDay,
+                    $endDay,
+                    $engine,
                     $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId,
-                    $engine
+                    $keywordId
                 ) {
-                    $this->addQueryConditions(
+                    $this->getCondition(
                         $query,
-                        $clientId,
+                        $startDay,
+                        $endDay,
                         $engine,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
                         $keywordId
                     );
-                }
-            )->where(
-                function (Builder $query) use ($engine) {
-                    $this->addConditionNetworkQueryForADW($engine, $query);
                 }
             )
             ->groupBy($groupBy)
@@ -444,6 +440,50 @@ abstract class AbstractReportModel extends Model
             $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
         return $builder;
+    }
+
+    protected function getCondition(
+        Builder $query,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $query->where(
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )->where(
+            function (Builder $query) use (
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId,
+                $engine
+            ) {
+                $this->addQueryConditions(
+                    $query,
+                    $clientId,
+                    $engine,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+        )->where(
+            function (Builder $query) use ($engine) {
+                $this->addConditionNetworkQueryForADW($engine, $query);
+            }
+        );
     }
 
     protected function getBuilderForCalculateData(
