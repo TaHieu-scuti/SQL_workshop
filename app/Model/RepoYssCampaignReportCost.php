@@ -128,6 +128,129 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         }
     }
 
+    protected function insertConversionToTemporaryTable(
+        $conversionPoints,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        foreach ($conversionNames as $key => $conversionName) {
+            $convModel = DB::table('repo_yss_campaign_report_conv')
+            ->select(
+                DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+            )->where('conversionName', $conversionName)
+            ->where(
+                function (EloquentBuilder $query) use (
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->getCondition(
+                        $query,
+                        $startDay,
+                        $endDay,
+                        $engine,
+                        $clientId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            )->groupBy($groupedByField);
+        }
+    }
+
+    protected function getAllCallTrackingJoined(
+        $adGainerCampaigns,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $callTrackingArray = [];
+        $tableJoin = (new RepoPhoneTimeUse)->getTable();
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
+        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        foreach ($phoneList as $i => $phoneNumber) {
+            $callTrackingArray[] = $this->select(
+                DB::raw($this->table.".dayOfWeek,
+                    COUNT(".$tableJoin.".`id`) as total, '".$phoneNumber."' as phoneNumber")
+            )->leftJoin(
+                $tableJoin,
+                function (JoinClause $join) use ($tableJoin, $phoneNumber, $utmCampaignList) {
+                    $join->on(
+                        $this->table . '.account_id',
+                        '=',
+                        $tableJoin . '.account_id'
+                    )->on(
+                        $this->table . '.campaign_id',
+                        '=',
+                        $tableJoin . '.campaign_id'
+                    )->whereIn(
+                        $tableJoin . '.utm_campaign',
+                        $utmCampaignList
+                    )->on(
+                        $this->table . '.dayOfWeek',
+                        '=',
+                        DB::raw('DAYNAME(' . $tableJoin . '.time_of_call)')
+                    )->whereRaw($tableJoin . ".phone_number = '" . $phoneNumber . "'")
+                    ->whereRaw($tableJoin . ".time_of_call LIKE CONCAT(".$this->table.".`day`, '%')")
+                    ->where($tableJoin . '.source', '=', 'yss')
+                    ->where($tableJoin . '.traffic_type', '=', 'AD');
+                }
+            )->where(
+                function (EloquentBuilder $query) use (
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $this->getCondition(
+                        $query,
+                        $startDay,
+                        $endDay,
+                        $engine,
+                        $clientId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
+                }
+            )->groupBy($this->table . '.dayOfWeek')
+            ->get();
+        }
+        return $callTrackingArray;
+    }
+
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
     {
         $this->addJoinsForConversionPoints($builder, $conversionPoints);

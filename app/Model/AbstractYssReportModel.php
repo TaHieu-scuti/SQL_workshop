@@ -385,10 +385,25 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $keywordId
         );
 
-        DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
-            . $this->getBindingSql($builder));
+        // DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
+        //     . $this->getBindingSql($builder));
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        // $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv) {
+            $this->insertConversionToTemporaryTable(
+                $this->conversionPoints,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
+            );
+        }
         return $builder;
     }
 
