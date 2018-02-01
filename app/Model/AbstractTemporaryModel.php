@@ -3,14 +3,23 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use App\AbstractReportModel;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 Abstract class AbstractTemporaryModel extends AbstractReportModel
 {
-    const FIELDS_CONV_POINT = [
-        '[conversionValues]'
+    const UNSET_COLUMNS = [
+        '[conversionValues]',
+        'web_cv',
+        'web_cvr',
+        'web_cpa',
     ];
+
+    const TABLE_TEMPORARY = 'temporary_table';
+
     const FIELDS_CALL_TRACKING = [
         '[phoneNumberValues]',
         'call_cv',
@@ -20,7 +29,38 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
         'total_cvr',
         'total_cpa'
     ];
-    
+    private $groupCallTracking = [];
+
+    const FIELDS_TYPE_STRING = [
+        'network',
+        'conversionName',
+        'source',
+        'phone_number',
+        'utm_campaign',
+        'campaign',
+        'adGroup',
+        'account_id',
+        'campaign_id',
+        'campaignName',
+
+    ];
+
+    const FILEDS_TYPE_BIGINT = [
+        'adGroupID',
+        'clicks',
+        'impressions',
+        'campaignID',
+        'customerID',
+        'adID'
+    ];
+
+    const FIX_FIELDS = [
+        'day',
+        'conversions',
+        'account_id',
+        'campaign_id',
+        'campaignID'
+    ];
     protected function createTemporaryTable(
         array $fieldNames,
         $isConv = false,
@@ -31,9 +71,10 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
 
         $fieldNames = $this->unsetColumns(
             $fieldNames,
-            array_merge(self::FIELDS_CALL_TRACKING, self::FIELDS_CONV_POINT)
+            array_merge(self::FIELDS_CALL_TRACKING, self::UNSET_COLUMNS)
         );
-        $tableName = 'temporary_'.Auth::user()->account_id.'_Table';
+        $fieldNames = array_merge($fieldNames, self::FIX_FIELDS);
+
         $fieldNames = $this->checkAndUpdateFiledNames(
             $fieldNames,
             $isConv,
@@ -43,16 +84,28 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
         );
 
         Schema::create(
-            $tableName,
+            self::TABLE_TEMPORARY,
             function (Blueprint $table) use ($fieldNames) {
                 $table->increments('id');
-                foreach ($fieldNames as $fieldName) {
+                foreach ($fieldNames as $key => $fieldName) {
+                    if (in_array($fieldName, self::FILEDS_TYPE_BIGINT)) {
+                        $table->bigInteger($key);
+                    } elseif(in_array($fieldName, $this->groupCallTracking)) {
+                        $table->integer($key);
+                    }elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
+                        $table->string($key)->nullable();
+                    } elseif ($fieldName === 'day') {
+                        $table->dateTime($key)->nullable();
+                    } else {
+                        $table->double($key)->nullable();
+                    }
+
+                    $table->index($key, 'IX_'.$key);
 
                 }
+                $table->temporary();
             }
         );
-
-
     }
 
     private function checkAndUpdateFiledNames(
@@ -72,9 +125,10 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
         if ($isCallTracking) {
             foreach ($adGainerCampaigns as $i => $adgeiner) {
                 array_unshift($fieldNames, 'call'.$i);
+                array_unshift($this->groupCallTracking, 'call'.$i);
             }
         }
-
+        $fieldNames = $this->updateFieldNames($fieldNames);
         return $fieldNames;
     }
 

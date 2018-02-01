@@ -90,45 +90,45 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
-        foreach ($fieldNames as $fieldName) {
-            switch ($fieldName) {
-                case '[conversionValues]':
-                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
-                    break;
-                case '[phoneNumberValues]':
-                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
-                    break;
-                case 'call_cv':
-                    $expressions = $this->addRawExpressionCallConversions($expressions);
-                    break;
-                case 'call_cvr':
-                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
-                    break;
-                case 'call_cpa':
-                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
-                    break;
-                case 'web_cv':
-                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
-                    break;
-                case 'web_cvr':
-                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
-                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
-                    break;
-                case 'web_cpa':
-                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
-                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
-                    break;
-                case 'total_cv':
-                    $expressions = $this->addRawExpressionTotalConversions($expressions);
-                    break;
-                case 'total_cvr':
-                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
-                    break;
-                case 'total_cpa':
-                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
-                    break;
-            }
-        }
+//        foreach ($fieldNames as $fieldName) {
+//            switch ($fieldName) {
+//                case '[conversionValues]':
+//                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
+//                    break;
+//                case '[phoneNumberValues]':
+//                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
+//                    break;
+//                case 'call_cv':
+//                    $expressions = $this->addRawExpressionCallConversions($expressions);
+//                    break;
+//                case 'call_cvr':
+//                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
+//                    break;
+//                case 'call_cpa':
+//                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
+//                    break;
+//                case 'web_cv':
+//                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
+//                    break;
+//                case 'web_cvr':
+//                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
+//                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
+//                    break;
+//                case 'web_cpa':
+//                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
+//                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
+//                    break;
+//                case 'total_cv':
+//                    $expressions = $this->addRawExpressionTotalConversions($expressions);
+//                    break;
+//                case 'total_cvr':
+//                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
+//                    break;
+//                case 'total_cpa':
+//                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
+//                    break;
+//            }
+//        }
         return $expressions;
     }
 
@@ -366,6 +366,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $this->adGainerCampaigns
             );
         }
+
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -383,6 +384,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
+        DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
+            . $this->getBindingSql($builder));
 
         $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
         return $builder;
