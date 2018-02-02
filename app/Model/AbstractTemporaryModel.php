@@ -89,9 +89,9 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                 $table->increments('id');
                 foreach ($fieldNames as $key => $fieldName) {
                     if (in_array($fieldName, self::FILEDS_TYPE_BIGINT)) {
-                        $table->bigInteger($key);
+                        $table->bigInteger($key)->nullable();
                     } elseif (in_array($fieldName, $this->groupCallTracking)) {
-                        $table->integer($key);
+                        $table->integer($key)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
                         $table->string($key)->nullable();
                     } elseif ($fieldName === 'day') {
@@ -105,6 +105,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                 $table->temporary();
             }
         );
+
+        return $fieldNames;
     }
 
     private function checkAndUpdateFiledNames(

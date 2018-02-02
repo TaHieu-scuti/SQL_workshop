@@ -383,15 +383,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             static::PAGE_ID
         );
         $this->checkconditionfieldName($fieldNames);
-        if ($this->isConv || $this->isCallTracking) {
-            $this->createTemporaryTable(
-                $fieldNames,
-                $this->isConv,
-                $this->isCallTracking,
-                $this->conversionPoints,
-                $this->adGainerCampaigns
-            );
-        }
+
 
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
@@ -410,44 +402,55 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-         DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
-             . $this->getBindingSql($builder));
 
-        if ($this->isConv) {
-            $this->updateTemporaryTableWithConversion(
+        if ($this->isConv || $this->isCallTracking) {
+            $columns = $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
                 $this->conversionPoints,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                $engine,
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
+                $this->adGainerCampaigns
             );
-        }
 
-        if ($this->isCallTracking) {
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                $engine,
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
-            );
-        }
-        $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+                . $this->getBindingSql($builder));
 
-        $builderTemp = DB::table(self::TABLE_TEMPORARY)->select($aggregated)->groupby($groupedByField);
-        return $builderTemp;
+            if ($this->isConv) {
+                $this->updateTemporaryTableWithConversion(
+                    $this->conversionPoints,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $this->adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+            $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated)->groupby($groupedByField);
+        }
+        return $builder;
     }
 
     protected function getBuilderForCalculateData(
@@ -465,8 +468,28 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
-        $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+
+        $builder = parent::getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if ($this->isConv || $this->isCallTracking) {
+            $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+        }
+
         return $builder;
     }
 
