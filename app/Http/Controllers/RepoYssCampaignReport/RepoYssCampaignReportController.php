@@ -113,10 +113,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $this->updateSpecificModel();
 
         $dataReports = $this->getDataForTable();
-//        $totalDataArray = $this->getCalculatedData();
-//        $summaryReportData = $this->getCalculatedSummaryReport();
-        $totalDataArray = null;
-        $summaryReportData = null;
+        $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
 
         $summaryReportLayout = view(
@@ -184,10 +182,8 @@ class RepoYssCampaignReportController extends AbstractReportController
         $this->updateSpecificModel();
 
         $reports = $this->getDataForTable();
-//        $totalDataArray = $this->getCalculatedData();
-//        $summaryReportData = $this->getCalculatedSummaryReport();
-        $totalDataArray = null;
-        $summaryReportData = null;
+        $totalDataArray = $this->getCalculatedData();
+        $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
 
         $tableDataLayout = view(

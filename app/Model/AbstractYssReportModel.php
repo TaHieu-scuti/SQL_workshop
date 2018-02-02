@@ -93,7 +93,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null) {
+    protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null)
+    {
         $tableName = null;
         if ($this->isConv || $this->isCallTracking) {
             $tableName = self::TABLE_TEMPORARY;
@@ -235,7 +236,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     private function addRawExpressionTotalCostPerAction(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
+            . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= '`call'
@@ -408,12 +410,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-
          DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
              . $this->getBindingSql($builder));
 
-
-        // $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
         if ($this->isConv) {
             $this->updateTemporaryTableWithConversion(
                 $this->conversionPoints,
@@ -449,8 +448,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
         $builderTemp = DB::table(self::TABLE_TEMPORARY)->select($aggregated)->groupby($groupedByField);
         return $builderTemp;
-//        var_dump($builderTemp->);die;
-//        var_dump($this->getBindingSql($builderTemp));die;
     }
 
     protected function getBuilderForCalculateData(
@@ -468,24 +465,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
-
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
-
+        $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+        $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
         return $builder;
     }
 

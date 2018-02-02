@@ -196,9 +196,9 @@ abstract class AbstractReportModel extends Model
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if ($tableName === 'temporary_table') {
                     $arrayCalculate[] = DB::raw(
-                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
-                        );
-                 } else {
+                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                    );
+                } else {
                     if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
                                         ->getType()
                                         ->getName()
@@ -212,8 +212,7 @@ abstract class AbstractReportModel extends Model
                             'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                         );
                     }
-                 }
-                
+                }
             }
         }
         return $arrayCalculate;

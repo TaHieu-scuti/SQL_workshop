@@ -9,7 +9,7 @@ use App\AbstractReportModel;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
-Abstract class AbstractTemporaryModel extends AbstractReportModel
+abstract class AbstractTemporaryModel extends AbstractReportModel
 {
     const UNSET_COLUMNS = [
         '[conversionValues]',
@@ -90,9 +90,9 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
                 foreach ($fieldNames as $key => $fieldName) {
                     if (in_array($fieldName, self::FILEDS_TYPE_BIGINT)) {
                         $table->bigInteger($key);
-                    } elseif(in_array($fieldName, $this->groupCallTracking)) {
+                    } elseif (in_array($fieldName, $this->groupCallTracking)) {
                         $table->integer($key);
-                    }elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
+                    } elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
                         $table->string($key)->nullable();
                     } elseif ($fieldName === 'day') {
                         $table->dateTime($key)->nullable();
@@ -101,7 +101,6 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
                     }
 
                     $table->index($key, 'IX_'.$key);
-
                 }
                 $table->temporary();
             }
@@ -131,5 +130,4 @@ Abstract class AbstractTemporaryModel extends AbstractReportModel
         $fieldNames = $this->updateFieldNames($fieldNames);
         return $fieldNames;
     }
-
 }
