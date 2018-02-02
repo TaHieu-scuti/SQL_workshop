@@ -87,14 +87,18 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             ->where($joinAlias.'.traffic_type', '=', 'AD');
     }
 
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
         return $expressions;
     }
 
     protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null) {
-        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
+        $tableName = null;
+        if ($this->isConv || $this->isCallTracking) {
+            $tableName = self::TABLE_TEMPORARY;
+        }
+        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
                 case '[conversionValues]':
@@ -149,7 +153,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         }
 
         $aggregations = $this->getAggregatedForTemprary($fieldNames, $higherLayerSelections);
-
         return $aggregations;
     }
 
@@ -442,7 +445,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $keywordId
             );
         }
-
         $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
 
         var_dump($aggregated);die;

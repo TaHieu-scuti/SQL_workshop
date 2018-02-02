@@ -113,10 +113,12 @@ abstract class AbstractReportModel extends Model
      * @param string[] $fieldNames
      * @return Expression[]
      */
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
         $fieldNames = $this->updateFieldNames($fieldNames);
-        $tableName = $this->getTable();
+        if (empty($tableName)) {
+            $tableName = $this->getTable();
+        }
         $joinTableName = (new RepoYssAccount)->getTable();
         if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
             $tableName = 'repo_yss_prefecture_report_cost';
@@ -192,19 +194,26 @@ abstract class AbstractReportModel extends Model
                     'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                                    ->getType()
-                                    ->getName()
-                    === self::FIELD_TYPE
-                ) {
+                if ($tableName === static::TABLE_TEMPORARY) {
                     $arrayCalculate[] = DB::raw(
-                        'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
-                    );
-                } else {
-                    $arrayCalculate[] = DB::raw(
-                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
-                    );
-                }
+                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                        );
+                 } else {
+                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                                        ->getType()
+                                        ->getName()
+                        === self::FIELD_TYPE
+                    ) {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                        );
+                    } else {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                        );
+                    }
+                 }
+                
             }
         }
         return $arrayCalculate;
