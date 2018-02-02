@@ -117,15 +117,15 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     $expressions = $this->addRawExpressionCallCostPerAction($expressions);
                     break;
                 case 'web_cv':
-                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
+                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cv");
                     break;
                 case 'web_cvr':
-                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
-                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
+                    $expressions[] = DB::raw("IFNULL((SUM(`".self::TABLE_TEMPORARY."`.`conversions`) /
+                    SUM(`".self::TABLE_TEMPORARY."`.`clicks`)) * 100, 0) as web_cvr");
                     break;
                 case 'web_cpa':
-                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
-                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
+                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`cost`) /
+                    SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cpa");
                     break;
                 case 'total_cv':
                     $expressions = $this->addRawExpressionTotalConversions($expressions);
@@ -172,7 +172,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     'IFNULL((SUM(`'
                     . self::TABLE_TEMPORARY
                     . '`.`conversions'.$i.'`) / SUM(`'
-                    . $this->getTable()
+                    . self::TABLE_TEMPORARY
                     . "`.`clicks`)) * 100, 0) AS 'YSS "
                     . $conversionName
                     . " CVR'"
@@ -199,7 +199,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . ", 0) AS 'YSS "
+                    . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -208,8 +208,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . ' / SUM(`'
-                    . $this->table
+                    . '` / SUM(`'
+                    . self::TABLE_TEMPORARY
                     . "`.`clicks`), 0) AS 'YSS "
                     . $campaign->campaign_name
                     . ' '
@@ -218,10 +218,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 );
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    . $this->table
+                    . self::TABLE_TEMPORARY
                     . '`.`cost`) / `call'
                     . $i
-                    . ", 0) AS 'YSS "
+                    . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -235,17 +235,17 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     private function addRawExpressionTotalCostPerAction(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . $this->table . '`.`cost`) / (SUM(`' . $this->table . '`.`conversions`) + ';
+        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= '`call'
                 . $i
-                . ' + ';
+                . '` + ';
         }
 
         $expression .= '`call'
             . ($numberOfCampaigns - 1)
-            . ', 0) AS total_cpa';
+            . '`), 0) AS total_cpa';
 
         $expressions[] = DB::raw($expression);
 
@@ -254,17 +254,17 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     private function addRawExpressionTotalConversionRate(array $expressions)
     {
-        $expression = 'IFNULL((SUM(`' . $this->table . '`.`conversions`) + ';
+        $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-            $expression .= 'COUNT(`call'
+            $expression .= '`call'
                 . $i
-                . ' + ';
+                . '` + ';
         }
 
-        $expression .= 'COUNT(`call'
+        $expression .= '`call'
             . ($numberOfCampaigns - 1)
-            . ') / '
+            . '`) / '
             . 'SUM(`'
             . self::TABLE_TEMPORARY
             . '`.`clicks`), 0) AS total_cvr';
@@ -276,17 +276,17 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     private function addRawExpressionTotalConversions(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . $this->table . '`.`conversions`) + ';
+        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= '`call'
                 . $i
-                . ' + ';
+                . '` + ';
         }
 
         $expression .= '`call'
             . ($numberOfCampaigns - 1)
-            . ', 0) AS total_cv';
+            . '`, 0) AS total_cv';
 
         $expressions[] = DB::raw($expression);
 
@@ -295,17 +295,17 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     private function addRawExpressionCallCostPerAction(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . $this->table . '`.`cost`) / (';
+        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= '`call'
                 . $i
-                . ' + ';
+                . '` + ';
         }
 
         $expression .= '`call'
             . ($numberOfCampaigns - 1)
-            . ', 0) AS call_cpa';
+            . '`), 0) AS call_cpa';
 
         $expressions[] = DB::raw($expression);
 
@@ -317,10 +317,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $expression = 'IFNULL(';
         $numberOfCampaigns = count($this->adGainerCampaigns);
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-            $expression .= '`call' . $i . ' + ';
+            $expression .= '`call' . $i . '` + ';
         }
 
-        $expression .= '`call' . ($numberOfCampaigns - 1) . ', 0) AS call_cv';
+        $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
 
         $expressions[] = DB::raw($expression);
 
@@ -334,12 +334,12 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
             $expression .= '`call'
                 . $i
-                . " + ";
+                . "` + ";
         }
 
         $expression .= '`call'
             . ($numberOfCampaigns - 1)
-            . ') / '
+            . '`) / '
             . $numberOfCampaigns
             . ', 0) AS call_cvr';
 
@@ -447,9 +447,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         }
         $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
 
-        $builderTemp = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
-        var_dump($this->getBindingSql($builderTemp));die;
-
+        $builderTemp = DB::table(self::TABLE_TEMPORARY)->select($aggregated)->groupby($groupedByField);
+        return $builderTemp;
+//        var_dump($builderTemp->);die;
+//        var_dump($this->getBindingSql($builderTemp));die;
     }
 
     protected function getBuilderForCalculateData(

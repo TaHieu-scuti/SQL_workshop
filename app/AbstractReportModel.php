@@ -194,7 +194,7 @@ abstract class AbstractReportModel extends Model
                     'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if ($tableName === static::TABLE_TEMPORARY) {
+                if ($tableName === 'temporary_table') {
                     $arrayCalculate[] = DB::raw(
                             'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                         );
