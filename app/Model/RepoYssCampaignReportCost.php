@@ -191,62 +191,38 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $tableJoin = (new RepoPhoneTimeUse)->getTable();
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
-        foreach ($phoneList as $i => $phoneNumber) {
-            $queryGetCallTracking = $this->select(
-                DB::raw($this->table.".". $groupedByField .", COUNT(".$tableJoin.".`id`)")
-            )->leftJoin(
-                $tableJoin,
-                function (JoinClause $join) use ($tableJoin, $phoneNumber, $utmCampaignList) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $tableJoin . '.account_id'
-                    )->on(
-                        $this->table . '.campaign_id',
-                        '=',
-                        $tableJoin . '.campaign_id'
-                    )->on(
-                        $this->table . '.campaignID',
-                        '=',
-                        $tableJoin . '.utm_campaign'
-                    )->whereIn(
-                        $tableJoin . '.utm_campaign',
-                        $utmCampaignList
-                    )->whereRaw($tableJoin . ".phone_number = '" . $phoneNumber . "'")
-                    ->whereRaw($this->table.".`day` = STR_TO_DATE(".$tableJoin.".`time_of_call`, '%Y-%m-%d')")
-                    ->where($tableJoin . '.source', '=', 'yss');
-                }
-            )->where(
-                function (EloquentBuilder $query) use (
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                ) {
-                    $this->getCondition(
-                        $query,
-                        $startDay,
-                        $endDay,
-                        $engine,
-                        $clientId,
-                        $accountId,
-                        $campaignId,
-                        $adGroupId,
-                        $adReportId,
-                        $keywordId
-                    );
-                }
-            )->groupBy($groupedByField);
+        if ($groupedByField === 'campaignName') {
+            $groupedByField = 'utm_campaign';
         }
-        return $callTrackingArray;
+        foreach ($phoneList as $i => $phoneNumber) {
+            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
+            $tableName = $repoPhoneTimeUseModel->getTable();
+            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+                DB::raw($groupedByField .", COUNT(`id`)")
+            )->where('phone_number', $phoneNumber)
+            ->where('source', 'yss')
+            ->where(
+                function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
+                    $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                }
+            )->whereIn('utm_campaign', $utmCampaignList)
+            ->groupBy($groupedByField);
+        }
+    }
+
+    private function addConditonForDate(EloquentBuilder $query, $tableName, $startDay, $endDay)
+    {
+        if ($startDay === $endDay) {
+            $query->whereRaw('STR_TO_DATE('.$tableName.
+                '.time_of_call, "%Y-%m-%d %H:%i:%s") LIKE "'.$endDay.'%"');
+        } else {
+            $query->whereRaw('STR_TO_DATE('.$tableName.
+                '.time_of_call, "%Y-%m-%d %H:%i:%s") >= "'.$startDay.'"')
+                ->whereRaw('STR_TO_DATE('.$tableName.
+                    '.time_of_call, "%Y-%m-%d %H:%i:%s") <= "'.$endDay.'"');
+        }
     }
 
     protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
