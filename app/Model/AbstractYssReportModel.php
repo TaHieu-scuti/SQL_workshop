@@ -404,12 +404,15 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            $columns = $this->createTemporaryTable(
+             $this->createTemporaryTable(
                 $fieldNames,
                 $this->isConv,
                 $this->isCallTracking,
                 $this->conversionPoints,
                 $this->adGainerCampaigns
+            );
+            $columns = $this->unsetColumns(
+                $fieldNames, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
@@ -446,6 +449,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     $keywordId
                 );
             }
+
             $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
 
             $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated)->groupby($groupedByField);

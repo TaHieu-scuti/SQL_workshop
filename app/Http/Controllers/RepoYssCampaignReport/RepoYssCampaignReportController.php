@@ -81,12 +81,12 @@ class RepoYssCampaignReportController extends AbstractReportController
         session()->put([self::SESSION_KEY_CAMPAIGNID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
-            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+            array_unshift($defaultColumns, self::CAMPAIGN_ID, self::GROUPED_BY_FIELD);
             if ($engine === 'ydn') {
                 $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
             }
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::CAMPAIGN_ID);
+            array_unshift($defaultColumns, self::CAMPAIGN_ID, self::ADW_GROUPED_BY_FIELD);
         }
         if (!session('campaignReport')) {
             $this->initializeSession($defaultColumns);
