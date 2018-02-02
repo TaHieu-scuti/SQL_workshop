@@ -174,7 +174,14 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
                         $keywordId
                     );
                 }
-            )->groupBy($groupedByField);
+            )->groupBy(
+
+                );
+
+            DB::update('update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($queryGetConversion).') AS tbl set conversions'.$key.' = tbl.conversions where '
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
+            );
         }
     }
 
@@ -200,7 +207,7 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
             $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
             $tableName = $repoPhoneTimeUseModel->getTable();
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw($groupedByField .", COUNT(`id`)")
+                DB::raw($groupedByField .", COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
             ->where('source', 'yss')
             ->where(
@@ -209,6 +216,11 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
                 }
             )->whereIn('utm_campaign', $utmCampaignList)
             ->groupBy($groupedByField);
+
+            DB::update('update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
+                .self::TABLE_TEMPORARY.'.campaignID = tbl.'.$groupedByField
+            );
         }
     }
 

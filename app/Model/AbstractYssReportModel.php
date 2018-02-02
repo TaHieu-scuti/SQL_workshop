@@ -90,46 +90,67 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
     {
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
-//        foreach ($fieldNames as $fieldName) {
-//            switch ($fieldName) {
-//                case '[conversionValues]':
-//                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
-//                    break;
-//                case '[phoneNumberValues]':
-//                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
-//                    break;
-//                case 'call_cv':
-//                    $expressions = $this->addRawExpressionCallConversions($expressions);
-//                    break;
-//                case 'call_cvr':
-//                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
-//                    break;
-//                case 'call_cpa':
-//                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
-//                    break;
-//                case 'web_cv':
-//                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
-//                    break;
-//                case 'web_cvr':
-//                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
-//                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
-//                    break;
-//                case 'web_cpa':
-//                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
-//                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
-//                    break;
-//                case 'total_cv':
-//                    $expressions = $this->addRawExpressionTotalConversions($expressions);
-//                    break;
-//                case 'total_cvr':
-//                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
-//                    break;
-//                case 'total_cpa':
-//                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
-//                    break;
-//            }
-//        }
         return $expressions;
+    }
+
+    protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null) {
+        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case '[conversionValues]':
+                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
+                    break;
+                case '[phoneNumberValues]':
+                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
+                    break;
+                case 'call_cv':
+                    $expressions = $this->addRawExpressionCallConversions($expressions);
+                    break;
+                case 'call_cvr':
+                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
+                    break;
+                case 'call_cpa':
+                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`conversions`), 0) as web_cv");
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw("IFNULL((SUM(`{$this->table}`.`conversions`) /
+                    SUM(`{$this->table}`.`clicks`)) * 100, 0) as web_cvr");
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw("IFNULL(SUM(`{$this->table}`.`cost`) /
+                    SUM(`{$this->table}`.`conversions`), 0) as web_cpa");
+                    break;
+                case 'total_cv':
+                    $expressions = $this->addRawExpressionTotalConversions($expressions);
+                    break;
+                case 'total_cvr':
+                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
+                    break;
+                case 'total_cpa':
+                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
+                    break;
+            }
+        }
+        return $expressions;
+    }
+
+    private function processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId)
+    {
+        $higherLayerSelections = [];
+        if ($groupedByField !== self::DEVICE
+            && $groupedByField !== self::HOUR_OF_DAY
+            && $groupedByField !== self::DAY_OF_WEEK
+            && $groupedByField !== self::PREFECTURE
+        ) {
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        }
+
+        $aggregations = $this->getAggregatedForTemprary($fieldNames, $higherLayerSelections);
+
+        return $aggregations;
     }
 
     private function addRawExpressionsConversionPoint(array $expressions)
@@ -385,8 +406,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $keywordId
         );
 
-        // DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
-        //     . $this->getBindingSql($builder));
+         DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', static::FIX_INSERT_FILEDS).') '
+             . $this->getBindingSql($builder));
+
 
         // $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
         if ($this->isConv) {
@@ -420,8 +442,11 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $keywordId
             );
         }
-        exit('ok');
-        return $builder;
+
+        $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+
+        var_dump($aggregated);die;
+
     }
 
     protected function getBuilderForCalculateData(
