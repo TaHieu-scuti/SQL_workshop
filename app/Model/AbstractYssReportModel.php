@@ -447,7 +447,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         }
         $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
 
-        var_dump(DB::table(self::TABLE_TEMPORARY)->get());die;
+        $builderTemp = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+        var_dump($this->getBindingSql($builderTemp));die;
 
     }
 
