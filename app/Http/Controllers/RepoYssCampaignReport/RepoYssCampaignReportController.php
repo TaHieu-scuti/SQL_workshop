@@ -66,6 +66,8 @@ class RepoYssCampaignReportController extends AbstractReportController
      */
     protected $model;
 
+    private $flag = true;
+
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssCampaignReportCost $model
@@ -116,23 +118,28 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-
+        $columns = array_keys((array) $dataReports[0]);
+        if (property_exists ( $dataReports[0] , 'table')) {
+            $columns = array_keys($dataReports[0]->getAttributes());
+            $this->flag = false;
+        }
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
                 self::SUMMARY_REPORT => $summaryReportData
             ]
         )->render();
+
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => array_keys((array) $dataReports[0]),
+                self::FIELD_NAMES => $columns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                'agency' => 'agency'
+                'flag' => $this->flag
             ]
         )->render();
         $fieldsOnModal = view(
@@ -186,17 +193,23 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
 
+        $columns = array_keys((array) $reports[0]);
+        if (property_exists ( $reports[0] , 'table')) {
+            $columns = array_keys($reports[0]->getAttributes());
+            $this->flag = false;
+        }
+
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
-                self::FIELD_NAMES => array_keys((array) $reports[0]),
+                self::FIELD_NAMES => $columns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                'agency' => 'agency'
+                'flag' => $this->flag
             ]
         )->render();
         // if no data found

@@ -78,7 +78,7 @@
         <tbody>
             @foreach($reports as $report)
                 @php
-                    if (isset($agency)) $report = (array) $report;
+                    if (isset($agency) || $flag) $report = (array) $report;
                 @endphp
                 <tr>
                 @foreach($fieldNames as $fieldName)

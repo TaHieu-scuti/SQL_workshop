@@ -415,6 +415,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $fieldNames, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
 
+            if (!in_array(static::PAGE_ID, $columns)) {
+                array_unshift($columns, static::PAGE_ID);
+            }
+
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
 
