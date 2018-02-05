@@ -99,8 +99,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                     } else {
                         $table->double($key)->nullable();
                     }
-
-                    $table->index($key, 'IX_'.$key);
                 }
                 $table->temporary();
             }

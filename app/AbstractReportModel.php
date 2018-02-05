@@ -441,8 +441,7 @@ abstract class AbstractReportModel extends Model
                     );
                 }
             )
-            ->groupBy($groupBy)
-            ->orderBy($columnSort, $sort);
+            ->groupBy($groupBy);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
@@ -749,7 +748,7 @@ abstract class AbstractReportModel extends Model
             $adGroupId,
             $adReportId,
             $keywordId
-        );
+        )->orderBy($columnSort, $sort);
 
         return $builder->paginate($pagination);
     }

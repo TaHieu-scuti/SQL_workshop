@@ -20,6 +20,7 @@ class RepoYssCampaignReportController extends AbstractReportController
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'campaignReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
+    const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
@@ -119,10 +120,11 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         $columns = array_keys((array) $dataReports[0]);
-        if (property_exists ( $dataReports[0] , 'table')) {
+        if (is_object($dataReports[0]) && property_exists($dataReports[0], 'table')) {
             $columns = array_keys($dataReports[0]->getAttributes());
             $this->flag = false;
         }
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -194,10 +196,11 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
 
         $columns = array_keys((array) $reports[0]);
-        if (property_exists ( $reports[0] , 'table')) {
+        if (is_object($reports[0]) && property_exists($reports[0], 'table')) {
             $columns = array_keys($reports[0]->getAttributes());
             $this->flag = false;
         }
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
             'layouts.table_data',
