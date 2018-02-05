@@ -249,10 +249,12 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     private function removeUnnecessaryFields($columnTable)
     {
-        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME)) && array_search('cost', $columnTable) !== false) {
+        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME))
+            && array_search('cost', $columnTable) !== false) {
             unset($columnTable[array_search('cost', $columnTable)]);
         }
-        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME)) && array_search('clicks', $columnTable) !== false) {
+        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME))
+            && array_search('clicks', $columnTable) !== false) {
             unset($columnTable[array_search('clicks', $columnTable)]);
         }
         return $columnTable;
