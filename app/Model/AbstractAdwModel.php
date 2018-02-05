@@ -13,9 +13,12 @@ abstract class AbstractAdwModel extends AbstractReportModel
     private $conversionPoints;
     private $adGainerCampaigns;
 
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
+    private $isConv = false;
+    private $isCallTracking = false;
+
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = "")
     {
-        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
+        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName = "");
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
                 case 'criteria.Name':
@@ -319,7 +322,54 @@ abstract class AbstractAdwModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+            $columns = $this->unsetColumns($fieldNames, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
+
+            if (!in_array(static::PAGE_ID, $columns)) {
+                array_unshift($columns, static::PAGE_ID);
+            }
+
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+                . $this->getBindingSql($builder));
+
+            if ($this->isConv) {
+                $this->updateTemporaryTableWithConversion(
+                    $this->conversionPoints,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $this->adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay
+                );
+            }
+
+            $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            $builder = DB::table(self::TABLE_TEMPORARY)
+                ->select($aggregated)
+                ->groupby($groupedByField)
+                ->orderBy($columnSort, $sort);
+        }
 
         return $builder;
     }
