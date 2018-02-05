@@ -61,6 +61,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'campaign_id',
         'campaignID'
     ];
+
     protected function createTemporaryTable(
         array $fieldNames,
         $isConv = false,
@@ -122,12 +123,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
 
         if ($isCallTracking) {
-            foreach ($adGainerCampaigns as $i => $adgeiner) {
+            foreach ($adGainerCampaigns as $i => $adgainer) {
                 array_unshift($fieldNames, 'call'.$i);
                 array_unshift($this->groupCallTracking, 'call'.$i);
             }
         }
-        $fieldNames = $this->updateFieldNames($fieldNames);
-        return $fieldNames;
+        return $this->updateFieldNames($fieldNames);
     }
 }

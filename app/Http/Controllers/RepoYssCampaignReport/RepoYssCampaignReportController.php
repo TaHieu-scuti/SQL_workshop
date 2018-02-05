@@ -124,6 +124,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $columns = array_keys($dataReports[0]->getAttributes());
             $this->flag = false;
         }
+        $columns = $this->removeUnnecessaryFields($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -200,6 +201,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             $columns = array_keys($reports[0]->getAttributes());
             $this->flag = false;
         }
+        $columns = $this->removeUnnecessaryFields($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
@@ -240,5 +242,16 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->model = new RepoYdnCampaignReport;
         }
         return $engine;
+    }
+
+    private function removeUnnecessaryFields($columnTable)
+    {
+        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME)) && array_search('cost', $columnTable) !== false) {
+            unset($columnTable[array_search('cost', $columnTable)]);
+        }
+        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME)) && array_search('clicks', $columnTable) !== false) {
+            unset($columnTable[array_search('clicks', $columnTable)]);
+        }
+        return $columnTable;
     }
 }

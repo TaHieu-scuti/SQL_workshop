@@ -89,8 +89,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = null)
     {
-        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections);
-        return $expressions;
+        return parent::getAggregated($fieldNames, $higherLayerSelections);
     }
 
     protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null)
@@ -153,8 +152,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
 
-        $aggregations = $this->getAggregatedForTemprary($fieldNames, $higherLayerSelections);
-        return $aggregations;
+        return $this->getAggregatedForTemprary($fieldNames, $higherLayerSelections);
     }
 
     private function addRawExpressionsConversionPoint(array $expressions)
@@ -382,7 +380,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $campaignIDs,
             static::PAGE_ID
         );
-        $this->checkconditionfieldName($fieldNames);
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
 
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -538,7 +536,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         return $arraySelect;
     }
 
-    private function checkconditionfieldName($fieldNames)
+    private function checkConditionFieldName($fieldNames)
     {
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === '[conversionValues]') {
@@ -547,5 +545,15 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $this->isCallTracking = true;
             }
         }
+
+        if ($this->isConv || $this->isCallTracking) {
+            if (!in_array('cost', $fieldNames)) {
+                array_unshift($fieldNames, 'cost');
+            }
+            if (!in_array('clicks', $fieldNames)) {
+                array_unshift($fieldNames, 'clicks');
+            }
+        }
+        return $fieldNames;
     }
 }
