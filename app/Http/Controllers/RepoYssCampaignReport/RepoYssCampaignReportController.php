@@ -67,7 +67,7 @@ class RepoYssCampaignReportController extends AbstractReportController
      */
     protected $model;
 
-    private $flag = true;
+    private $isObjectStdClass = true;
 
     public function __construct(
         ResponseFactory $responseFactory,
@@ -142,7 +142,7 @@ class RepoYssCampaignReportController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                'flag' => $this->flag
+                'flag' => $this->isObjectStdClass
             ]
         )->render();
         $fieldsOnModal = view(
@@ -202,7 +202,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $columns = array_keys((array) $reports[0]);
         if (is_object($reports[0]) && property_exists($reports[0], 'table')) {
             $columns = array_keys($reports[0]->getAttributes());
-            $this->flag = false;
+            $this->isObjectStdClass = false;
         }
         $columns = $this->removeUnnecessaryFields($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);

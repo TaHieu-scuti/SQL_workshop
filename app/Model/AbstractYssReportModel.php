@@ -92,7 +92,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         return parent::getAggregated($fieldNames, $higherLayerSelections);
     }
 
-    protected function getAggregatedForTemprary(array $fieldNames, array $higherLayerSelections = null)
+    protected function getAggregatedForTemporary(array $fieldNames, array $higherLayerSelections = null)
     {
         $tableName = null;
         if ($this->isConv || $this->isCallTracking) {
@@ -152,7 +152,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
 
-        return $this->getAggregatedForTemprary($fieldNames, $higherLayerSelections);
+        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
     }
 
     private function addRawExpressionsConversionPoint(array $expressions)
