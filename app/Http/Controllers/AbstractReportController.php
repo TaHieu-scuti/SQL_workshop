@@ -662,14 +662,16 @@ abstract class AbstractReportController extends Controller
         if (static::class === 'App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController'
             && session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
             if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_ALL_FIELD_NAME))) {
-                session([static::SESSION_KEY_COLUMN_SORT => array_values(session(static::SESSION_KEY_ALL_FIELD_NAME))[0]]);
+                session([static::SESSION_KEY_COLUMN_SORT
+                    => $this->getFirstColumnSort(session(static::SESSION_KEY_ALL_FIELD_NAME))]);
             }
         } elseif (!in_array(session(static::SESSION_KEY_COLUMN_SORT), session(static::SESSION_KEY_FIELD_NAME))) {
             if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName'
                 && session(static::SESSION_KEY_COLUMN_SORT) !== 'clientName'
                 && session(static::SESSION_KEY_COLUMN_SORT) !== 'directClients'
             ) {
-                session([static::SESSION_KEY_COLUMN_SORT => array_values(session(static::SESSION_KEY_FIELD_NAME))[0]]);
+                session([static::SESSION_KEY_COLUMN_SORT
+                    => $this->getFirstColumnSort(session(static::SESSION_KEY_FIELD_NAME))]);
             }
         }
 
@@ -691,6 +693,24 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+    }
+
+    private function getFirstColumnSort($fieldNames)
+    {
+        $arrayIDs = [
+            'campaignID',
+            'adgroupID',
+            'keywordID',
+            'adGroupID',
+            'adID',
+            'keywordID'
+        ];
+        foreach ($fieldNames as $key => $fieldName) {
+            if (in_array($fieldName, $arrayIDs)) {
+                unset($fieldNames[$key]);
+            }
+        }
+        return array_values($fieldNames)[0];
     }
 
     public function getCalculatedSummaryReport()
