@@ -135,7 +135,6 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYdnCampaignReport;
             $queryGetConversion = $convModel->select(
