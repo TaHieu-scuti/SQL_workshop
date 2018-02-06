@@ -130,19 +130,6 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         }
     }
 
-    private function addConditonForDate(EloquentBuilder $query, $tableName, $startDay, $endDay)
-    {
-        if ($startDay === $endDay) {
-            $query->whereRaw('STR_TO_DATE('.$tableName.
-                '.time_of_call, "%Y-%m-%d %H:%i:%s") LIKE "'.$endDay.'%"');
-        } else {
-            $query->whereRaw('STR_TO_DATE('.$tableName.
-                '.time_of_call, "%Y-%m-%d %H:%i:%s") >= "'.$startDay.'"')
-                ->whereRaw('STR_TO_DATE('.$tableName.
-                    '.time_of_call, "%Y-%m-%d %H:%i:%s") <= "'.$endDay.'"');
-        }
-    }
-
     public function getAllCampaign(
         $accountId = null
     ) {
