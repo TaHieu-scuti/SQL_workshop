@@ -322,9 +322,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $fieldNames,
                 $groupedByField,
                 $campaignId,
-                $adGroupId,
-                $this->isConv,
-                $this->isCallTracking
+                $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, [DB::raw('IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare')]))
@@ -372,9 +370,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $fieldNames,
                 $groupedByField,
                 $campaignId,
-                $adGroupId,
-                $this->isConv,
-                $this->isCallTracking
+                $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)->select(
                 array_merge(

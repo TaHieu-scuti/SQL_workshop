@@ -13,8 +13,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 {
     private $conversionPoints;
     private $adGainerCampaigns;
-    private $isConv = false;
-    private $isCallTracking = false;
 
     protected function addJoinConditions(JoinClause $join, $joinAlias)
     {
@@ -385,9 +383,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $fieldNames,
                 $groupedByField,
                 $campaignId,
-                $adGroupId,
-                $this->isConv,
-                $this->isCallTracking
+                $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
@@ -434,9 +430,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $fieldNames,
                 $groupedByField,
                 $campaignId,
-                $adGroupId,
-                $this->isConv,
-                $this->isCallTracking
+                $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
         }

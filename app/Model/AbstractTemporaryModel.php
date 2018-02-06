@@ -12,8 +12,8 @@ use DB;
 
 abstract class AbstractTemporaryModel extends AbstractReportModel
 {
-    private $isConv = false;
-    private $isCallTracking = false;
+    protected $isConv = false;
+    protected $isCallTracking = false;
 
     const UNSET_COLUMNS = [
         '[conversionValues]',
@@ -111,12 +111,10 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
 
     protected function getAggregatedForTemporary(
         array $fieldNames,
-        array $higherLayerSelections = null,
-        $isConv = false,
-        $isCallTracking = false
+        array $higherLayerSelections = null
     ) {
         $tableName = null;
-        if ($isConv || $isCallTracking) {
+        if ($this->isConv || $this->isCallTracking) {
             $tableName = self::TABLE_TEMPORARY;
         }
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
@@ -202,9 +200,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $fieldNames,
         $groupedByField,
         $campaignId,
-        $adGroupId,
-        $isConv,
-        $isCallTracking
+        $adGroupId
     ) {
         $higherLayerSelections = [];
         if ($groupedByField !== self::DEVICE
@@ -214,6 +210,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         ) {
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
         }
-        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections, $isConv, $isCallTracking);
+        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
     }
 }
