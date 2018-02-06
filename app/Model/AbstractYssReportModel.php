@@ -87,11 +87,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             ->where($joinAlias.'.traffic_type', '=', 'AD');
     }
 
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = null)
-    {
-        return parent::getAggregated($fieldNames, $higherLayerSelections);
-    }
-
     protected function getAggregatedForTemporary(array $fieldNames, array $higherLayerSelections = null)
     {
         $tableName = null;
