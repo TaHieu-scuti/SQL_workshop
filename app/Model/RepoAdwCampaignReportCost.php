@@ -141,12 +141,6 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
         }
     }
 
-    protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
-    {
-        $this->addJoinsForConversionPoints($builder, $conversionPoints);
-        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
-    }
-
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
         $yss_campaign_model = new RepoAdwCampaignReportConv();
