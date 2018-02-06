@@ -130,27 +130,4 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
         return $this->updateFieldNames($fieldNames);
     }
-
-    protected function checkConditionFieldName($fieldNames)
-    {
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === '[conversionValues]') {
-                $this->isConv = true;
-            }
-
-            if (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
-                $this->isCallTracking = true;
-            }
-        }
-
-        if ($this->isConv || $this->isCallTracking) {
-            if (!in_array('cost', $fieldNames)) {
-                array_unshift($fieldNames, 'cost');
-            }
-            if (!in_array('clicks', $fieldNames)) {
-                array_unshift($fieldNames, 'clicks');
-            }
-        }
-        return $fieldNames;
-    }
 }
