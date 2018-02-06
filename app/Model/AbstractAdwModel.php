@@ -87,7 +87,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
                     .self::TABLE_TEMPORARY
-                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . "`.`conversions".$i."`), 0) AS 'Adw "
                     . $conversionName
                     . " CV'"
                 );
@@ -96,7 +96,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     . self::TABLE_TEMPORARY
                     . '`.`conversions'.$i.'`) / SUM(`'
                     . self::TABLE_TEMPORARY
-                    . "`.`clicks`)) * 100, 0) AS 'YSS "
+                    . "`.`clicks`)) * 100, 0) AS 'Adw "
                     . $conversionName
                     . " CVR'"
                 );
@@ -105,7 +105,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     . self::TABLE_TEMPORARY
                     . '`.`cost`) / SUM(`'
                     . self::TABLE_TEMPORARY
-                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . "`.`conversions".$i."`), 0) AS 'Adw "
                     . $conversionName
                     . " CPA'"
                 );
@@ -122,7 +122,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'Adw "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -133,7 +133,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     . $i
                     . '` / SUM(`'
                     . self::TABLE_TEMPORARY
-                    . "`.`clicks`), 0) AS 'YSS "
+                    . "`.`clicks`), 0) AS 'Adw "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -144,7 +144,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     . self::TABLE_TEMPORARY
                     . '`.`cost`) / `call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'Adw "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
