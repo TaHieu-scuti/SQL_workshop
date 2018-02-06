@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use App\AbstractReportModel;
 use Illuminate\Support\Facades\Auth;
 use DB;
