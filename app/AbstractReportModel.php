@@ -113,10 +113,12 @@ abstract class AbstractReportModel extends Model
      * @param string[] $fieldNames
      * @return Expression[]
      */
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null)
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
         $fieldNames = $this->updateFieldNames($fieldNames);
-        $tableName = $this->getTable();
+        if (empty($tableName)) {
+            $tableName = $this->getTable();
+        }
         $joinTableName = (new RepoYssAccount)->getTable();
         if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
             $tableName = 'repo_yss_prefecture_report_cost';
@@ -192,18 +194,24 @@ abstract class AbstractReportModel extends Model
                     'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                                    ->getType()
-                                    ->getName()
-                    === self::FIELD_TYPE
-                ) {
-                    $arrayCalculate[] = DB::raw(
-                        'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
-                    );
-                } else {
+                if ($tableName === 'temporary_table') {
                     $arrayCalculate[] = DB::raw(
                         'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                     );
+                } else {
+                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                                        ->getType()
+                                        ->getName()
+                        === self::FIELD_TYPE
+                    ) {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                        );
+                    } else {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                        );
+                    }
                 }
             }
         }
@@ -408,23 +416,23 @@ abstract class AbstractReportModel extends Model
         }
         $builder = $this->select(array_merge($selectBy, $aggregations))
             ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
                 function (Builder $query) use (
+                    $startDay,
+                    $endDay,
+                    $engine,
                     $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId,
-                    $engine
+                    $keywordId
                 ) {
-                    $this->addQueryConditions(
+                    $this->getCondition(
                         $query,
-                        $clientId,
+                        $startDay,
+                        $endDay,
                         $engine,
+                        $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
@@ -432,18 +440,57 @@ abstract class AbstractReportModel extends Model
                         $keywordId
                     );
                 }
-            )->where(
-                function (Builder $query) use ($engine) {
-                    $this->addConditionNetworkQueryForADW($engine, $query);
-                }
             )
-            ->groupBy($groupBy)
-            ->orderBy($columnSort, $sort);
+            ->groupBy($groupBy);
 
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO);
         }
         return $builder;
+    }
+
+    protected function getCondition(
+        Builder $query,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $query->where(
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )->where(
+            function (Builder $query) use (
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId,
+                $engine
+            ) {
+                $this->addQueryConditions(
+                    $query,
+                    $clientId,
+                    $engine,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+        )->where(
+            function (Builder $query) use ($engine) {
+                $this->addConditionNetworkQueryForADW($engine, $query);
+            }
+        );
     }
 
     protected function getBuilderForCalculateData(
@@ -701,7 +748,7 @@ abstract class AbstractReportModel extends Model
             $adGroupId,
             $adReportId,
             $keywordId
-        );
+        )->orderBy($columnSort, $sort);
 
         return $builder->paginate($pagination);
     }

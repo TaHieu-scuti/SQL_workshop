@@ -3,8 +3,9 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-class RepoPhoneTimeUse extends Model
+class RepoPhoneTimeUse extends AbstractReportModel
 {
     public $timestamps = false;
     protected $table = 'repo_phone_time_use';
