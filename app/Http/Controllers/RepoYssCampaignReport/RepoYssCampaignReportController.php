@@ -122,7 +122,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $columns = array_keys((array) $dataReports[0]);
         if (is_object($dataReports[0]) && property_exists($dataReports[0], 'table')) {
             $columns = array_keys($dataReports[0]->getAttributes());
-            $this->flag = false;
+            $this->isObjectStdClass = false;
         }
         $columns = $this->removeUnnecessaryFields($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
@@ -217,7 +217,7 @@ class RepoYssCampaignReportController extends AbstractReportController
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                'flag' => $this->flag
+                'flag' => $this->isObjectStdClass
             ]
         )->render();
         // if no data found
