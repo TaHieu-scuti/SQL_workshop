@@ -711,12 +711,8 @@ abstract class AbstractReportController extends Controller
             'adID',
             'keywordID'
         ];
-        foreach ($fieldNames as $key => $fieldName) {
-            if (in_array($fieldName, $arrayIDs)) {
-                unset($fieldNames[$key]);
-            }
-        }
-        return array_values($fieldNames)[0];
+        $fieldNames = array_diff($fieldNames, $arrayIDs);
+        return empty($fieldNames) ? session(static::SESSION_KEY_COLUMN_SORT) : array_values($fieldNames)[0];
     }
 
     public function getCalculatedSummaryReport()
