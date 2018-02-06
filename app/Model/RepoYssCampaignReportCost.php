@@ -34,18 +34,6 @@ class RepoYssCampaignReportCost extends AbstractYssReportModel
         'web_cpa' => 'integer'
     ];
 
-    const FIX_INSERT_FILEDS = [
-        'campaignID',
-        'campaignName',
-        'impressions',
-        'clicks',
-        'cost',
-        'ctr',
-        'averageCpc',
-        'averagePosition',
-        'impressionShare'
-    ];
-
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
         $groupedByField,

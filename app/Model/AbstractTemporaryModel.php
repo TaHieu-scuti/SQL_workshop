@@ -45,7 +45,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
 
     ];
 
-    const FILEDS_TYPE_BIGINT = [
+    const FIELDS_TYPE_BIGINT = [
         'adGroupID',
         'clicks',
         'impressions',
@@ -76,7 +76,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         );
         $fieldNames = array_merge($fieldNames, self::FIX_FIELDS);
 
-        $fieldNames = $this->checkAndUpdateFiledNames(
+        $fieldNames = $this->checkAndUpdateFieldNames(
             $fieldNames,
             $isConv,
             $isCallTracking,
@@ -89,7 +89,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             function (Blueprint $table) use ($fieldNames) {
                 $table->increments('id');
                 foreach ($fieldNames as $key => $fieldName) {
-                    if (in_array($fieldName, self::FILEDS_TYPE_BIGINT)) {
+                    if (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
                         $table->bigInteger($key)->nullable();
                     } elseif (in_array($fieldName, $this->groupCallTracking)) {
                         $table->integer($key)->nullable();
@@ -108,7 +108,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         return $fieldNames;
     }
 
-    private function checkAndUpdateFiledNames(
+    private function checkAndUpdateFieldNames(
         $fieldNames,
         $isConv,
         $isCallTracking,
@@ -136,7 +136,9 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === '[conversionValues]') {
                 $this->isConv = true;
-            } elseif (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
+            }
+
+            if (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
                 $this->isCallTracking = true;
             }
         }
