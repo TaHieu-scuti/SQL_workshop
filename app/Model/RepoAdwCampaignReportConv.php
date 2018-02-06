@@ -2,12 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-use App\Model\RepoAdwCampaignReportConv;
-use App\Model\RepoAdwCampaignReportCost;
-
-class RepoAdwCampaignReportConv extends Model
+class RepoAdwCampaignReportConv extends AbstractReportModel
 {
     protected $table = 'repo_adw_campaign_report_conv';
 
