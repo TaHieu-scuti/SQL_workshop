@@ -345,8 +345,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $this->isConv,
                 $this->isCallTracking,
                 $this->conversionPoints,
-                $this->adGainerCampaigns,
-                $engine
+                $this->adGainerCampaigns
             );
             $columns = $this->unsetColumns(
                 $fieldNames,

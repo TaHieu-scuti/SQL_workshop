@@ -68,8 +68,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $isConv = false,
         $isCallTracking = false,
         $conversionPoints = null,
-        $adGainerCampaigns = null,
-        $engine = null
+        $adGainerCampaigns = null
     ) {
 
         $fieldNames = $this->unsetColumns(
@@ -87,7 +86,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         );
         Schema::create(
             self::TABLE_TEMPORARY,
-            function (Blueprint $table) use ($fieldNames, $engine) {
+            function (Blueprint $table) use ($fieldNames) {
                 $table->increments('id');
                 foreach ($fieldNames as $key => $fieldName) {
                     if (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
