@@ -12,6 +12,9 @@ use DB;
 
 abstract class AbstractTemporaryModel extends AbstractReportModel
 {
+    private $isConv = false;
+    private $isCallTracking = false;
+
     const UNSET_COLUMNS = [
         '[conversionValues]',
         'web_cv',
@@ -106,6 +109,59 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         );
     }
 
+    protected function getAggregatedForTemporary(
+        array $fieldNames,
+        array $higherLayerSelections = null,
+        $isConv = false,
+        $isCallTracking = false
+    ) {
+        $tableName = null;
+        if ($isConv || $isCallTracking) {
+            $tableName = self::TABLE_TEMPORARY;
+        }
+        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
+        foreach ($fieldNames as $fieldName) {
+            switch ($fieldName) {
+                case '[conversionValues]':
+                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
+                    break;
+                case '[phoneNumberValues]':
+                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
+                    break;
+                case 'call_cv':
+                    $expressions = $this->addRawExpressionCallConversions($expressions);
+                    break;
+                case 'call_cvr':
+                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
+                    break;
+                case 'call_cpa':
+                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
+                    break;
+                case 'web_cv':
+                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cv");
+                    break;
+                case 'web_cvr':
+                    $expressions[] = DB::raw("IFNULL((SUM(`".self::TABLE_TEMPORARY."`.`conversions`) /
+                    SUM(`".self::TABLE_TEMPORARY."`.`clicks`)) * 100, 0) as web_cvr");
+                    break;
+                case 'web_cpa':
+                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`cost`) /
+                    SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cpa");
+                    break;
+                case 'total_cv':
+                    $expressions = $this->addRawExpressionTotalConversions($expressions);
+                    break;
+                case 'total_cvr':
+                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
+                    break;
+                case 'total_cpa':
+                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
+                    break;
+            }
+        }
+        return $expressions;
+    }
+
     private function checkAndUpdateFieldNames(
         $fieldNames,
         $isConv,
@@ -140,5 +196,24 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                 ->whereRaw('STR_TO_DATE('.$tableName.
                     '.time_of_call, "%Y-%m-%d %H:%i:%s") <= "'.$endDay.'"');
         }
+    }
+
+    protected function processGetAggregated(
+        $fieldNames,
+        $groupedByField,
+        $campaignId,
+        $adGroupId,
+        $isConv,
+        $isCallTracking
+    ) {
+        $higherLayerSelections = [];
+        if ($groupedByField !== self::DEVICE
+            && $groupedByField !== self::HOUR_OF_DAY
+            && $groupedByField !== self::DAY_OF_WEEK
+            && $groupedByField !== self::PREFECTURE
+        ) {
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+        }
+        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections, $isConv, $isCallTracking);
     }
 }

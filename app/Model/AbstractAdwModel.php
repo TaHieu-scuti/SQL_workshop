@@ -13,73 +13,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
     private $conversionPoints;
     private $adGainerCampaigns;
 
-    private $isConv = false;
-    private $isCallTracking = false;
-
-    protected function getAggregatedForTemporary(array $fieldNames, array $higherLayerSelections = null)
-    {
-        $tableName = null;
-        if ($this->isConv || $this->isCallTracking) {
-            $tableName = self::TABLE_TEMPORARY;
-        }
-        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
-        foreach ($fieldNames as $fieldName) {
-            switch ($fieldName) {
-                case '[conversionValues]':
-                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
-                    break;
-                case '[phoneNumberValues]':
-                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
-                    break;
-                case 'call_cv':
-                    $expressions = $this->addRawExpressionCallConversions($expressions);
-                    break;
-                case 'call_cvr':
-                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
-                    break;
-                case 'call_cpa':
-                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
-                    break;
-                case 'web_cv':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cv");
-                    break;
-                case 'web_cvr':
-                    $expressions[] = DB::raw("IFNULL((SUM(`".self::TABLE_TEMPORARY."`.`conversions`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`clicks`)) * 100, 0) as web_cvr");
-                    break;
-                case 'web_cpa':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`cost`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cpa");
-                    break;
-                case 'total_cv':
-                    $expressions = $this->addRawExpressionTotalConversions($expressions);
-                    break;
-                case 'total_cvr':
-                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
-                    break;
-                case 'total_cpa':
-                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
-                    break;
-            }
-        }
-        return $expressions;
-    }
-
-    private function processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId)
-    {
-        $higherLayerSelections = [];
-        if ($groupedByField !== self::DEVICE
-            && $groupedByField !== self::HOUR_OF_DAY
-            && $groupedByField !== self::DAY_OF_WEEK
-            && $groupedByField !== self::PREFECTURE
-        ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
-        }
-
-        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
-    }
-
-    private function addRawExpressionsConversionPoint(array $expressions)
+    protected function addRawExpressionsConversionPoint(array $expressions)
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
         if ($conversionNames !== null) {
@@ -115,7 +49,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionsPhoneNumberConversions(array $expressions)
+    protected function addRawExpressionsPhoneNumberConversions(array $expressions)
     {
         if ($this->adGainerCampaigns !== null) {
             foreach ($this->adGainerCampaigns as $i => $campaign) {
@@ -156,7 +90,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallConversions(array $expressions)
+    protected function addRawExpressionCallConversions(array $expressions)
     {
         $expression = 'IFNULL(';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -171,7 +105,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallConversionRate(array $expressions)
+    protected function addRawExpressionCallConversionRate(array $expressions)
     {
         $expression = 'IFNULL((';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -192,7 +126,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallCostPerAction(array $expressions)
+    protected function addRawExpressionCallCostPerAction(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -211,7 +145,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalConversions(array $expressions)
+    protected function addRawExpressionTotalConversions(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -230,7 +164,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalConversionRate(array $expressions)
+    protected function addRawExpressionTotalConversionRate(array $expressions)
     {
         $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -252,7 +186,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalCostPerAction(array $expressions)
+    protected function addRawExpressionTotalCostPerAction(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
             . self::TABLE_TEMPORARY . '`.`conversions`) + ';
@@ -384,7 +318,14 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 );
             }
             $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
-            $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId,
+                $this->isConv,
+                $this->isCallTracking
+            );
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, [DB::raw('IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare')]))
                 ->groupby($groupedByField)
@@ -427,7 +368,14 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
-            $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId,
+                $this->isConv,
+                $this->isCallTracking
+            );
             $builder = DB::table(self::TABLE_TEMPORARY)->select(
                 array_merge(
                     $aggregated,
