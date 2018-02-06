@@ -49,6 +49,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         'averageCpc',
         'averagePosition',
         'impressionShare',
+        'conversions',
         '[conversionValues]',
         'web_cv',
         'web_cvr',
