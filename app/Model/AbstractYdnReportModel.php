@@ -340,20 +340,6 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId)
-    {
-        $higherLayerSelections = [];
-        if ($groupedByField !== self::DEVICE
-            && $groupedByField !== self::HOUR_OF_DAY
-            && $groupedByField !== self::DAY_OF_WEEK
-            && $groupedByField !== self::PREFECTURE
-        ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
-        }
-
-        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
-    }
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -498,7 +484,15 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+        }
 
         return $builder;
     }
