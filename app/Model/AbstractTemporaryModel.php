@@ -104,8 +104,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                 $table->temporary();
             }
         );
-
-        return $fieldNames;
     }
 
     private function checkAndUpdateFieldNames(
