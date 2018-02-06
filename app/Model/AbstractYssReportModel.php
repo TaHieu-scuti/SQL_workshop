@@ -312,7 +312,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
-
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
