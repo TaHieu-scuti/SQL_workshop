@@ -57,7 +57,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -68,7 +68,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $i
                     . '` / SUM(`'
                     . self::TABLE_TEMPORARY
-                    . "`.`clicks`), 0) AS 'YSS "
+                    . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
@@ -79,7 +79,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . self::TABLE_TEMPORARY
                     . '`.`cost`) / `call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
                     . $campaign->phone_number
