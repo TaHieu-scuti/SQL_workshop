@@ -482,10 +482,10 @@ abstract class AbstractReportController extends Controller
             || session(static::SESSION_KEY_ENGINE) === 'ydn'
             || session(static::SESSION_KEY_ENGINE) === null
         ) {
-            $array[0] = static::GROUPED_BY_FIELD;
+            $array[1] = static::GROUPED_BY_FIELD;
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
-            $array[0] = static::ADW_GROUPED_BY_FIELD;
+            $array[1] = static::ADW_GROUPED_BY_FIELD;
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
         }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
