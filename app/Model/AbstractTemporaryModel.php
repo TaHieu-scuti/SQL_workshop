@@ -225,7 +225,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             array_push($arrayAlias, 'adgroupID');
             array_push($arrayAlias, 'adgroupName');
         }
-        array_splice( $columns, 3, 0, $arrayAlias );
+        array_splice( $columns, 2, 0, $arrayAlias );
 
         return $columns;
     }
