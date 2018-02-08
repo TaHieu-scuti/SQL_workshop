@@ -212,4 +212,21 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
         return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
     }
+
+    protected function higherSelectionFields($columns, $campaignId, $adGroupId)
+    {
+        $arrayAlias = [];
+
+        if (!isset($campaignId)) {
+            array_push($arrayAlias, 'campaignID');
+            array_push($arrayAlias, 'campaignName');
+        }
+        if (!isset($adGroupId)) {
+            array_push($arrayAlias, 'adgroupID');
+            array_push($arrayAlias, 'adgroupName');
+        }
+        array_splice( $columns, 3, 0, $arrayAlias );
+
+        return $columns;
+    }
 }
