@@ -195,4 +195,12 @@ class Campaign extends Model
             }
         );
     }
+
+    public function getCustomForPhoneTimeUse($campaignIdAdgainer)
+    {
+        $campaignId = array_unique($campaignIdAdgainer->pluck('campaign_id')->toArray());
+        return $this->select(self::ARR_SELECT_FIELDS)
+            ->whereIn('campaign_id', $campaignId)
+            ->get();
+    }
 }
