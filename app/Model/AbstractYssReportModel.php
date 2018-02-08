@@ -303,12 +303,15 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $keywordIds = array_unique($this->conversionPoints->pluck('keywordID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'yss',
             $campaignIDs,
-            static::PAGE_ID
+            static::PAGE_ID,
+            null,
+            $keywordIds
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
@@ -329,7 +332,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv || $this->isCallTracking) {
             $this->createTemporaryTable(
                 $fieldNames,
@@ -343,6 +345,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             if (!in_array(static::PAGE_ID, $columns)) {
                 array_unshift($columns, static::PAGE_ID);
             }
+
+            $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -442,7 +446,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $account_id = null,
         $accountId = null,
         $campaignId = null,
-        $adGroupId = null
+        $adGroupId = null,
+        $keywordId = null
     ) {
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
@@ -453,6 +458,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         }
         if ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
+        }
+        if ($keywordId !== null) {
+            $query->where('keywordID', '=', $keywordId);
         }
     }
 
@@ -468,7 +476,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         }
 
         if ($column === 'keywordID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keywordID');
         }
 
         return $arraySelect;
