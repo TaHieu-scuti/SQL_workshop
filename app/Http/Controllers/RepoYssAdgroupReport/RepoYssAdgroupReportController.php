@@ -87,7 +87,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         session()->put([self::SESSION_KEY_AD_GROUP_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
-            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+            array_unshift($defaultColumns, self::ADGROUP_ID, self::GROUPED_BY_FIELD);
             if ($engine === 'ydn') {
                 $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
             }
