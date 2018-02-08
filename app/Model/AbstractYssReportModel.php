@@ -303,7 +303,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        $keywordIds = array_unique($this->conversionPoints->pluck('keywordID')->toArray());
+        $adGroupIds = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
@@ -311,7 +311,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $campaignIDs,
             static::PAGE_ID,
             null,
-            $keywordIds
+            $adGroupIds
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
@@ -332,21 +332,24 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
+            $columns = $fieldNames;
+            if (static::PAGE_ID !== 'campaignID') {
+                $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
+            }
             $this->createTemporaryTable(
-                $fieldNames,
+                $columns,
                 $this->isConv,
                 $this->isCallTracking,
                 $this->conversionPoints,
                 $this->adGainerCampaigns
             );
-            $columns = $this->unsetColumns($fieldNames, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
+            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
 
             if (!in_array(static::PAGE_ID, $columns)) {
                 array_unshift($columns, static::PAGE_ID);
             }
-
-            $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -388,6 +391,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
+
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)

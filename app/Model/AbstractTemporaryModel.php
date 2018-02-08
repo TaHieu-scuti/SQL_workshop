@@ -211,7 +211,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             && $groupedByField !== self::DAY_OF_WEEK
             && $groupedByField !== self::PREFECTURE
         ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId, self::TABLE_TEMPORARY);
         }
         return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
     }
