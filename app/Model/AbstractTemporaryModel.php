@@ -46,6 +46,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'account_id',
         'campaign_id',
         'campaignName',
+        'adgroupName',
         'matchType',
         'keywordMatchType',
         'keyword'
@@ -224,7 +225,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             array_push($arrayAlias, 'campaignID');
             array_push($arrayAlias, 'campaignName');
         }
-        if (!isset($adGroupId)) {
+        if (!isset($adGroupId) && static::PAGE_ID !== 'adgroupID') {
             array_push($arrayAlias, 'adgroupID');
             array_push($arrayAlias, 'adgroupName');
         }

@@ -127,7 +127,6 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
                     );
                 }
             )->groupBy($groupedByField);
-
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
@@ -149,43 +148,39 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
+        $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
-        if ($groupedByField === 'campaignName') {
-            $groupedByField = 'utm_campaign';
-        }
-        foreach ($phoneList as $i => $phoneNumber) {
-            $campaignModel = new Campaign;
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse;
-            $joinAlias = 'call' . $i;
-            $queryGetConversion = $campaignModel->select(DB::raw($groupedByField .", COUNT(`id`) AS id"))->leftJoin(
-                $repoPhoneTimeUseModel->getTable() . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($phoneNumber) {
-                    $join->where('phone_number', $phoneNumber)
-                    ->where('source', 'yss')
-                    ->where('traffic_type', 'AD')
-                    ->where('camp_custom1', 'adgroupid')
-                    ->orWhere('camp_custom2', 'adgroupid')
-                    ->orWhere('camp_custom3', 'adgroupid')
-                    ->orWhere('camp_custom4', 'adgroupid')
-                    ->orWhere('camp_custom5', 'adgroupid')
-                    ->orWhere('camp_custom6', 'adgroupid')
-                    ->orWhere('camp_custom7', 'adgroupid')
-                    ->orWhere('camp_custom8', 'adgroupid')
-                    ->orWhere('camp_custom9', 'adgroupid')
-                    ->orWhere('camp_custom10', 'adgroupid');
-                }
-            )->where(
-                function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                    $this->addConditonForDate($query, $tableName, $startDay, $endDay);
-                }
-            )->whereIn('utm_campaign', $utmCampaignList)
-            ->groupBy($groupedByField);;
 
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+        $campaignModel = new Campaign();
+        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
+
+        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+            $customField = $this->getFieldName($campaign, 'adgroupid');
+
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    $customField
+                ]
+            )
+                ->whereRaw($customField.' NOT LIKE ""')
+                ->where('source', '=', $engine)
+                ->whereRaw('traffic_type = "AD"')
+                ->whereIn('phone_number', $phoneNumbers)
+                ->where('utm_campaign', $utmCampaignList)
+                ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                        $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                    }
+                )
+                ->groupBy($customField);
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.campaignID = tbl.'.$groupedByField
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                .self::TABLE_TEMPORARY.'.adgroupID = tbl.'.$customField
             );
         }
     }
@@ -195,6 +190,18 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         $yss_campaign_model = new RepoYssAdgroupReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         return $yss_campaign_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
+
+    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId)
+    {
+        return $this->select('campaign_id')
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
