@@ -200,7 +200,7 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
                 DB::raw($groupedByField .", COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-            ->where('source', 'yss')
+            ->where('source', 'ydn')
             ->where(
                 function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                     $this->addConditonForDate($query, $tableName, $startDay, $endDay);

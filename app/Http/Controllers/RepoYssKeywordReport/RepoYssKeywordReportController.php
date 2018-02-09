@@ -23,6 +23,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const SESSION_KEY_PREFIX = 'keywordReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
+    const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
@@ -50,6 +51,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         'averageCpc',
         'averagePosition',
         'impressionShare',
+        'conversions',
         '[conversionValues]',
         'web_cv',
         'web_cvr',
@@ -68,6 +70,8 @@ class RepoYssKeywordReportController extends AbstractReportController
      */
     protected $model;
 
+    private $isObjectStdClass = true;
+
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssKeywordReportCost $model
@@ -82,7 +86,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === null || $engine === 'yss') {
-            array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+            array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
         }
@@ -105,12 +109,13 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
+
+        $columns = $this->getAttributeFieldNames($dataReports);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -122,11 +127,12 @@ class RepoYssKeywordReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
+                self::FIELD_NAMES => $columns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         $fieldsOnModal = view(
@@ -173,18 +179,20 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($reports);
+        $columns = $this->getAttributeFieldNames($reports);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
             'layouts.table_data',
             [
-            self::REPORTS => $reports,
-            self::FIELD_NAMES => array_keys($reports[0]->getAttributes()),
-            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-            self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray,
-            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                self::REPORTS => $reports,
+                self::FIELD_NAMES => $columns,
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         // if no data found

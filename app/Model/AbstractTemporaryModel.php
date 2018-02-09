@@ -47,6 +47,9 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'campaign_id',
         'campaignName',
         'adgroupName'
+        'matchType',
+        'keywordMatchType',
+        'keyword',
     ];
 
     const FIELDS_TYPE_BIGINT = [
@@ -55,6 +58,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'impressions',
         'campaignID',
         'customerID',
+        'keywordID',
         'adID'
     ];
 
@@ -63,7 +67,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'conversions',
         'account_id',
         'campaign_id',
-        'campaignID'
     ];
 
     protected function createTemporaryTable(
@@ -73,12 +76,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $conversionPoints = null,
         $adGainerCampaigns = null
     ) {
-
         $fieldNames = $this->unsetColumns(
             $fieldNames,
             array_merge(self::FIELDS_CALL_TRACKING, self::UNSET_COLUMNS)
         );
-        $fieldNames = array_merge($fieldNames, self::FIX_FIELDS);
+        $fieldNames = array_merge($fieldNames, self::FIX_FIELDS, [static::PAGE_ID]);
 
         $fieldNames = $this->checkAndUpdateFieldNames(
             $fieldNames,
@@ -87,6 +89,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $conversionPoints,
             $adGainerCampaigns
         );
+
         Schema::create(
             self::TABLE_TEMPORARY,
             function (Blueprint $table) use ($fieldNames) {
@@ -208,9 +211,30 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             && $groupedByField !== self::DAY_OF_WEEK
             && $groupedByField !== self::PREFECTURE
         ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId, self::TABLE_TEMPORARY);
         }
         return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
+    }
+
+    protected function higherSelectionFields($columns, $campaignId, $adGroupId)
+    {
+        $arrayAlias = [];
+        if (!isset($campaignId)) {
+            array_push($arrayAlias, 'campaignID');
+            array_push($arrayAlias, 'campaignName');
+        }
+        if (!isset($adGroupId)) {
+            array_push($arrayAlias, 'adgroupID');
+            array_push($arrayAlias, 'adgroupName');
+        }
+
+        array_splice($columns, 2, 0, $arrayAlias);
+
+        if (session(self::SESSION_KEY_ENGINE) === 'yss' && $key = array_search('matchType', $columns)) {
+            $columns[$key] = 'keywordMatchType';
+        }
+
+        return $columns;
     }
 
     protected function getFieldName($campaign, $field)

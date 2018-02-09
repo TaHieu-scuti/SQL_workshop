@@ -120,13 +120,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $columns = array_keys((array) $dataReports[0]);
-        if (is_object($dataReports[0]) && property_exists($dataReports[0], 'table')) {
-            $columns = array_keys($dataReports[0]->getAttributes());
-            $this->isObjectStdClass = false;
-        }
-        $columns = $this->removeUnnecessaryFields($columns);
-        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
+        $columns = $this->getAttributeFieldNames($dataReports);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -200,12 +194,8 @@ class RepoYssCampaignReportController extends AbstractReportController
             [self::SUMMARY_REPORT => $summaryReportData]
         )->render();
 
-        $columns = array_keys((array) $reports[0]);
-        if (is_object($reports[0]) && property_exists($reports[0], 'table')) {
-            $columns = array_keys($reports[0]->getAttributes());
-            $this->isObjectStdClass = false;
-        }
-        $columns = $this->removeUnnecessaryFields($columns);
+        $columns = $this->getAttributeFieldNames($reports);
+
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
@@ -246,18 +236,5 @@ class RepoYssCampaignReportController extends AbstractReportController
             $this->model = new RepoYdnCampaignReport;
         }
         return $engine;
-    }
-
-    private function removeUnnecessaryFields($columnTable)
-    {
-        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME))
-            && array_search('cost', $columnTable) !== false) {
-            unset($columnTable[array_search('cost', $columnTable)]);
-        }
-        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME))
-            && array_search('clicks', $columnTable) !== false) {
-            unset($columnTable[array_search('clicks', $columnTable)]);
-        }
-        return $columnTable;
     }
 }

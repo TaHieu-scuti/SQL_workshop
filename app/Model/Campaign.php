@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Eloquent\Builder;
 
-class Campaign extends Model
+class Campaign extends AbstractTemporaryModel
 {
     const ARR_SELECT_FIELDS = [
         'camp_custom1',
@@ -24,13 +24,26 @@ class Campaign extends Model
     /** @var bool */
     public $timestamps = false;
 
+    const ARR_SELECT_FIELDS = [
+        'camp_custom1',
+        'camp_custom2',
+        'camp_custom3',
+        'camp_custom4',
+        'camp_custom5',
+        'camp_custom6',
+        'camp_custom7',
+        'camp_custom8',
+        'camp_custom9',
+        'camp_custom10'
+    ];
+
     public function getAdGainerCampaignsWithPhoneNumber(
         $account_id,
         $source,
         array $campaignIDs,
         $flag = null,
         array $adIDs = null,
-        array $keywordIDs = null
+        array $adgroupIds = null
     ) {
         $campaignsTableName = $this->getTable();
         $repoPhoneTimeUseTableName = (new RepoPhoneTimeUse)->getTable();
@@ -64,7 +77,7 @@ class Campaign extends Model
                     $campaignsTableName,
                     $repoPhoneTimeUseTableName,
                     $adIDs,
-                    $keywordIDs
+                    $adgroupIds
                 ) {
                     if ($flag === 'adID') {
                         $this->addConditionForCampaignsWithPhoneNumber(
@@ -79,7 +92,7 @@ class Campaign extends Model
                             $query,
                             $campaignsTableName,
                             $repoPhoneTimeUseTableName,
-                            $keywordIDs,
+                            $adgroupIds,
                             'adgroupid'
                         );
                     }
