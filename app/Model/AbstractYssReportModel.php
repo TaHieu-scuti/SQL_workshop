@@ -333,9 +333,13 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
+
+            if (!in_array(static::PAGE_ID, $columns)) {
+                array_unshift($columns, static::PAGE_ID);
+            }
+
             if (static::PAGE_ID !== 'campaignID') {
                 $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
             }
@@ -348,13 +352,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             );
             $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
 
-            if (!in_array(static::PAGE_ID, $columns)) {
-                array_unshift($columns, static::PAGE_ID);
-            }
-
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,

@@ -66,7 +66,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'conversions',
         'account_id',
         'campaign_id',
-        'campaignID'
     ];
 
     protected function createTemporaryTable(
@@ -80,7 +79,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $fieldNames,
             array_merge(self::FIELDS_CALL_TRACKING, self::UNSET_COLUMNS)
         );
-        $fieldNames = array_merge($fieldNames, self::FIX_FIELDS);
+        $fieldNames = array_merge($fieldNames, self::FIX_FIELDS, [static::PAGE_ID]);
 
         $fieldNames = $this->checkAndUpdateFieldNames(
             $fieldNames,
@@ -89,6 +88,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $conversionPoints,
             $adGainerCampaigns
         );
+
         Schema::create(
             self::TABLE_TEMPORARY,
             function (Blueprint $table) use ($fieldNames) {
@@ -218,7 +218,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
     protected function higherSelectionFields($columns, $campaignId, $adGroupId)
     {
         $arrayAlias = [];
-
         if (!isset($campaignId)) {
             array_push($arrayAlias, 'campaignID');
             array_push($arrayAlias, 'campaignName');
@@ -233,6 +232,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         if (session(self::SESSION_KEY_ENGINE) === 'yss' && $key = array_search('matchType', $columns)) {
             $columns[$key] = 'keywordMatchType';
         }
+
         return $columns;
     }
 
