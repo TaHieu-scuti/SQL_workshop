@@ -106,12 +106,13 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
+
+        $columns = $this->getAttributeFiledNames($dataReports);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -174,7 +175,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($reports);
+        $columns = $this->getAttributeFiledNames($reports);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
             'layouts.table_data',

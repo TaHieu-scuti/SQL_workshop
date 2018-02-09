@@ -130,14 +130,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
 
-        $columns = array_keys((array) $dataReports[0]);
-        if (is_object($dataReports[0]) && property_exists($dataReports[0], 'table')) {
-            $columns = array_keys($dataReports[0]->getAttributes());
-            $this->isObjectStdClass = false;
-        }
-        $columns = $this->removeUnnecessaryFields($columns);
+        $columns = $this->getAttributeFiledNames($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $summaryReportLayout = view(
@@ -209,14 +203,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($reports);
 
-        $columns = array_keys((array) $reports[0]);
-        if (is_object($reports[0]) && property_exists($reports[0], 'table')) {
-            $columns = array_keys($reports[0]->getAttributes());
-            $this->isObjectStdClass = false;
-        }
-        $columns = $this->removeUnnecessaryFields($columns);
+        $columns = $this->getAttributeFiledNames($columns);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
@@ -285,16 +273,4 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
     }
 
-    private function removeUnnecessaryFields($columnTable)
-    {
-        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME))
-            && array_search('cost', $columnTable) !== false) {
-            unset($columnTable[array_search('cost', $columnTable)]);
-        }
-        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME))
-            && array_search('clicks', $columnTable) !== false) {
-            unset($columnTable[array_search('clicks', $columnTable)]);
-        }
-        return $columnTable;
-    }
 }
