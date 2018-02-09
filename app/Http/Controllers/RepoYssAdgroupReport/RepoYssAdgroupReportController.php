@@ -131,7 +131,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
 
-        $columns = $this->getAttributeFiledNames($columns);
+        $columns = $this->getAttributeFieldNames($dataReports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $summaryReportLayout = view(
@@ -204,7 +204,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
 
-        $columns = $this->getAttributeFiledNames($columns);
+        $columns = $this->getAttributeFieldNames($reports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
@@ -272,5 +272,4 @@ class RepoYssAdgroupReportController extends AbstractReportController
             session()->put([self::SESSION_KEY_OLD_ENGINE => session(static::SESSION_KEY_ENGINE)]);
         }
     }
-
 }

@@ -22,6 +22,7 @@
                         @if($fieldName === "accountid"
                             || $fieldName === "campaignID"
                             || $fieldName === "adgroupID"
+                            || $fieldName === "keywordID"
                             || $fieldName === "account_id"
                             || $fieldName === 'adType'
                             || $fieldName === 'displayURL'
@@ -38,6 +39,7 @@
                         @if($fieldName === "accountid"
                             || $fieldName === "campaignID"
                             || $fieldName === "adgroupID"
+                            || $fieldName === "keywordID"
                             || $fieldName === "account_id"
                             || $fieldName === 'adType'
                             || $fieldName === 'displayURL'
@@ -85,6 +87,7 @@
                     @if($fieldName === 'accountid'
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
+                        || $fieldName === "keywordID"
                         || $fieldName === 'account_id'
                         || $fieldName === 'adType'
                         || $fieldName === 'displayURL'
@@ -195,6 +198,7 @@
             <tr>
                 <?php
                 $columnNames = [
+                    'accountid',
                     'accountName',
                     'campaignName',
                     'campaign',
@@ -223,7 +227,12 @@
                         || $fieldName === "account_id"
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
+                        || $fieldName === "keywordID"
+                        || $fieldName === "keyword"
+                        || $fieldName === "adgroupID"
                         || $fieldName === "campaignName"
+                        || $fieldName === "adgroupName"
+                        || $fieldName === "matchType"
                         || $fieldName === "campaign")
                         @continue
                     @endif
