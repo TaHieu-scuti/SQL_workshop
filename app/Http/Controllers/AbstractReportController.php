@@ -927,4 +927,27 @@ abstract class AbstractReportController extends Controller
 
         return $array;
     }
+
+    protected function getAttributeFiledNames($data)
+    {
+        $columns = array_keys((array) $data[0]);
+        if (is_object($data[0]) && property_exists($data[0], 'table')) {
+            $columns = array_keys($data[0]->getAttributes());
+            $this->isObjectStdClass = false;
+        }
+        return $this->removeUnnecessaryFields($columns);
+    }
+
+    protected function removeUnnecessaryFields($columnTable)
+    {
+        if (!in_array('cost', session(static::SESSION_KEY_FIELD_NAME))
+            && array_search('cost', $columnTable) !== false) {
+            unset($columnTable[array_search('cost', $columnTable)]);
+        }
+        if (!in_array('clicks', session(static::SESSION_KEY_FIELD_NAME))
+            && array_search('clicks', $columnTable) !== false) {
+            unset($columnTable[array_search('clicks', $columnTable)]);
+        }
+        return $columnTable;
+    }
 }
