@@ -281,7 +281,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
     }
 
-    private function removeUnnecessaryFields($columnTable)
+    protected function removeUnnecessaryFields($columnTable)
     {
         if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME))
             && array_search('cost', $columnTable) !== false) {
