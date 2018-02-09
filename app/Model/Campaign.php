@@ -24,19 +24,6 @@ class Campaign extends AbstractTemporaryModel
     /** @var bool */
     public $timestamps = false;
 
-    const ARR_SELECT_FIELDS = [
-        'camp_custom1',
-        'camp_custom2',
-        'camp_custom3',
-        'camp_custom4',
-        'camp_custom5',
-        'camp_custom6',
-        'camp_custom7',
-        'camp_custom8',
-        'camp_custom9',
-        'camp_custom10'
-    ];
-
     public function getAdGainerCampaignsWithPhoneNumber(
         $account_id,
         $source,
