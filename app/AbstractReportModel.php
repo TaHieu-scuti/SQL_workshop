@@ -154,7 +154,7 @@ abstract class AbstractReportModel extends Model
                 );
             }
             if ($fieldName === 'matchType') {
-                $arrayCalculate[] = DB::raw($this->getTable() . '.' . $key.' as '.$fieldName);
+                $arrayCalculate[] = DB::raw($tableName . '.' . $key.' as '.$fieldName);
             }
             if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
                 if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
@@ -954,9 +954,13 @@ abstract class AbstractReportModel extends Model
 
     public function higherLayerSelections(
         $campaignId = null,
-        $adGroupId = null
+        $adGroupId = null,
+        $tableName = ""
     ) {
         $table = $this->getTable();
+        if ($tableName !== "") {
+            $table = $tableName;
+        }
         $arrayAlias = [];
         $arraySelections = [];
 
