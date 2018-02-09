@@ -48,8 +48,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'campaignName',
         'matchType',
         'keywordMatchType',
-        'keyword'
-
+        'keyword',
     ];
 
     const FIELDS_TYPE_BIGINT = [

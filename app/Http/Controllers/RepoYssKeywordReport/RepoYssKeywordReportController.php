@@ -50,6 +50,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         'averageCpc',
         'averagePosition',
         'impressionShare',
+        'conversions',
         '[conversionValues]',
         'web_cv',
         'web_cvr',
@@ -68,6 +69,8 @@ class RepoYssKeywordReportController extends AbstractReportController
      */
     protected $model;
 
+    private $isObjectStdClass = true;
+
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssKeywordReportCost $model
@@ -82,7 +85,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === null || $engine === 'yss') {
-            array_unshift($defaultColumns, self::GROUPED_BY_FIELD);
+            array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD);
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
         }
@@ -110,7 +113,13 @@ class RepoYssKeywordReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
+
+        $columns = array_keys((array) $dataReports[0]);
+        if (is_object($dataReports[0]) && property_exists($dataReports[0], 'table')) {
+            $columns = array_keys($dataReports[0]->getAttributes());
+            $this->isObjectStdClass = false;
+        }
+        $columns = $this->removeUnnecessaryFields($columns);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -122,11 +131,12 @@ class RepoYssKeywordReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
+                self::FIELD_NAMES => $columns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         $fieldsOnModal = view(
@@ -173,18 +183,25 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($reports);
+        $columns = array_keys((array) $reports[0]);
+        if (is_object($reports[0]) && property_exists($reports[0], 'table')) {
+            $columns = array_keys($reports[0]->getAttributes());
+            $this->isObjectStdClass = false;
+        }
+        $columns = $this->removeUnnecessaryFields($columns);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
             'layouts.table_data',
             [
-            self::REPORTS => $reports,
-            self::FIELD_NAMES => array_keys($reports[0]->getAttributes()),
-            self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
-            self::SORT => session(self::SESSION_KEY_SORT),
-            self::TOTAL_DATA_ARRAY => $totalDataArray,
-            self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
-            'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                self::REPORTS => $reports,
+                self::FIELD_NAMES => $columns,
+                self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
+                self::SORT => session(self::SESSION_KEY_SORT),
+                self::TOTAL_DATA_ARRAY => $totalDataArray,
+                self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
+                'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         // if no data found
@@ -222,5 +239,18 @@ class RepoYssKeywordReportController extends AbstractReportController
             array_unshift($tableColumns, 'campaignName');
         }
         return $tableColumns;
+    }
+
+    private function removeUnnecessaryFields($columnTable)
+    {
+        if (!in_array('cost', session(self::SESSION_KEY_FIELD_NAME))
+            && array_search('cost', $columnTable) !== false) {
+            unset($columnTable[array_search('cost', $columnTable)]);
+        }
+        if (!in_array('clicks', session(self::SESSION_KEY_FIELD_NAME))
+            && array_search('clicks', $columnTable) !== false) {
+            unset($columnTable[array_search('clicks', $columnTable)]);
+        }
+        return $columnTable;
     }
 }
