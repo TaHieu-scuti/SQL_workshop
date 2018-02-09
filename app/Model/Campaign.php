@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Campaign extends AbstractTemporaryModel
 {
-    /** @var bool */
-    public $timestamps = false;
-
     const ARR_SELECT_FIELDS = [
         'camp_custom1',
         'camp_custom2',
@@ -23,6 +20,9 @@ class Campaign extends AbstractTemporaryModel
         'camp_custom9',
         'camp_custom10'
     ];
+
+    /** @var bool */
+    public $timestamps = false;
 
     public function getAdGainerCampaignsWithPhoneNumber(
         $account_id,
