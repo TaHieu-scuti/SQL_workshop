@@ -169,7 +169,7 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
                 ->whereRaw($customField.' NOT LIKE ""')
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->whereIn('phone_number', $phoneNumbers)
+                ->where('phone_number', $phoneNumbers[$i])
                 ->where('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
