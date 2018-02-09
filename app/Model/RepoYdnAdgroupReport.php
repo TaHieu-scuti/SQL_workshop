@@ -264,7 +264,7 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
                 ->whereIn('phone_number', $phoneNumbers)
-                ->where('utm_campaign', $utmCampaignList)
+                ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
                         $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
