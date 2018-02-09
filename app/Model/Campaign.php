@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Campaign extends Model
 {
+    const ARR_SELECT_FIELDS = [
+        'camp_custom1',
+        'camp_custom2',
+        'camp_custom3',
+        'camp_custom4',
+        'camp_custom5',
+        'camp_custom6',
+        'camp_custom7',
+        'camp_custom8',
+        'camp_custom9',
+        'camp_custom10'
+    ];
+
     /** @var bool */
     public $timestamps = false;
 
@@ -194,5 +207,13 @@ class Campaign extends Model
                     ->whereIn($repoPhoneTimeUseTableName.".custom10", $arrayIds);
             }
         );
+    }
+
+    public function getCustomForPhoneTimeUse($campaignIdAdgainer)
+    {
+        $campaignId = array_unique($campaignIdAdgainer->pluck('campaign_id')->toArray());
+        return $this->select(self::ARR_SELECT_FIELDS)
+            ->whereIn('campaign_id', $campaignId)
+            ->get();
     }
 }

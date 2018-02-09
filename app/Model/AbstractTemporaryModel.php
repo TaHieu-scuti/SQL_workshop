@@ -212,4 +212,33 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
         return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
     }
+
+    protected function getFieldName($campaign, $field)
+    {
+        $fieldName = '';
+
+        if ($campaign->camp_custom1 === $field) {
+            $fieldName = 'custom1';
+        } elseif ($campaign->camp_custom2 === $field) {
+            $fieldName = 'custom2';
+        } elseif ($campaign->camp_custom3 === $field) {
+            $fieldName = 'custom3';
+        } elseif ($campaign->camp_custom4 === $field) {
+            $fieldName = 'custom4';
+        } elseif ($campaign->camp_custom5 === $field) {
+            $fieldName = 'custom5';
+        } elseif ($campaign->camp_custom6 === $field) {
+            $fieldName = 'custom6';
+        } elseif ($campaign->camp_custom7 === $field) {
+            $fieldName = 'custom7';
+        } elseif ($campaign->camp_custom8 === $field) {
+            $fieldName = 'custom8';
+        } elseif ($campaign->camp_custom9 === $field) {
+            $fieldName = 'custom9';
+        } elseif ($campaign->camp_custom10 === $field) {
+            $fieldName = 'custom10';
+        }
+
+        return $fieldName;
+    }
 }

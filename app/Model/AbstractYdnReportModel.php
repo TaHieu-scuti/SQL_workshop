@@ -510,7 +510,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             ->get();
     }
 
-    private function addConditonForConversionName(
+    protected function addConditonForConversionName(
         EloquentBuilder $query,
         $account_id = null,
         $accountId = null,
