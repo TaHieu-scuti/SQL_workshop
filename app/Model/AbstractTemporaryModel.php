@@ -46,7 +46,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'account_id',
         'campaign_id',
         'campaignName',
-        'adgroupName'
+        'adgroupName',
         'matchType',
         'keywordMatchType',
         'keyword',
