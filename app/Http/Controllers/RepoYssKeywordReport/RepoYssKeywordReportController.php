@@ -115,7 +115,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
 
-        $columns = $this->getAttributeFiledNames($dataReports);
+        $columns = $this->getAttributeFieldNames($dataReports);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -179,7 +179,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        $columns = $this->getAttributeFiledNames($reports);
+        $columns = $this->getAttributeFieldNames($reports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(

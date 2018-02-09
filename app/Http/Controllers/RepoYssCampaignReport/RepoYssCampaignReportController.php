@@ -120,7 +120,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
-        $columns = $this->getAttributeFiledNames($dataReports);
+        $columns = $this->getAttributeFieldNames($dataReports);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -194,7 +194,7 @@ class RepoYssCampaignReportController extends AbstractReportController
             [self::SUMMARY_REPORT => $summaryReportData]
         )->render();
 
-        $columns = $this->getAttributeFiledNames($reports);
+        $columns = $this->getAttributeFieldNames($reports);
 
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
