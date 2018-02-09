@@ -25,6 +25,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
+    const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
@@ -54,6 +55,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         'averageCpc',
         'averagePosition',
         'impressionShare',
+        'conversions',
         '[conversionValues]',
         'web_cv',
         'web_cvr',
@@ -72,6 +74,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
      */
     protected $model;
 
+    private $isObjectStdClass = true;
+
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssAdgroupReportCost $model
@@ -87,7 +91,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         session()->put([self::SESSION_KEY_AD_GROUP_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === 'yss' || $engine === 'ydn') {
-            array_unshift($defaultColumns, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
+            array_unshift($defaultColumns, self::ADGROUP_ID, self::GROUPED_BY_FIELD);
             if ($engine === 'ydn') {
                 $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
             }
@@ -127,6 +131,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($dataReports);
+        $columns = $this->getAttributeFieldNames($dataReports);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -137,11 +142,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
             'layouts.table_data',
             [
                 self::REPORTS => $dataReports,
-                self::FIELD_NAMES => array_keys($dataReports[0]->getAttributes()),
+                self::FIELD_NAMES => $columns,
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+                'isObjectStdClass' => $this->isObjectStdClass,
             ]
         )->render();
         $fieldsOnModal = view(
@@ -196,17 +202,19 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
         $tableColumns = $this->updateTableColumns($reports);
-
+        $columns = $this->getAttributeFieldNames($dataReports);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
         $tableDataLayout = view(
             'layouts.table_data',
             [
             self::REPORTS => $reports,
-            self::FIELD_NAMES => array_keys($reports[0]->getAttributes()),
+            self::FIELD_NAMES => $columns,
             self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
             self::SORT => session(self::SESSION_KEY_SORT),
             self::TOTAL_DATA_ARRAY => $totalDataArray,
             self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
             'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
+            'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         // if no data found
