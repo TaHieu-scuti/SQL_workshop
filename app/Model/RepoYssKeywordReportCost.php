@@ -156,7 +156,6 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
                 .self::TABLE_TEMPORARY.'.adgroupID = tbl.'.$customField
             );
         }
-
     }
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
@@ -179,7 +178,7 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
         $accountId = null,
         $campaignId = null,
         $adGroupId = null,
-        $keywordId
+        $keywordId = null
     ) {
         return $this->select('campaign_id')
             ->distinct()
