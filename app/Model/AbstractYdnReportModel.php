@@ -451,14 +451,27 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $adReportId, $column)
-    {
+    public function getAllDistinctConversionNames(
+        $account_id,
+        $accountId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $column
+    ) {
         $aggregation = $this->getAggregatedConversionName($column);
          return $this->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId, $adReportId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId, $adReportId);
+                    $this->addConditonForConversionName(
+                        $query,
+                        $account_id,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId
+                    );
                 }
             )
             ->get();
