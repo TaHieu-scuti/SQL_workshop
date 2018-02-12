@@ -207,7 +207,7 @@
                     'keyword',
                     'adName',
                     'ad',
-                    'matchType'
+                    'matchType',
                 ];
                 $totalColspan = 0;
                 foreach ($fieldNames as $value) {
@@ -233,7 +233,10 @@
                         || $fieldName === "campaignName"
                         || $fieldName === "adgroupName"
                         || $fieldName === "matchType"
-                        || $fieldName === "campaign")
+                        || $fieldName === "campaign"
+                        || $fieldName === "displayURL"
+                        || $fieldName === "description1"
+                        || $fieldName === "adID")
                         @continue
                     @endif
 
