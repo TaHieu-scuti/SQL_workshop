@@ -68,7 +68,6 @@ class RepoYssAdReportController extends AbstractReportController
      * @var \App\Model\RepoYssAdReportCost
      */
     protected $model;
-    private $isObjectStdClass = true;
 
     public function __construct(
         ResponseFactory $responseFactory,

@@ -71,6 +71,9 @@ abstract class AbstractReportController extends Controller
     ];
 
     private $adgainerId;
+
+    protected $isObjectStdClass = true;
+
     protected $displayNoDataFoundMessageOnGraph = true;
     protected $displayNoDataFoundMessageOnTable = true;
 

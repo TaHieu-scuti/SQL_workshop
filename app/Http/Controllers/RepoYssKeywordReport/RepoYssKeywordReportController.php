@@ -70,8 +70,6 @@ class RepoYssKeywordReportController extends AbstractReportController
      */
     protected $model;
 
-    private $isObjectStdClass = true;
-
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssKeywordReportCost $model
