@@ -414,7 +414,7 @@ abstract class AbstractReportModel extends Model
                 $item = $this->getTable() . '.' . $item;
             }
         }
-        $builder = $this->select(array_merge($aggregations, $selectBy))
+        $builder = $this->select(array_merge($selectBy, $aggregations))
             ->where(
                 function (Builder $query) use (
                     $startDay,

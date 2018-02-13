@@ -12,6 +12,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 {
     private $conversionPoints;
     private $adGainerCampaigns;
+    const IMPRESSSION_SHARE = 'IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare';
 
     protected function addRawExpressionsConversionPoint(array $expressions)
     {
@@ -290,7 +291,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $this->conversionPoints,
                 $this->adGainerCampaigns
             );
-
             $columns = $this->unsetColumns(
                 $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
@@ -299,6 +299,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
+
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
@@ -337,8 +338,13 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
+            $arr = [];
+            if (static::PAGE_ID !== 'adID') {
+                $arr[] = self::IMPRESSSION_SHARE;
+            }
+
             $builder = DB::table(self::TABLE_TEMPORARY)
-                ->select(array_merge($aggregated, [DB::raw('IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare')]))
+                ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
                 ->orderBy($columnSort, $sort);
         }
@@ -385,10 +391,14 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
+            $arr = [];
+            if (static::PAGE_ID !== 'adID') {
+                $arr[] = self::IMPRESSSION_SHARE;
+            }
             $builder = DB::table(self::TABLE_TEMPORARY)->select(
                 array_merge(
                     $aggregated,
-                    [DB::raw('IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare')]
+                    $arr
                 )
             );
         }
