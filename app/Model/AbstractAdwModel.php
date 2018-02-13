@@ -274,21 +274,27 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $keywordId
         );
         if ($this->isConv || $this->isCallTracking) {
+            $columns = $fieldNames;
+            if (!in_array(static::PAGE_ID, $columns)) {
+                array_unshift($columns, static::PAGE_ID);
+            }
+
+            if (static::PAGE_ID !== 'campaignID') {
+                $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
+            }
+
             $this->createTemporaryTable(
-                $fieldNames,
+                $columns,
                 $this->isConv,
                 $this->isCallTracking,
                 $this->conversionPoints,
                 $this->adGainerCampaigns
             );
+
             $columns = $this->unsetColumns(
-                $fieldNames,
+                $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
-
-            if (!in_array(static::PAGE_ID, $columns)) {
-                array_unshift($columns, static::PAGE_ID);
-            }
 
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
@@ -314,7 +320,14 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     $this->adGainerCampaigns,
                     $groupedByField,
                     $startDay,
-                    $endDay
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
                 );
             }
             $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
@@ -393,6 +406,12 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
                 ->where('customerID', '=', $accountId);
+        }
+        if ($campaignId !== null) {
+            $query->where('campaignID', '=', $campaignId);
+        }
+        if ($adGroupId !== null) {
+            $query->where('adgroupID', '=', $adGroupId);
         }
     }
 

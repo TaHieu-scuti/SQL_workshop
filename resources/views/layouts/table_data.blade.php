@@ -22,6 +22,7 @@
                         @if($fieldName === "accountid"
                             || $fieldName === "campaignID"
                             || $fieldName === "adgroupID"
+                            || $fieldName === "adGroupID"
                             || $fieldName === "keywordID"
                             || $fieldName === "account_id"
                             || $fieldName === 'adType'
@@ -39,6 +40,7 @@
                         @if($fieldName === "accountid"
                             || $fieldName === "campaignID"
                             || $fieldName === "adgroupID"
+                            || $fieldName === "adGroupID"
                             || $fieldName === "keywordID"
                             || $fieldName === "account_id"
                             || $fieldName === 'adType'
@@ -87,6 +89,7 @@
                     @if($fieldName === 'accountid'
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
+                        || $fieldName === "adGroupID"
                         || $fieldName === "keywordID"
                         || $fieldName === 'account_id'
                         || $fieldName === 'adType'
@@ -227,6 +230,7 @@
                         || $fieldName === "account_id"
                         || $fieldName === "campaignID"
                         || $fieldName === "adgroupID"
+                        || $fieldName === "adGroupID"
                         || $fieldName === "keywordID"
                         || $fieldName === "keyword"
                         || $fieldName === "adgroupID"
