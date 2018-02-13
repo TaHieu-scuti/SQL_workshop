@@ -86,7 +86,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         if ($engine === null || $engine === 'yss') {
             array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD);
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD);
+            array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD);
         }
 
         if (!session('keywordReport')) {
