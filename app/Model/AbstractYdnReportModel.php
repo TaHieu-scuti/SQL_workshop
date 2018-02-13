@@ -14,7 +14,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
     private $conversionPoints;
     private $adGainerCampaigns;
 
-    private function addRawExpressionsConversionPoint(array $expressions)
+    protected function addRawExpressionsConversionPoint(array $expressions)
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
         if ($conversionNames !== null) {
@@ -50,7 +50,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionsPhoneNumberConversions(array $expressions)
+    protected function addRawExpressionsPhoneNumberConversions(array $expressions)
     {
         if ($this->adGainerCampaigns !== null) {
             foreach ($this->adGainerCampaigns as $i => $campaign) {
@@ -91,7 +91,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallConversions(array $expressions)
+    protected function addRawExpressionCallConversions(array $expressions)
     {
         $expression = 'IFNULL(';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -106,7 +106,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallConversionRate(array $expressions)
+    protected function addRawExpressionCallConversionRate(array $expressions)
     {
         $expression = 'IFNULL((';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -127,7 +127,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionCallCostPerAction(array $expressions)
+    protected function addRawExpressionCallCostPerAction(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -146,7 +146,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalConversions(array $expressions)
+    protected function addRawExpressionTotalConversions(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -165,7 +165,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalConversionRate(array $expressions)
+    protected function addRawExpressionTotalConversionRate(array $expressions)
     {
         $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
@@ -187,7 +187,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    private function addRawExpressionTotalCostPerAction(array $expressions)
+    protected function addRawExpressionTotalCostPerAction(array $expressions)
     {
         $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
             . self::TABLE_TEMPORARY . '`.`conversions`) + ';
@@ -290,56 +290,6 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             ->where('phone_time_use.traffic_type', '=', 'AD');
     }
 
-    protected function getAggregatedForTemporary(array $fieldNames, array $higherLayerSelections = null)
-    {
-        $tableName = null;
-        if ($this->isConv || $this->isCallTracking) {
-            $tableName = self::TABLE_TEMPORARY;
-        }
-        $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
-        foreach ($fieldNames as $fieldName) {
-            switch ($fieldName) {
-                case '[conversionValues]':
-                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
-                    break;
-                case '[phoneNumberValues]':
-                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
-                    break;
-                case 'call_cv':
-                    $expressions = $this->addRawExpressionCallConversions($expressions);
-                    break;
-                case 'call_cvr':
-                    $expressions = $this->addRawExpressionCallConversionRate($expressions);
-                    break;
-                case 'call_cpa':
-                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
-                    break;
-                case 'web_cv':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cv");
-                    break;
-                case 'web_cvr':
-                    $expressions[] = DB::raw("IFNULL((SUM(`".self::TABLE_TEMPORARY."`.`conversions`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`clicks`)) * 100, 0) as web_cvr");
-                    break;
-                case 'web_cpa':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`cost`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cpa");
-                    break;
-                case 'total_cv':
-                    $expressions = $this->addRawExpressionTotalConversions($expressions);
-                    break;
-                case 'total_cvr':
-                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
-                    break;
-                case 'total_cpa':
-                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
-                    break;
-            }
-        }
-
-        return $expressions;
-    }
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -362,6 +312,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             $accountId,
             $campaignId,
             $adGroupId,
+            $adReportId,
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
@@ -374,7 +325,6 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             static::PAGE_ID,
             $adIDs
         );
-
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -394,20 +344,25 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv === true || $this->isCallTracking === true) {
+            $columns = $fieldNames;
+            if (!in_array(static::PAGE_ID, $columns)) {
+                array_unshift($columns, static::PAGE_ID);
+            }
+
+            if (static::PAGE_ID !== 'campaignID') {
+                $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
+            }
+
             $this->createTemporaryTable(
-                $fieldNames,
+                $columns,
                 $this->isConv,
                 $this->isCallTracking,
                 $this->conversionPoints,
                 $this->adGainerCampaigns
             );
-            $columns = $this->unsetColumns($fieldNames, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
 
-            if (!in_array(static::PAGE_ID, $columns)) {
-                array_unshift($columns, static::PAGE_ID);
-            }
+            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -443,7 +398,6 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     $keywordId
                 );
             }
-
             $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
@@ -497,14 +451,27 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $builder;
     }
 
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
-    {
+    public function getAllDistinctConversionNames(
+        $account_id,
+        $accountId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $column
+    ) {
         $aggregation = $this->getAggregatedConversionName($column);
-        return $this->select($aggregation)
+         return $this->select($aggregation)
             ->distinct()
             ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId, $adReportId) {
+                    $this->addConditonForConversionName(
+                        $query,
+                        $account_id,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId
+                    );
                 }
             )
             ->get();
@@ -515,7 +482,8 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         $account_id = null,
         $accountId = null,
         $campaignId = null,
-        $adGroupId = null
+        $adGroupId = null,
+        $adReportId = null
     ) {
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
@@ -526,6 +494,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         }
         if ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
+        }
+        if ($adReportId !== null) {
+            $query->where('adID', '=', $adReportId);
         }
     }
 
@@ -567,6 +538,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                 array_unshift($fieldNames, 'clicks');
             }
         }
+
         return $fieldNames;
     }
 }

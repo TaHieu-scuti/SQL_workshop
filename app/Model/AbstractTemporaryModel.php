@@ -49,7 +49,10 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'adgroupName',
         'matchType',
         'keywordMatchType',
-        'keyword'
+        'keyword',
+        'displayURL',
+        'description1',
+        'adName'
     ];
 
     const FIELDS_TYPE_BIGINT = [
@@ -213,7 +216,10 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         ) {
             $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId, self::TABLE_TEMPORARY);
         }
-        return $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
+        $aggregations = $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
+        $selectBy = static::FIELDS;
+
+        return array_merge($selectBy, $aggregations);
     }
 
     protected function higherSelectionFields($columns, $campaignId, $adGroupId)
@@ -231,6 +237,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         if (session(self::SESSION_KEY_ENGINE) === 'yss' && $key = array_search('matchType', $columns)) {
             $columns[$key] = 'keywordMatchType';
         }
+
+        if (session(self::SESSION_KEY_ENGINE) === 'ydn' && static::PAGE_ID === 'adID') {
+            $columns = array_merge(static::FIELDS, $columns);
+        }
+
         return $columns;
     }
 
