@@ -24,8 +24,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
-    const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
+    const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
     const SESSION_KEY_SORT = self::SESSION_KEY_PREFIX . self::SORT;
@@ -130,8 +130,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-        $tableColumns = $this->updateTableColumns($dataReports);
+
         $columns = $this->getAttributeFieldNames($dataReports);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
+
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -147,7 +149,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
-                'isObjectStdClass' => $this->isObjectStdClass,
+                'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
         $fieldsOnModal = view(
@@ -203,6 +205,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         //add more columns higher layer to fieldnames
         $columns = $this->getAttributeFieldNames($reports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
+
         $tableDataLayout = view(
             'layouts.table_data',
             [

@@ -659,8 +659,7 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
-        if (static::class === 'App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController'
-            && session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
+        if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
             if (!in_array(
                 session(static::SESSION_KEY_COLUMN_SORT),
                 session(static::SESSION_KEY_ALL_FIELD_NAME)

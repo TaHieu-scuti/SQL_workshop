@@ -81,65 +81,108 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         return $arrAdgroups;
     }
 
-    private function addJoinsForConversionPoints(
-        EloquentBuilder $builder,
-        $conversionPoints
+    protected function updateTemporaryTableWithConversion(
+        $conversionPoints,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
-        $campaignReportConvTableName = (new RepoYssAdgroupReportConv())->getTable();
-        foreach ($conversionNames as $i => $conversionName) {
-            $joinAlias = 'conv' . $i;
-            $builder->leftJoin(
-                $campaignReportConvTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $conversionName, $adgroupIDs) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $joinAlias . '.account_id'
-                    )
-                        ->on(
-                            $this->table . '.accountId',
-                            '=',
-                            $joinAlias . '.accountId'
-                        )->on(
-                            $this->table . '.day',
-                            '=',
-                            $joinAlias . '.day'
-                        )->on(
-                            $this->table . '.campaignID',
-                            '=',
-                            $joinAlias . '.campaignID'
-                        )->whereIn(
-                            $joinAlias . '.adgroupID',
-                            $adgroupIDs
-                        )->where(
-                            $joinAlias . '.conversionName',
-                            '=',
-                            $conversionName
-                        );
+        foreach ($conversionNames as $key => $conversionName) {
+            $convModel = new RepoYssAdgroupReportConv();
+            $queryGetConversion = $convModel->select(
+                DB::raw('SUM(repo_yss_adgroup_report_conv.conversions) AS conversions, '.$groupedByField)
+            )->where('conversionName', $conversionName)
+            ->where(
+                function (EloquentBuilder $query) use (
+                    $convModel,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $convModel->getCondition(
+                        $query,
+                        $startDay,
+                        $endDay,
+                        $engine,
+                        $clientId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    );
                 }
+            )->groupBy($groupedByField);
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
 
-    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
-    {
-        foreach ($adGainerCampaigns as $i => $campaign) {
-            $joinAlias = 'call' . $i;
-            $builder->leftJoin(
-                DB::raw('(`phone_time_use` AS '.$joinAlias.', `campaigns` AS '.$joinAlias.'_campaigns)'),
-                function (JoinClause $join) use ($joinAlias) {
-                    $this->addJoinConditions($join, $joinAlias);
-                }
+    protected function updateTemporaryTableWithCallTracking(
+        $adGainerCampaigns,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
+        $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
+
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+        $campaignModel = new Campaign();
+        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
+
+        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+            $customField = $this->getFieldName($campaign, 'adgroupid');
+
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    $customField
+                ]
+            )
+                ->whereRaw($customField.' NOT LIKE ""')
+                ->where('source', '=', $engine)
+                ->whereRaw('traffic_type = "AD"')
+                ->where('phone_number', $phoneNumbers[$i])
+                ->where('utm_campaign', $utmCampaignList)
+                ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                        $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                    }
+                )
+                ->groupBy($customField);
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                .self::TABLE_TEMPORARY.'.adgroupID = tbl.'.$customField
             );
         }
-    }
-
-    protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
-    {
-        $this->addJoinsForConversionPoints($builder, $conversionPoints);
-        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
     }
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
@@ -147,6 +190,18 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         $yss_campaign_model = new RepoYssAdgroupReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         return $yss_campaign_model->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
+
+    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId)
+    {
+        return $this->select('campaign_id')
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {

@@ -315,7 +315,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
-
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -354,6 +353,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
+
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
