@@ -13,6 +13,11 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
     private $conversionPoints;
     private $adGainerCampaigns;
 
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
+    {
+        return parent::getAggregatedToUpdateTemporatyTable($fieldNames, $higherLayerSelections, $tableName);
+    }
+
     protected function addRawExpressionsConversionPoint(array $expressions)
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
@@ -92,117 +97,124 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 
     protected function addRawExpressionCallConversions(array $expressions)
     {
-        $expression = 'IFNULL(';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-            $expression .= '`call' . $i . '` + ';
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call' . $i . '` + ';
+            }
+
+            $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
-
-        $expressions[] = DB::raw($expression);
-
         return $expressions;
     }
 
     protected function addRawExpressionCallConversionRate(array $expressions)
     {
-        $expression = 'IFNULL((';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL((';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . "` + ";
+            }
+
             $expression .= '`call'
-                . $i
-                . "` + ";
+                . ($numberOfCampaigns - 1)
+                . '`) / '
+                . $numberOfCampaigns
+                . ', 0) AS call_cvr';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call'
-            . ($numberOfCampaigns - 1)
-            . '`) / '
-            . $numberOfCampaigns
-            . ', 0) AS call_cvr';
-
-        $expressions[] = DB::raw($expression);
 
         return $expressions;
     }
 
     protected function addRawExpressionCallCostPerAction(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
             $expression .= '`call'
-                . $i
-                . '` + ';
+                . ($numberOfCampaigns - 1)
+                . '`), 0) AS call_cpa';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call'
-            . ($numberOfCampaigns - 1)
-            . '`), 0) AS call_cpa';
-
-        $expressions[] = DB::raw($expression);
-
         return $expressions;
     }
 
     protected function addRawExpressionTotalConversions(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
             $expression .= '`call'
-                . $i
-                . '` + ';
+                . ($numberOfCampaigns - 1)
+                . '`, 0) AS total_cv';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call'
-            . ($numberOfCampaigns - 1)
-            . '`, 0) AS total_cv';
-
-        $expressions[] = DB::raw($expression);
-
         return $expressions;
     }
 
     protected function addRawExpressionTotalConversionRate(array $expressions)
     {
-        $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
             $expression .= '`call'
-                . $i
-                . '` + ';
+                . ($numberOfCampaigns - 1)
+                . '`) / '
+                . 'SUM(`'
+                . self::TABLE_TEMPORARY
+                . '`.`clicks`), 0) AS total_cvr';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call'
-            . ($numberOfCampaigns - 1)
-            . '`) / '
-            . 'SUM(`'
-            . self::TABLE_TEMPORARY
-            . '`.`clicks`), 0) AS total_cvr';
-
-        $expressions[] = DB::raw($expression);
-
         return $expressions;
     }
 
     protected function addRawExpressionTotalCostPerAction(array $expressions)
     {
-        $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
-            . self::TABLE_TEMPORARY . '`.`conversions`) + ';
         $numberOfCampaigns = count($this->adGainerCampaigns);
-        for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
+                . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
             $expression .= '`call'
-                . $i
-                . '` + ';
+                . ($numberOfCampaigns - 1)
+                . '`), 0) AS total_cpa';
+
+            $expressions[] = DB::raw($expression);
         }
-
-        $expression .= '`call'
-            . ($numberOfCampaigns - 1)
-            . '`), 0) AS total_cpa';
-
-        $expressions[] = DB::raw($expression);
-
         return $expressions;
     }
 

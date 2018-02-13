@@ -142,8 +142,116 @@ abstract class AbstractReportModel extends Model
                     continue;
                 } else {
                     $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG('. $tableName .'.searchImprShare) + AVG('.
-                        $tableName .'.contentImprShare), 2) AS ' .$fieldName
+                        'ROUND(AVG(' . $tableName . '.searchImprShare) + AVG(' .
+                        $tableName . '.contentImprShare), 2) AS ' . $fieldName
+                    );
+                    continue;
+                }
+            }
+            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
+                $arrayCalculate[] = DB::raw(
+                    'SUM( ' . $fieldName . ' ) AS ' . $fieldName
+                );
+            }
+            if ($fieldName === 'matchType') {
+                $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
+            }
+            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+                if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
+                    $arrayCalculate[] = static::PAGE_ID;
+                    $this->groupBy[] = static::PAGE_ID;
+                }
+                $arrayCalculate[] = $fieldName;
+                if (!empty($higherLayerSelections)) {
+                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+                }
+                continue;
+            }
+
+            if ($fieldName === self::DEVICE
+                || $fieldName === self::HOUR_OF_DAY
+                || $fieldName === self::DAY_OF_WEEK
+                || $fieldName === self::PREFECTURE
+                || $fieldName === 'adType'
+                || $fieldName === self::YSS_SEARCH_QUERY
+                || $fieldName === self::ADW_SEARCH_QUERY
+            ) {
+                if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                    $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
+                } else {
+                    $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
+                }
+
+                continue;
+            }
+
+            if ($fieldName === 'accountid') {
+                $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
+            }
+
+            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+                $arrayCalculate[] = DB::raw(
+                    'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                );
+            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+                if ($tableName === 'temporary_table') {
+                    $arrayCalculate[] = DB::raw(
+                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                    );
+                } else {
+                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                            ->getType()
+                            ->getName()
+                        === self::FIELD_TYPE
+                    ) {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                        );
+                    } else {
+                        $arrayCalculate[] = DB::raw(
+                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                        );
+                    }
+                }
+            }
+        }
+        return $arrayCalculate;
+    }
+
+    protected function getAggregatedToUpdateTemporatyTable(
+        array $fieldNames,
+        array $higherLayerSelections = null,
+        $tableName = ''
+    ) {
+        $fieldNames = $this->updateFieldNames($fieldNames);
+        if (empty($tableName)) {
+            $tableName = $this->getTable();
+        }
+        $joinTableName = (new RepoYssAccount)->getTable();
+        if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
+            $tableName = 'repo_yss_prefecture_report_cost';
+        }
+        if (array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames) === false) {
+            $key = array_search(static::PAGE_ID, $fieldNames);
+            if ($key !== false) {
+                unset($fieldNames[$key]);
+            }
+        }
+        $arrayCalculate = [];
+        foreach ($fieldNames as $key => $fieldName) {
+            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                continue;
+            }
+            if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+                if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                    $arrayCalculate[] = DB::raw(
+                        'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
+                    );
+                    continue;
+                } else {
+                    $arrayCalculate[] = DB::raw(
+                        'AVG('. $tableName .'.searchImprShare) + AVG('.
+                        $tableName .'.contentImprShare) AS ' .$fieldName
                     );
                     continue;
                 }
@@ -191,7 +299,7 @@ abstract class AbstractReportModel extends Model
 
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                    'IFNULL(AVG(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
                 if ($tableName === 'temporary_table') {
@@ -200,12 +308,12 @@ abstract class AbstractReportModel extends Model
                     );
                 } else {
                     if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                                        ->getType()
-                                        ->getName()
+                            ->getType()
+                            ->getName()
                         === self::FIELD_TYPE
                     ) {
                         $arrayCalculate[] = DB::raw(
-                            'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                            'IFNULL(SUM(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
                         );
                     } else {
                         $arrayCalculate[] = DB::raw(
