@@ -52,7 +52,10 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'keyword',
         'displayURL',
         'description1',
-        'adName'
+        'description',
+        'adName',
+        'ad',
+        'adType'
     ];
 
     const FIELDS_TYPE_BIGINT = [
@@ -238,7 +241,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $columns[$key] = 'keywordMatchType';
         }
 
-        if (session(self::SESSION_KEY_ENGINE) === 'ydn' && static::PAGE_ID === 'adID') {
+        if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID') {
             $columns = array_merge(static::FIELDS, $columns);
         }
 

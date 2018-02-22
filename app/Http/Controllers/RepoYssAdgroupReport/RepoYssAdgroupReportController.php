@@ -74,8 +74,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
      */
     protected $model;
 
-    protected $isObjectStdClass = true;
-
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssAdgroupReportCost $model

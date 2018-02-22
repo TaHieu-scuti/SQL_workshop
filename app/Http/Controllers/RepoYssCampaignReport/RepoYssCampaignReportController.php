@@ -68,8 +68,6 @@ class RepoYssCampaignReportController extends AbstractReportController
      */
     protected $model;
 
-    private $isObjectStdClass = true;
-
     public function __construct(
         ResponseFactory $responseFactory,
         RepoYssCampaignReportCost $model
