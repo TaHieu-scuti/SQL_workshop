@@ -74,7 +74,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
      */
     protected $model;
 
-    private $isObjectStdClass = true;
+    protected $isObjectStdClass = true;
 
     public function __construct(
         ResponseFactory $responseFactory,
@@ -96,7 +96,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
                 $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
             }
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
+            array_unshift($defaultColumns, self::ADGROUP_ID, self::ADW_GROUPED_BY_FIELD);
         }
         if (!session('adgroupReport')) {
             $this->initializeSession($defaultColumns);
