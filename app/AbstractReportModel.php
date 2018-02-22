@@ -334,7 +334,7 @@ abstract class AbstractReportModel extends Model
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
                 $arrayCalculate[] = DB::raw(
-                    'IFNULL(ROUND(AVG(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0) 
+                    'IFNULL(ROUND(AVG(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0)
                     AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
@@ -344,7 +344,7 @@ abstract class AbstractReportModel extends Model
                     === self::FIELD_TYPE
                 ) {
                     $arrayCalculate[] = DB::raw(
-                        'IFNULL(ROUND(SUM(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0) 
+                        'IFNULL(ROUND(SUM(' . $tableName . '.' . static::ARR_FIELDS[$fieldName] . '), 2), 0)
                         AS ' . $fieldName
                     );
                 } else {
