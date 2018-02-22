@@ -294,7 +294,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             if (static::PAGE_ID !== 'campaignID') {
                 $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
             }
-
             $this->createTemporaryTable(
                 $columns,
                 $this->isConv,
@@ -309,8 +308,10 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             );
 
             $columns = array_keys($this->updateFieldNames($columns));
+
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
+
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
@@ -432,6 +433,8 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         $arraySelect = ['conversionName'];
         if ($column === 'campaignID') {
             array_unshift($arraySelect, 'campaignID');
+        } elseif ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
         } elseif ($column === 'adID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
         } elseif ($column === 'keywordID') {
