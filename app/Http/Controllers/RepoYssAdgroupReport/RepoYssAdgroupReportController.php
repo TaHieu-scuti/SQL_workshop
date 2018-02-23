@@ -121,14 +121,22 @@ class RepoYssAdgroupReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSpecificModel();
 
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         //add more columns higher layer to fieldnames
-
+        if ($engine === 'adw') {
+            $dataReports = new \Illuminate\Pagination\LengthAwarePaginator(
+                array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
+                count($dataReports->toArray()),
+                20,
+                $this->page,
+                ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
+            );
+        }
         $columns = $this->getAttributeFieldNames($dataReports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
@@ -201,6 +209,15 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
+        if ($engine === 'adw') {
+            $reports = new \Illuminate\Pagination\LengthAwarePaginator(
+                array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
+                count($reports->toArray()),
+                20,
+                $this->page,
+                ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
+            );
+        }
         $columns = $this->getAttributeFieldNames($reports);
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
