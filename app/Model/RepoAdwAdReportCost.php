@@ -244,7 +244,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
             );
             $columns = array_keys($this->updateFieldNames($columns));
 
-            DB::insert('INSERT into '.self::TABLE_TEMPORARY__AD.' ('.implode(', ', $columns).') '
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY_AD.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
 
             if ($this->isConv) {
@@ -260,7 +260,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                     $adGroupId,
                     $adReportId,
                     $keywordId,
-                    self::TABLE_TEMPORARY__AD
+                    self::TABLE_TEMPORARY_AD
                 );
             }
 
@@ -277,7 +277,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                     $adGroupId,
                     $adReportId,
                     $keywordId,
-                    self::TABLE_TEMPORARY__AD
+                    self::TABLE_TEMPORARY_AD
                 );
             }
             $arr = [];
@@ -290,9 +290,9 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 $groupedByField,
                 $campaignId,
                 $adGroupId,
-                self::TABLE_TEMPORARY__AD
+                self::TABLE_TEMPORARY_AD
             );
-            $builder = DB::table(self::TABLE_TEMPORARY__AD)
+            $builder = DB::table(self::TABLE_TEMPORARY_AD)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
                 ->orderBy($columnSort, $sort);
@@ -349,10 +349,10 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 $groupedByField,
                 $campaignId,
                 $adGroupId,
-                self::TABLE_TEMPORARY__AD
+                self::TABLE_TEMPORARY_AD
             );
 
-            $builder = DB::table(self::TABLE_TEMPORARY__AD)->select(
+            $builder = DB::table(self::TABLE_TEMPORARY_AD)->select(
                 array_merge(
                     $aggregated,
                     $arr

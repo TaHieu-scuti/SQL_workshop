@@ -24,7 +24,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
 
     const TABLE_TEMPORARY = 'temporary_table';
 
-    const TABLE_TEMPORARY__AD = 'temporary_table_ad';
+    const TABLE_TEMPORARY_AD = 'temporary_table_ad';
 
     const FIELDS_CALL_TRACKING = [
         '[phoneNumberValues]',
@@ -87,7 +87,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
     ) {
         $tableName = self::TABLE_TEMPORARY;
         if ($preFixRoute === 'adgroup') {
-            $tableName = self::TABLE_TEMPORARY__AD;
+            $tableName = self::TABLE_TEMPORARY_AD;
         }
         $fieldNames = $this->unsetColumns(
             $fieldNames,
@@ -229,7 +229,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
         $aggregations = $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections, $tableName);
         $selectBy = static::FIELDS;
-        if ($tableName === self::TABLE_TEMPORARY__AD) {
+        if ($tableName === self::TABLE_TEMPORARY_AD) {
             $selectBy = static::FIELDS_ADGROUP_ADW;
         }
 
