@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
+use App\AbstractReportModel;
 
 class RepoAdwAdReportCost extends AbstractAdwModel
 {
+    protected $preFixRoute = '';
+
     const GROUPED_BY_FIELD_NAME = 'ad';
     const PAGE_ID = 'adID';
     const ALL_HIGHER_LAYERS =
@@ -33,6 +36,11 @@ class RepoAdwAdReportCost extends AbstractAdwModel
     const FIELDS = [
         'displayURL',
         'description'
+    ];
+
+    const FIELDS_ADGROUP_ADW = [
+        'adGroupID',
+        'adGroup'
     ];
 
     protected $table = "repo_adw_ad_report_cost";
@@ -67,8 +75,12 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $tableName = ""
     ) {
+        if (empty($tableName)) {
+            $tableName = self::TABLE_TEMPORARY;
+        }
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwAdReportConv();
@@ -104,9 +116,9 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 )->groupBy($this->groupBy);
 
             DB::update(
-                'update '.self::TABLE_TEMPORARY.', ('
+                'update '.$tableName.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
-                .self::TABLE_TEMPORARY.'.ad = tbl.'.$groupedByField
+                .$tableName.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
@@ -122,8 +134,14 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         $campaignId = null,
         $adGroupId = null,
         $adReportId = null,
-        $keywordId = null
+        $keywordId = null,
+        $tableName = ""
     ) {
+        $groupedField = 'adgroupID';
+        if (empty($tableName)) {
+            $tableName = self::TABLE_TEMPORARY;
+            $groupedField = 'adID';
+        }
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
         $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
@@ -154,11 +172,196 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 )
                 ->groupBy($customField);
             DB::update(
-                'update '.self::TABLE_TEMPORARY.', ('
+                'update '.$tableName.', ('
                 .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.adID = tbl.'.$customField
+                .$tableName.'.'.$groupedField.' = tbl.'.$customField
             );
         }
+    }
+
+    public function getQueryForDataTable(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $columnSort,
+        $sort,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null,
+        $conversionPoints = null,
+        $adGainerCampaigns = null
+    ) {
+        $this->conversionPoints = $conversionPoints;
+        $this->adGainerCampaigns = $adGainerCampaigns;
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
+        $this->preFixRoute = 'adgroup';
+
+        $builder = AbstractReportModel::getBuilderForGetDataForTable(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $columnSort,
+            $sort,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if ($this->isConv || $this->isCallTracking) {
+            $columns = $fieldNames;
+            if (!in_array('adgroupID', $columns)) {
+                array_unshift($columns, 'adgroupID');
+            }
+
+            if (static::PAGE_ID !== 'campaignID') {
+                $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId, 'adgroup');
+            }
+            $this->createTemporaryTable(
+                $columns,
+                $this->isConv,
+                $this->isCallTracking,
+                $conversionPoints,
+                $adGainerCampaigns,
+                'adgroup'
+            );
+            $columns = $this->unsetColumns(
+                $columns,
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, self::FIELDS)
+            );
+            $columns = array_keys($this->updateFieldNames($columns));
+
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY__AD.' ('.implode(', ', $columns).') '
+                . $this->getBindingSql($builder));
+
+            if ($this->isConv) {
+                $this->updateTemporaryTableWithConversion(
+                    $conversionPoints,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId,
+                    self::TABLE_TEMPORARY__AD
+                );
+            }
+
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId,
+                    self::TABLE_TEMPORARY__AD
+                );
+            }
+            $arr = [];
+            if (in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
+            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
+            $aggregated = $this->processGetAggregated(
+                $fields,
+                $groupedByField,
+                $campaignId,
+                $adGroupId,
+                self::TABLE_TEMPORARY__AD
+            );
+            $builder = DB::table(self::TABLE_TEMPORARY__AD)
+                ->select(array_merge($aggregated, $arr))
+                ->groupby($groupedByField)
+                ->orderBy($columnSort, $sort);
+        }
+
+        return $builder;
+
+    }
+
+    public function getQueryForCalculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $agencyId,
+        $accountId,
+        $clientId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId,
+        $conversionPoints,
+        $adGainerCampaigns
+    ) {
+        $this->conversionPoints = $conversionPoints;
+        $this->adGainerCampaigns = $adGainerCampaigns;
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
+
+        $builder = AbstractReportModel::getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if ($this->isConv || $this->isCallTracking) {
+            $arr = [];
+            if (in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
+            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
+            $aggregated = $this->processGetAggregated(
+                $fields,
+                $groupedByField,
+                $campaignId,
+                $adGroupId,
+                self::TABLE_TEMPORARY__AD
+            );
+
+            $builder = DB::table(self::TABLE_TEMPORARY__AD)->select(
+                array_merge(
+                    $aggregated,
+                    $arr
+                )
+            );
+        }
+
+        return $builder;
     }
 
     public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId)
