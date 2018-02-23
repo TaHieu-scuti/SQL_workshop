@@ -299,7 +299,6 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         }
 
         return $builder;
-
     }
 
     public function getQueryForCalculateData(

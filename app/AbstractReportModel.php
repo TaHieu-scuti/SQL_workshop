@@ -252,7 +252,7 @@ abstract class AbstractReportModel extends Model
                         'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
                     );
                     continue;
-                }  elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
                     $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
                     continue;
                 } else {
