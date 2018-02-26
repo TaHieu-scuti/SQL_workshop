@@ -256,6 +256,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $columns = array_merge(static::FIELDS, $columns);
         }
 
+        if (static::GROUPED_BY_FIELD_NAME === 'keyword' && array_search('adgroupID', $columns) === false) {
+            $key = array_search(static::GROUPED_BY_FIELD_NAME, $columns);
+            array_splice($columns, $key + 1, 0, ['adgroupID']);
+        }
+
         return $columns;
     }
 

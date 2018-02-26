@@ -253,9 +253,10 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adGroupId,
             static::PAGE_ID
         );
+
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
-        $keywordIDs = array_unique($this->conversionPoints->pluck('keywordID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
@@ -263,7 +264,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $campaignIDs,
             static::PAGE_ID,
             $adIDs,
-            $keywordIDs
+            $adgroupIDs
         );
 
         $fieldNames = $this->checkConditionFieldName($fieldNames);
