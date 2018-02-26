@@ -103,9 +103,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         // on changing account
         // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
         // normal report type
-        if ($this->checkoutConditionForUpdateColumn($engine)) {
-            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
-        }
+        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
 
         $this->checkOldId();
         $this->checkoutSessionFieldName();
