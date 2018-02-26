@@ -252,7 +252,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $columns[$key] = 'keywordMatchType';
         }
 
-        if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID' && $preFixRoute = "") {
+        if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID' && $preFixRoute === "") {
             $columns = array_merge(static::FIELDS, $columns);
         }
 
