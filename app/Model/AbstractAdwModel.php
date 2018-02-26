@@ -267,7 +267,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         );
 
         $fieldNames = $this->checkConditionFieldName($fieldNames);
-
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -285,6 +284,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
             if (!in_array(static::PAGE_ID, $columns)) {
@@ -520,10 +520,12 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             if (!in_array('cost', $fieldNames)) {
-                array_unshift($fieldNames, 'cost');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['cost']);
             }
             if (!in_array('clicks', $fieldNames)) {
-                array_unshift($fieldNames, 'clicks');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['clicks']);
             }
         }
         return $fieldNames;

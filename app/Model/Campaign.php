@@ -37,6 +37,7 @@ class Campaign extends AbstractTemporaryModel
         if ($flag === 'adID' || $flag === 'adgroupID' || $flag === 'keywordID') {
             $repoPhoneTimeUseTableName = (new PhoneTimeUse)->getTable();
         }
+
         return $this->distinct()
             ->select([
                 $campaignsTableName . '.campaign_id',

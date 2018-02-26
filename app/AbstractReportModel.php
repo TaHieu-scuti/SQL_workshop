@@ -479,7 +479,7 @@ abstract class AbstractReportModel extends Model
             && $groupedByField !== self::DAY_OF_WEEK
             && $groupedByField !== self::PREFECTURE
         ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+            $higherLayerSelections = $this->higherLayerSelections($fieldNames, $campaignId, $adGroupId);
         }
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //replace prefecture with criteria.Name
@@ -1085,6 +1085,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function higherLayerSelections(
+        $fieldNames,
         $campaignId = null,
         $adGroupId = null,
         $tableName = ""
@@ -1117,6 +1118,11 @@ abstract class AbstractReportModel extends Model
                 .' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
             array_push($arraySelections, $querySelectId, $querySelectName);
             array_push($this->groupBy, $value['columnId']);
+        }
+
+        if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
+            array_push($arraySelections, 'adgroupID');
+            array_push($this->groupBy, 'adgroupID');
         }
         return $arraySelections;
     }

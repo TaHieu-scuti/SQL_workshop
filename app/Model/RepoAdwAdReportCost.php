@@ -201,8 +201,8 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         $this->conversionPoints = $conversionPoints;
         $this->adGainerCampaigns = $adGainerCampaigns;
         $fieldNames = $this->checkConditionFieldName($fieldNames);
-        $this->preFixRoute = 'adgroup';
 
+        $this->preFixRoute = 'adgroup';
         $builder = AbstractReportModel::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -230,6 +230,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
             if (static::PAGE_ID !== 'campaignID') {
                 $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId, 'adgroup');
             }
+
             $this->createTemporaryTable(
                 $columns,
                 $this->isConv,
@@ -242,8 +243,8 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, self::FIELDS)
             );
-            $columns = array_keys($this->updateFieldNames($columns));
 
+            $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY_AD.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
 
