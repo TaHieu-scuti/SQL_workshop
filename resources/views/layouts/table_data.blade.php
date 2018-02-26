@@ -28,6 +28,7 @@
                             || $fieldName === 'adType'
                             || $fieldName === 'displayURL'
                             || $fieldName === 'description1'
+                            || $fieldName === 'description'
                             || $fieldName === 'adID')
                             @continue
                         @endif
@@ -46,6 +47,7 @@
                             || $fieldName === 'adType'
                             || $fieldName === 'displayURL'
                             || $fieldName === 'description1'
+                            || $fieldName === 'description'
                             || $fieldName === 'adID')
                             @continue
                         @endif
@@ -95,6 +97,7 @@
                         || $fieldName === 'adType'
                         || $fieldName === 'displayURL'
                         || $fieldName === 'description1'
+                        || $fieldName === 'description'
                         || $fieldName === 'adID')
                         @continue
                     @endif
@@ -240,6 +243,7 @@
                         || $fieldName === "campaign"
                         || $fieldName === "displayURL"
                         || $fieldName === "description1"
+                        || $fieldName === "description"
                         || $fieldName === "adID")
                         @continue
                     @endif
