@@ -19,32 +19,32 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return parent::getAggregatedToUpdateTemporatyTable($fieldNames, $higherLayerSelections, $tableName);
     }
 
-    protected function addRawExpressionsConversionPoint(array $expressions)
+    protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
         if ($conversionNames !== null) {
             foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    .self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
                     'IFNULL((SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`conversions'.$i.'`) / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`cost`) / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
                     . " CPA'"
@@ -55,7 +55,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionsPhoneNumberConversions(array $expressions)
+    protected function addRawExpressionsPhoneNumberConversions(array $expressions, $tableName = "")
     {
         if ($this->adGainerCampaigns !== null) {
             foreach ($this->adGainerCampaigns as $i => $campaign) {
@@ -72,7 +72,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     'IFNULL(`call'
                     . $i
                     . '` / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . ' '
@@ -81,7 +81,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                 );
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`cost`) / `call'
                     . $i
                     . "`, 0) AS 'YDN "
@@ -134,11 +134,11 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionCallCostPerAction(array $expressions)
+    protected function addRawExpressionCallCostPerAction(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -154,11 +154,11 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalConversions(array $expressions)
+    protected function addRawExpressionTotalConversions(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -174,11 +174,11 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalConversionRate(array $expressions)
+    protected function addRawExpressionTotalConversionRate(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL((SUM(`' . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -189,7 +189,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                 . ($numberOfCampaigns - 1)
                 . '`) / '
                 . 'SUM(`'
-                . self::TABLE_TEMPORARY
+                . $tableName
                 . '`.`clicks`), 0) AS total_cvr';
 
             $expressions[] = DB::raw($expression);
@@ -197,12 +197,12 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalCostPerAction(array $expressions)
+    protected function addRawExpressionTotalCostPerAction(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
-                . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (SUM(`'
+                . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i

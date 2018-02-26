@@ -108,6 +108,7 @@ abstract class AbstractReportModel extends Model
     ];
 
     protected $groupBy = [];
+    protected $preFixRoute = '';
 
     /**
      * @param string[] $fieldNames
@@ -139,6 +140,9 @@ abstract class AbstractReportModel extends Model
                     $arrayCalculate[] = DB::raw(
                         'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
                     );
+                    continue;
+                } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                    $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
                     continue;
                 } else {
                     $arrayCalculate[] = DB::raw(
@@ -194,7 +198,7 @@ abstract class AbstractReportModel extends Model
                     'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if ($tableName === 'temporary_table') {
+                if ($tableName === 'temporary_table' || $tableName === 'temporary_table_ad') {
                     $arrayCalculate[] = DB::raw(
                         'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                     );
@@ -247,6 +251,9 @@ abstract class AbstractReportModel extends Model
                     $arrayCalculate[] = DB::raw(
                         'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
                     );
+                    continue;
+                } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                    $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
                     continue;
                 } else {
                     $arrayCalculate[] = DB::raw(
@@ -472,7 +479,7 @@ abstract class AbstractReportModel extends Model
             && $groupedByField !== self::DAY_OF_WEEK
             && $groupedByField !== self::PREFECTURE
         ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId);
+            $higherLayerSelections = $this->higherLayerSelections($fieldNames, $campaignId, $adGroupId);
         }
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //replace prefecture with criteria.Name
@@ -497,7 +504,14 @@ abstract class AbstractReportModel extends Model
             }
         }
         // merge static::FIELDS in order to display ad as requested
-        $this->groupBy = array_merge($this->groupBy, static::FIELDS);
+        if ($engine === 'adw'
+            && static::GROUPED_BY_FIELD_NAME === 'ad'
+            && $this->preFixRoute === 'adgroup'
+        ) {
+            $this->groupBy = array_merge($this->groupBy, []);
+        } else {
+            $this->groupBy = array_merge($this->groupBy, static::FIELDS);
+        }
         $groupBy = $this->groupBy;
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
@@ -517,6 +531,12 @@ abstract class AbstractReportModel extends Model
             }
         }
         $selectBy = static::FIELDS;
+        if ($engine === 'adw'
+                && static::GROUPED_BY_FIELD_NAME === 'ad'
+                && $this->preFixRoute === 'adgroup'
+        ) {
+            $selectBy = static::FIELDS_ADGROUP_ADW;
+        }
         foreach ($selectBy as &$item) {
             if (is_string($item)) {
                 $item = $this->getTable() . '.' . $item;
@@ -856,7 +876,11 @@ abstract class AbstractReportModel extends Model
             $adGroupId,
             $adReportId,
             $keywordId
-        )->orderBy($columnSort, $sort);
+        );
+
+        if ($engine === 'adw' && static::GROUPED_BY_FIELD_NAME === 'adGroup') {
+            return $builder;
+        }
 
         return $builder->paginate($pagination);
     }
@@ -1061,6 +1085,7 @@ abstract class AbstractReportModel extends Model
     }
 
     public function higherLayerSelections(
+        $fieldNames,
         $campaignId = null,
         $adGroupId = null,
         $tableName = ""
@@ -1093,6 +1118,11 @@ abstract class AbstractReportModel extends Model
                 .' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
             array_push($arraySelections, $querySelectId, $querySelectName);
             array_push($this->groupBy, $value['columnId']);
+        }
+
+        if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
+            array_push($arraySelections, 'adgroupID');
+            array_push($this->groupBy, 'adgroupID');
         }
         return $arraySelections;
     }

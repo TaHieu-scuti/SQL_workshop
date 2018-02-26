@@ -24,6 +24,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
 
     const TABLE_TEMPORARY = 'temporary_table';
 
+    const TABLE_TEMPORARY_AD = 'temporary_table_ad';
+
     const FIELDS_CALL_TRACKING = [
         '[phoneNumberValues]',
         'call_cv',
@@ -80,8 +82,13 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $isConv = false,
         $isCallTracking = false,
         $conversionPoints = null,
-        $adGainerCampaigns = null
+        $adGainerCampaigns = null,
+        $preFixRoute = ""
     ) {
+        $tableName = self::TABLE_TEMPORARY;
+        if ($preFixRoute === 'adgroup') {
+            $tableName = self::TABLE_TEMPORARY_AD;
+        }
         $fieldNames = $this->unsetColumns(
             $fieldNames,
             array_merge(self::FIELDS_CALL_TRACKING, self::UNSET_COLUMNS)
@@ -97,7 +104,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         );
 
         Schema::create(
-            self::TABLE_TEMPORARY,
+            $tableName,
             function (Blueprint $table) use ($fieldNames) {
                 $table->increments('id');
                 foreach ($fieldNames as $key => $fieldName) {
@@ -120,20 +127,17 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
 
     protected function getAggregatedForTemporary(
         array $fieldNames,
-        array $higherLayerSelections = null
+        array $higherLayerSelections,
+        $tableName = ""
     ) {
-        $tableName = null;
-        if ($this->isConv || $this->isCallTracking) {
-            $tableName = self::TABLE_TEMPORARY;
-        }
         $expressions = parent::getAggregated($fieldNames, $higherLayerSelections, $tableName);
         foreach ($fieldNames as $fieldName) {
             switch ($fieldName) {
                 case '[conversionValues]':
-                    $expressions = $this->addRawExpressionsConversionPoint($expressions);
+                    $expressions = $this->addRawExpressionsConversionPoint($expressions, $tableName);
                     break;
                 case '[phoneNumberValues]':
-                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions);
+                    $expressions = $this->addRawExpressionsPhoneNumberConversions($expressions, $tableName);
                     break;
                 case 'call_cv':
                     $expressions = $this->addRawExpressionCallConversions($expressions);
@@ -142,27 +146,27 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
                     $expressions = $this->addRawExpressionCallConversionRate($expressions);
                     break;
                 case 'call_cpa':
-                    $expressions = $this->addRawExpressionCallCostPerAction($expressions);
+                    $expressions = $this->addRawExpressionCallCostPerAction($expressions, $tableName);
                     break;
                 case 'web_cv':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cv");
+                    $expressions[] = DB::raw("IFNULL(SUM(`".$tableName."`.`conversions`), 0) as web_cv");
                     break;
                 case 'web_cvr':
-                    $expressions[] = DB::raw("IFNULL((SUM(`".self::TABLE_TEMPORARY."`.`conversions`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`clicks`)) * 100, 0) as web_cvr");
+                    $expressions[] = DB::raw("IFNULL((SUM(`".$tableName."`.`conversions`) /
+                    SUM(`".$tableName."`.`clicks`)) * 100, 0) as web_cvr");
                     break;
                 case 'web_cpa':
-                    $expressions[] = DB::raw("IFNULL(SUM(`".self::TABLE_TEMPORARY."`.`cost`) /
-                    SUM(`".self::TABLE_TEMPORARY."`.`conversions`), 0) as web_cpa");
+                    $expressions[] = DB::raw("IFNULL(SUM(`".$tableName."`.`cost`) /
+                    SUM(`".$tableName."`.`conversions`), 0) as web_cpa");
                     break;
                 case 'total_cv':
-                    $expressions = $this->addRawExpressionTotalConversions($expressions);
+                    $expressions = $this->addRawExpressionTotalConversions($expressions, $tableName);
                     break;
                 case 'total_cvr':
-                    $expressions = $this->addRawExpressionTotalConversionRate($expressions);
+                    $expressions = $this->addRawExpressionTotalConversionRate($expressions, $tableName);
                     break;
                 case 'total_cpa':
-                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions);
+                    $expressions = $this->addRawExpressionTotalCostPerAction($expressions, $tableName);
                     break;
             }
         }
@@ -209,23 +213,30 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $fieldNames,
         $groupedByField,
         $campaignId,
-        $adGroupId
+        $adGroupId,
+        $tableName = ""
     ) {
+        if (empty($tableName)) {
+            $tableName = self::TABLE_TEMPORARY;
+        }
         $higherLayerSelections = [];
         if ($groupedByField !== self::DEVICE
             && $groupedByField !== self::HOUR_OF_DAY
             && $groupedByField !== self::DAY_OF_WEEK
             && $groupedByField !== self::PREFECTURE
         ) {
-            $higherLayerSelections = $this->higherLayerSelections($campaignId, $adGroupId, self::TABLE_TEMPORARY);
+            $higherLayerSelections = $this->higherLayerSelections($fieldNames, $campaignId, $adGroupId, $tableName);
         }
-        $aggregations = $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections);
+        $aggregations = $this->getAggregatedForTemporary($fieldNames, $higherLayerSelections, $tableName);
         $selectBy = static::FIELDS;
+        if ($tableName === self::TABLE_TEMPORARY_AD) {
+            $selectBy = static::FIELDS_ADGROUP_ADW;
+        }
 
         return array_merge($selectBy, $aggregations);
     }
 
-    protected function higherSelectionFields($columns, $campaignId, $adGroupId)
+    protected function higherSelectionFields($columns, $campaignId, $adGroupId, $preFixRoute = "")
     {
         $arrayAlias = [];
         if (!isset($campaignId)) {
@@ -241,8 +252,13 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $columns[$key] = 'keywordMatchType';
         }
 
-        if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID') {
+        if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID' && $preFixRoute = "") {
             $columns = array_merge(static::FIELDS, $columns);
+        }
+
+        if (static::GROUPED_BY_FIELD_NAME === 'keyword' && array_search('adgroupID', $columns) === false) {
+            $key = array_search(static::GROUPED_BY_FIELD_NAME, $columns);
+            array_splice($columns, $key + 1, 0, ['adgroupID']);
         }
 
         return $columns;

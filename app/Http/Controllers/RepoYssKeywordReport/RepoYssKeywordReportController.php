@@ -19,6 +19,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const COLUMN_SORT = 'columnSort';
     const SORT = 'sort';
     const MEDIA_ID = 'keywordID';
+    const ADGROUP_ID = 'adgroupID';
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'keywordReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
@@ -84,9 +85,9 @@ class RepoYssKeywordReportController extends AbstractReportController
         $engine = $this->updateModel();
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine === null || $engine === 'yss') {
-            array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD);
+            array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD, self::ADGROUP_ID);
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD);
+            array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD, self::ADGROUP_ID);
         }
 
         if (!session('keywordReport')) {

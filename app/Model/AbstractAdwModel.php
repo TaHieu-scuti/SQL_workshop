@@ -10,41 +10,40 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AbstractAdwModel extends AbstractTemporaryModel
 {
-    private $conversionPoints;
-    private $adGainerCampaigns;
-    const IMPRESSSION_SHARE = 'IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare';
+    protected $conversionPoints;
+    protected $adGainerCampaigns;
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
         return parent::getAggregatedToUpdateTemporatyTable($fieldNames, $higherLayerSelections, $tableName);
     }
 
-    protected function addRawExpressionsConversionPoint(array $expressions)
+    protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
         if ($conversionNames !== null) {
             foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    .self::TABLE_TEMPORARY
+                    .$tableName
                     . "`.`conversions".$i."`), 0) AS 'Adw "
                     . $conversionName
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
                     'IFNULL((SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`conversions'.$i.'`) / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'Adw "
                     . $conversionName
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`cost`) / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`conversions".$i."`), 0) AS 'Adw "
                     . $conversionName
                     . " CPA'"
@@ -55,7 +54,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionsPhoneNumberConversions(array $expressions)
+    protected function addRawExpressionsPhoneNumberConversions(array $expressions, $tableName = "")
     {
         if ($this->adGainerCampaigns !== null) {
             foreach ($this->adGainerCampaigns as $i => $campaign) {
@@ -72,7 +71,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     'IFNULL(`call'
                     . $i
                     . '` / SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . "`.`clicks`), 0) AS 'Adw "
                     . $campaign->campaign_name
                     . ' '
@@ -81,7 +80,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 );
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    . self::TABLE_TEMPORARY
+                    . $tableName
                     . '`.`cost`) / `call'
                     . $i
                     . "`, 0) AS 'Adw "
@@ -135,11 +134,11 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionCallCostPerAction(array $expressions)
+    protected function addRawExpressionCallCostPerAction(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -155,11 +154,11 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalConversions(array $expressions)
+    protected function addRawExpressionTotalConversions(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -175,11 +174,11 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalConversionRate(array $expressions)
+    protected function addRawExpressionTotalConversionRate(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL((SUM(`' . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL((SUM(`' . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -190,7 +189,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 . ($numberOfCampaigns - 1)
                 . '`) / '
                 . 'SUM(`'
-                . self::TABLE_TEMPORARY
+                . $tableName
                 . '`.`clicks`), 0) AS total_cvr';
 
             $expressions[] = DB::raw($expression);
@@ -198,12 +197,12 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalCostPerAction(array $expressions)
+    protected function addRawExpressionTotalCostPerAction(array $expressions, $tableName = "")
     {
         $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . self::TABLE_TEMPORARY . '`.`cost`) / (SUM(`'
-                . self::TABLE_TEMPORARY . '`.`conversions`) + ';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (SUM(`'
+                . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -254,9 +253,10 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adGroupId,
             static::PAGE_ID
         );
+
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
-        $keywordIDs = array_unique($this->conversionPoints->pluck('keywordID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
@@ -264,11 +264,10 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $campaignIDs,
             static::PAGE_ID,
             $adIDs,
-            $keywordIDs
+            $adgroupIDs
         );
 
         $fieldNames = $this->checkConditionFieldName($fieldNames);
-
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -286,6 +285,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
             if (!in_array(static::PAGE_ID, $columns)) {
@@ -295,7 +295,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             if (static::PAGE_ID !== 'campaignID') {
                 $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
             }
-
             $this->createTemporaryTable(
                 $columns,
                 $this->isConv,
@@ -309,6 +308,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             );
 
             $columns = array_keys($this->updateFieldNames($columns));
+
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
 
@@ -343,22 +343,51 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                     $keywordId
                 );
             }
-            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+            $arr = [];
+            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
+            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fieldNames,
+                $fields,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
-            $arr = [];
-            if (static::PAGE_ID !== 'adID') {
-                $arr[] = self::IMPRESSSION_SHARE;
-            }
-
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
                 ->orderBy($columnSort, $sort);
+        }
+
+        if (static::PAGE_ID === 'adgroupID') {
+            $model = new RepoAdwAdReportCost();
+
+            $query = $model->getQueryForDataTable(
+                $engine,
+                $fieldNames,
+                $accountStatus,
+                $startDay,
+                $endDay,
+                $columnSort,
+                $sort,
+                $groupedByField,
+                $agencyId,
+                $accountId,
+                $clientId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+            $builder = $builder->union($query);
+            $outerQuery = DB::query()
+                ->from(DB::raw("({$this->getBindingSql($builder)}) AS tbl"))
+                ->orderBy($columnSort, $sort);
+            $results = $outerQuery->get();
+            return isset($results) ? $results : [];
         }
 
         return $builder;
@@ -379,6 +408,8 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
+
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
@@ -396,23 +427,47 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+            $arr = [];
+            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
+            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fieldNames,
+                $fields,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
-            $arr = [];
-            if (static::PAGE_ID !== 'adID') {
-                $arr[] = self::IMPRESSSION_SHARE;
-            }
+
             $builder = DB::table(self::TABLE_TEMPORARY)->select(
                 array_merge(
                     $aggregated,
                     $arr
                 )
             );
+        }
+
+        if (static::PAGE_ID === 'adgroupID') {
+            $model = new RepoAdwAdReportCost();
+
+            $query = $model->getQueryForCalculateData(
+                $engine,
+                $fieldNames,
+                $accountStatus,
+                $startDay,
+                $endDay,
+                $groupedByField,
+                $agencyId,
+                $accountId,
+                $clientId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+            $builder->union($query);
         }
 
         return $builder;
@@ -442,6 +497,8 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         $arraySelect = ['conversionName'];
         if ($column === 'campaignID') {
             array_unshift($arraySelect, 'campaignID');
+        } elseif ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
         } elseif ($column === 'adID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
         } elseif ($column === 'keywordID') {
@@ -450,7 +507,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $arraySelect;
     }
 
-    private function checkConditionFieldName($fieldNames)
+    protected function checkConditionFieldName($fieldNames)
     {
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === '[conversionValues]') {
@@ -464,10 +521,12 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             if (!in_array('cost', $fieldNames)) {
-                array_unshift($fieldNames, 'cost');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['cost']);
             }
             if (!in_array('clicks', $fieldNames)) {
-                array_unshift($fieldNames, 'clicks');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['clicks']);
             }
         }
         return $fieldNames;
