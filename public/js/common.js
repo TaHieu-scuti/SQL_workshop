@@ -466,7 +466,16 @@ $(document).ready(function(){
         }
         count--;
     }
-    if ($('span.title').attr('data-titleBreadCumbs') == 'アカウント名') {
+    if ($('span.title').attr('data-titleBreadCumbs') == '代理店'
+        || $('span.title').attr('data-titleBreadCumbs') == 'クライアント'
+        || $('span.title').attr('data-titleBreadCumbs') == 'アカウント名'
+    ) {
+        if (pageInformation.title == 'Admin') {
+            $('.site-information-guess-annotation').append('アドミン');
+        }
+        if (pageInformation.title == 'Agency') {
+            $('.site-information-guess-annotation').append('代理店');
+        }
         if (pageInformation.title == 'Client') {
             $('.site-information-guess-annotation').append('クライアント');
         }
