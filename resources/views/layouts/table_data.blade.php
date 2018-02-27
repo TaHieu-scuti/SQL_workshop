@@ -204,7 +204,6 @@
             <tr>
                 <?php
                 $columnNames = [
-                    'accountid',
                     'accountName',
                     'campaignName',
                     'campaign',
