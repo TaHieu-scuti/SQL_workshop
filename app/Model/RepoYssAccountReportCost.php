@@ -80,10 +80,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 $arrSelect[] = DB::raw(
                     'ROUND(AVG( avgCPC ), 2) AS data'
                 );
-            }
-            if ($column === self::AVERAGE_POSITION) {
+            } elseif ($column === self::AVERAGE_POSITION) {
                 $arrSelect[] = DB::raw(
                     'ROUND(AVG( avgPosition ), 2) AS data'
+                );
+            } else {
+                $arrSelect[] = DB::raw(
+                    'ROUND(AVG('. $column .'), 2) AS data'
                 );
             }
         } elseif (in_array($column, static::SUM_FIELDS)) {
