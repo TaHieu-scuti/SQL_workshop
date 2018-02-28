@@ -120,25 +120,32 @@ class DirectClient extends Account
         $adReportId = null,
         $keywordId = null
     ) {
-        $directClientAggregations = $this->getAggregatedAgency(
-            $fieldNames,
-            "'directClients'"
-        );
-        $directClientQuery = $this->getQueryBuilderForTable($directClientAggregations, $startDay, $endDay)
+        $this->createTemporaryAccountTable();
+        $directClientAggregations = $this->getAggregatedTemporary($fieldNames, 'directClients');
+        $sql = $this->select('account_id', 'accountName')
             ->where('accounts.level', '=', 3)
             ->where('accounts.agent_id', '=', '')
             ->whereRaw(
                 "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
             );
-        if ($accountStatus === self::HIDE_ZERO_STATUS) {
-            $directClientQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
-        }
-        $outerQuery = DB::query()
-            ->from(DB::raw("({$this->getBindingSql($directClientQuery)}) AS tbl"))
-            ->orderBy($columnSort, $sort)
-            ->groupBy('directClients');
 
-        $results = $outerQuery->get();
+        DB::insert('INSERT into '. self::TEMPORARY_ACCOUNT_TABLE .'(account_id, accountName)'
+            . $this->getBindingSql($sql));
+
+        $this->getAccountYss($startDay, $endDay);
+        $this->getAccountYdn($startDay, $endDay);
+        $this->getAccountAdw($startDay, $endDay);
+
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select($directClientAggregations)
+            ->orderBy($columnSort, $sort)
+            ->groupby('directClients');
+
+        if ($accountStatus === self::HIDE_ZERO_STATUS) {
+            $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+        }
+
+        $results = $builder->get();
 
         return isset($results) ? $results->toArray() : [];
     }
@@ -167,15 +174,12 @@ class DirectClient extends Account
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
 
-        $rawExpressions = $this->getRawExpressions($fieldNames);
-        $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
-            ->where('accounts.level', '=', 3)
-            ->where('accounts.agent_id', '=', '')
-            ->whereRaw(
-                "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
-            );
+        $rawExpressions = $this->getRawExpressions($fieldNames, self::TEMPORARY_ACCOUNT_TABLE);
 
-        $result = $agencyTotalsQuery->first();
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select($rawExpressions);
+
+        $result = $builder->first();
 
         if ($result === null) {
             return [];
@@ -224,6 +228,6 @@ class DirectClient extends Account
             ];
         }
 
-        return $result->toArray();
+        return (array) $result;
     }
 }

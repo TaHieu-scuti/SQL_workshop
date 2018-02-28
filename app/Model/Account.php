@@ -481,7 +481,7 @@ class Account extends AbstractTemporaryAccountModel
         $this->getAccountAdw($startDay, $endDay);
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
-            ->select(array_merge($getAgreatedAgency))
+            ->select($getAgreatedAgency)
             ->groupby('clientName')
             ->orderBy($columnSort, $sort);
 
