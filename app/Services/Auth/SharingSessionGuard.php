@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use App\User;
@@ -30,6 +31,11 @@ class SharingSessionGuard implements Guard
             $this->setUser($currentUser);
             return true;
         }
+
+        if (Auth::user() !== null) {
+            return true;
+        }
+
         return false;
     }
 
