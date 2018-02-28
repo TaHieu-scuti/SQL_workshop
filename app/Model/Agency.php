@@ -64,7 +64,7 @@ class Agency extends Account
     ) {
         $this->createTemporaryAccountTable(self::AGENCY);
         array_unshift($fieldNames, 'account_id');
-        $getAgreatedAgency = $this->getAggregatedTemporary($fieldNames, 'agencyName');
+        $getAggregation = $this->getAggregatedTemporary($fieldNames, 'agencyName');
         $agencyClientQuery = $this->select(
             'parentAccounts.account_id',
             'parentAccounts.accountName',
@@ -99,7 +99,7 @@ class Agency extends Account
         $this->getAccountAdw($startDay, $endDay, self::AGENCY);
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
-            ->select(array_merge($getAgreatedAgency))
+            ->select(array_merge($getAggregation))
             ->groupby('agencyName')
             ->orderBy($columnSort, $sort);
 
