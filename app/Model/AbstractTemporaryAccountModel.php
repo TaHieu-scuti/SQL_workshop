@@ -49,6 +49,30 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         'web_cpa',
     ];
 
+    const SUM_FIELDS_OF_ENGINES = [
+        'ydn_web_cv',
+        'yss_web_cv',
+        'adw_web_cv',
+        'ydn_call_cv',
+        'yss_call_cv',
+        'adw_call_cv'
+    ];
+
+    const AVERAGE_FIELDS_OF_ENGINES = [
+        'ydn_web_cvr',
+        'ydn_web_cpa',
+        'yss_web_cvr',
+        'yss_web_cpa',
+        'adw_web_cvr',
+        'adw_web_cpa',
+        'ydn_call_cvr',
+        'ydn_call_cpa',
+        'yss_call_cvr',
+        'yss_call_cpa',
+        'adw_call_cvr',
+        'adw_call_cpa',
+    ];
+
     const DEFAULT_COLUMNS = [
         'account_id',
         'accountName',
@@ -83,9 +107,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     ) {
         Schema::create(
             self::TEMPORARY_ACCOUNT_TABLE,
-            function (Blueprint $table) use ($fieldNames) {
+            function (Blueprint $table) {
                 $table->increments('id');
-                foreach (self::DEFAULT_COLUMNS as $key => $fieldName) {
+                foreach (self::DEFAULT_COLUMNS as $fieldName) {
                     if (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
                         $table->bigInteger($fieldName)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_INT)) {
@@ -198,41 +222,11 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
                     'IFNULL(adw_'. $fieldName . ' +  ydn_' . $fieldName . ' + yss_' . $fieldName . ', 0)'
                     . ' AS '. $fieldName
                 );
-            } elseif ($fieldName === 'ydn_web_cv') {
+            } elseif (in_array(
+                $fieldName,
+                array_merge(self::SUM_FIELDS_OF_ENGINES, self::AVERAGE_FIELDS_OF_ENGINES))) {
                 $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_web_cv, 0) AS ydn_web_cv'
-                );
-            } elseif ($fieldName === 'ydn_web_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_web_cvr, 0) AS ydn_web_cvr'
-                );
-            } elseif ($fieldName === 'ydn_web_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_web_cpa, 0) AS ydn_web_cpa'
-                );
-            } elseif ($fieldName === 'yss_web_cv') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_web_cv, 0) AS yss_web_cv'
-                );
-            } elseif ($fieldName === 'yss_web_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_web_cvr, 0) AS yss_web_cvr'
-                );
-            } elseif ($fieldName === 'yss_web_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_web_cpa, 0) AS yss_web_cpa'
-                );
-            } elseif ($fieldName === 'adw_web_cv') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_web_cv, 0) AS adw_web_cv'
-                );
-            } elseif ($fieldName === 'adw_web_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_web_cvr, 0) AS adw_web_cvr'
-                );
-            } elseif ($fieldName === 'adw_web_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_web_cpa, 0) AS adw_web_cpa'
+                    'IFNULL('.$fieldName.', 0) AS '.$fieldName
                 );
             } elseif ($fieldName === 'web_cv') {
                 $arrayCalculate[] = DB::raw(
@@ -247,42 +241,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
                 $arrayCalculate[] = DB::raw(
                     'IFNULL((ydn_cost + yss_cost + adw_cost) / '
                     . '(ydn_web_cv + yss_web_cv + adw_web_cv), 0) AS web_cpa'
-                );
-            } elseif ($fieldName === 'ydn_call_cv') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_call_cv, 0) AS ydn_call_cv'
-                );
-            } elseif ($fieldName === 'ydn_call_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_call_cvr, 0) AS ydn_call_cvr'
-                );
-            } elseif ($fieldName === 'ydn_call_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ydn_call_cpa, 0) AS ydn_call_cpa'
-                );
-            } elseif ($fieldName === 'yss_call_cv') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_call_cv, 0) AS yss_call_cv'
-                );
-            } elseif ($fieldName === 'yss_call_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_call_cvr, 0) AS yss_call_cvr'
-                );
-            } elseif ($fieldName === 'yss_call_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(yss_call_cpa, 0) AS yss_call_cpa'
-                );
-            } elseif ($fieldName === 'adw_call_cv') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_call_cv, 0) AS adw_call_cv'
-                );
-            } elseif ($fieldName === 'adw_call_cvr') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_call_cvr, 0) AS adw_call_cvr'
-                );
-            } elseif ($fieldName === 'adw_call_cpa') {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_call_cpa, 0) AS adw_call_cpa'
                 );
             } elseif ($fieldName === 'call_cv') {
                 $arrayCalculate[] = DB::raw(
@@ -336,41 +294,13 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
                 'IFNULL((AVG(ydn_averagePosition) + AVG(yss_averagePosition) + '
                 . 'AVG(adw_averagePosition)) / 3, 0) AS averagePosition'
             );
-        } elseif ($fieldName === 'ydn_web_cv') {
+        } elseif (in_array($fieldName, self::SUM_FIELDS_OF_ENGINES)) {
             $rawExpression = DB::raw(
-                'IFNULL(SUM(ydn_web_cv), 0) AS ydn_web_cv'
+                'IFNULL(SUM('.$fieldName.'), 0) AS '.$fieldName
             );
-        } elseif ($fieldName === 'ydn_web_cvr') {
+        } elseif (in_array($fieldName, self::AVERAGE_FIELDS_OF_ENGINES)) {
             $rawExpression = DB::raw(
-                'IFNULL(AVG(ydn_web_cvr), 0) AS ydn_web_cvr'
-            );
-        } elseif ($fieldName === 'ydn_web_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(ydn_web_cpa), 0) AS ydn_web_cpa'
-            );
-        } elseif ($fieldName === 'yss_web_cv') {
-            $rawExpression = DB::raw(
-                'IFNULL(SUM(yss_web_cv), 0) AS yss_web_cv'
-            );
-        } elseif ($fieldName === 'yss_web_cvr') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(yss_web_cvr), 0) AS yss_web_cvr'
-            );
-        } elseif ($fieldName === 'yss_web_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(yss_web_cpa), 0) AS yss_web_cpa'
-            );
-        } elseif ($fieldName === 'adw_web_cv') {
-            $rawExpression = DB::raw(
-                'IFNULL(SUM(adw_web_cv), 0) AS adw_web_cv'
-            );
-        } elseif ($fieldName === 'adw_web_cvr') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(adw_web_cvr), 0) AS adw_web_cvr'
-            );
-        } elseif ($fieldName === 'adw_web_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(adw_web_cpa), 0) AS adw_web_cpa'
+                'IFNULL(AVG('.$fieldName.'), 0) AS '.$fieldName
             );
         } elseif ($fieldName === 'web_cv') {
             $rawExpression = DB::raw(
@@ -385,42 +315,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
             $rawExpression = DB::raw(
                 'IFNULL((SUM(ydn_cost) + SUM(yss_cost) + SUM(adw_cost)) / '
                 . '(SUM(ydn_web_cv) + SUM(yss_web_cv) + SUM(adw_web_cv)), 0) AS web_cpa'
-            );
-        } elseif ($fieldName === 'ydn_call_cv') {
-            $rawExpression = DB::raw(
-                'IFNULL(SUM(ydn_call_cv), 0) AS ydn_call_cv'
-            );
-        } elseif ($fieldName === 'ydn_call_cvr') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(ydn_call_cvr), 0) AS ydn_call_cvr'
-            );
-        } elseif ($fieldName === 'ydn_call_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(ydn_call_cpa), 0) AS ydn_call_cpa'
-            );
-        } elseif ($fieldName === 'yss_call_cv') {
-            $rawExpression = DB::raw(
-                'IFNULL(SUM(yss_call_cv), 0) AS yss_call_cv'
-            );
-        } elseif ($fieldName === 'yss_call_cvr') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(yss_call_cvr), 0) AS yss_call_cvr'
-            );
-        } elseif ($fieldName === 'yss_call_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(yss_call_cpa), 0) AS yss_call_cpa'
-            );
-        } elseif ($fieldName === 'adw_call_cv') {
-            $rawExpression = DB::raw(
-                'IFNULL(SUM(adw_call_cv), 0) AS adw_call_cv'
-            );
-        } elseif ($fieldName === 'adw_call_cvr') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(adw_call_cvr), 0) AS adw_call_cvr'
-            );
-        } elseif ($fieldName === 'adw_call_cpa') {
-            $rawExpression = DB::raw(
-                'IFNULL(AVG(adw_call_cpa), 0) AS adw_call_cpa'
             );
         } elseif ($fieldName === 'call_cv') {
             $rawExpression = DB::raw(
