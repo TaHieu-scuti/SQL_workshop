@@ -19,7 +19,8 @@ class SharingSessionGuard implements Guard
      *
      * @return bool
      */
-    public function check() {
+    public function check()
+    {
         if (session_id() === '') {
             session_start();
         }
@@ -37,8 +38,8 @@ class SharingSessionGuard implements Guard
      *
      * @return bool
      */
-    public function guest() {
-
+    public function guest()
+    {
     }
 
     /**
@@ -46,7 +47,8 @@ class SharingSessionGuard implements Guard
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function user() {
+    public function user()
+    {
         return $this->user;
     }
 
@@ -55,7 +57,8 @@ class SharingSessionGuard implements Guard
      *
      * @return int|null
      */
-    public function id() {
+    public function id()
+    {
         if ($this->user !== null) {
             return $this->user->id;
         }
@@ -68,8 +71,8 @@ class SharingSessionGuard implements Guard
      * @param  array  $credentials
      * @return bool
      */
-    public function validate(array $credentials = []) {
-
+    public function validate(array $credentials = [])
+    {
     }
 
     /**
@@ -78,7 +81,8 @@ class SharingSessionGuard implements Guard
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return void
      */
-    public function setUser(Authenticatable $user) {
+    public function setUser(Authenticatable $user)
+    {
         $this->user = $user;
     }
 }
