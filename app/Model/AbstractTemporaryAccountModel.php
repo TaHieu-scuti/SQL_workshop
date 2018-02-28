@@ -143,7 +143,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     protected function getAccountYss($startDay, $endDay, $agency = "")
     {
         $modelYssAccount = new RepoYssAccountReportCost;
-        $column = $this->checkIssetAvaiable($agency);
+        $column = $this->checkIssetVariable($agency);
 
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             static::SUBQUERY_FIELDS,
@@ -162,7 +162,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     protected function getAccountYdn($startDay, $endDay, $agency = "")
     {
         $modelYdnAccount = new RepoYdnReport;
-        $column = $this->checkIssetAvaiable($agency);
+        $column = $this->checkIssetVariable($agency);
 
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             static::SUBQUERY_FIELDS,
@@ -182,7 +182,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     protected function getAccountAdw($startDay, $endDay, $agency = "")
     {
         $modelAdwAccount = new RepoAdwAccountReportCost;
-        $column = $this->checkIssetAvaiable($agency);
+        $column = $this->checkIssetVariable($agency);
 
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             static::SUBQUERY_FIELDS,
@@ -387,7 +387,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         return $rawExpression;
     }
 
-    private function checkIssetAvaiable($agency = "")
+    private function checkIssetVariable($agency = "")
     {
         $column = "account_id";
         if ($agency !== "") {
