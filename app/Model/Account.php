@@ -229,7 +229,6 @@ class Account extends AbstractTemporaryAccountModel
             } else {
                 $rawExpression[] = $this->getRawExpression($fieldName);
             }
-
         }
 
         return $rawExpression;

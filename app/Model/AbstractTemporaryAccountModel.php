@@ -144,8 +144,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
             .$this->getBindingSql($ydnAccountAgency).')AS tbl set '.implode(', ', $rawExpressions).' where '
             .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id'
         );
-
-
     }
 
     protected function getAccountAdw($startDay, $endDay)
@@ -164,7 +162,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
             .$this->getBindingSql($adwAccountAgency).')AS tbl set '.implode(', ', $rawExpressions).' where '
             .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id'
         );
-
     }
 
     private function setFieldNameToUpdate($engine)
