@@ -12,7 +12,7 @@ use App\Http\Controllers\AbstractReportController;
 use DateTime;
 use Exception;
 
-class Account extends AbstractReportModel
+class Account extends AbstractTemporaryAccountModel
 {
     const TABLE_ALIASES = [
         'adw',
@@ -217,15 +217,18 @@ class Account extends AbstractReportModel
         return DB::raw($rawExpression);
     }
 
-    protected function getRawExpressions($fieldNames)
+    protected function getRawExpressions($fieldNames, $temporary = "")
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
                 $rawExpression[] = DB::raw($fieldName. ' AS agencyName');
             }
-
-            $rawExpression[] = $this->getRawExpression($fieldName);
+            if ($temporary !== "") {
+                $rawExpression[] = $this->getRawExpressionTemporary($fieldName);
+            } else {
+                $rawExpression[] = $this->getRawExpression($fieldName);
+            }
         }
 
         return $rawExpression;
@@ -331,13 +334,12 @@ class Account extends AbstractReportModel
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
 
-        $rawExpressions = $this->getRawExpressions($fieldNames);
-        $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
-            ->where('accounts.level', '=', 3)
-            ->where('accounts.agent_id', '!=', '');
-        $this->addConditionAgency($agencyTotalsQuery, $agencyId);
+        $rawExpressions = $this->getRawExpressions($fieldNames, self::TEMPORARY_ACCOUNT_TABLE);
 
-        $result = $agencyTotalsQuery->first();
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select($rawExpressions);
+
+        $result = $builder->first();
 
         if ($result === null) {
             return [];
@@ -386,7 +388,7 @@ class Account extends AbstractReportModel
             ];
         }
 
-        return $result->toArray();
+        return (array) $result;
     }
 
     protected function getQueryBuilderForTable($select, $startDay, $endDay)
@@ -463,26 +465,30 @@ class Account extends AbstractReportModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
+        $this->createTemporaryAccountTable($fieldNames);
 
-        $getAgreatedAgency = $this->getAggregatedAgency($fieldNames, 'clientName');
-
-        $clientsQuery = $this->getQueryBuilderForTable($getAgreatedAgency, $startDay, $endDay)
+        $getAgreatedAgency = $this->getAggregatedTemporary($fieldNames, 'clientName');
+        $sql = $this->select('account_id', 'accountName')
             ->where('level', '=', 3)
-            ->where('agent_id', '!=', '')
+            ->where('agent_id', '!=', '');
+        $this->addConditionAgency($sql, $agencyId);
+
+        DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' (account_id, accountName) '
+            . $this->getBindingSql($sql));
+
+        $this->getAccountYss($startDay, $endDay);
+        $this->getAccountYdn($startDay, $endDay);
+        $this->getAccountAdw($startDay, $endDay);
+
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select(array_merge($getAgreatedAgency))
+            ->groupby('clientName')
             ->orderBy($columnSort, $sort);
 
-        $this->addConditionAgency($clientsQuery, $agencyId);
-
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
-            $clientsQuery = $clientsQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $builder = $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
-
-        $outerQuery = DB::query()
-            ->from(DB::raw("({$this->getBindingSql($clientsQuery)}) AS tbl"))
-            ->orderBy($columnSort, $sort)
-            ->groupBy('clientName');
-
-        $results = $outerQuery->get();
+        $results = $builder->get();
 
         return isset($results) ? $results->toArray() : [];
     }
