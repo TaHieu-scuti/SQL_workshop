@@ -224,7 +224,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
                 );
             } elseif (in_array(
                 $fieldName,
-                array_merge(self::SUM_FIELDS_OF_ENGINES, self::AVERAGE_FIELDS_OF_ENGINES))) {
+                array_merge(self::SUM_FIELDS_OF_ENGINES, self::AVERAGE_FIELDS_OF_ENGINES)
+            )) {
                 $arrayCalculate[] = DB::raw(
                     'IFNULL('.$fieldName.', 0) AS '.$fieldName
                 );
