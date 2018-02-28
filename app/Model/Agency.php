@@ -15,6 +15,8 @@ class Agency extends Account
         'ctr'
     ];
 
+    const AGENCY = "agency";
+
     const SUM_FIELDS = [
         'clicks',
         'impressions',
@@ -60,40 +62,52 @@ class Agency extends Account
         $adReportId = null,
         $keywordId = null
     ) {
+        $this->createTemporaryAccountTable(self::AGENCY);
         array_unshift($fieldNames, 'account_id');
-        $agencyAggregations = $this->getAggregatedAgency($fieldNames, 'agencyName', 'parentAccounts');
-        $agencyClientQuery = $this->getQueryBuilderForTable($agencyAggregations, $startDay, $endDay)
+        $getAgreatedAgency = $this->getAggregatedTemporary($fieldNames, 'agencyName');
+        $agencyClientQuery = $this->select(
+            'parentAccounts.account_id',
+            'parentAccounts.accountName',
+            DB::raw('`accounts`.`account_id` AS client_id')
+        )
             ->leftJoin(
-                DB::raw(' accounts AS parentAccounts'),
+                DB::raw('accounts AS parentAccounts'),
                 'accounts.agent_id',
                 '=',
                 'parentAccounts.account_id'
             )
             ->whereRaw(
                 "`accounts`.`agent_id` = `parentAccounts`.`account_id`"
-            );
+            )
+            ->groupBy('accountName', 'account_id');
 
-        $directClientAggregations = $this->getAggregatedAgency(
-            $fieldNames,
-            'agencyName',
-            "'directClients'"
-        );
-        $directClientQuery = $this->getQueryBuilderForTable($directClientAggregations, $startDay, $endDay)
+        $this->insertDataToTemporary($agencyClientQuery);
+
+        $directClientQuery = $this->select(
+            'account_id',
+            DB::raw('"directClients" AS accountName'),
+            'account_id AS client_id'
+        )
             ->where('accounts.level', '=', 3)
             ->where('accounts.agent_id', '=', '')
             ->whereRaw(
                 "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
             );
+        $this->insertDataToTemporary($directClientQuery);
+        $this->getAccountYss($startDay, $endDay, self::AGENCY);
+        $this->getAccountYdn($startDay, $endDay, self::AGENCY);
+        $this->getAccountAdw($startDay, $endDay, self::AGENCY);
 
-        $unionQuery = $agencyClientQuery->union($directClientQuery);
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select(array_merge($getAgreatedAgency))
+            ->groupby('agencyName')
+            ->orderBy($columnSort, $sort);
+
         if ($accountStatus === self::HIDE_ZERO_STATUS) {
-            $unionQuery->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
+            $builder->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO_OF_CLIENT);
         }
-        $outerQuery = DB::query()
-            ->from(DB::raw("({$this->getBindingSql($unionQuery)}) AS tbl"))
-            ->orderBy($columnSort, $sort)
-            ->groupBy('agencyName');
-        $results = $outerQuery->get();
+
+        $results = $builder->get();
         return isset($results) ? $results->toArray() : [];
     }
 
@@ -114,16 +128,12 @@ class Agency extends Account
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
 
-        $rawExpressions = $this->getRawExpressions($fieldNames);
-        $agencyTotalsQuery = $this->getQueryBuilderForTable($rawExpressions, $startDay, $endDay)
-            ->leftJoin(
-                DB::raw(' accounts AS parentAccounts'),
-                'accounts.agent_id',
-                '=',
-                'parentAccounts.account_id'
-            );
+        $rawExpressions = $this->getRawExpressions($fieldNames, self::TEMPORARY_ACCOUNT_TABLE);
 
-        $result = $agencyTotalsQuery->first();
+        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+            ->select($rawExpressions);
+
+        $result = $builder->first();
 
         if ($result === null) {
             return [];
@@ -172,7 +182,7 @@ class Agency extends Account
             ];
         }
 
-        return $result->toArray();
+        return (array) $result;
     }
     /**
      * @param string $column
@@ -233,5 +243,11 @@ class Agency extends Account
         $arr = ['all' => 'All Agencies'];
 
         return $arr + $arrayOfDirectClientsAndAgencies;
+    }
+
+    private function insertDataToTemporary($builder)
+    {
+        DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' (account_id, accountName, client_id) '
+            . $this->getBindingSql($builder));
     }
 }

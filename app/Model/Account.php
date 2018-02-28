@@ -465,7 +465,7 @@ class Account extends AbstractTemporaryAccountModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
-        $this->createTemporaryAccountTable($fieldNames);
+        $this->createTemporaryAccountTable();
 
         $getAgreatedAgency = $this->getAggregatedTemporary($fieldNames, 'clientName');
         $sql = $this->select('account_id', 'accountName')
