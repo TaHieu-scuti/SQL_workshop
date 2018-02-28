@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\User;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Services\Auth\SharingSessionGuard;
+use Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,13 @@ class AuthServiceProvider extends ServiceProvider
             'adgainer',
             function () {
                 return new AdGainerUserProvider(new User);
+            }
+        );
+
+        $this->app['auth']->extend(
+            'custom',
+            function () {
+                return new SharingSessionGuard(new User);
             }
         );
     }
