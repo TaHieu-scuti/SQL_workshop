@@ -56,7 +56,10 @@ class SharingSessionGuard implements Guard
      * @return int|null
      */
     public function id() {
-        return $this->user->id;
+        if ($this->user !== null) {
+            return $this->user->id;
+        }
+        return null;
     }
 
     /**
