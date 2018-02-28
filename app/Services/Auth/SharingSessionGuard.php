@@ -26,8 +26,8 @@ class SharingSessionGuard implements Guard
         }
 
         if (array_key_exists('account_id', $_SESSION)) {
-            $user = $this->user->where('account_id', '=', $_SESSION['account_id'])->first();
-            $this->setUser($user);
+            $currentUser = $this->user->where('account_id', '=', $_SESSION['account_id'])->first();
+            $this->setUser($currentUser);
             return true;
         }
         return false;
