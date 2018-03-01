@@ -176,7 +176,7 @@ class DirectClient extends Account
 
         $rawExpressions = $this->getRawExpressions($fieldNames, self::TEMPORARY_ACCOUNT_TABLE);
 
-        $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+        $builder = DB:: (self::TEMPORARY_ACCOUNT_TABLE)
             ->select($rawExpressions);
 
         $result = $builder->first();
