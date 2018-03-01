@@ -15,6 +15,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     const ACCOUNT_ID = 'account_id';
 
     const FIELDS_TYPE_BIGINT = [
+        'client_id',
         'account_id',
     ];
 
@@ -102,14 +103,18 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         'adw_call_cpa',
     ];
 
-    protected function createTemporaryAccountTable(
-        array $fieldNames
-    ) {
+    protected function createTemporaryAccountTable($agency = "")
+    {
+        $fieldNames = self::DEFAULT_COLUMNS;
+        if ($agency !== "") {
+            array_unshift($fieldNames, 'client_id');
+        }
+
         Schema::create(
             self::TEMPORARY_ACCOUNT_TABLE,
-            function (Blueprint $table) {
+            function (Blueprint $table) use ($fieldNames) {
                 $table->increments('id');
-                foreach (self::DEFAULT_COLUMNS as $fieldName) {
+                foreach ($fieldNames as $fieldName) {
                     if (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
                         $table->bigInteger($fieldName)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_INT)) {
@@ -135,9 +140,11 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         );
     }
 
-    protected function getAccountYss($startDay, $endDay)
+    protected function getAccountYss($startDay, $endDay, $agency = "")
     {
         $modelYssAccount = new RepoYssAccountReportCost;
+        $column = $this->checkIssetVariable($agency);
+
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
@@ -148,13 +155,15 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         DB::update(
             'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
             .$this->getBindingSql($yssAccountAgency).')AS tbl set '.implode(', ', $rawExpressions).' where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id'
+            .self::TEMPORARY_ACCOUNT_TABLE.'.'. $column.' = tbl.account_id'
         );
     }
 
-    protected function getAccountYdn($startDay, $endDay)
+    protected function getAccountYdn($startDay, $endDay, $agency = "")
     {
         $modelYdnAccount = new RepoYdnReport;
+        $column = $this->checkIssetVariable($agency);
+
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
@@ -166,13 +175,15 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         DB::update(
             'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
             .$this->getBindingSql($ydnAccountAgency).')AS tbl set '.implode(', ', $rawExpressions).' where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id'
+            .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
     }
 
-    protected function getAccountAdw($startDay, $endDay)
+    protected function getAccountAdw($startDay, $endDay, $agency = "")
     {
         $modelAdwAccount = new RepoAdwAccountReportCost;
+        $column = $this->checkIssetVariable($agency);
+
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
@@ -184,7 +195,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         DB::update(
             'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
             .$this->getBindingSql($adwAccountAgency).')AS tbl set '.implode(', ', $rawExpressions).' where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id'
+            .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
     }
 
@@ -374,5 +385,15 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         }
 
         return $rawExpression;
+    }
+
+    private function checkIssetVariable($agency = "")
+    {
+        $column = "account_id";
+        if ($agency !== "") {
+            $column = "client_id";
+        }
+
+        return $column;
     }
 }

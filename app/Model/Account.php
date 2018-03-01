@@ -465,9 +465,9 @@ class Account extends AbstractTemporaryAccountModel
         } catch (Exception $exception) {
             throw new \InvalidArgumentException($exception->getMessage(), 0, $exception);
         }
-        $this->createTemporaryAccountTable($fieldNames);
+        $this->createTemporaryAccountTable();
 
-        $getAgreatedAgency = $this->getAggregatedTemporary($fieldNames, 'clientName');
+        $getAggreatedAgency = $this->getAggregatedTemporary($fieldNames, 'clientName');
         $sql = $this->select('account_id', 'accountName')
             ->where('level', '=', 3)
             ->where('agent_id', '!=', '');
@@ -481,7 +481,7 @@ class Account extends AbstractTemporaryAccountModel
         $this->getAccountAdw($startDay, $endDay);
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
-            ->select(array_merge($getAgreatedAgency))
+            ->select(array_merge($getAggreatedAgency))
             ->groupby('clientName')
             ->orderBy($columnSort, $sort);
 
