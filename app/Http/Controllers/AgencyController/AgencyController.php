@@ -93,7 +93,7 @@ class AgencyController extends AbstractReportController
         ResponseFactory $responseFactory,
         Agency $model
     ) {
-        $this->middleware('checkRole:custom');
+        $this->middleware('checkRole');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
