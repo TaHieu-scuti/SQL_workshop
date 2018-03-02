@@ -9,10 +9,209 @@ use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
-abstract class AbstractYssSpecificReportModel extends AbstractReportModel
+abstract class AbstractYssSpecificReportModel extends AbstractTemporaryModel
 {
     private $conversionPoints;
     private $adGainerCampaigns;
+
+    protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
+    {
+        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        if ($conversionNames !== null) {
+            foreach ($conversionNames as $i => $conversionName) {
+                $expressions[] = DB::raw(
+                    'IFNULL(SUM(`'
+                    . $tableName
+                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . $conversionName
+                    . " CV'"
+                );
+                $expressions[] = DB::raw(
+                    'IFNULL((SUM(`'
+                    . $tableName
+                    . '`.`conversions'.$i.'`) / SUM(`'
+                    . $tableName
+                    . "`.`clicks`)) * 100, 0) AS 'YSS "
+                    . $conversionName
+                    . " CVR'"
+                );
+                $expressions[] = DB::raw(
+                    'IFNULL(SUM(`'
+                    . $tableName
+                    . '`.`cost`) / SUM(`'
+                    . $tableName
+                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . $conversionName
+                    . " CPA'"
+                );
+            }
+        }
+
+        return $expressions;
+    }
+
+    protected function addRawExpressionsPhoneNumberConversions(array $expressions, $tableName = "")
+    {
+        if ($this->adGainerCampaigns !== null) {
+            foreach ($this->adGainerCampaigns as $i => $campaign) {
+                $expressions[] = DB::raw(
+                    'IFNULL(`call'
+                    . $i
+                    . "`, 0) AS 'YSS "
+                    . $campaign->campaign_name
+                    . ' '
+                    . $campaign->phone_number
+                    . " CV'"
+                );
+                $expressions[] = DB::raw(
+                    'IFNULL(`call'
+                    . $i
+                    . '` / SUM(`'
+                    . $tableName
+                    . "`.`clicks`), 0) AS 'YSS "
+                    . $campaign->campaign_name
+                    . ' '
+                    . $campaign->phone_number
+                    . " CVR'"
+                );
+                $expressions[] = DB::raw(
+                    'IFNULL(SUM(`'
+                    . $tableName
+                    . '`.`cost`) / `call'
+                    . $i
+                    . "`, 0) AS 'YSS "
+                    . $campaign->campaign_name
+                    . ' '
+                    . $campaign->phone_number
+                    . " CPA'"
+                );
+            }
+        }
+
+        return $expressions;
+    }
+
+    protected function addRawExpressionTotalCostPerAction(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (SUM(`'
+                . $tableName . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`), 0) AS total_cpa';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionTotalConversionRate(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL((SUM(`' . $tableName . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`) / '
+                . 'SUM(`'
+                . $tableName
+                . '`.`clicks`), 0) AS total_cvr';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionTotalConversions(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`, 0) AS total_cv';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionCallCostPerAction(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`), 0) AS call_cpa';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionCallConversions(array $expressions)
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call' . $i . '` + ';
+            }
+
+            $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionCallConversionRate(array $expressions)
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL((';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . "` + ";
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`) / '
+                . $numberOfCampaigns
+                . ', 0) AS call_cvr';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
 
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -31,6 +230,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -64,7 +264,59 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+            $columns = $this->unsetColumns(
+                $fieldNames,
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+            );
+
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+                . $this->getBindingSql($builder));
+            if ($this->isConv) {
+                $this->updateTemporaryTableWithConversion(
+                    $this->conversionPoints,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $this->adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay
+                );
+            }
+
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+
+            $builder = DB::table(self::TABLE_TEMPORARY)
+                ->select($aggregated)
+                ->groupby($groupedByField)
+                ->orderBy($columnSort, $sort);
+        }
+
         return $builder;
     }
 
@@ -99,7 +351,16 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+        }
+
         return $builder;
     }
 
@@ -138,5 +399,28 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
         }
 
         return $arraySelect;
+    }
+
+    private function checkConditionFieldName($fieldNames)
+    {
+        foreach ($fieldNames as $fieldName) {
+            if ($fieldName === '[conversionValues]') {
+                $this->isConv = true;
+            }
+
+            if (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
+                $this->isCallTracking = true;
+            }
+        }
+
+        if ($this->isConv || $this->isCallTracking) {
+            if (!in_array('cost', $fieldNames)) {
+                array_unshift($fieldNames, 'cost');
+            }
+            if (!in_array('clicks', $fieldNames)) {
+                array_unshift($fieldNames, 'clicks');
+            }
+        }
+        return $fieldNames;
     }
 }
