@@ -343,6 +343,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
 
