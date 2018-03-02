@@ -57,7 +57,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'description',
         'adName',
         'ad',
-        'adType'
+        'adType',
+        'dayOfWeek'
     ];
 
     const FIELDS_TYPE_BIGINT = [
