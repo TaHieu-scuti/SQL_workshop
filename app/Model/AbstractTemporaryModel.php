@@ -103,7 +103,6 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             $conversionPoints,
             $adGainerCampaigns
         );
-
         Schema::create(
             $tableName,
             function (Blueprint $table) use ($fieldNames) {
