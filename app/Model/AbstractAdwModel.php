@@ -305,7 +305,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
-            
             $columns = array_keys($this->updateFieldNames($columns));
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
