@@ -505,4 +505,61 @@ class RepoAdwCampaignDayOfWeek extends AbstractTemporaryModel
         }
         return $fieldNames;
     }
+
+    protected function getBuilderForCalculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
+
+        $builder = parent::getBuilderForCalculateData(
+            $engine,
+            $fieldNames,
+            $accountStatus,
+            $startDay,
+            $endDay,
+            $groupedByField,
+            $agencyId,
+            $accountId,
+            $clientId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if ($this->isConv || $this->isCallTracking) {
+            $arr = [];
+            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
+            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
+            $aggregated = $this->processGetAggregated(
+                $fields,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+
+            $builder = DB::table(self::TABLE_TEMPORARY)->select(
+                array_merge(
+                    $aggregated,
+                    $arr
+                )
+            );
+        }
+
+        return $builder;
+    }
 }
