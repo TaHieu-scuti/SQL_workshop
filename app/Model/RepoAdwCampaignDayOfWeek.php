@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoAdwCampaignDayOfWeek extends AbstractAdwDayofweekReportModel
+class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
 {
     const PAGE_ID = "campaignID";
 

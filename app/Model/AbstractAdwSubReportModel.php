@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractAdwDayofweekReportModel extends AbstractTemporaryModel
+abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
 {
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
