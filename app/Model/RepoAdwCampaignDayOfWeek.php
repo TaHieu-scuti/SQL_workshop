@@ -541,9 +541,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             $arr = [];
-            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
-                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-            }
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
             $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
                 $fields,
