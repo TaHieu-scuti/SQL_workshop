@@ -253,6 +253,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adGroupId,
             static::PAGE_ID
         );
+
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
@@ -305,6 +306,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
+
             $columns = array_keys($this->updateFieldNames($columns));
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
