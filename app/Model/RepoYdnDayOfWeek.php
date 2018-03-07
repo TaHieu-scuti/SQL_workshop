@@ -51,7 +51,6 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        var_dump($campaignIDs);die;
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
