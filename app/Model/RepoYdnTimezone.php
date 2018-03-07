@@ -213,30 +213,6 @@ class RepoYdnTimezone extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        // $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        // $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
-
-        // foreach ($phoneList as $i => $phoneNumber) {
-        //     $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-        //     $tableName = $repoPhoneTimeUseModel->getTable();
-        //     $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-        //         DB::raw("HOUR(`time_of_call`) AS hourOfday, COUNT(`id`) AS id")
-        //     )->where('phone_number', $phoneNumber)
-        //         ->where('source', 'ydn')
-        //         ->where(
-        //             function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-        //                 $this->addConditonForDate($query, $tableName, $startDay, $endDay);
-        //             }
-        //         )->whereIn('utm_campaign', $utmCampaignList)
-        //         ->groupBy($groupedByField);
-
-        //     DB::update(
-        //         'update '.self::TABLE_TEMPORARY.', ('
-        //         .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-        //         .self::TABLE_TEMPORARY.'.dayOfWeek = tbl.dayOfWeek'
-        //     );
-        // }
-
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
         $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
