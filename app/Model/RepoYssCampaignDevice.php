@@ -346,52 +346,6 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         }
     }
 
-    protected function addJoinConditionForDevice(EloquentBuilder $builder, $device)
-    {
-        $joinTableName = "repo_phone_time_use";
-
-        $builder->leftJoin(
-            $joinTableName,
-            function (JoinClause $join) use ($joinTableName, $device) {
-                $join->on(
-                    function (JoinClause $builder) use ($joinTableName, $device) {
-                        $builder->where(
-                            function (JoinClause $buider) use ($joinTableName, $device) {
-                                if ($device === "DESKTOP") {
-                                    $buider->where($joinTableName.'.mobile', '=', '"No"');
-                                } elseif ($device === "SMART_PHONE") {
-                                    $buider->whereRaw($joinTableName.'.mobile LIKE "Yes%"');
-                                }
-                            }
-                        )
-                        ->where(
-                            function (JoinClause $builder) use ($joinTableName, $device) {
-                                if ($device === "DESKTOP") {
-                                    $this->addConditionForDeviceDesktop($builder, $joinTableName);
-                                } elseif ($device === "SMART_PHONE") {
-                                    $this->addConditionForDeviceSmartPhone($builder, $joinTableName);
-                                } else {
-                                    $builder->where($joinTableName.'.platform LIKE "Unknown Platform%"');
-                                }
-                            }
-                        )
-                        ->whereRaw(
-                            "`repo_phone_time_use`.`account_id` = `repo_yss_campaign_report_cost`.`account_id`"
-                        )
-                        ->whereRaw("`".$joinTableName."`.`campaign_id` = `repo_yss_campaign_report_cost`.`campaign_id`")
-                        ->whereRaw("`".$joinTableName."`.`utm_campaign` = `repo_yss_campaign_report_cost`.`campaignID`")
-                        ->whereRaw(
-                            "STR_TO_DATE(`".$joinTableName."`.`time_of_call`, '%Y-%m-%d') =
-                        `repo_yss_campaign_report_cost`.`day`"
-                        )
-                        ->whereRaw("`".$joinTableName."`.`source` = 'yss'")
-                        ->whereRaw("`".$joinTableName."`.`traffic_type` = 'AD'");
-                    }
-                );
-            }
-        );
-    }
-
     protected function addConditionForDeviceDesktop($builder, $joinTableName)
     {
         $builder->whereRaw($joinTableName.'.platform NOT LIKE "Windows Phone%"')
