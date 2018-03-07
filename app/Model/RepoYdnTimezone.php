@@ -223,7 +223,7 @@ class RepoYdnTimezone extends AbstractYdnReportModel
         $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
 
         foreach ($campaignForPhoneTimeUse as $i => $campaign) {
-            $customField = $this->getFieldName($campaign, 'adgroupid');
+            $customField = $this->getFieldName($campaign, 'creative');
 
             $builder = $phoneTimeUseModel->select(
                 DB::raw("HOUR(`time_of_call`) AS hourofday, COUNT(`id`) AS id")
