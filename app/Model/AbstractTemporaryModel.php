@@ -59,7 +59,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'ad',
         'adType',
         'dayOfWeek',
-        'prefecture'
+        'prefecture',
         'device'
     ];
 
