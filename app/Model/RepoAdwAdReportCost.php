@@ -81,7 +81,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         if (empty($tableName)) {
             $tableName = self::TABLE_TEMPORARY;
         }
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwAdReportConv();
             $queryGetConversion = $convModel->select(
@@ -143,7 +143,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
             $groupedField = 'adID';
         }
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
-        $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
 
         $phoneTimeUseModel = new PhoneTimeUse();

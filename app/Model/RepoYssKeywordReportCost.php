@@ -55,7 +55,7 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYssKeywordReportConv();
             $queryGetConversion = $convModel->select(
@@ -121,7 +121,7 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
             $keywordId
         );
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         if ($groupedByField === 'keyword') {
             $groupedByField = 'adgroupID';
         }

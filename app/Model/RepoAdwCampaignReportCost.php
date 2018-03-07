@@ -66,7 +66,7 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwCampaignReportConv();
             $queryGetConversion = $convModel->select(
@@ -115,7 +115,7 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
         $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         if ($groupedByField === 'campaign') {
             $groupedByField = 'utm_campaign';
         }
