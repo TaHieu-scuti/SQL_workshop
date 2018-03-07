@@ -134,7 +134,7 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYdnCampaignReport;
             $queryGetConversion = $convModel->select(
@@ -190,7 +190,7 @@ class RepoYdnCampaignReport extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         if ($groupedByField === 'campaignName') {
             $groupedByField = 'utm_campaign';
         }

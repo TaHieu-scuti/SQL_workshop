@@ -29,7 +29,7 @@ class RepoYssCampaignDayofweek extends AbstractYssSpecificReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYssCampaignReportConv();
             $queryGetConversion = $convModel->select(
@@ -78,7 +78,7 @@ class RepoYssCampaignDayofweek extends AbstractYssSpecificReportModel
         $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
         foreach ($phoneList as $i => $phoneNumber) {
             $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
