@@ -139,12 +139,10 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             $campaignId,
             $adGroupId
         );
-        $builder = DB::table(self::TABLE_TEMPORARY)
+        return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
             ->orderBy($columnSort, $sort);
-
-        return $builder;
     }
 
     protected function getBuilderForCalculateData(
@@ -162,30 +160,13 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
-            $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
-            $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
-        );
         $aggregated = $this->processGetAggregated(
             $fieldNames,
             $groupedByField,
             $campaignId,
             $adGroupId
         );
-        $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
-
-        return $builder;
+        return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
     }
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
