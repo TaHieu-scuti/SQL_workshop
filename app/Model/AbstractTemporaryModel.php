@@ -58,7 +58,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'adName',
         'ad',
         'adType',
-        'dayOfWeek'
+        'dayOfWeek',
+        'device'
     ];
 
     const FIELDS_TYPE_BIGINT = [
@@ -182,7 +183,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         $adGainerCampaigns
     ) {
         if ($isConv) {
-            $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+            $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
             foreach ($conversionNames as $i => $conversionName) {
                 array_unshift($fieldNames, 'conversions'.$i);
             }
