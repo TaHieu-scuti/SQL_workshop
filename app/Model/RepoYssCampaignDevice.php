@@ -248,7 +248,6 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                 }
             )
             ->groupBy($groupedByField);
-
     }
 
     private function insertDataToTemporary($builder, $columns)
