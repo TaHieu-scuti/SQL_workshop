@@ -231,7 +231,7 @@ class RepoYdnTimezone extends AbstractYdnReportModel
                 ->whereRaw($customField.' NOT LIKE ""')
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->where('phone_number', '=',$phoneNumbers[$i])
+                ->where('phone_number', '=', $phoneNumbers[$i])
                 ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
