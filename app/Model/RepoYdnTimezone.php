@@ -95,7 +95,10 @@ class RepoYdnTimezone extends AbstractYdnReportModel
                 $this->adGainerCampaigns
             );
 
-            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adgroupName']));
+            $columns = $this->unsetColumns(
+                $columns,
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adgroupName'])
+            );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -152,10 +155,22 @@ class RepoYdnTimezone extends AbstractYdnReportModel
             $convModel = new RepoYdnReport();
             $queryGetConversion = $convModel->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$ydnHourOfDayGroupByField.' AS hourOfDay')
-        )->where('conversionName', $conversionName)
-                ->where(
-                    function (EloquentBuilder $query) use (
-                        $convModel,
+            )->where('conversionName', $conversionName)
+            ->where(
+                function (EloquentBuilder $query) use (
+                    $convModel,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $convModel->getCondition(
+                        $query,
                         $startDay,
                         $endDay,
                         $engine,
@@ -165,21 +180,9 @@ class RepoYdnTimezone extends AbstractYdnReportModel
                         $adGroupId,
                         $adReportId,
                         $keywordId
-                    ) {
-                        $convModel->getCondition(
-                            $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
-                            $clientId,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId,
-                            $keywordId
-                        );
-                    }
-                )->groupBy($groupedByField);
+                    );
+                }
+            )->groupBy($groupedByField);
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
