@@ -40,7 +40,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
-            'adw',
+            'yss',
             $campaignIDs
         );
 
