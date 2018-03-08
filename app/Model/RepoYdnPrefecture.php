@@ -142,7 +142,7 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYdnReport();
             $queryGetConversion = $convModel->select(
@@ -194,9 +194,9 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
         $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
 
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+            $phoneTimeUseModel = new PhoneTimeUse();
+            $tableName = $phoneTimeUseModel->getTable();
+            $queryGetCallTracking = $phoneTimeUseModel->select(
                 DB::raw($groupedByField . "COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'ydn')
