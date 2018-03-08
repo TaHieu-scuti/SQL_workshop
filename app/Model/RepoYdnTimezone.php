@@ -2,10 +2,7 @@
 
 namespace App\Model;
 
-use App\Model\AbstractYdnReportModel;
-
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
 class RepoYdnTimezone extends AbstractYdnSpecificReportModel
@@ -15,16 +12,6 @@ class RepoYdnTimezone extends AbstractYdnSpecificReportModel
     const PAGE_ID = 'campaignID';
 
     public $timestamps = false;
-
-    protected function addJoinConditions(JoinClause $join)
-    {
-        parent::addJoinConditions($join);
-        $join->on(
-            DB::raw("HOUR(`phone_time_use`.`time_of_call`)"),
-            '=',
-            $this->table . '.hourofday'
-        );
-    }
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -86,7 +73,7 @@ class RepoYdnTimezone extends AbstractYdnSpecificReportModel
         $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
         foreach ($phoneList as $i => $phoneNumber) {
             $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
