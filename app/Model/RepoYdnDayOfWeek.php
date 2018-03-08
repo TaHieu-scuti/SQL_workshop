@@ -95,7 +95,7 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
                 $this->adGainerCampaigns
             );
 
-            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
+            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adgroupName']));
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
