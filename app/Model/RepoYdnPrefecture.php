@@ -144,13 +144,11 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoYdnReport();
-            $queryGetConversion = $convModel->select(
+            $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
                 ->where(
                     function (EloquentBuilder $query) use (
-                        $convModel,
                         $startDay,
                         $endDay,
                         $engine,
@@ -161,7 +159,7 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
                         $adReportId,
                         $keywordId
                     ) {
-                        $convModel->getCondition(
+                        $this->getCondition(
                             $query,
                             $startDay,
                             $endDay,
