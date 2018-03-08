@@ -190,7 +190,11 @@ abstract class AbstractReportModel extends Model
             }
 
             if ($fieldName === 'accountid') {
-                $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
+                if ($tableName === 'temporary_account_table') {
+                    $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName);
+                } else {
+                    $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
+                }
             }
 
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
@@ -198,7 +202,10 @@ abstract class AbstractReportModel extends Model
                     'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
                 );
             } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if ($tableName === 'temporary_table' || $tableName === 'temporary_table_ad') {
+                if ($tableName === 'temporary_table'
+                    || $tableName === 'temporary_table_ad'
+                    || $tableName === 'temporary_account_table'
+                ) {
                     $arrayCalculate[] = DB::raw(
                         'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                     );

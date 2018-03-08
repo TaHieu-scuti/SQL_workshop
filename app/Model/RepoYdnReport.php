@@ -134,26 +134,31 @@ class RepoYdnReport extends AbstractAccountReportModel
         $accountId = null
     ) {
         $aggregations = $this->getAggregatedOfYdn($fieldNames);
-        $aggregations = array_merge($this->getAggregatedForAccounts($fieldNames), $aggregations);
+        $arraySelection = array_merge(
+            [DB::raw("repo_ydn_reports.adID, 'ydn' as engine, repo_ydn_reports.account_id as account_id")],
+            $aggregations
+        );
         $ydnAccountReport = self::select(
-            array_merge([DB::raw("'ydn' as engine")], $aggregations)
-        )
-            ->where(
-                function (Builder $query) use ($startDay, $endDay) {
-                    $this->addTimeRangeCondition($startDay, $endDay, $query);
-                }
-            )->where(
-                function (Builder $query) use ($clientId) {
-                    $query->where('repo_ydn_reports.account_id', '=', $clientId);
-                }
+            array_merge(
+                $arraySelection,
+                [DB::raw('SUM(dailySpendingLimit) AS dailySpendingLimit,
+                SUM(repo_ydn_reports.conversions) AS sumConversions')]
             )
-            ->groupBy($groupedByField)
-            ->orderBy($columnSort, $sort);
+        )->where(
+            function (Builder $query) use ($startDay, $endDay) {
+                $this->addTimeRangeCondition($startDay, $endDay, $query);
+            }
+        )->where(
+            function (Builder $query) use ($clientId) {
+                $query->where('repo_ydn_reports.account_id', '=', $clientId);
+            }
+        )
+        ->groupBy($groupedByField)
+        ->orderBy($columnSort, $sort);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $ydnAccountReport = $ydnAccountReport->groupBy('accountid');
         }
-
         return $ydnAccountReport;
     }
 

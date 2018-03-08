@@ -2,14 +2,14 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
+use App\Model\AbstractTemporaryModel;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 
 use Exception;
 
-abstract class AbstractTemporaryAccountModel extends AbstractReportModel
+abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
 {
     const TEMPORARY_ACCOUNT_TABLE = 'temporary_account_table';
     const ACCOUNT_ID = 'account_id';
@@ -17,9 +17,13 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
     const FIELDS_TYPE_BIGINT = [
         'client_id',
         'account_id',
+        'impressions',
+        'clicks',
+        'cost'
     ];
 
     const FIELDS_TYPE_STRING = [
+        'accountid',
         'accountName'
     ];
 
@@ -32,7 +36,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         'adw_web_cv',
         'ydn_call_cv',
         'yss_call_cv',
-        'adw_call_cv'
+        'adw_call_cv',
+        'dailySpendingLimit'
     ];
 
     const FIELDS_TO_CHECK = [
@@ -101,6 +106,18 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         'adw_call_cv',
         'adw_call_cvr',
         'adw_call_cpa',
+    ];
+
+    const COLUMNS_NOT_MAKE = [
+        'web_cv',
+        'web_cvr',
+        'web_cpa',
+        'call_cv',
+        'call_cvr',
+        'call_cpa',
+        'total_cv',
+        'total_cvr',
+        'total_cpa'
     ];
 
     protected function createTemporaryAccountTable($agency = "")
@@ -395,5 +412,36 @@ abstract class AbstractTemporaryAccountModel extends AbstractReportModel
         }
 
         return $column;
+    }
+
+    protected function createTemporaryAccountReport($fieldNames)
+    {
+        Schema::create(
+            self::TEMPORARY_ACCOUNT_TABLE,
+            function (Blueprint $table) use ($fieldNames) {
+                $table->increments('id');
+                $table->string('engine');
+                $table->string('account_id', 50);
+                $table->integer('totalPhoneTimeUse');
+                $table->double('sumConversions');
+                $table->bigInteger('adID');
+                foreach ($fieldNames as $fieldName) {
+                    if (in_array($fieldName, self::COLUMNS_NOT_MAKE)) {
+                        continue;
+                    } elseif (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
+                        $table->bigInteger($fieldName)->nullable();
+                    } elseif (in_array($fieldName, self::FIELDS_TYPE_INT)) {
+                        $table->integer($fieldName)->nullable();
+                    } elseif (in_array($fieldName, self::AVERAGE_FIELDS)) {
+                        $table->double($fieldName)->nullable();
+                    } elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
+                        $table->string($fieldName)->nullable();
+                    } else {
+                        $table->double($fieldName)->nullable();
+                    }
+                }
+                $table->temporary();
+            }
+        );
     }
 }
