@@ -339,9 +339,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
         $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
         $sql = DB::table(self::TEMPORARY_ACCOUNT_TABLE)->select($selections);
-        $data = DB::table(DB::raw("(".$this->getBindingSql($sql).") as tbl"))
+        return DB::table(DB::raw("(".$this->getBindingSql($sql).") as tbl"))
         ->select($rawExpression)->first();
-        return $data;
     }
 
     public function repoYssAccounts()
