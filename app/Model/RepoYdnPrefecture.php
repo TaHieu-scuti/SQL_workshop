@@ -186,30 +186,62 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId, $utmCampaignList);
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
-        foreach ($phoneList as $i => $phoneNumber) {
-            $phoneTimeUseModel = new PhoneTimeUse();
-            $tableName = $phoneTimeUseModel->getTable();
-            $queryGetCallTracking = $phoneTimeUseModel->select(
-                DB::raw($groupedByField . "COUNT(`id`) AS id")
-            )->where('phone_number', $phoneNumber)
-                ->where('source', 'ydn')
+        $phoneTimeUseModel = new PhoneTimeUse;
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+        $campaignModel = new Campaign;
+        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
+
+        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+            $customField = $this->getFieldName($campaign, 'adgroupid');
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    $customField
+                ]
+            )
+                ->whereRaw($customField.' NOT LIKE ""')
+                ->where('source', '=', $engine)
+                ->whereRaw('traffic_type = "AD"')
+                ->whereIn('phone_number', $phoneNumbers)
+                ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
-                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                        $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
                     }
-                )->whereIn('utm_campaign', $utmCampaignList)
+                )
                 ->groupBy($groupedByField);
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
                 .self::TABLE_TEMPORARY.$groupedByField .' = tbl.' . $groupedByField
             );
         }
+    }
+
+    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId, $utmCampaignList)
+    {
+        return $this->select('campaign_id')
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->whereIn('campaignID', $utmCampaignList)
+            ->get();
     }
 }
