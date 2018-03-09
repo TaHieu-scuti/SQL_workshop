@@ -197,12 +197,11 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
 
         $phoneTimeUseModel = new PhoneTimeUse;
         $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
 
-        foreach ($phoneList as $i => $phoneNumber) {
+        foreach ($phoneNumbers as $i => $phoneNumber) {
             $builder = $phoneTimeUseModel->select(
                 [
                     DB::raw('count(id) AS id'),
