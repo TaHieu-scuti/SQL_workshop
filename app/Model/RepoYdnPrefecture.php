@@ -210,7 +210,7 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
             )
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->whereIn('phone_number', $phoneNumbers)
+                ->whereIn('phone_number', $phoneNumber)
                 ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
