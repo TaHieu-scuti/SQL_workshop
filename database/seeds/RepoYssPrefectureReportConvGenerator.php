@@ -17,7 +17,7 @@ class RepoYssPrefectureReportConvGenerator extends Seeder
     public function run()
     {
         $yssCostPres = RepoYssPrefectureReportCost::all();
-        foreach ($yssCostPres as $key => $yssCostPre) {
+        foreach ($yssCostPres as $yssCostPre) {
             for ($i=0; $i < self::NUMBER_OF_CONVERSION_POINTS; $i++) {
                 $yssConvPre = new RepoYssPrefectureReportConv;
                 $yssConvPre->exeDate = $yssCostPre->exeDate;
