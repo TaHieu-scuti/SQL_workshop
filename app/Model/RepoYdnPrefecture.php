@@ -196,34 +196,29 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $campaignIdAdgainer = $this->
-            getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId, $utmCampaignList);
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
 
         $phoneTimeUseModel = new PhoneTimeUse;
         $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
-        $campaignModel = new Campaign;
-        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
 
-        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
-            $customField = $this->getFieldName($campaign, 'adgroupid');
+        foreach ($phoneList as $i => $phoneNumber) {
             $builder = $phoneTimeUseModel->select(
                 [
                     DB::raw('count(id) AS id'),
-                    $customField
+                    'visitor_city_state'
                 ]
             )
-                ->whereRaw($customField.' NOT LIKE ""')
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->whereIn('phone_number', $phoneNumbers)
+                ->whereIn('phone_number', $phoneNumbers[$i])
                 ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
                         $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
                     }
                 )
-                ->groupBy($groupedByField);
+                ->groupBy('visitor_city_state');
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
