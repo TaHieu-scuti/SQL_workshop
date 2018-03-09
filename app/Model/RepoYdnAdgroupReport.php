@@ -116,7 +116,8 @@ class RepoYdnAdgroupReport extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId, $utmCampaignList);
+        $campaignIdAdgainer = $this->
+            getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId, $utmCampaignList);
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
         $phoneTimeUseModel = new PhoneTimeUse();
