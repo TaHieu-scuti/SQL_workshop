@@ -82,20 +82,10 @@ class RepoYssCampaignPrefecture extends AbstractYssSpecificReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $campaignIdAdgainer = $this->getCampaignIdAdgainer(
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $utmCampaignList
-        );
-
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         $phoneTimeUseModel = new PhoneTimeUse();
         $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
-        $campaignModel = new Campaign();
-        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
-        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+        foreach ($phoneNumbers as $i => $phoneNumber) {
             $builder = $phoneTimeUseModel->select(
                 [
                     DB::raw('count(id) AS id'),
@@ -103,7 +93,7 @@ class RepoYssCampaignPrefecture extends AbstractYssSpecificReportModel
                 ]
             )->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->where('phone_number', $phoneNumbers[$i])
+                ->where('phone_number', $phoneNumber)
                 ->where('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
