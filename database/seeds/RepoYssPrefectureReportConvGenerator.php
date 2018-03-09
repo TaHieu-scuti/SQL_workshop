@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Model\RepoYssPrefectureReportCost;
 use App\Model\RepoYssPrefectureReportConv;
 
+// @codingStandardsIgnoreLine
 class RepoYssPrefectureReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 2;
