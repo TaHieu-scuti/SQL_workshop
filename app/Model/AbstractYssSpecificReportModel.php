@@ -77,6 +77,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
+
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
@@ -98,7 +99,14 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                     $this->adGainerCampaigns,
                     $groupedByField,
                     $startDay,
-                    $endDay
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
                 );
             }
 
