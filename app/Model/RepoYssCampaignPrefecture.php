@@ -96,17 +96,12 @@ class RepoYssCampaignPrefecture extends AbstractYssSpecificReportModel
         $campaignModel = new Campaign();
         $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
         foreach ($campaignForPhoneTimeUse as $i => $campaign) {
-            $customField = $this->getFieldName($campaign, 'adgroupid');
-
             $builder = $phoneTimeUseModel->select(
                 [
                     DB::raw('count(id) AS id'),
-                    $customField,
                     'visitor_city_state'
                 ]
-            )
-                ->whereRaw($customField.' NOT LIKE ""')
-                ->where('source', '=', $engine)
+            )->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
                 ->where('phone_number', $phoneNumbers[$i])
                 ->where('utm_campaign', $utmCampaignList)
