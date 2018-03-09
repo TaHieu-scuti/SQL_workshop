@@ -16,10 +16,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
 
     const FIELDS_TYPE_BIGINT = [
         'client_id',
-        'account_id',
-        'impressions',
-        'clicks',
-        'cost'
+        'account_id'
     ];
 
     const FIELDS_TYPE_STRING = [
@@ -126,7 +123,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         if ($agency !== "") {
             array_unshift($fieldNames, 'client_id');
         }
-
         Schema::create(
             self::TEMPORARY_ACCOUNT_TABLE,
             function (Blueprint $table) use ($fieldNames) {
@@ -428,7 +424,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
                 foreach ($fieldNames as $fieldName) {
                     if (in_array($fieldName, self::COLUMNS_NOT_MAKE)) {
                         continue;
-                    } elseif (in_array($fieldName, self::FIELDS_TYPE_BIGINT)) {
+                    } elseif (in_array($fieldName, self::FIELDS_TYPE_BIGINT)
+                        || in_array($fieldName, self::SUM_FIELDS)
+                    ) {
                         $table->bigInteger($fieldName)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_INT)) {
                         $table->integer($fieldName)->nullable();

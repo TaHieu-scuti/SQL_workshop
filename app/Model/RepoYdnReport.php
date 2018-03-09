@@ -153,8 +153,7 @@ class RepoYdnReport extends AbstractAccountReportModel
                 $query->where('repo_ydn_reports.account_id', '=', $clientId);
             }
         )
-        ->groupBy($groupedByField)
-        ->orderBy($columnSort, $sort);
+        ->groupBy($groupedByField);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $ydnAccountReport = $ydnAccountReport->groupBy('accountid');
