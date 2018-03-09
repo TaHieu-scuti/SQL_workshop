@@ -643,7 +643,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $utmCampaignList = array_unique($campaignIdAdgainer->pluck('campaignID')->toArray());
         $customField = '';
 
-        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+        foreach ($campaignForPhoneTimeUse as $campaign) {
             $customField = $this->getFieldName($campaign, 'creative');
         }
 
@@ -821,15 +821,21 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 continue;
             }
             $fieldNeeds[] = $field;
-            if (in_array($field, $related_field_keys)) {
-                foreach (self::RELATED_FIELDS[$field] as $related_field) {
-                    if (in_array($related_field, $fieldNeeds)) {
-                        continue;
-                    }
-                    $fieldNeeds[] = $related_field;
-                    if (in_array($related_field, $related_field_keys)) {
-                        $fieldNeeds = array_unique(array_merge($fieldNeeds, self::RELATED_FIELDS[$related_field]));
-                    }
+            $fieldNeeds = $this->checkRelatedField($fieldNeeds, $field, $related_field_keys);
+        }
+        return $fieldNeeds;
+    }
+
+    private function checkRelatedField($fieldNeeds, $field, $related_field_keys)
+    {
+        if (in_array($field, $related_field_keys)) {
+            foreach (self::RELATED_FIELDS[$field] as $related_field) {
+                if (in_array($related_field, $fieldNeeds)) {
+                    continue;
+                }
+                $fieldNeeds[] = $related_field;
+                if (in_array($related_field, $related_field_keys)) {
+                    $fieldNeeds = array_unique(array_merge($fieldNeeds, self::RELATED_FIELDS[$related_field]));
                 }
             }
         }

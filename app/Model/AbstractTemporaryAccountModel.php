@@ -430,8 +430,6 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
                         $table->bigInteger($fieldName)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_INT)) {
                         $table->integer($fieldName)->nullable();
-                    } elseif (in_array($fieldName, self::AVERAGE_FIELDS)) {
-                        $table->double($fieldName)->nullable();
                     } elseif (in_array($fieldName, self::FIELDS_TYPE_STRING)) {
                         $table->string($fieldName)->nullable();
                     } else {
