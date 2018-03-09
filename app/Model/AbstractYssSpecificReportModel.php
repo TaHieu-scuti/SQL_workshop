@@ -9,11 +9,8 @@ use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
-abstract class AbstractYssSpecificReportModel extends AbstractReportModel
+abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
 {
-    private $conversionPoints;
-    private $adGainerCampaigns;
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -31,6 +28,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -39,10 +37,10 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        $phoneTimeUseWithDayOfWeek = new RepoPhoneTimeUse;
-        $this->adGainerCampaigns = $phoneTimeUseWithDayOfWeek->getPhoneTimeUseWithDayOfWeek(
+        $campaigns = new Campaign;
+        $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
-            'yss',
+            'adw',
             $campaignIDs
         );
 
@@ -64,7 +62,59 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
+            $columns = $this->unsetColumns(
+                $fieldNames,
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+            );
+
+            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+                . $this->getBindingSql($builder));
+            if ($this->isConv) {
+                $this->updateTemporaryTableWithConversion(
+                    $this->conversionPoints,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
+            }
+
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $this->adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay
+                );
+            }
+
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+
+            $builder = DB::table(self::TABLE_TEMPORARY)
+                ->select($aggregated)
+                ->groupby($groupedByField)
+                ->orderBy($columnSort, $sort);
+        }
+
         return $builder;
     }
 
@@ -99,44 +149,16 @@ abstract class AbstractYssSpecificReportModel extends AbstractReportModel
             $keywordId
         );
 
-        $this->addJoin($builder, $this->conversionPoints, $this->adGainerCampaigns);
+        if ($this->isConv || $this->isCallTracking) {
+            $aggregated = $this->processGetAggregated(
+                $fieldNames,
+                $groupedByField,
+                $campaignId,
+                $adGroupId
+            );
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+        }
+
         return $builder;
-    }
-
-    protected function addConditonForConversionName(
-        EloquentBuilder $query,
-        $account_id = null,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null
-    ) {
-        if ($account_id !== null && $accountId !== null) {
-            $query->where('account_id', '=', $account_id)
-                ->where('accountId', '=', $accountId);
-        }
-        if ($campaignId !== null) {
-            $query->where('campaignID', '=', $campaignId);
-        }
-        if ($adGroupId !== null) {
-            $query->where('adgroupID', '=', $adGroupId);
-        }
-    }
-
-    protected function getAggregatedConversionName($column)
-    {
-        $arraySelect = ['conversionName'];
-        if ($column === 'campaignID') {
-            array_unshift($arraySelect, 'campaignID');
-        }
-
-        if ($column === 'adgroupID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID');
-        }
-
-        if ($column === 'keywordID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
-        }
-
-        return $arraySelect;
     }
 }

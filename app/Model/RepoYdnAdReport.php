@@ -49,7 +49,7 @@ class RepoYdnAdReport extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM('.$this->getTable().'.conversions) AS conversions, '.$groupedByField)

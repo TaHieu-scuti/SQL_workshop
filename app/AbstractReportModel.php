@@ -89,7 +89,6 @@ abstract class AbstractReportModel extends Model
     const YDN_FIELDS_MAP = [
 //      'columns' => 'alias'
         'keywordMatchType' => 'matchType',
-        'DAYNAME(day)' => 'dayOfWeek'
     ];
 
     const ALL_HIGHER_LAYERS = [];
@@ -251,6 +250,10 @@ abstract class AbstractReportModel extends Model
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                continue;
+            }
+            if ($fieldName === 'dayOfWeek' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                $arrayCalculate[] = DB::raw('DAYNAME(`day`)');
                 continue;
             }
             if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {

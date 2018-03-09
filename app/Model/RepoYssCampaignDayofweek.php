@@ -16,83 +16,88 @@ class RepoYssCampaignDayofweek extends AbstractYssSpecificReportModel
 
     public $timestamps = false;
 
-    protected function addJoin(EloquentBuilder $builder, $conversionPoints = null, $adGainerCampaigns = null)
-    {
-        $this->addJoinsForConversionPoints($builder, $conversionPoints);
-        $this->addJoinsForCallConversions($builder, $adGainerCampaigns);
-    }
-
-    private function addJoinsForConversionPoints(
-        EloquentBuilder $builder,
-        $conversionPoints
+    protected function updateTemporaryTableWithConversion(
+        $conversionPoints,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
-        $campaignReportConvTableName = (new RepoYssCampaignReportConv)->getTable();
-        foreach ($conversionNames as $i => $conversionName) {
-            $joinAlias = 'conv' . $i;
-            $builder->leftJoin(
-                $campaignReportConvTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $conversionName) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $joinAlias . '.account_id'
-                    )
-                    ->on(
-                        $this->table . '.accountId',
-                        '=',
-                        $joinAlias . '.accountId'
-                    )->on(
-                        $this->table . '.day',
-                        '=',
-                        $joinAlias . '.day'
-                    )->on(
-                        $this->table . '.dayOfWeek',
-                        '=',
-                        $joinAlias . '.dayOfWeek'
-                    )->where(
-                        $joinAlias . '.conversionName',
-                        '=',
-                        $conversionName
-                    );
-                }
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        foreach ($conversionNames as $key => $conversionName) {
+            $convModel = new RepoYssCampaignReportConv();
+            $queryGetConversion = $convModel->select(
+                DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+            )->where('conversionName', $conversionName)
+                ->where(
+                    function (EloquentBuilder $query) use (
+                        $convModel,
+                        $startDay,
+                        $endDay,
+                        $engine,
+                        $clientId,
+                        $accountId,
+                        $campaignId,
+                        $adGroupId,
+                        $adReportId,
+                        $keywordId
+                    ) {
+                        $convModel->getCondition(
+                            $query,
+                            $startDay,
+                            $endDay,
+                            $engine,
+                            $clientId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    }
+                )->groupBy($groupedByField);
+
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
 
-    private function addJoinsForCallConversions(EloquentBuilder $builder, $adGainerCampaigns)
-    {
-        $joinTableName = (new RepoPhoneTimeUse)->getTable();
+    protected function updateTemporaryTableWithCallTracking(
+        $adGainerCampaigns,
+        $groupedByField,
+        $startDay,
+        $endDay
+    ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+
         foreach ($phoneList as $i => $phoneNumber) {
-            $joinAlias = 'call' . $i;
-            $builder->leftJoin(
-                $joinTableName . ' AS ' . $joinAlias,
-                function (JoinClause $join) use ($joinAlias, $phoneNumber, $utmCampaignList) {
-                    $join->on(
-                        $this->table . '.account_id',
-                        '=',
-                        $joinAlias . '.account_id'
-                    )->on(
-                        $this->table . '.campaign_id',
-                        '=',
-                        $joinAlias . '.campaign_id'
-                    )->whereIn(
-                        $joinAlias . '.utm_campaign',
-                        $utmCampaignList
-                    )->on(
-                        $this->table . '.day',
-                        '=',
-                        DB::raw("STR_TO_DATE(`" . $joinAlias . "`.`time_of_call`, '%Y-%m-%d')")
-                    )->whereRaw(
-                        '`' . $joinAlias . "`.`phone_number` = '" . $phoneNumber . "'"
-                    )->where(
-                        $joinAlias . '.source',
-                        '=',
-                        'yss'
-                    );
-                }
+            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
+            $tableName = $repoPhoneTimeUseModel->getTable();
+            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+                DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
+            )->where('phone_number', $phoneNumber)
+                ->where('source', 'yss')
+                ->where(
+                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
+                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                    }
+                )->whereIn('utm_campaign', $utmCampaignList)
+                ->groupBy($groupedByField);
+
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
+                .self::TABLE_TEMPORARY.'.dayOfWeek = tbl.dayOfWeek'
             );
         }
     }

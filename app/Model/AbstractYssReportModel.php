@@ -92,7 +92,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
 
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
-        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($this->conversionPoints->pluck('conversionName')->toArray()));
         if ($conversionNames !== null) {
             foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
@@ -343,6 +343,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
 

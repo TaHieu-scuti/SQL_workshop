@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
+use App\Model\RepoYssCampaignDevice;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
@@ -51,6 +52,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_AGENCY_ID = 'agencyId';
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
     const PREFECTURE = 'prefecture';
+    const DEVICE = 'device';
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const STATUS_TITLE = 'statusTitle';
     const START_DAY = 'startDay';
@@ -767,6 +769,10 @@ abstract class AbstractReportController extends Controller
         if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->updateModelForDayOfWeek();
         }
+
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::DEVICE) {
+            $this->updateModelForDevice();
+        }
     }
 
     public function updateModelForPrefecture()
@@ -819,6 +825,25 @@ abstract class AbstractReportController extends Controller
             }
         }
     }
+
+    public function updateModelForDevice()
+    {
+        if (session(self::SESSION_KEY_ENGINE) === 'yss') {
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYssAdgroupDevice;
+            }
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYssCampaignDevice;
+            }
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            $this->model = new RepoYdnDevice;
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignDevice;
+            }
+        }
+    }
+
     public function exportSearchQueryToCsv()
     {
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);

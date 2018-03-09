@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AbstractYdnReportModel extends AbstractTemporaryModel
 {
-    private $conversionPoints;
-    private $adGainerCampaigns;
+    protected $conversionPoints;
+    protected $adGainerCampaigns;
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
@@ -21,7 +21,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
 
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
-        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($this->conversionPoints->pluck('conversionName')->toArray()));
         if ($conversionNames !== null) {
             foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
@@ -529,7 +529,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         return $arraySelect;
     }
 
-    private function checkConditionFieldName($fieldNames)
+    protected function checkConditionFieldName($fieldNames)
     {
         foreach ($fieldNames as $fieldName) {
             if ($fieldName === '[conversionValues]') {
