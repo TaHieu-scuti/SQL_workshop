@@ -223,7 +223,7 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.$groupedByField .' = tbl.' . $groupedByField
+                . 'tbl.visitor_city_state LIKE CONCAT("%",'.self::TABLE_TEMPORARY.'.prefecture," (Japan)")'
             );
         }
     }
