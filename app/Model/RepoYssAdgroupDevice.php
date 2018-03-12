@@ -327,7 +327,6 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
         $keywordId = null
     ) {
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
-        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
 
         $phoneTimeUseModel = new PhoneTimeUse();
