@@ -326,21 +326,14 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
-        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-
-        $phoneTimeUseModel = new PhoneTimeUse();
-        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
-        $campaignModel = new Campaign();
-        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
-
-        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
-            $customField = $this->getFieldName($campaign, 'adgroupid');
-
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+        foreach ($phoneList as $i => $phoneNumber) {
+            $phoneTimeUseModel = new PhoneTimeUse;
             $builder = $phoneTimeUseModel->select(
                 DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
             )
-                ->whereRaw($customField.' NOT LIKE ""')
+                ->where('phone_number', $phoneNumber)
                 ->where('source', 'yss')
                 ->where('traffic_type', 'AD')
                 ->where(
@@ -374,18 +367,6 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                 .self::TABLE_TEMPORARY.'.device = tbl.device'
             );
         }
-    }
-
-    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId)
-    {
-        return $this->select('campaign_id')
-            ->distinct()
-            ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
-                }
-            )
-            ->get();
     }
 
     private function addConditionForDeviceDesktop($builder, $joinTableName)
