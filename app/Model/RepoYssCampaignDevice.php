@@ -336,7 +336,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                         } elseif ($device === "SMART_PHONE") {
                             $this->addConditionForDeviceSmartPhone($builder, $tableName);
                         } else {
-                            $builder->where($tableName.'.platform LIKE "Unknown Platform%"');
+                            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
                         }
                     }
                 )
