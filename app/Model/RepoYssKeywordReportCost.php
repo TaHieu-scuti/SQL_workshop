@@ -113,14 +113,15 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $campaignIds = $this->getCampaignIds(
             $clientId,
             $accountId,
             $campaignId,
             $adGroupId,
-            $keywordId
+            $keywordId,
+            $utmCampaignList
         );
-        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         if ($groupedByField === 'keyword') {
             $groupedByField = 'adgroupID';
@@ -178,7 +179,8 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
         $accountId = null,
         $campaignId = null,
         $adGroupId = null,
-        $keywordId = null
+        $keywordId = null,
+        $utmCampaignList = null
     ) {
         return $this->select('campaign_id')
             ->distinct()
@@ -194,6 +196,7 @@ class RepoYssKeywordReportCost extends AbstractYssReportModel
                     );
                 }
             )
+            ->whereIn('campaignID', $utmCampaignList)
             ->get();
     }
 }
