@@ -101,14 +101,15 @@ class RepoYdnAdReport extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $campaignIds = $this->getCampaignIds(
             $clientId,
             $accountId,
             $campaignId,
             $adGroupId,
-            $adReportId
+            $adReportId,
+            $utmCampaignList
         );
-        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneNumbers = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
         $campaignModel = new Campaign;
         $phoneTimeUseModel = new PhoneTimeUse();
@@ -148,7 +149,8 @@ class RepoYdnAdReport extends AbstractYdnReportModel
         $accountId = null,
         $campaignId = null,
         $adGroupId = null,
-        $adReportId = null
+        $adReportId = null,
+        $utmCampaignList = null
     ) {
         return $this->select('campaign_id')
             ->distinct()
@@ -164,6 +166,7 @@ class RepoYdnAdReport extends AbstractYdnReportModel
                     );
                 }
             )
+            ->whereIn('campaignID', $utmCampaignList)
             ->get();
     }
 }

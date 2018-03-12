@@ -106,4 +106,7 @@ return [
     'items_to_display' => '表示項目',
     'select_all' => '全て選択',
     'log_out' => 'ログアウト',
+    '[conversionValues]' => '変換値',
+    '[phoneNumberValues]' => '電話番号値',
+    'dailySpendingLimit' => '一日あたりの予算',
 ];

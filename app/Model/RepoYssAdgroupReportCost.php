@@ -148,9 +148,15 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId, $accountId, $campaignId, $adGroupId);
-        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
+        $campaignIdAdgainer = $this->getCampaignIdAdgainer(
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $utmCampaignList
+        );
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
         $phoneTimeUseModel = new PhoneTimeUse();
         $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
@@ -199,7 +205,7 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
             ->get();
     }
 
-    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId)
+    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId, $utmCampaignList)
     {
         return $this->select('campaign_id')
             ->distinct()
@@ -208,6 +214,7 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
                     $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
                 }
             )
+            ->whereIn('campaignID', $utmCampaignList)
             ->get();
     }
 }

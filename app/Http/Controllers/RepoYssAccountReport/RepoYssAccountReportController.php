@@ -134,13 +134,6 @@ class RepoYssAccountReportController extends AbstractReportController
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
-        $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
-            count($dataReports->toArray()),
-            20,
-            $this->page,
-            ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
-        );
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
         }
@@ -159,7 +152,8 @@ class RepoYssAccountReportController extends AbstractReportController
         $tableDataLayout = view(
             'layouts.table_data',
             [
-                self::REPORTS => $results,
+                self::REPORTS => $dataReports,
+                'isObjectStdClass' => $this->isObjectStdClass,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
@@ -233,20 +227,14 @@ class RepoYssAccountReportController extends AbstractReportController
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
         }
-        $results = new \Illuminate\Pagination\LengthAwarePaginator(
-            array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
-            count($reports),
-            20,
-            $this->page,
-            ["path" => self::SESSION_KEY_PREFIX_ROUTE."/update-table"]
-        );
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         $tableDataLayout = view(
             'layouts.table_data',
             [
-                self::REPORTS => $results,
+                self::REPORTS => $reports,
+                'isObjectStdClass' => $this->isObjectStdClass,
                 self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
@@ -257,7 +245,7 @@ class RepoYssAccountReportController extends AbstractReportController
         )->render();
         // if no data found
         // display no data found message on table
-        if ($results->total() !== 0) {
+        if ($reports->total() !== 0) {
             $this->displayNoDataFoundMessageOnTable = false;
         }
         return $this->responseFactory->json(
