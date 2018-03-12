@@ -176,7 +176,7 @@ class RepoYssAdgroupReportCost extends AbstractYssReportModel
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
                 ->where('phone_number', $phoneNumbers[$i])
-                ->where('utm_campaign', $utmCampaignList)
+                ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
                         $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
