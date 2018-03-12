@@ -553,22 +553,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             . $this->getBindingSql($adwData));
 
         //update total phone time use
-        $queryPhoneTimeUseYss = $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'yss', $startDay, $endDay);
-        DB::update(
-            'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
-            .$this->getBindingSql($queryPhoneTimeUseYss).')AS tbl set totalPhoneTimeUse = tbl.id where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id AND '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.engine = "yss"'
-        );
-
-        $queryPhoneTimeUseAdw = $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'adw', $startDay, $endDay);
-        DB::update(
-            'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
-            .$this->getBindingSql($queryPhoneTimeUseAdw).')AS tbl set totalPhoneTimeUse = tbl.id where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id AND '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.engine = "adw"'
-        );
-
+        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'yss', $startDay, $endDay);
+        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'adw', $startDay, $endDay);
         $this->addJoinPhoneTimeUseConditionForYdn($clientId, $startDay, $endDay);
 
         //update daily spending limit
@@ -671,9 +657,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    protected function addJoinPhoneTimeUseCondition($account_id, $traffic_type, $source, $startDay, $endDay)
+    private function addJoinPhoneTimeUseCondition($account_id, $traffic_type, $source, $startDay, $endDay)
     {
-        return DB::table('phone_time_use')
+        $query = DB::table('phone_time_use')
         ->select(DB::raw('COUNT(id) as id, account_id, `source`'))
         ->where('account_id', $account_id)
         ->where('traffic_type', $traffic_type)
@@ -681,6 +667,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->where(function (queryBuilder $query) use ($startDay, $endDay) {
             $this->conditionForDate($query, 'phone_time_use', $startDay, $endDay);
         })->groupBy(['account_id', 'source']);
+
+        DB::update(
+            'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
+            .$this->getBindingSql($query).')AS tbl set totalPhoneTimeUse = tbl.id where '
+            .self::TEMPORARY_ACCOUNT_TABLE.'.account_id = tbl.account_id AND '
+            .self::TEMPORARY_ACCOUNT_TABLE.'.engine = "'.$source.'"'
+        );
     }
 
     private function updateDailySpendingLimitYss($clientId, $startDay, $endDay)
