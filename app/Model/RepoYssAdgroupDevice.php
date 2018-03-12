@@ -132,13 +132,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                 $groupedByField,
                 $startDay,
                 $endDay,
-                'DESKTOP',
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
+                'DESKTOP'
             );
 
             $this->updateTemporaryTableWithCallTracking(
@@ -146,13 +140,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                 $groupedByField,
                 $startDay,
                 $endDay,
-                'SMART_PHONE',
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
+                'SMART_PHONE'
             );
 
             $this->updateTemporaryTableWithCallTracking(
@@ -160,13 +148,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                 $groupedByField,
                 $startDay,
                 $endDay,
-                'NONE',
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
+                'NONE'
             );
         }
         $aggregated = $this->processGetAggregated(
@@ -318,13 +300,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
         $groupedByField,
         $startDay,
         $endDay,
-        $device,
-        $clientId = null,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $device
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
