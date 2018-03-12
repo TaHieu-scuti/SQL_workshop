@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Query\Builder as queryBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Events\StatementPrepared;
@@ -664,7 +664,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->where('account_id', $account_id)
         ->where('traffic_type', $traffic_type)
         ->where('source', $source)
-        ->where(function (queryBuilder $query) use ($startDay, $endDay) {
+        ->where(function (QueryBuilder $query) use ($startDay, $endDay) {
             $this->conditionForDate($query, 'phone_time_use', $startDay, $endDay);
         })->groupBy(['account_id', 'source']);
 
@@ -766,7 +766,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         return $expressions;
     }
 
-    private function conditionForDate(queryBuilder $query, $tableName, $startDay, $endDay)
+    private function conditionForDate(QueryBuilder $query, $tableName, $startDay, $endDay)
     {
         if ($startDay === $endDay) {
             $query->whereRaw('STR_TO_DATE('.$tableName.
