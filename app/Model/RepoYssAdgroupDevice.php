@@ -330,6 +330,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         foreach ($phoneList as $i => $phoneNumber) {
             $phoneTimeUseModel = new PhoneTimeUse;
+            $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
             $builder = $phoneTimeUseModel->select(
                 DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
             )
