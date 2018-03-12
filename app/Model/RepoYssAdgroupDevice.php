@@ -269,7 +269,19 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
             )->where('conversionName', $conversionName)
             ->where(
                 function (EloquentBuilder $query) use (
-                        $convModel,
+                    $convModel,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                ) {
+                    $convModel->getCondition(
+                        $query,
                         $startDay,
                         $endDay,
                         $engine,
@@ -279,20 +291,8 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                         $adGroupId,
                         $adReportId,
                         $keywordId
-                    ) {
-                        $convModel->getCondition(
-                            $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
-                            $clientId,
-                            $accountId,
-                            $campaignId,
-                            $adGroupId,
-                            $adReportId,
-                            $keywordId
-                        );
-                    }
+                    );
+                }
             )->groupBy($groupedByField);
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
