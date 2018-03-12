@@ -132,6 +132,22 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                 $endDay,
                 'DESKTOP'
             );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                'SMART_PHONE'
+            );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                'NONE'
+            );
         }
         $aggregated = $this->processGetAggregated(
             $fieldNames,
