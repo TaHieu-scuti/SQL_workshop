@@ -36,6 +36,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adGroupId,
             static::PAGE_ID
         );
+
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
@@ -72,7 +73,11 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             );
             $columns = $this->unsetColumns(
                 $fieldNames,
-                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+                array_merge(
+                    self::UNSET_COLUMNS,
+                    self::FIELDS_CALL_TRACKING,
+                    ['campaignName', 'adgroupName']
+                )
             );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
