@@ -14,9 +14,9 @@ class RepoYssAdgroupPrefecture extends AbstractYssPrefecture
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoYssPrefectureReportConv();
+        $yssPrefectureConvModel = new RepoYssPrefectureReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        return $yssCampaignConvModel->select($aggregation)
+        return $yssPrefectureConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
