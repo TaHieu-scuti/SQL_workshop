@@ -21,6 +21,7 @@ use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoYssCampaignPrefecture;
+use App\Model\RepoAdwCampaignDevice;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
