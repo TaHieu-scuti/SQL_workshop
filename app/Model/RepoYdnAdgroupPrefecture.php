@@ -184,7 +184,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         }
     }
 
-        protected function updateTemporaryTableWithCallTracking(
+    protected function updateTemporaryTableWithCallTracking(
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
