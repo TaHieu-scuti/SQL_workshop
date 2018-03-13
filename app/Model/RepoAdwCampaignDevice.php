@@ -373,7 +373,8 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
         }
     }
 
-    private function addConditionForDesktopDevice(EloquentBuilder $builder, $tableName) {
+    private function addConditionForDesktopDevice(EloquentBuilder $builder, $tableName)
+    {
         $builder->whereRaw($tableName.'.mobile = "No"')
             ->whereRaw($tableName.'.platform NOT LIKE "Window Phone%"')
             ->where(
@@ -388,7 +389,8 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             );
     }
 
-    private function addConditionForTabletDevice(EloquentBuilder $builder, $tableName) {
+    private function addConditionForTabletDevice(EloquentBuilder $builder, $tableName)
+    {
         $builder->whereRaw($tableName.'.mobile = "No"')
             ->whereRaw($tableName.'.platform LIKE "Android%"')
             ->where(
@@ -396,7 +398,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
                     $builder->whereRaw($tableName.'.platform LIKE "iOS%"')
                         ->orWhereRaw($tableName.'.platform LIKE "Android%"')
                         ->orWhereRaw($tableName.'.platform LIKE "Blackberry%"');
-                } 
+                }
             );
     }
 
