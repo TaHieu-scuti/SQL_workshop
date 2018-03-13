@@ -347,17 +347,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
                 }
             )->where(
                 function (EloquentBuilder $builder) use ($tableName, $device) {
-                    if ($device === 'DESKTOP') {
-                        $this->addConditionForDesktopDevice($builder, $tableName);
-                    }
-
-                    if ($device === 'TABLET') {
-                        $this->addConditionForTabletDevice($builder, $tableName);
-                    }
-
-                    if ($device === 'UNKNOW') {
-                        $builder->whereRaw($tableName.'.platform LIKE "Unknow Platform%"');
-                    }
+                    $this->checkingConditionForDevice($builder, $tableName, $device);
                 }
             )
             ->where(
@@ -427,5 +417,23 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             $adGroupId
         );
         return DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr));
+    }
+
+    private function checkingConditionForDevice(
+        EloquentBuilder $builder,
+        $tableName,
+        $device
+    ) {
+        if ($device === 'DESKTOP') {
+            $this->addConditionForDesktopDevice($builder, $tableName);
+        }
+
+        if ($device === 'TABLET') {
+            $this->addConditionForTabletDevice($builder, $tableName);
+        }
+
+        if ($device === 'UNKNOW') {
+            $builder->whereRaw($tableName.'.platform LIKE "Unknow Platform%"');
+        }
     }
 }
