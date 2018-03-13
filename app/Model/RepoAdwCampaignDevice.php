@@ -368,7 +368,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.device = tbl.device'
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
