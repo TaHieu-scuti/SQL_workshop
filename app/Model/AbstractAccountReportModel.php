@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractAccountReportModel extends AbstractReportModel
+abstract class AbstractAccountReportModel extends AbstractTemporaryAccountModel
 {
     abstract protected function getPhoneTimeUseSourceValue();
 

@@ -75,7 +75,14 @@ class RepoYssCampaignDayofweek extends AbstractYssSpecificReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));

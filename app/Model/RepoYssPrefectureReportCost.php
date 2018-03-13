@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Event;
 
 use PDO;
 
-class RepoYssPrefectureReportCost extends AbstractYssReportModel
+class RepoYssPrefectureReportCost extends AbstractYssRawExpressions
 {
     const GROUPED_BY_FIELD_NAME = 'prefecture';
     const ADW_JOIN_TABLE_NAME = 'criteria';
@@ -607,6 +607,7 @@ class RepoYssPrefectureReportCost extends AbstractYssReportModel
             ->groupBy($groupedByField)
             ->orderBy($columnSort, $sort);
         $this->addJoinConditionForYssPrefecture($paginatedData);
+
         if ($accountStatus == self::HIDE_ZERO_STATUS) {
             $paginatedData = $paginatedData->havingRaw(self::SUM_IMPRESSIONS_NOT_EQUAL_ZERO)
                 ->paginate($pagination);

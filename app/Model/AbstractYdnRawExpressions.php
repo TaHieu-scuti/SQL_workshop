@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
+abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
 {
     protected $conversionPoints;
     protected $adGainerCampaigns;
@@ -19,9 +19,8 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
                     . $tableName
-                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
-                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -29,9 +28,8 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . '`.`conversions'.$i.'`) / SUM(`'
                     . $tableName
-                    . "`.`clicks`)) * 100, 0) AS 'YSS "
+                    . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
-                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -39,9 +37,8 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . '`.`cost`) / SUM(`'
                     . $tableName
-                    . "`.`conversions".$i."`), 0) AS 'YSS "
+                    . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
-                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -57,11 +54,10 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . "<br>"
+                    . ' '
                     . $campaign->phone_number
-                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -69,11 +65,10 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $i
                     . '` / SUM(`'
                     . $tableName
-                    . "`.`clicks`), 0) AS 'YSS "
+                    . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . "<br>"
+                    . ' '
                     . $campaign->phone_number
-                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -81,11 +76,10 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . '`.`cost`) / `call'
                     . $i
-                    . "`, 0) AS 'YSS "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . "<br>"
+                    . ' '
                     . $campaign->phone_number
-                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -94,13 +88,49 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalCostPerAction(array $expressions, $tableName = "")
+    protected function addRawExpressionCallConversions(array $expressions)
     {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
+        $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (SUM(`'
-                . $tableName . '`.`conversions`) + ';
+            $expression = 'IFNULL(';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call' . $i . '` + ';
+            }
+
+            $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionCallConversionRate(array $expressions)
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL((';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . "` + ";
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`) / '
+                . $numberOfCampaigns
+                . ', 0) AS call_cvr';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionCallCostPerAction(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -109,7 +139,27 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
 
             $expression .= '`call'
                 . ($numberOfCampaigns - 1)
-                . '`), 0) AS total_cpa';
+                . '`), 0) AS call_cpa';
+
+            $expressions[] = DB::raw($expression);
+        }
+        return $expressions;
+    }
+
+    protected function addRawExpressionTotalConversions(array $expressions, $tableName = "")
+    {
+        $numberOfCampaigns = count($this->adGainerCampaigns);
+        if ($numberOfCampaigns > 0) {
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`conversions`) + ';
+            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
+                $expression .= '`call'
+                    . $i
+                    . '` + ';
+            }
+
+            $expression .= '`call'
+                . ($numberOfCampaigns - 1)
+                . '`, 0) AS total_cv';
 
             $expressions[] = DB::raw($expression);
         }
@@ -118,8 +168,7 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
 
     protected function addRawExpressionTotalConversionRate(array $expressions, $tableName = "")
     {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
+        $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
             $expression = 'IFNULL((SUM(`' . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
@@ -140,12 +189,12 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function addRawExpressionTotalConversions(array $expressions, $tableName = "")
+    protected function addRawExpressionTotalCostPerAction(array $expressions, $tableName = "")
     {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
+        $numberOfCampaigns = count($this->adGainerCampaigns);
         if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . $tableName . '`.`conversions`) + ';
+            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (SUM(`'
+                . $tableName . '`.`conversions`) + ';
             for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
                 $expression .= '`call'
                     . $i
@@ -154,68 +203,7 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
 
             $expression .= '`call'
                 . ($numberOfCampaigns - 1)
-                . '`, 0) AS total_cv';
-
-            $expressions[] = DB::raw($expression);
-        }
-        return $expressions;
-    }
-
-    protected function addRawExpressionCallCostPerAction(array $expressions, $tableName = "")
-    {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
-        if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(SUM(`' . $tableName . '`.`cost`) / (';
-            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-                $expression .= '`call'
-                    . $i
-                    . '` + ';
-            }
-
-            $expression .= '`call'
-                . ($numberOfCampaigns - 1)
-                . '`), 0) AS call_cpa';
-
-            $expressions[] = DB::raw($expression);
-        }
-        return $expressions;
-    }
-
-    protected function addRawExpressionCallConversions(array $expressions)
-    {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
-        if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL(';
-            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-                $expression .= '`call' . $i . '` + ';
-            }
-
-            $expression .= '`call' . ($numberOfCampaigns - 1) . '`, 0) AS call_cv';
-
-            $expressions[] = DB::raw($expression);
-        }
-        return $expressions;
-    }
-
-    protected function addRawExpressionCallConversionRate(array $expressions)
-    {
-        $phoneNumbers = array_values(array_unique($this->adGainerCampaigns->pluck('phone_number')->toArray()));
-        $numberOfCampaigns = count($phoneNumbers);
-        if ($numberOfCampaigns > 0) {
-            $expression = 'IFNULL((';
-            for ($i = 0; $i < $numberOfCampaigns - 1; $i++) {
-                $expression .= '`call'
-                    . $i
-                    . "` + ";
-            }
-
-            $expression .= '`call'
-                . ($numberOfCampaigns - 1)
-                . '`) / '
-                . $numberOfCampaigns
-                . ', 0) AS call_cvr';
+                . '`), 0) AS total_cpa';
 
             $expressions[] = DB::raw($expression);
         }

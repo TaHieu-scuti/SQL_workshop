@@ -111,7 +111,7 @@ class RepoYssCampaignReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSpecificModel();
 
         $dataReports = $this->getDataForTable();
@@ -119,6 +119,11 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         $columns = $this->getAttributeFieldNames($dataReports);
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        if ($engine == 'ydn') {
+            $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+        }
+
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -138,10 +143,11 @@ class RepoYssCampaignReportController extends AbstractReportController
                 'isObjectStdClass' => $this->isObjectStdClass
             ]
         )->render();
+
         $fieldsOnModal = view(
             'layouts.fields_on_modal',
             [
-                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
+                self::COLUMNS_FOR_FILTER => $defaultColumns,
                 self::FIELD_NAMES => $fieldNames
             ]
         )->render();
