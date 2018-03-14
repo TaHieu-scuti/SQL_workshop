@@ -375,6 +375,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
         $tableName,
         $device
     ) {
+        // we dont need to add platform condition for HIGH_END_MOBILE cause `mobile = yes` is enough
         if ($device === 'DESKTOP') {
             $this->addConditionForDesktopDevice($builder, $tableName);
         } elseif ($device === 'TABLET') {
