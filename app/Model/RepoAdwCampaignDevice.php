@@ -62,7 +62,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaign'], ['device'])
         );
 
-        $unknowDevice = $this->getDataForAdwCampaignDevice(
+        $this->insetAllDeviceDataIntoTemporaryTable(
             $columns,
             $groupedByField,
             $startDay,
@@ -74,57 +74,8 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             $adGroupId,
             $adReportId,
             $keywordId,
-            'UNKNOWN'
+            $fieldNames
         );
-        $this->insertDataToTemporary($unknowDevice, $fieldNames);
-
-        $tabletDevice = $this->getDataForAdwCampaignDevice(
-            $columns,
-            $groupedByField,
-            $startDay,
-            $endDay,
-            $engine,
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId,
-            'TABLET'
-        );
-        $this->insertDataToTemporary($tabletDevice, $fieldNames);
-
-        $desktopDevice = $this->getDataForAdwCampaignDevice(
-            $columns,
-            $groupedByField,
-            $startDay,
-            $endDay,
-            $engine,
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId,
-            'DESKTOP'
-        );
-        $this->insertDataToTemporary($desktopDevice, $fieldNames);
-
-        $highEndMobileDevice = $this->getDataForAdwCampaignDevice(
-            $columns,
-            $groupedByField,
-            $startDay,
-            $endDay,
-            $engine,
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId,
-            'HIGH_END_MOBILE'
-        );
-        $this->insertDataToTemporary($highEndMobileDevice, $fieldNames);
 
         if ($this->isConv) {
             $this->updateTemporaryTableWithConversion(
@@ -148,7 +99,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
                 $groupedByField,
                 $startDay,
                 $endDay,
-                'UNKNOW'
+                'UNKNOWN'
             );
 
             $this->updateTemporaryTableWithCallTracking(
@@ -432,8 +383,87 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             $this->addConditionForTabletDevice($builder, $tableName);
         }
 
-        if ($device === 'UNKNOW') {
-            $builder->whereRaw($tableName.'.platform LIKE "Unknow Platform%"');
+        if ($device === 'UNKNOWN') {
+            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
         }
+    }
+
+    private function insetAllDeviceDataIntoTemporaryTable(
+        $columns,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId,
+        $accountId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId,
+        $fieldNames
+    ) {
+        $unknownDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'UNKNOWN'
+        );
+        $this->insertDataToTemporary($unknownDevice, $fieldNames);
+
+        $tabletDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'TABLET'
+        );
+        $this->insertDataToTemporary($tabletDevice, $fieldNames);
+
+        $desktopDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'DESKTOP'
+        );
+        $this->insertDataToTemporary($desktopDevice, $fieldNames);
+
+        $highEndMobileDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'HIGH_END_MOBILE'
+        );
+        $this->insertDataToTemporary($highEndMobileDevice, $fieldNames);
     }
 }
