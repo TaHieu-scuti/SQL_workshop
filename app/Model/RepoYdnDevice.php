@@ -44,7 +44,7 @@ class RepoYdnDevice extends AbstractYdnRawExpressions
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
-            'adw',
+            'ydn',
             $campaignIDs
         );
 
@@ -61,6 +61,109 @@ class RepoYdnDevice extends AbstractYdnRawExpressions
             array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'], ['device'])
         );
 
+        $this->insertDataToTemporaryOfEngines(
+            $columns,
+            $fieldNames,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId
+        );
+
+        if ($this->isConv) {
+            $this->updateTemporaryTableWithConversion(
+                $this->conversionPoints,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
+            );
+        }
+
+        if ($this->isCallTracking) {
+            $this->updateDataForCallTrackingOfYdn(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay
+            );
+        }
+        $aggregated = $this->processGetAggregated(
+            $fieldNames,
+            $groupedByField,
+            $campaignId,
+            $adGroupId
+        );
+        return DB::table(self::TABLE_TEMPORARY)
+            ->select($aggregated)
+            ->groupby($groupedByField)
+            ->orderBy($columnSort, $sort);
+    }
+
+    protected function getBuilderForCalculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $aggregated = $this->processGetAggregated(
+            $fieldNames,
+            $groupedByField,
+            $campaignId,
+            $adGroupId
+        );
+        return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+    }
+
+    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $aggregation = $this->getAggregatedConversionName($column);
+        $aggregation[] = 'device';
+        return $this->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
+
+    private function insertDataToTemporaryOfEngines(
+        $columns,
+        $fieldNames,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId,
+        $accountId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId
+    ) {
         $deviceDesktop = $this->getDataDeviceYdnCampaign(
             $columns,
             $groupedByField,
@@ -124,104 +227,45 @@ class RepoYdnDevice extends AbstractYdnRawExpressions
             'Other'
         );
         $this->insertDataToTemporary($deviceOther, $fieldNames);
-
-        if ($this->isConv) {
-            $this->updateTemporaryTableWithConversion(
-                $this->conversionPoints,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                $engine,
-                $clientId,
-                $accountId,
-                $campaignId,
-                $adGroupId,
-                $adReportId,
-                $keywordId
-            );
-        }
-
-        if ($this->isCallTracking) {
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                'PC'
-            );
-
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                'Tablet'
-            );
-
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                'SmartPhone'
-            );
-
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                'Other'
-            );
-        }
-        $aggregated = $this->processGetAggregated(
-            $fieldNames,
-            $groupedByField,
-            $campaignId,
-            $adGroupId
-        );
-        return DB::table(self::TABLE_TEMPORARY)
-            ->select($aggregated)
-            ->groupby($groupedByField)
-            ->orderBy($columnSort, $sort);
     }
 
-    protected function getBuilderForCalculateData(
-        $engine,
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
+    private function updateDataForCallTrackingOfYdn(
+        $adGainerCampaigns,
         $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $startDay,
+        $endDay
     ) {
-        $aggregated = $this->processGetAggregated(
-            $fieldNames,
+        $this->updateTemporaryTableWithCallTracking(
+            $adGainerCampaigns,
             $groupedByField,
-            $campaignId,
-            $adGroupId
+            $startDay,
+            $endDay,
+            'PC'
         );
-        return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
-    }
 
-    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
-    {
-        $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = 'device';
-        return $this->select($aggregation)
-            ->distinct()
-            ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
-                }
-            )
-            ->get();
+        $this->updateTemporaryTableWithCallTracking(
+            $adGainerCampaigns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            'Tablet'
+        );
+
+        $this->updateTemporaryTableWithCallTracking(
+            $adGainerCampaigns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            'SmartPhone'
+        );
+
+        $this->updateTemporaryTableWithCallTracking(
+            $adGainerCampaigns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            'Other'
+        );
     }
 
     protected function getDataDeviceYdnCampaign(
