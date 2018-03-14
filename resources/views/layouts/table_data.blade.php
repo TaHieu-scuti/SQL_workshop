@@ -65,21 +65,21 @@
                         @if ($columnSort === $fieldName && $sort === "desc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-down"></i>{{$translation}}</a>
+                                <i class="fa fa-arrow-down"></i> {!!$translation!!} </a>
                             </th>
                         @elseif ($columnSort === $fieldName && $sort === "asc")
                             <th data-value="{{ $fieldName }}">
                                 <a href="javascript:void(0)">
-                                <i class="fa fa-arrow-up"></i>{{$translation}}</a>
+                                <i class="fa fa-arrow-up"></i> {!!$translation!!} </a>
                             </th>
                         @else
                             <th data-value="{{ $fieldName }}">
-                                <a href="javascript:void(0)"></i>{{$translation}}</a>
+                                <a href="javascript:void(0)"></i> {!!$translation!!} </a>
                             </th>
                         @endif
                     @endforeach
                 @endif
-            </tr>
+            </tr> 
         </thead>
         <tbody>
             @foreach($reports as $report)

@@ -21,6 +21,7 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -30,6 +31,7 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -39,6 +41,7 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -56,8 +59,9 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -67,8 +71,9 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -78,8 +83,9 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CPA'"
                 );
             }
