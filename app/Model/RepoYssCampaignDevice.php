@@ -11,6 +11,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
     protected $table = 'repo_yss_campaign_report_cost';
 
     const PAGE_ID = 'campaignID';
+    const GROUPED_BY_FIELD_NAME = 'device';
 
     public $timestamps = false;
 
