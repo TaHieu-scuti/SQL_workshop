@@ -127,7 +127,9 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             );
         }
         $arr = [];
-        $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        if (in_array('impressionShare', $fieldNames)) {
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        }
         $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
         $aggregated = $this->processGetAggregated(
             $fields,
@@ -359,7 +361,9 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
         $keywordId = null
     ) {
         $arr = [];
-        $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        if (in_array('impressionShare', $fieldNames)) {
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        }
         $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
         $aggregated = $this->processGetAggregated(
             $fields,
