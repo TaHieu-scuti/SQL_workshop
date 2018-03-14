@@ -132,6 +132,22 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                 $endDay,
                 'DESKTOP'
             );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                'SMART_PHONE'
+            );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                'NONE'
+            );
         }
         $aggregated = $this->processGetAggregated(
             $fieldNames,
@@ -320,7 +336,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                         } elseif ($device === "SMART_PHONE") {
                             $this->addConditionForDeviceSmartPhone($builder, $tableName);
                         } else {
-                            $builder->where($tableName.'.platform LIKE "Unknown Platform%"');
+                            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
                         }
                     }
                 )

@@ -95,7 +95,10 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
                 $this->adGainerCampaigns
             );
 
-            $columns = $this->unsetColumns($columns, array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING));
+            $columns = $this->unsetColumns(
+                $columns,
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adgroupName'])
+            );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -199,7 +202,14 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
@@ -210,7 +220,7 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'yss')
+                ->where('source', 'ydn')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);

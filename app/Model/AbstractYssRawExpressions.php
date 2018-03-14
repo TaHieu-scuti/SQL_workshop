@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-class AbstractYssRawExpressions extends AbstractTemporaryModel
+abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
 {
     protected $conversionPoints;
     protected $adGainerCampaigns;
