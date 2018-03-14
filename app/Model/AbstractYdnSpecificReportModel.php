@@ -9,7 +9,7 @@ use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
-class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
+abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
 {
     protected function getBuilderForGetDataForTable(
         $engine,
