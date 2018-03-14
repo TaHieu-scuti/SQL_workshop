@@ -62,7 +62,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaign'], ['device'])
         );
 
-        $this->insetAllDeviceDataIntoTemporaryTable(
+        $this->insertAllDeviceDataIntoTemporaryTable(
             $columns,
             $groupedByField,
             $startDay,
@@ -377,18 +377,14 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
     ) {
         if ($device === 'DESKTOP') {
             $this->addConditionForDesktopDevice($builder, $tableName);
-        }
-
-        if ($device === 'TABLET') {
+        } elseif ($device === 'TABLET') {
             $this->addConditionForTabletDevice($builder, $tableName);
-        }
-
-        if ($device === 'UNKNOWN') {
+        } elseif ($device === 'UNKNOWN') {
             $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
         }
     }
 
-    private function insetAllDeviceDataIntoTemporaryTable(
+    private function insertAllDeviceDataIntoTemporaryTable(
         $columns,
         $groupedByField,
         $startDay,
