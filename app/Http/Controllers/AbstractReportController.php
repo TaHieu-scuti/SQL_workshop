@@ -11,7 +11,7 @@ use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnTimezone;
 use App\Model\RepoYdnDayOfWeek;
-use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoYssAdgroupPrefecture;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
 use App\Model\RepoYssAdgroupTimezone;
@@ -785,7 +785,7 @@ abstract class AbstractReportController extends Controller
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssPrefectureReportCost;
+                $this->model = new RepoYssAdgroupPrefecture;
             }
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignPrefecture;
