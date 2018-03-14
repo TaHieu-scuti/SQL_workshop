@@ -97,6 +97,7 @@ class Campaign extends AbstractTemporaryModel
                 $source
             )
             ->whereIn($repoPhoneTimeUseTableName . '.utm_campaign', $campaignIDs)
+            ->orderBy('utm_campaign', 'ASC')
             ->get();
     }
 

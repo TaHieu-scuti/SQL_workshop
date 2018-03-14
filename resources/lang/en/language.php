@@ -126,4 +126,7 @@ return [
     'items_to_display' => 'Items to display',
     'select_all' => 'Select all',
     'log_out' => 'Log out',
+    '[conversionValues]' => 'Conversion Values',
+    '[phoneNumberValues]' => 'PhoneNumber Values',
+    'dailySpendingLimit' => 'Daily Budget',
 ];

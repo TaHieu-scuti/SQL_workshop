@@ -9,7 +9,7 @@ use Illuminate\Database\Query\JoinClause;
 
 use DB;
 
-abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
+abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
 {
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -36,12 +36,11 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adGroupId,
             static::PAGE_ID
         );
-
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
-            'yss',
+            'ydn',
             $campaignIDs
         );
 
@@ -73,16 +72,11 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             );
             $columns = $this->unsetColumns(
                 $fieldNames,
-                array_merge(
-                    self::UNSET_COLUMNS,
-                    self::FIELDS_CALL_TRACKING,
-                    ['campaignName', 'adgroupName']
-                )
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
             );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
@@ -104,14 +98,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                     $this->adGainerCampaigns,
                     $groupedByField,
                     $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
+                    $endDay
                 );
             }
 

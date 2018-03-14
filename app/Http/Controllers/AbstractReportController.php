@@ -12,7 +12,7 @@ use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnAdgroupPrefecture;
 use App\Model\RepoYdnTimezone;
 use App\Model\RepoYdnDayOfWeek;
-use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoYssAdgroupPrefecture;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
 use App\Model\RepoYssAdgroupTimezone;
@@ -21,6 +21,8 @@ use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
+use App\Model\RepoYssAdgroupDevice;
+use App\Model\RepoYssCampaignPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -782,13 +784,19 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            $this->model = new RepoYssPrefectureReportCost;
-        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn'
-                    && in_array('campaignName', $fieldNames)) {
-            $this->model = new RepoYdnPrefecture;
-        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn'
-                    && in_array('adgroupName', $fieldNames)) {
-            $this->model = new RepoYdnAdgroupPrefecture;
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYssAdgroupPrefecture;
+            }
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYssCampaignPrefecture;
+            }
+        } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnPrefecture;
+            }
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupPrefecture;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }

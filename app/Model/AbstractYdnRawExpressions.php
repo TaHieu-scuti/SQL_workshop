@@ -2,23 +2,24 @@
 
 namespace App\Model;
 
-use App\AbstractReportModel;
-
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
+abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
 {
+    protected $conversionPoints;
+    protected $adGainerCampaigns;
+
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
-        $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($this->conversionPoints->pluck('conversionName')->toArray()));
         if ($conversionNames !== null) {
             foreach ($conversionNames as $i => $conversionName) {
                 $expressions[] = DB::raw(
                     'IFNULL(SUM(`'
-                    .$tableName
-                    . "`.`conversions".$i."`), 0) AS 'Adw "
+                    . $tableName
+                    . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
                     . "<br>"
                     . " CV'"
@@ -28,7 +29,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
                     . $tableName
                     . '`.`conversions'.$i.'`) / SUM(`'
                     . $tableName
-                    . "`.`clicks`)) * 100, 0) AS 'Adw "
+                    . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
                     . "<br>"
                     . " CVR'"
@@ -38,7 +39,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
                     . $tableName
                     . '`.`cost`) / SUM(`'
                     . $tableName
-                    . "`.`conversions".$i."`), 0) AS 'Adw "
+                    . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
                     . "<br>"
                     . " CPA'"
@@ -56,7 +57,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
                 $expressions[] = DB::raw(
                     'IFNULL(`call'
                     . $i
-                    . "`, 0) AS 'Adw "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
                     . "<br>"
                     . $campaign->phone_number
@@ -68,7 +69,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
                     . $i
                     . '` / SUM(`'
                     . $tableName
-                    . "`.`clicks`), 0) AS 'Adw "
+                    . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
                     . "<br>"
                     . $campaign->phone_number
@@ -80,7 +81,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
                     . $tableName
                     . '`.`cost`) / `call'
                     . $i
-                    . "`, 0) AS 'Adw "
+                    . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
                     . "<br>"
                     . $campaign->phone_number
@@ -128,7 +129,6 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
 
             $expressions[] = DB::raw($expression);
         }
-
         return $expressions;
     }
 
@@ -216,21 +216,6 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    protected function getAggregatedConversionName($column)
-    {
-        $arraySelect = ['conversionName'];
-        if ($column === 'campaignID') {
-            array_unshift($arraySelect, 'campaignID');
-        } elseif ($column === 'adgroupID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID');
-        } elseif ($column === 'adID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
-        } elseif ($column === 'keywordID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keywordID');
-        }
-        return $arraySelect;
-    }
-
     protected function addConditonForConversionName(
         EloquentBuilder $query,
         $account_id = null,
@@ -240,7 +225,7 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
     ) {
         if ($account_id !== null && $accountId !== null) {
             $query->where('account_id', '=', $account_id)
-                ->where('customerID', '=', $accountId);
+                ->where('accountId', '=', $accountId);
         }
         if ($campaignId !== null) {
             $query->where('campaignID', '=', $campaignId);
@@ -248,6 +233,24 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
         if ($adGroupId !== null) {
             $query->where('adgroupID', '=', $adGroupId);
         }
+    }
+
+    protected function getAggregatedConversionName($column)
+    {
+        $arraySelect = ['conversionName'];
+        if ($column === 'campaignID') {
+            array_unshift($arraySelect, 'campaignID');
+        }
+
+        if ($column === 'adgroupID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID');
+        }
+
+        if ($column === 'keywordID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
+        }
+
+        return $arraySelect;
     }
 
     protected function checkConditionFieldName($fieldNames)
@@ -264,12 +267,10 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             if (!in_array('cost', $fieldNames)) {
-                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
-                array_splice($fieldNames, $key + 1, 0, ['cost']);
+                array_unshift($fieldNames, 'cost');
             }
             if (!in_array('clicks', $fieldNames)) {
-                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
-                array_splice($fieldNames, $key + 1, 0, ['clicks']);
+                array_unshift($fieldNames, 'clicks');
             }
         }
         return $fieldNames;
