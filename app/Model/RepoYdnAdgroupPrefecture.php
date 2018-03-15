@@ -22,8 +22,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         $campaignId = null,
         $adGroupId = null
     ) {
-        $columns = $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
-        return $columns;
+        return $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
     }
 
     protected function updateTemporaryTableWithConversion(
