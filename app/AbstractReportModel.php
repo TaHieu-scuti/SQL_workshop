@@ -115,6 +115,7 @@ abstract class AbstractReportModel extends Model
      */
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
+
         $fieldNames = $this->updateFieldNames($fieldNames);
         if (empty($tableName)) {
             $tableName = $this->getTable();
@@ -132,6 +133,10 @@ abstract class AbstractReportModel extends Model
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                continue;
+            }
+            if ($fieldName === 'region') {
+                $arrayCalculate[] = $fieldName;
                 continue;
             }
             if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
@@ -494,7 +499,7 @@ abstract class AbstractReportModel extends Model
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //replace prefecture with criteria.Name
             $key = array_search('prefecture', $fieldNames);
-            $fieldNames[$key] = 'criteria.Name';
+            $fieldNames[$key] = 'region';
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
@@ -532,7 +537,7 @@ abstract class AbstractReportModel extends Model
             //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
             unset($groupBy[$key]);
-            $groupedByField = 'criteria.Name';
+            $groupedByField = 'region';
             array_push($groupBy, $groupedByField);
         }
         foreach ($aggregations as &$aggregation) {
@@ -552,6 +557,7 @@ abstract class AbstractReportModel extends Model
                 $item = $this->getTable() . '.' . $item;
             }
         }
+        // dd($selectBy, $aggregations);
         $builder = $this->select(array_merge($selectBy, $aggregations))
             ->where(
                 function (Builder $query) use (
