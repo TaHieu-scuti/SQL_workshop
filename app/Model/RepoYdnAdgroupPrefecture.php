@@ -17,8 +17,11 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
 
     const PAGE_ID = 'adgroupID';
 
-    protected function adjustTemporaryTableColumns($columns)
-    {
+    protected function adjustTemporaryTableColumns(
+        $columns,
+        $campaignId = null,
+        $adGroupId = null
+    ) {
         if (($key = array_search(self::PAGE_ID, $columns)) !== false) {
             unset($columns[$key]);
         }
