@@ -21,6 +21,7 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YSS "
                     . $conversionName
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -30,6 +31,7 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'YSS "
                     . $conversionName
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -39,6 +41,7 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YSS "
                     . $conversionName
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -56,8 +59,9 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -67,8 +71,9 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`), 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -78,8 +83,9 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -267,10 +273,12 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             if (!in_array('cost', $fieldNames)) {
-                array_unshift($fieldNames, 'cost');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['cost']);
             }
             if (!in_array('clicks', $fieldNames)) {
-                array_unshift($fieldNames, 'clicks');
+                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
+                array_splice($fieldNames, $key + 1, 0, ['clicks']);
             }
         }
         return $fieldNames;

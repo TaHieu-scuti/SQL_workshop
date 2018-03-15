@@ -23,6 +23,8 @@ use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
 use App\Model\RepoAdwCampaignPrefecture;
+use App\Model\RepoAdwCampaignDevice;
+use App\Model\RepoYdnDevice;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
