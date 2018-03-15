@@ -20,8 +20,10 @@ use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
+use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
 use App\Model\RepoAdwCampaignDevice;
+use App\Model\RepoYdnDevice;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
