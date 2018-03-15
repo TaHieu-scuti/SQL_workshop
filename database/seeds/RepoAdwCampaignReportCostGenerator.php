@@ -8,9 +8,9 @@ use App\Model\RepoAdwAccountReportCost;
 // @codingStandardsIgnoreLine
 class RepoAdwCampaignReportCostGenerator extends Seeder
 {
-    const START_DATE = '2017-01-01 00:00:00';
+    const START_DATE = '2017-12-01 00:00:00';
     const INTERVAL = 'P1D';
-    const END_DATE = '2018-02-03 00:00:00';
+    const END_DATE = '2018-03-30 00:00:00';
     const MIN_DAILY_SPENDING_LIMIT = 1;
     const MAX_DAILY_SPENDING_LIMIT = 1004;
     const NUMBER_OF_ACCOUNTS = 2;
@@ -34,7 +34,7 @@ class RepoAdwCampaignReportCostGenerator extends Seeder
     const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
-    const MAX_CONV_VALUE = 89489437437880;
+    const MAX_CONV_VALUE = 9999999;
     const DEVICES = ['UNKNOWN', 'DESKTOP', 'HIGH_END_MOBILE', 'TABLET'];
     /**
      * Run the database seeds.
