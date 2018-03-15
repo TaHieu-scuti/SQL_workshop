@@ -22,12 +22,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         $campaignId = null,
         $adGroupId = null
     ) {
-        if (($key = array_search(self::PAGE_ID, $columns)) !== false) {
-            unset($columns[$key]);
-        }
-        if (($key = array_search('adgroupName', $columns)) !== false) {
-            unset($columns[$key]);
-        }
+        $columns = $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
         return $columns;
     }
 
