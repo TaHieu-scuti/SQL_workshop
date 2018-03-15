@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\AbstractReportModel;
 
-class RepoAdwGeoReportConv extends Model
+class RepoAdwGeoReportConv extends AbstractReportModel
 {
     protected $table = 'repo_adw_geo_report_conv';
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 
 use App\Model\AbstractAdwSubReportModel;
+use App\Model\RepoAdwGeoReportConv;
 
 use DB;
 
@@ -154,7 +155,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         $campaignIDs = array_values(array_unique($conversionPoints->pluck('campaignID')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoAdwCampaignPrefectureConv();
+            $convModel = new RepoAdwGeoReportConv;
             $queryGetConversion = $convModel->select(
                 DB::raw('SUM(repo_adw_geo_report_conv.conversions) AS conversions, region')
             )->where('conversionName', $conversionName)
@@ -185,7 +186,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
                         );
                     }
                 )->whereIn('campaignID', $campaignIDs)
-                )->groupBy('region');
+                ->groupBy('region');
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
