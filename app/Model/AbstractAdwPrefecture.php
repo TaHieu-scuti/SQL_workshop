@@ -153,7 +153,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $campaignIDs = array_values(array_unique($conversionPoints->pluck('campaignID')->toArray()));
+        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwGeoReportConv;
             $queryGetConversion = $convModel->select(

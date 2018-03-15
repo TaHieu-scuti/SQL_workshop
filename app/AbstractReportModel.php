@@ -115,7 +115,6 @@ abstract class AbstractReportModel extends Model
      */
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
-
         $fieldNames = $this->updateFieldNames($fieldNames);
         if (empty($tableName)) {
             $tableName = $this->getTable();
