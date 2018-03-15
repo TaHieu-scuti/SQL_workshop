@@ -7,9 +7,9 @@ use App\Model\RepoYdnReport;
 // @codingStandardsIgnoreLine
 class RepoYdnReportGenerator extends Seeder
 {
-    const START_DATE = '2017-01-01 00:00:00';
+    const START_DATE = '2017-12-01 00:00:00';
     const INTERVAL = 'P1D';
-    const END_DATE = '2018-02-03 00:00:00';
+    const END_DATE = '2018-03-30 00:00:00';
     const NUMBER_OF_ACCOUNTS = 2;
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
     const MAX_NUMBER_OF_CAMPAIGNS = 1;
@@ -28,7 +28,7 @@ class RepoYdnReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['Pc', 'Tablet', 'SmartPhone', 'Other'];
     const PREFECTURE = [
         'Hokkaido',
         'Aomori',
