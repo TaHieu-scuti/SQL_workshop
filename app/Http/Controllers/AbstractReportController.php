@@ -799,9 +799,6 @@ abstract class AbstractReportController extends Controller
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignPrefecture;
             }
-            if (static::SESSION_KEY_PREFIX ==='adgroupReport.') {
-                # code...
-            }
         }
     }
 
