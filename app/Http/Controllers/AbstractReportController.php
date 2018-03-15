@@ -22,6 +22,7 @@ use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
+use App\Model\RepoAdwCampaignPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -793,7 +794,13 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnPrefecture;
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            $this->model = new RepoAdwGeoReportCost;
+            // $this->model = new RepoAdwGeoReportCost;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignPrefecture;
+            }
+            if (static::SESSION_KEY_PREFIX ==='adgroupReport.') {
+                # code...
+            }
         }
     }
 
