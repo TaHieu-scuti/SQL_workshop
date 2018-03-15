@@ -284,7 +284,7 @@ class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
             $repoPhoneTimeUseModel = new RepoPhoneTimeUse;
             $tableName = $repoPhoneTimeUseModel->getTable();
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
+                DB::raw("'".$device."' AS device, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
             ->where('source', 'adw')
             ->where('traffic_type', 'AD')
