@@ -86,7 +86,8 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
+            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
+                `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
 
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
