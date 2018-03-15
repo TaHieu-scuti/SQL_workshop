@@ -6,13 +6,13 @@ use App\Model\RepoAdwAccountReportCost;
 // @codingStandardsIgnoreLine
 class RepoAdwAccountReportGenerator extends Seeder
 {
-    const START_DATE = '2017-01-01 00:00:00';
+    const START_DATE = '2017-12-01 00:00:00';
     const INTERVAL = 'P1D';
-    const END_DATE = '2018-02-03 00:00:00';
+    const END_DATE = '2018-03-01 00:00:00';
     const NUMBER_OF_ACCOUNTS = 2;
     const NUMBER_OF_MEDIA_ACCOUNTS = [
         2,
-        4,
+        1,
         5,
         1,
         3
@@ -32,9 +32,9 @@ class RepoAdwAccountReportGenerator extends Seeder
     const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 0;
     const MIN_CONV_VALUE = 1000000;
-    const MAX_CONV_VALUE = 89489437437880;
+    const MAX_CONV_VALUE = 9999999;
     const NETWORKS = ['CONTENT', 'SEARCH'];
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['HIGH_END_MOBILE', 'TABLET', 'DESKTOP', 'UNKNOWN'];
 
     private function processDay(DateTime $day)
     {
