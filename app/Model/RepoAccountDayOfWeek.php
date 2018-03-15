@@ -39,7 +39,6 @@ class RepoAccountDayOfWeek extends RepoYssAccountReportCost
     {
         $phoneTimeUseModel = new PhoneTimeUse();
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId);
-        $campaignModel = new Campaign();
         $utmCampaignList = array_unique($campaignIdAdgainer->pluck('campaignID')->toArray());
 
         $builder = $phoneTimeUseModel->select(
