@@ -152,6 +152,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $campaignIDs = array_values(array_unique($conversionPoints->pluck('campaignID')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwCampaignPrefectureConv();
             $queryGetConversion = $convModel->select(
@@ -183,6 +184,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
                             $keywordId
                         );
                     }
+                )->whereIn('campaignID', $campaignIDs)
                 )->groupBy('region');
 
             DB::update(
@@ -219,7 +221,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             )->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
                 ->where('phone_number', $phoneNumber)
-                ->where('utm_campaign', $utmCampaignList)
+                ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
                         $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
