@@ -11,7 +11,7 @@ use App\Model\RepoYssAccountReportCost;
 
 class RepoAccountDayOfWeek extends RepoYssAccountReportCost
 {
-    protected function addJoinPhoneTimeUseDayOfWeek($account_id, $traffic_type, $source, $startDay, $endDay)
+    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw($account_id, $traffic_type, $source, $startDay, $endDay)
     {
         $query = DB::table('phone_time_use')
         ->select(DB::raw('
@@ -35,7 +35,7 @@ class RepoAccountDayOfWeek extends RepoYssAccountReportCost
         );
     }
 
-    protected function addJoinPhoneTimeUseDayOfWeekForYdn($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithPhoneTimeUseForYdn($clientId, $startDay, $endDay)
     {
         $phoneTimeUseModel = new PhoneTimeUse();
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId);
@@ -65,7 +65,7 @@ class RepoAccountDayOfWeek extends RepoYssAccountReportCost
         );
     }
 
-    protected function updateDailySpendingLimitDayOfWeekYss($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithDailySpendingLimitForYss($clientId, $startDay, $endDay)
     {
         $yssCampaignModel = new RepoYssCampaignReportCost;
         $query = $yssCampaignModel
@@ -84,7 +84,7 @@ class RepoAccountDayOfWeek extends RepoYssAccountReportCost
         );
     }
 
-    protected function updateDailySpendingLimitDayOfWeekAdw($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay)
     {
         $adwCampaignModel = new RepoAdwCampaignReportCost;
         $query = $adwCampaignModel
@@ -101,31 +101,5 @@ class RepoAccountDayOfWeek extends RepoYssAccountReportCost
             .self::TEMPORARY_ACCOUNT_TABLE.'.dayOfWeek = tbl.dayOfWeek AND '
             .self::TEMPORARY_ACCOUNT_TABLE.'.engine = "adw"'
         );
-    }
-
-    private function conditionForDate(QueryBuilder $query, $tableName, $startDay, $endDay)
-    {
-        if ($startDay === $endDay) {
-            $query->whereRaw('STR_TO_DATE('.$tableName.
-                '.time_of_call, "%Y-%m-%d %H:%i:%s") LIKE "'.$endDay.'%"');
-        } else {
-            $query->whereRaw('STR_TO_DATE('.$tableName.
-                '.time_of_call, "%Y-%m-%d %H:%i:%s") >= "'.$startDay.'"')
-                ->whereRaw('STR_TO_DATE('.$tableName.
-                    '.time_of_call, "%Y-%m-%d %H:%i:%s") <= "'.$endDay.'"');
-        }
-    }
-
-    private function getCampaignIdAdgainer($clientId)
-    {
-        $ydnModel = new RepoYdnReport;
-        return $ydnModel->select('campaign_id', 'campaignID')
-            ->distinct()
-            ->where(
-                function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
-                }
-            )
-            ->get();
     }
 }
