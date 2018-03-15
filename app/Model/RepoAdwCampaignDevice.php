@@ -2,18 +2,19 @@
 
 namespace App\Model;
 
+use App\Model\AbstractAdwSubReportModel;
+
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssCampaignDevice extends AbstractYssRawExpressions
+class RepoAdwCampaignDevice extends AbstractAdwSubReportModel
 {
-    protected $table = 'repo_yss_campaign_report_cost';
-
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'device';
+    const PAGE_ID = "campaignID";
 
     public $timestamps = false;
+
+    protected $table = 'repo_adw_campaign_report_cost';
 
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -47,7 +48,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             'adw',
             $campaignIDs
         );
-
+        
         $this->createTemporaryTable(
             $fieldNames,
             $this->isConv,
@@ -58,10 +59,10 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
 
         $columns = $this->unsetColumns(
             $fieldNames,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'], ['device'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaign'], ['device'])
         );
 
-        $deviceDesktop = $this->getDataDeviceYssCampaign(
+        $this->insertAllDeviceDataIntoTemporaryTable(
             $columns,
             $groupedByField,
             $startDay,
@@ -73,41 +74,8 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             $adGroupId,
             $adReportId,
             $keywordId,
-            'DESKTOP'
+            $fieldNames
         );
-        $this->insertDataToTemporary($deviceDesktop, $fieldNames);
-
-        $deviceSmartPhone = $this->getDataDeviceYssCampaign(
-            $columns,
-            $groupedByField,
-            $startDay,
-            $endDay,
-            $engine,
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId,
-            'SMART_PHONE'
-        );
-        $this->insertDataToTemporary($deviceSmartPhone, $fieldNames);
-
-        $deviceNone = $this->getDataDeviceYssCampaign(
-            $columns,
-            $groupedByField,
-            $startDay,
-            $endDay,
-            $engine,
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId,
-            'NONE'
-        );
-        $this->insertDataToTemporary($deviceNone, $fieldNames);
 
         if ($this->isConv) {
             $this->updateTemporaryTableWithConversion(
@@ -131,6 +99,22 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                 $groupedByField,
                 $startDay,
                 $endDay,
+                'UNKNOWN'
+            );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                'TABLET'
+            );
+
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
                 'DESKTOP'
             );
 
@@ -139,56 +123,29 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
                 $groupedByField,
                 $startDay,
                 $endDay,
-                'SMART_PHONE'
-            );
-
-            $this->updateTemporaryTableWithCallTracking(
-                $this->adGainerCampaigns,
-                $groupedByField,
-                $startDay,
-                $endDay,
-                'NONE'
+                'HIGH_END_MOBILE'
             );
         }
+        $arr = [];
+        if (in_array('impressionShare', $fieldNames)) {
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        }
+        $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
         $aggregated = $this->processGetAggregated(
-            $fieldNames,
+            $fields,
             $groupedByField,
             $campaignId,
             $adGroupId
         );
         return DB::table(self::TABLE_TEMPORARY)
-            ->select($aggregated)
+            ->select(array_merge($aggregated, $arr))
             ->groupby($groupedByField)
             ->orderBy($columnSort, $sort);
     }
 
-    protected function getBuilderForCalculateData(
-        $engine,
-        $fieldNames,
-        $accountStatus,
-        $startDay,
-        $endDay,
-        $groupedByField,
-        $agencyId = null,
-        $accountId = null,
-        $clientId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
-    ) {
-        $aggregated = $this->processGetAggregated(
-            $fieldNames,
-            $groupedByField,
-            $campaignId,
-            $adGroupId
-        );
-        return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
-    }
-
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoYssCampaignReportConv();
+        $yssCampaignConvModel = new RepoAdwCampaignReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         $aggregation[] = 'device';
         return $yssCampaignConvModel->select($aggregation)
@@ -201,7 +158,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             ->get();
     }
 
-    protected function getDataDeviceYssCampaign(
+    private function getDataForAdwCampaignDevice(
         $fieldNames,
         $groupedByField,
         $startDay,
@@ -252,14 +209,15 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
     {
         $columns = $this->unsetColumns(
             $columns,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaign'])
         );
+        $columns = array_keys($this->updateFieldNames($columns));
 
         DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
             . $this->getBindingSql($builder));
     }
 
-    protected function updateTemporaryTableWithConversion(
+    private function updateTemporaryTableWithConversion(
         $conversionPoints,
         $groupedByField,
         $startDay,
@@ -274,9 +232,9 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoYssCampaignReportConv();
+            $convModel = new RepoAdwCampaignReportConv;
             $queryGetConversion = $convModel->select(
-                DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+                DB::raw('SUM(repo_adw_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
                 ->where(
                     function (EloquentBuilder $query) use (
@@ -313,7 +271,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         }
     }
 
-    protected function updateTemporaryTableWithCallTracking(
+    private function updateTemporaryTableWithCallTracking(
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
@@ -323,70 +281,190 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
+            $repoPhoneTimeUseModel = new RepoPhoneTimeUse;
             $tableName = $repoPhoneTimeUseModel->getTable();
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
+                DB::raw("'".$device."' AS device, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'yss')
-                ->where('traffic_type', 'AD')
-                ->where(
-                    function (EloquentBuilder $builder) use ($tableName, $device) {
-                        if ($device === "DESKTOP") {
-                            $this->addConditionForDeviceDesktop($builder, $tableName);
-                        } elseif ($device === "SMART_PHONE") {
-                            $this->addConditionForDeviceSmartPhone($builder, $tableName);
-                        } else {
-                            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
-                        }
+            ->where('source', 'adw')
+            ->where('traffic_type', 'AD')
+            ->where(
+                function (EloquentBuilder $builder) use ($tableName, $device) {
+                    if ($device === 'DESKTOP' || $device === 'TABLET') {
+                        $builder->where($tableName.'.mobile', '=', 'No');
                     }
-                )
-                ->where(
-                    function (EloquentBuilder $query) use ($tableName, $device) {
-                        if ($device === "DESKTOP") {
-                            $query->where($tableName.'.mobile', '=', 'No');
-                        } elseif ($device === "SMART_PHONE") {
-                            $query->whereRaw($tableName.'.mobile LIKE "Yes%"');
-                        }
+
+                    if ($device === 'HIGH_END_MOBILE') {
+                        $builder->where($tableName.'.mobile', '=', 'Yes');
                     }
-                )
-                ->where(
-                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
-                    }
-                )->whereIn('utm_campaign', $utmCampaignList);
+                }
+            )->where(
+                function (EloquentBuilder $builder) use ($tableName, $device) {
+                    $this->checkingConditionForDevice($builder, $tableName, $device);
+                }
+            )
+            ->where(
+                function (EloquentBuilder $builder) use ($startDay, $tableName, $endDay) {
+                    $this->addConditonForDate($builder, $tableName, $startDay, $endDay);
+                }
+            )->whereIn('utm_campaign', $utmCampaignList);
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.device = tbl.device'
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
 
-    protected function addConditionForDeviceDesktop($builder, $joinTableName)
+    private function addConditionForDesktopDevice(EloquentBuilder $builder, $tableName)
     {
-        $builder->whereRaw($joinTableName.'.platform NOT LIKE "Windows Phone%"')
+        $builder->whereRaw($tableName.'.mobile = "No"')
+            ->whereRaw($tableName.'.platform NOT LIKE "Window Phone%"')
             ->where(
-                function ($builder) use ($joinTableName) {
-                    $builder->whereRaw($joinTableName.'.platform LIKE "Windows%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "Linux%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "Mac OS%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "FreeBSD%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "Unknown Windows OS%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "NetBSD%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "iOS%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "Android%"')
-                        ->orWhereRaw($joinTableName.'.platform LIKE "Blackberry%"');
+                function ($builder) use ($tableName) {
+                    $builder->whereRaw($tableName.'.platform LIKE "Windows%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "Linux%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "Mac OS%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "FreeBSD%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "NetBSD%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "Unknown Windows OS%"');
                 }
             );
     }
 
-    protected function addConditionForDeviceSmartPhone($builder, $joinTableName)
+    private function addConditionForTabletDevice(EloquentBuilder $builder, $tableName)
     {
-        $builder->whereRaw($joinTableName.'.platform LIKE "Windows Phone%"')
-            ->orWhereRaw($joinTableName.'.platform LIKE "iOS%"')
-            ->orWhereRaw($joinTableName.'.platform LIKE "Android%"')
-            ->orWhereRaw($joinTableName.'.platform LIKE "Symbian%"')
-            ->orWhereRaw($joinTableName.'.platform LIKE "Blackberry%"');
+        $builder->whereRaw($tableName.'.mobile = "No"')
+            ->whereRaw($tableName.'.platform LIKE "Android%"')
+            ->where(
+                function ($builder) use ($tableName) {
+                    $builder->whereRaw($tableName.'.platform LIKE "iOS%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "Android%"')
+                        ->orWhereRaw($tableName.'.platform LIKE "Blackberry%"');
+                }
+            );
+    }
+
+    protected function getBuilderForCalculateData(
+        $engine,
+        $fieldNames,
+        $accountStatus,
+        $startDay,
+        $endDay,
+        $groupedByField,
+        $agencyId = null,
+        $accountId = null,
+        $clientId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $arr = [];
+        if (in_array('impressionShare', $fieldNames)) {
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        }
+        $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
+        $aggregated = $this->processGetAggregated(
+            $fields,
+            $groupedByField,
+            $campaignId,
+            $adGroupId
+        );
+        return DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr));
+    }
+
+    private function checkingConditionForDevice(
+        EloquentBuilder $builder,
+        $tableName,
+        $device
+    ) {
+        // we dont need to add platform condition for HIGH_END_MOBILE cause `mobile = yes` is enough
+        if ($device === 'DESKTOP') {
+            $this->addConditionForDesktopDevice($builder, $tableName);
+        } elseif ($device === 'TABLET') {
+            $this->addConditionForTabletDevice($builder, $tableName);
+        } elseif ($device === 'UNKNOWN') {
+            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
+        }
+    }
+
+    private function insertAllDeviceDataIntoTemporaryTable(
+        $columns,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId,
+        $accountId,
+        $campaignId,
+        $adGroupId,
+        $adReportId,
+        $keywordId,
+        $fieldNames
+    ) {
+        $unknownDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'UNKNOWN'
+        );
+        $this->insertDataToTemporary($unknownDevice, $fieldNames);
+
+        $tabletDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'TABLET'
+        );
+        $this->insertDataToTemporary($tabletDevice, $fieldNames);
+
+        $desktopDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'DESKTOP'
+        );
+        $this->insertDataToTemporary($desktopDevice, $fieldNames);
+
+        $highEndMobileDevice = $this->getDataForAdwCampaignDevice(
+            $columns,
+            $groupedByField,
+            $startDay,
+            $endDay,
+            $engine,
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $adReportId,
+            $keywordId,
+            'HIGH_END_MOBILE'
+        );
+        $this->insertDataToTemporary($highEndMobileDevice, $fieldNames);
     }
 }
