@@ -422,8 +422,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         $columns,
         $campaignId = null,
         $adGroupId = null
-    )
-    {
+    ) {
         if (!in_array(static::PAGE_ID, $columns)) {
             array_unshift($columns, static::PAGE_ID);
         }

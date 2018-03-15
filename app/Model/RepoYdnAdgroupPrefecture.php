@@ -21,7 +21,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
     {
         if (($key = array_search(self::PAGE_ID, $columns)) !== false) {
             unset($columns[$key]);
-            }
+        }
         if (($key = array_search('adgroupName', $columns)) !== false) {
             unset($columns[$key]);
         }
