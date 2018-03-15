@@ -20,7 +20,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     const GROUPED_BY_FIELD_NAME_ADW = 'account';
     const PAGE_ID = 'accountid';
     const ADW_CUSTOMER_ID = 'customerID';
-
     /**
      * @var bool
      */
@@ -53,6 +52,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     ];
 
     const DEFAULT_COLUMNS = [
+        'dayOfWeek',
         'accountName',
         'accountid',
         'impressions',
@@ -73,8 +73,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         'total_cpa'
     ];
 
+    //required fields, need to display summary
     const REQUIRED_FIELDS = [
-        'accountid',
         'impressions',
         'clicks',
         'cost',
@@ -462,6 +462,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $keywordId = null
     ) {
         // YSS
+        $this->groupBy = $groupedByField;
         $fieldNames = $this->handlerFields($fieldNames);
         $this->createTemporaryAccountReport($fieldNames);
         $joinTableName = 'repo_yss_accounts';
@@ -548,18 +549,28 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $adwData = $adwData->groupBy('repo_adw_account_report_cost.'.self::ADW_CUSTOMER_ID);
         }
-
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' ('.implode(', ', $columns).', sumConversions) '
             . $this->getBindingSql($adwData));
 
         //update total phone time use
-        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'yss', $startDay, $endDay);
-        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'adw', $startDay, $endDay);
-        $this->addJoinPhoneTimeUseConditionForYdn($clientId, $startDay, $endDay);
+        if (in_array('dayOfWeek', $fieldNames)) {
+            $this->addJoinPhoneTimeUseDayOfWeek($clientId, 'AD', 'yss', $startDay, $endDay);
+            $this->addJoinPhoneTimeUseDayOfWeek($clientId, 'AD', 'adw', $startDay, $endDay);
+            $this->addJoinPhoneTimeUseDayOfWeekForYdn($clientId, $startDay, $endDay);
+        } else {
+            $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'yss', $startDay, $endDay);
+            $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'adw', $startDay, $endDay);
+            $this->addJoinPhoneTimeUseConditionForYdn($clientId, $startDay, $endDay);
+        }
 
         //update daily spending limit
-        $this->updateDailySpendingLimitYss($clientId, $startDay, $endDay);
-        $this->updateDailySpendingLimitAdw($clientId, $startDay, $endDay);
+        if (in_array('dayOfWeek', $fieldNames)) {
+            $this->updateDailySpendingLimitDayOfWeekYss($clientId, $startDay, $endDay);
+            $this->updateDailySpendingLimitDayOfWeekAdw($clientId, $startDay, $endDay);
+        } else {
+            $this->updateDailySpendingLimitYss($clientId, $startDay, $endDay);
+            $this->updateDailySpendingLimitAdw($clientId, $startDay, $endDay);
+        }
 
         $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
 
