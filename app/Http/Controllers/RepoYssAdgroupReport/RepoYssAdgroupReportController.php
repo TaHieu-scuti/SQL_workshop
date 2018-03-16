@@ -125,6 +125,10 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
+        $defaultColumns = self::DEFAULT_COLUMNS;
+        if ($engine == 'ydn') {
+            $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
+        }
         //add more columns higher layer to fieldnames
         if ($engine === 'adw') {
             $dataReports = new \Illuminate\Pagination\LengthAwarePaginator(
@@ -159,7 +163,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $fieldsOnModal = view(
             'layouts.fields_on_modal',
             [
-                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
+                self::COLUMNS_FOR_FILTER => $defaultColumns,
                 self::FIELD_NAMES => self::DEFAULT_COLUMNS
             ]
         )->render();
