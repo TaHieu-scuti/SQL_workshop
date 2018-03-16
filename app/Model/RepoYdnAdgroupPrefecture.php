@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 
 use App\Model\AbstractYdnReportModel;
-use App\AbstractReportModel;
 
 class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
 {
