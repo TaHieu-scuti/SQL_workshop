@@ -103,7 +103,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneNumbers = array_value(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         $phoneTimeUseModel = new PhoneTimeUse();
         $tableName = $phoneTimeUseModel->getTable();
 
@@ -121,7 +121,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
                 .self::TABLE_TEMPORARY.'.dayOfWeek = tbl.dayOfWeek'
             );
         }
