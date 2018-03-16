@@ -11,6 +11,7 @@ use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnTimezone;
 use App\Model\RepoYdnDayOfWeek;
+use App\Model\RepoYdnAdgroupDayOfWeek;
 use App\Model\RepoYssAdgroupPrefecture;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
@@ -827,7 +828,12 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoYssCampaignDayofweek;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $this->model = new RepoYdnDayOfWeek;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnDayOfWeek;
+            }
+            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupDayOfWeek;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignDayOfWeek;
