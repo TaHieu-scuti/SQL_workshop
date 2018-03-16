@@ -11,6 +11,12 @@ use DB;
 
 abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
 {
+    const FIELDS_NEED_UNSET = [
+        'campaignName',
+        'adgroupName',
+        'keyword',
+        'adgroupID'
+    ];
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -62,7 +68,6 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv || $this->isCallTracking) {
             $this->createTemporaryTable(
                 $fieldNames,
@@ -76,9 +81,12 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                 array_merge(
                     self::UNSET_COLUMNS,
                     self::FIELDS_CALL_TRACKING,
-                    ['campaignName', 'adgroupName']
+                    self::FIELDS_NEED_UNSET
                 )
             );
+            if ($engine === 'yss' && $key = array_search('matchType', $columns)) {
+                $columns[$key] = 'keywordMatchType';
+            }
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));

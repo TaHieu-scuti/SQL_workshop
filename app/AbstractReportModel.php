@@ -290,6 +290,7 @@ abstract class AbstractReportModel extends Model
                 if (!empty($higherLayerSelections)) {
                     $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
                 }
+
                 continue;
             }
 
@@ -1130,10 +1131,11 @@ abstract class AbstractReportModel extends Model
             array_push($this->groupBy, $value['columnId']);
         }
 
-        if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
+        if (static::GROUPED_BY_FIELD_NAME === 'keyword' && isset($adGroupId)) {
             array_push($arraySelections, 'adgroupID');
             array_push($this->groupBy, 'adgroupID');
         }
+
         return $arraySelections;
     }
 
