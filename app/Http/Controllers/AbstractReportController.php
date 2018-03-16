@@ -6,6 +6,7 @@ use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Model\RepoYssCampaignDevice;
+use App\Model\RepoYssKeywordDayOfWeek;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
@@ -468,6 +469,7 @@ abstract class AbstractReportController extends Controller
     public function updateSessionGroupedByFieldName($specificItem)
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
+
         $array[0] = $specificItem;
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
         session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => $specificItem]);
@@ -825,6 +827,9 @@ abstract class AbstractReportController extends Controller
             }
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignDayofweek;
+            }
+            if (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoYssKeywordDayOfWeek;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnDayOfWeek;
