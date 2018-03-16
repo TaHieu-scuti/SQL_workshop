@@ -10,6 +10,7 @@ use App\Model\RepoYssKeywordDayOfWeek;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
+use App\Model\RepoYdnAdgroupPrefecture;
 use App\Model\RepoYdnTimezone;
 use App\Model\RepoYdnDayOfWeek;
 use App\Model\RepoYssAdgroupPrefecture;
@@ -690,7 +691,6 @@ abstract class AbstractReportController extends Controller
                     => $this->getFirstColumnSort(session(static::SESSION_KEY_FIELD_NAME))]);
             }
         }
-
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -790,12 +790,15 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoYssAdgroupPrefecture;
-            }
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignPrefecture;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $this->model = new RepoYdnPrefecture;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnPrefecture;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupPrefecture;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwGeoReportCost;
         }
