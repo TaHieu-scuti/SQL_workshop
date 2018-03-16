@@ -75,6 +75,10 @@ class RepoYssAccountReportController extends AbstractReportController
         'accountName' => [
             'need' => ['accountName', 'accountid'],
             'no_need' => ['dayOfWeek']
+        ],
+        'hourofday' => [
+            'need' => ['hourofday'],
+            'no_need' => ['accountName', 'accountid']
         ]
     ];
 
