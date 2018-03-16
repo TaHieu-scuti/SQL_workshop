@@ -656,8 +656,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw($account_id, $traffic_type, $source, $startDay, $endDay)
-    {
+    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw(
+        $account_id,
+        $traffic_type,
+        $source,
+        $startDay,
+        $endDay
+    ) {
         $query = DB::table('phone_time_use')
         ->select(DB::raw('COUNT(id) as id, account_id, `source`'))
         ->where('account_id', $account_id)

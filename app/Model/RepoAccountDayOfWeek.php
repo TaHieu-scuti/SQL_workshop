@@ -11,8 +11,13 @@ use App\Model\RepoYssAccountReportCost;
 
 class RepoAccountDayOfWeek extends RepoYssAccountReportCost
 {
-    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw($account_id, $traffic_type, $source, $startDay, $endDay)
-    {
+    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw(
+        $account_id,
+        $traffic_type,
+        $source,
+        $startDay,
+        $endDay
+    ) {
         $query = DB::table('phone_time_use')
         ->select(DB::raw('
             COUNT(id) as id,
