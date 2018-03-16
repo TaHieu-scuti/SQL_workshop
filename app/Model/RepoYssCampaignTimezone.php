@@ -29,7 +29,7 @@ class RepoYssCampaignTimezone extends AbstractYssSpecificReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYssCampaignReportConv();
             $queryGetConversion = $convModel->select(
