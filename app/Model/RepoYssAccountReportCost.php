@@ -52,6 +52,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     ];
 
     const DEFAULT_COLUMNS = [
+        'hourofday',
         'dayOfWeek',
         'accountName',
         'accountid',
