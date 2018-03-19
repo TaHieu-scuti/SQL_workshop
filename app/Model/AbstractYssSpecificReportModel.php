@@ -42,13 +42,16 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adGroupId,
             static::PAGE_ID
         );
-
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'yss',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            null,
+            $adgroupIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -68,6 +71,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $this->createTemporaryTable(
                 $fieldNames,
