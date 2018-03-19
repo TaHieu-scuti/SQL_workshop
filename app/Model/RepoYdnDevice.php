@@ -319,7 +319,7 @@ class RepoYdnDevice extends AbstractYdnRawExpressions
     {
         $columns = $this->unsetColumns(
             $columns,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName', 'adgroupName'])
         );
         DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
             . $this->getBindingSql($builder));

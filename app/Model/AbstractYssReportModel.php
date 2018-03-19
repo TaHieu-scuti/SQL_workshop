@@ -312,6 +312,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        if (static::PAGE_ID === 'keywordID' && !isset($adGroupId)) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['adgroupID']);
+        }
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
