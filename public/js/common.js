@@ -1,6 +1,10 @@
 var link = window.location.pathname;
 var prefixRoute = getRoutePrefix();
 
+if (self.window.name === '') {
+    self.window.name = Date.now() + Math.random();
+}
+
 $('.selectpicker').selectpicker();
 /*
 =======
@@ -102,6 +106,7 @@ $(".apply-button").click(function () {
         data: {
             'pagination' : array['pagination'],
             'fieldName' : array['fieldName'],
+            'windowName': self.window.name,
         },
         beforeSend : function () {
             $('#columnsModal').modal('hide');
@@ -162,6 +167,7 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             'startDay' : milestone['startDay'],
             'endDay' : milestone['endDay'],
             'timePeriodTitle' : milestone['timePeriodTitle'],
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();
@@ -198,6 +204,7 @@ $('.apply-custom-period').click(function() {
             'startDay' : startDay,
             'endDay' : endDay,
             'timePeriodTitle' : milestone['timePeriodTitle'],
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();
@@ -246,6 +253,7 @@ $('.status-option li').click(function () {
         data : {
             'status' : status,
             'statusTitle' : statusTitle,
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();
@@ -302,6 +310,7 @@ $('.table_data_report').delegate('th', 'click', function() {
         },
         data : {
             'columnSort' : th.data('value'),
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();
@@ -328,6 +337,7 @@ $('.specific-filter-item').click(function() {
         },
         data : {
             'specificItem' : $(this).data('value'),
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();
@@ -359,6 +369,7 @@ $('.normal-report').click(function() {
         },
         data : {
             'normalReport' : 'normal-report',
+            'windowName' : self.window.name,
         },
         beforeSend : function () {
             sendingRequestTable();

@@ -13,6 +13,12 @@ var Script = function () {
             let url = new URL(window.location.href);
             let numberOfPage = url.searchParams.get('page');
             let page = numberOfPage ? '?page=' + numberOfPage : '';
+            if (page.startsWith('?')) {
+                page += '&';
+            } else {
+                page += '?';
+            }
+            page += 'windowName=' + self.window.name;
             $.ajax({
                 url: prefixRoute + "/getDataForLayouts" + page,
                 type: "GET",
@@ -86,6 +92,7 @@ var Script = function () {
                     'startDay' : milestone['startDay'],
                     'endDay' : milestone['endDay'],
                     'timePeriodTitle' : milestone['timePeriodTitle'],
+                    'windowName' : self.window.name,
                 },
                 beforeSend : function () {
                     $('.morris-hover').css('display', 'none');
@@ -121,6 +128,7 @@ var Script = function () {
                     'startDay' : startDay,
                     'endDay' : endDay,
                     'timePeriodTitle' : milestone['timePeriodTitle'],
+                    'windowName' : self.window.name,
                 },
                 beforeSend : function () {
                     $('.morris-hover').css('display', 'none');
@@ -168,6 +176,7 @@ var Script = function () {
                 data : {
                     'status' : status,
                     'statusTitle' : statusTitle,
+                    'windowName' : self.window.name,
                 },
                 beforeSend : function () {
                     $('.morris-hover').css('display', 'none');
@@ -285,6 +294,7 @@ var Script = function () {
                 },
                 data : {
                     'graphColumnName' : columnName,
+                    'windowName' : self.window.name,
                 },
                 beforeSend : function () {
                     $('.morris-hover').css('display', 'none');
@@ -454,6 +464,7 @@ var Script = function () {
             }
         }
         function sendRequestData(datas, route, redirect) {
+            datas.windowName = self.window.name;
             $.ajax({
                 url : route + '/updateSession',
                 type : 'post',

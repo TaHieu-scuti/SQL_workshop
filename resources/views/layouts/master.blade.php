@@ -354,6 +354,9 @@
                 type : 'POST',
                 url : getRoutePrefix() + '/update-table?page=' + page,
                 dataType: 'json',
+                data: {
+                    'windowName' : self.window.name,
+                },
                 beforeSend : function () {
                     sendingRequestTable();
                 },
