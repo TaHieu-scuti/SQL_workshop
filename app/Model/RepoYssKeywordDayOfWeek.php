@@ -26,14 +26,14 @@ class RepoYssKeywordDayOfWeek extends AbstractYssSpecificReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $keywordIds = array_unique($conversionPoints->pluck('keywordID')->toArray());
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
 
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYssKeywordReportConv();
             $queryGetConversion = $convModel->select(
                 DB::raw('SUM(repo_yss_keyword_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('keywordID', $keywordIds)
+                ->whereIn('adGroupID', $adgroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,
