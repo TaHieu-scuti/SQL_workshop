@@ -28,6 +28,7 @@ use App\Model\RepoAdwCampaignPrefecture;
 use App\Model\RepoAdwCampaignDevice;
 use App\Model\RepoYdnDevice;
 use App\Model\RepoAdwAdgroupPrefecture;
+use App\Model\RepoAdwKeywordPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -807,6 +808,9 @@ abstract class AbstractReportController extends Controller
             }
             if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupPrefecture;
+            }
+            if (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoAdwKeywordPrefecture;
             }
         }
     }
