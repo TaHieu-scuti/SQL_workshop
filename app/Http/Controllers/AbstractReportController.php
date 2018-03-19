@@ -836,8 +836,7 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYdnDayOfWeek;
-            }
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoYdnAdgroupDayOfWeek;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
