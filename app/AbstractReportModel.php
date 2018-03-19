@@ -181,6 +181,11 @@ abstract class AbstractReportModel extends Model
             ) {
                 if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                     $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
+                } elseif ($fieldName === self::HOUR_OF_DAY
+                    && static::PAGE_ID === 'keywordID'
+                    && $tableName !== 'temporary_table'
+                ) {
+                    $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
                 } else {
                     $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
                 }
@@ -524,11 +529,17 @@ abstract class AbstractReportModel extends Model
             $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         }
         $groupBy = $this->groupBy;
+
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
-                $item = $this->getTable() . '.' . $item;
+                if ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID') {
+                    $item = DB::raw('hour('.$this->getTable() . '.day)');
+                } else {
+                    $item = $this->getTable() . '.' . $item;
+                }
             }
         }
+
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
