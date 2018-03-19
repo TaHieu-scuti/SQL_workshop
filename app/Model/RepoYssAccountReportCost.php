@@ -20,7 +20,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     const GROUPED_BY_FIELD_NAME_ADW = 'account';
     const PAGE_ID = 'accountid';
     const ADW_CUSTOMER_ID = 'customerID';
-
     /**
      * @var bool
      */
@@ -53,6 +52,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     ];
 
     const DEFAULT_COLUMNS = [
+        'dayOfWeek',
         'accountName',
         'accountid',
         'impressions',
@@ -73,8 +73,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         'total_cpa'
     ];
 
+    //required fields, need to display summary
     const REQUIRED_FIELDS = [
-        'accountid',
         'impressions',
         'clicks',
         'cost',
@@ -548,18 +548,17 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         if (!in_array($groupedByField, $this->groupByFieldName)) {
             $adwData = $adwData->groupBy('repo_adw_account_report_cost.'.self::ADW_CUSTOMER_ID);
         }
-
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' ('.implode(', ', $columns).', sumConversions) '
             . $this->getBindingSql($adwData));
 
         //update total phone time use
-        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'yss', $startDay, $endDay);
-        $this->addJoinPhoneTimeUseCondition($clientId, 'AD', 'adw', $startDay, $endDay);
-        $this->addJoinPhoneTimeUseConditionForYdn($clientId, $startDay, $endDay);
+        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'yss', $startDay, $endDay);
+        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'adw', $startDay, $endDay);
+        $this->updateTemporaryTableWithPhoneTimeUseForYdn($clientId, 'AD', 'adw', $startDay, $endDay);
 
         //update daily spending limit
-        $this->updateDailySpendingLimitYss($clientId, $startDay, $endDay);
-        $this->updateDailySpendingLimitAdw($clientId, $startDay, $endDay);
+        $this->updateTemporaryTableWithDailySpendingLimitForYss($clientId, $startDay, $endDay);
+        $this->updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay);
 
         $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
 
@@ -620,7 +619,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         return $expressions;
     }
 
-    private function addJoinPhoneTimeUseConditionForYdn($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithPhoneTimeUseForYdn($clientId, $startDay, $endDay)
     {
         $phoneTimeUseModel = new PhoneTimeUse();
         $campaignIdAdgainer = $this->getCampaignIdAdgainer($clientId);
@@ -657,8 +656,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    private function addJoinPhoneTimeUseCondition($account_id, $traffic_type, $source, $startDay, $endDay)
-    {
+    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw(
+        $account_id,
+        $traffic_type,
+        $source,
+        $startDay,
+        $endDay
+    ) {
         $query = DB::table('phone_time_use')
         ->select(DB::raw('COUNT(id) as id, account_id, `source`'))
         ->where('account_id', $account_id)
@@ -676,7 +680,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    private function updateDailySpendingLimitYss($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithDailySpendingLimitForYss($clientId, $startDay, $endDay)
     {
         $yssCampaignModel = new RepoYssCampaignReportCost;
         $query = $yssCampaignModel
@@ -695,7 +699,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    private function updateDailySpendingLimitAdw($clientId, $startDay, $endDay)
+    protected function updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay)
     {
         $adwCampaignModel = new RepoAdwCampaignReportCost;
         $query = $adwCampaignModel
@@ -766,7 +770,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         return $expressions;
     }
 
-    private function conditionForDate(QueryBuilder $query, $tableName, $startDay, $endDay)
+    protected function conditionForDate(QueryBuilder $query, $tableName, $startDay, $endDay)
     {
         if ($startDay === $endDay) {
             $query->whereRaw('STR_TO_DATE('.$tableName.
@@ -779,7 +783,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         }
     }
 
-    private function getCampaignIdAdgainer($clientId)
+    protected function getCampaignIdAdgainer($clientId)
     {
         $ydnModel = new RepoYdnReport;
         return $ydnModel->select('campaign_id', 'campaignID')
