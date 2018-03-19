@@ -21,7 +21,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
 
     const FIELDS_TYPE_STRING = [
         'accountid',
-        'accountName'
+        'accountName',
+        'dayOfWeek'
     ];
 
     const FIELDS_TYPE_INT = [

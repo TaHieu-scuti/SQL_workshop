@@ -109,6 +109,8 @@ class RepoYssKeywordReportController extends AbstractReportController
     public function getDataForLayouts()
     {
         $this->updateModel();
+        $this->updateSpecificModel();
+
         $dataReports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -172,7 +174,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     {
         $engine = $this->updateModel();
         $this->updateSessionData($request);
-
+        $this->updateSpecificModel();
         $reports = $this->getDataForTable();
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();

@@ -100,6 +100,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YSS "
                     . $conversionName
+                    ."<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -109,6 +110,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'YSS "
                     . $conversionName
+                    ."<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -118,6 +120,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YSS "
                     . $conversionName
+                    ."<br>"
                     . " CPA'"
                 );
             }
@@ -135,8 +138,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "</br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -146,8 +150,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`), 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -157,8 +162,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -306,6 +312,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        if (static::PAGE_ID === 'keywordID' && !isset($adGroupId)) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['adgroupID']);
+        }
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,

@@ -29,6 +29,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -38,6 +39,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`)) * 100, 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -47,6 +49,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`conversions".$i."`), 0) AS 'YDN "
                     . $conversionName
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -64,8 +67,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CV'"
                 );
                 $expressions[] = DB::raw(
@@ -75,8 +79,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $tableName
                     . "`.`clicks`), 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CVR'"
                 );
                 $expressions[] = DB::raw(
@@ -86,8 +91,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YDN "
                     . $campaign->campaign_name
-                    . ' '
+                    . "<br>"
                     . $campaign->phone_number
+                    . "<br>"
                     . " CPA'"
                 );
             }
@@ -357,13 +363,7 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         );
         if ($this->isConv === true || $this->isCallTracking === true) {
             $columns = $fieldNames;
-            if (!in_array(static::PAGE_ID, $columns)) {
-                array_unshift($columns, static::PAGE_ID);
-            }
-
-            if (static::PAGE_ID !== 'campaignID') {
-                $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
-            }
+            $columns = $this->adjustTemporaryTableColumns($columns, $campaignId, $adGroupId);
 
             $this->createTemporaryTable(
                 $columns,
@@ -416,6 +416,21 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
             ->orderBy($columnSort, $sort);
         }
         return $builder;
+    }
+
+    protected function adjustTemporaryTableColumns(
+        $columns,
+        $campaignId = null,
+        $adGroupId = null
+    ) {
+        if (!in_array(static::PAGE_ID, $columns)) {
+            array_unshift($columns, static::PAGE_ID);
+        }
+
+        if (static::PAGE_ID !== 'campaignID') {
+            $columns  = $this->higherSelectionFields($columns, $campaignId, $adGroupId);
+        }
+        return $columns;
     }
 
     protected function getBuilderForCalculateData(

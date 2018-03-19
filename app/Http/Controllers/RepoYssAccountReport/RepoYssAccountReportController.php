@@ -67,6 +67,21 @@ class RepoYssAccountReportController extends AbstractReportController
         'total_cpa'
     ];
 
+    const SESSION_NEED_FIELDS = [
+        'dayOfWeek' => [
+            'need' => ['dayOfWeek'],
+            'no_need' => ['accountName', 'accountid']
+        ],
+        'accountName' => [
+            'need' => ['accountName', 'accountid'],
+            'no_need' => ['dayOfWeek']
+        ],
+        'hourofday' => [
+            'need' => ['hourofday'],
+            'no_need' => ['accountName', 'accountid']
+        ]
+    ];
+
     /**
      * @var \App\Model\RepoYssAccountReportCost
      */
@@ -130,16 +145,15 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
-        $dataReports = $this->getDataForTable();
-        if (isset($request->page)) {
-            $this->updateNumberPage($request->page);
-        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
         }
-
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->model = new RepoAccountDayOfWeek;
+        }
+        $dataReports = $this->getDataForTable();
+        if (isset($request->page)) {
+            $this->updateNumberPage($request->page);
         }
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
@@ -206,7 +220,6 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
-
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
             $this->model = new RepoYssPrefectureReportCost;
         }
@@ -222,6 +235,8 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->model = new RepoAccountDayOfWeek;
         }
+
+        $this->handlerSession();
 
         $reports = $this->getDataForTable();
         if (isset($request->page)) {
@@ -370,5 +385,17 @@ class RepoYssAccountReportController extends AbstractReportController
             array_unshift($tableColumns, 'campaignName');
         }
         return $tableColumns;
+    }
+
+    private function handlerSession()
+    {
+        $sessionFieldNeeds = array_diff(
+            session(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_NEED_FIELDS[session(self::SESSION_KEY_GROUPED_BY_FIELD)]['no_need']
+        );
+        foreach (self::SESSION_NEED_FIELDS[session(self::SESSION_KEY_GROUPED_BY_FIELD)]['need'] as $value) {
+            array_unshift($sessionFieldNeeds, $value);
+        }
+        session()->put([self::SESSION_KEY_FIELD_NAME => array_unique($sessionFieldNeeds)]);
     }
 }
