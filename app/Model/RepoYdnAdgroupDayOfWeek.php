@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 use App\Model\AbstractYdnReportModel;
-use App\AbstractReportModel;
 
 class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
 {
