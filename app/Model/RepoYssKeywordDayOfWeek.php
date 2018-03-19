@@ -116,9 +116,9 @@ class RepoYssKeywordDayOfWeek extends AbstractYssSpecificReportModel
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoYssKeywordReportConv();
+        $yssKeywordonvModel = new RepoYssKeywordReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        return $yssCampaignConvModel->select($aggregation)
+        return $yssKeywordonvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
