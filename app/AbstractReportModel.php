@@ -529,12 +529,13 @@ abstract class AbstractReportModel extends Model
             $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         }
         $groupBy = $this->groupBy;
+
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
-                if (static::PAGE_ID !== 'keywordID') {
-                    $item = $this->getTable() . '.' . $item;
-                } elseif ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID')  {
+                if ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID') {
                     $item = DB::raw('hour('.$this->getTable() . '.day)');
+                } else {
+                    $item = $this->getTable() . '.' . $item;
                 }
             }
         }
