@@ -15,6 +15,10 @@ class SaveDatabaseConnectionIdToSession
     /** @var \Illuminate\Database\Connection */
     private $connection;
 
+    /**
+     * SaveDatabaseConnectionIdToSession constructor.
+     * @param Connection $connection
+     */
     public function __construct(Connection $connection)
     {
         if (!($connection instanceof MySqlConnection)) {
@@ -23,7 +27,10 @@ class SaveDatabaseConnectionIdToSession
         $this->connection = $connection;
     }
 
-    private function killOldConnections($oldConnectionIds)
+    /**
+     * @param array $oldConnectionIds
+     */
+    private function killOldConnections(array $oldConnectionIds)
     {
         foreach ($oldConnectionIds as $oldConnectionId) {
             try {
@@ -43,6 +50,31 @@ class SaveDatabaseConnectionIdToSession
     }
 
     /**
+     * @param string                     $key
+     * @param string                     $windowName
+     * @param string                     $sessionKey
+     * @param string                     $basePath
+     * @param \Illuminate\Session\Store  $session
+     */
+    private function processSessionKey($key, $windowName, $sessionKey, $basePath, $session)
+    {
+        if (strpos($key, self::SESSION_KEY_MYSQL_CONNECTION_IDS . '$' . $windowName) === 0) {
+            $explodedKey = explode('$', $key);
+            if (count($explodedKey) !== 3) {
+                return;
+            }
+
+            $explodedUri = explode('/', $explodedKey[2]);
+            $basePathKey = $explodedUri[0];
+
+            if ($key === $sessionKey || $basePath !== $basePathKey) {
+                $oldConnectionIds = $session->pull($key);
+                $this->killOldConnections($oldConnectionIds);
+            }
+        }
+    }
+
+    /**
      *
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,43 +83,28 @@ class SaveDatabaseConnectionIdToSession
      */
     public function handle($request, Closure $next)
     {
-        // TODO: don't run if this is an export request
-        if ($request->isXmlHttpRequest()) {
+        $windowName = $request->get('windowName');
+        $path = $request->path();
+
+        $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS
+            . '$'
+            . $windowName
+            . '$'
+            . $path;
+
+        $explodedPath = explode('/', $path);
+        $basePath = $explodedPath[0];
+
+        if ($request->isXmlHttpRequest() && strpos($path, 'export') === false) {
             $session = $request->session();
 
             $connectionId = $this->connection->select('SELECT CONNECTION_ID() as id')[0]->id;
-
-            $windowName = $request->get('windowName');
-
-            $path = $request->path();
-
-            $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS
-                . '$'
-                . $windowName
-                . '$'
-                . $path;
-
-            $explodedPath = explode('/', $path);
-            $basePath = $explodedPath[0];
 
             /* kill old connections if the path is the same as for this
                request or if the first part of the path is different
                from the one of this request */
             foreach ($session->all() as $key => $value) {
-                if (strpos($key, self::SESSION_KEY_MYSQL_CONNECTION_IDS . '$' . $windowName) === 0) {
-                    $explodedKey = explode('$', $key);
-                    if (count($explodedKey) !== 3) {
-                        continue;
-                    }
-
-                    $explodedUri = explode('/', $explodedKey[2]);
-                    $basePathKey = $explodedUri[0];
-
-                    if ($key === $sessionKey || $basePath !== $basePathKey) {
-                        $oldConnectionIds = $session->pull($key);
-                        $this->killOldConnections($oldConnectionIds);
-                    }
-                }
+                $this->processSessionKey($key, $windowName, $sessionKey, $basePath, $session);
             }
             $session->push($sessionKey, $connectionId);
             $session->save();
