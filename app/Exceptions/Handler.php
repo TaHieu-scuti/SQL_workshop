@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -32,6 +33,17 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Database\QueryException) {
+            $message = $exception->getMessage();
+            if (strpos(
+                $message,
+                "SQLSTATE[42S02]: Base table or view not found: 1146 Table 'default.temporary_"
+            ) === 0) {
+                $message .= ' This is most likely happening because the query was purposely killed';
+                Log::warning(getmypid() . ': ' . $message);
+                return;
+            }
+        }
         parent::report($exception);
     }
 
