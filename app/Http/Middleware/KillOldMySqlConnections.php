@@ -86,16 +86,15 @@ class KillOldMySqlConnections
         $windowName = $request->get('windowName');
         $path = $request->path();
 
-        $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS
-            . '$'
-            . $windowName
-            . '$'
-            . $path;
-
-        $explodedPath = explode('/', $path);
-        $basePath = $explodedPath[0];
-
         if ($request->isXmlHttpRequest() && strpos($path, 'export') === false) {
+            $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS
+                . '$'
+                . $windowName
+                . '$'
+                . $path;
+
+            $explodedPath = explode('/', $path);
+            $basePath = $explodedPath[0];
             $session = $request->session();
 
             $connectionId = $this->connection->select('SELECT CONNECTION_ID() as id')[0]->id;
