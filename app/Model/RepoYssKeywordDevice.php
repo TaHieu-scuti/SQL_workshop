@@ -189,9 +189,9 @@ class RepoYssKeywordDevice extends AbstractYssRawExpressions
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssKeywordonvModel = new RepoYssKeywordReportConv();
+        $yssKeywordConvModel = new RepoYssKeywordReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        return $yssKeywordonvModel->select($aggregation)
+        return $yssKeywordConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
