@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\SaveDatabaseConnectionIdToSession;
+use App\Http\Middleware\KillOldMySqlConnections;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,6 +61,6 @@ class Kernel extends HttpKernel
         'engine' =>\App\Http\Middleware\Engine::class,
         'checkRole' => \App\Http\Middleware\CheckRole::class,
         'checkRoleClient' => \App\Http\Middleware\CheckRoleClient::class,
-        'saveDatabaseConnectionIdToSession' => SaveDatabaseConnectionIdToSession::class
+        'killOldMySqlConnections' => KillOldMySqlConnections::class
     ];
 }

@@ -105,7 +105,7 @@ abstract class AbstractReportController extends Controller
                 return $next($request);
             }
         );
-        $this->middleware('saveDatabaseConnectionIdToSession');
+        $this->middleware('killOldMySqlConnections');
     }
 
     protected function translateFieldNames(array $fieldNames)

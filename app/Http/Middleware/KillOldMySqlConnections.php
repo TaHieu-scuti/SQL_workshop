@@ -8,7 +8,7 @@ use Illuminate\Database\MySqlConnection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 
-class SaveDatabaseConnectionIdToSession
+class KillOldMySqlConnections
 {
     const SESSION_KEY_MYSQL_CONNECTION_IDS = 'MysqlConnectionIds';
 
@@ -16,7 +16,7 @@ class SaveDatabaseConnectionIdToSession
     private $connection;
 
     /**
-     * SaveDatabaseConnectionIdToSession constructor.
+     * KillOldMySqlConnections constructor.
      * @param Connection $connection
      */
     public function __construct(Connection $connection)
