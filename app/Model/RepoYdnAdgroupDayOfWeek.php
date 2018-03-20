@@ -103,6 +103,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'ydn')
+                ->whereRaw('traffice_type = "AD"')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);
