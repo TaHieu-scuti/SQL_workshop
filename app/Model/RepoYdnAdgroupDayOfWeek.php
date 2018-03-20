@@ -44,7 +44,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$ydnDayOfWeekGroupByField.' AS dayOfWeek')
             )->where('conversionName', $conversionName)
-                whereIn('adGroupID', $adGroupIDs)
+                ->whereIn('adGroupID', $adGroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
