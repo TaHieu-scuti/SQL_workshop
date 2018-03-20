@@ -2,7 +2,8 @@ var link = window.location.pathname;
 var prefixRoute = getRoutePrefix();
 
 if (self.window.name === '') {
-    self.window.name = Date.now() + Math.random();
+    var randomNumber = Math.floor(Math.random() * Math.floor(1000000));
+    self.window.name = Date.now() + randomNumber;
 }
 
 $('.selectpicker').selectpicker();
