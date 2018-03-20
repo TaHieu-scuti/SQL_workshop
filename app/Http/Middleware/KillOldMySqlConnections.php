@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 class KillOldMySqlConnections
 {
     const SESSION_KEY_MYSQL_CONNECTION_IDS = 'MysqlConnectionIds';
+    const TIME_OUT = 120000;
 
     /** @var \Illuminate\Database\Connection */
     private $connection;
@@ -30,21 +31,23 @@ class KillOldMySqlConnections
     /**
      * @param array $oldConnectionIds
      */
-    private function killOldConnections(array $oldConnectionIds)
+    private function killOldConnections(array $oldConnectionIds, $now)
     {
-        foreach ($oldConnectionIds as $oldConnectionId) {
-            try {
-                Log::debug('Killing old mysql connection', [$oldConnectionId]);
-                $this->connection->statement('KILL ?', [$oldConnectionId]);
-            } catch (QueryException $e) {
-                if (strpos(
-                        $e->getMessage(),
-                        'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
-                    ) !== 0
-                ) {
-                    throw $e;
+        foreach ($oldConnectionIds as $millis => $oldConnectionId) {
+            if (($now - $millis) < self::TIME_OUT) {
+                try {
+                    Log::debug('Killing old mysql connection', [$oldConnectionId]);
+                    $this->connection->statement('KILL ?', [$oldConnectionId]);
+                } catch (QueryException $e) {
+                    if (strpos(
+                            $e->getMessage(),
+                            'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
+                        ) !== 0
+                    ) {
+                        throw $e;
+                    }
+                    Log::notice($e->getMessage());
                 }
-                Log::notice($e->getMessage());
             }
         }
     }
@@ -56,7 +59,7 @@ class KillOldMySqlConnections
      * @param string                     $basePath
      * @param \Illuminate\Session\Store  $session
      */
-    private function processSessionKey($key, $windowName, $sessionKey, $basePath, $session)
+    private function processSessionKey($key, $windowName, $sessionKey, $basePath, $session, $now)
     {
         if (strpos($key, self::SESSION_KEY_MYSQL_CONNECTION_IDS . '$' . $windowName) === 0) {
             $explodedKey = explode('$', $key);
@@ -69,14 +72,12 @@ class KillOldMySqlConnections
 
             if ($key === $sessionKey || $basePath !== $basePathKey) {
                 $oldConnectionIds = $session->pull($key);
-                $this->killOldConnections($oldConnectionIds);
+                $this->killOldConnections($oldConnectionIds, $now);
             }
         }
     }
 
     /**
-     *
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
@@ -99,13 +100,15 @@ class KillOldMySqlConnections
 
             $connectionId = $this->connection->select('SELECT CONNECTION_ID() as id')[0]->id;
 
+            $now = round(microtime(true) * 1000);
+
             /* kill old connections if the path is the same as for this
                request or if the first part of the path is different
                from the one of this request */
             foreach ($session->all() as $key => $value) {
-                $this->processSessionKey($key, $windowName, $sessionKey, $basePath, $session);
+                $this->processSessionKey($key, $windowName, $sessionKey, $basePath, $session, $now);
             }
-            $session->push($sessionKey, $connectionId);
+            $session->put($sessionKey . '.' . $now, $connectionId);
             $session->save();
             Log::debug('Mysql connection id saved to session', [$connectionId]);
         }
