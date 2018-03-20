@@ -80,7 +80,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
                 array_merge(
                     self::UNSET_COLUMNS,
                     self::FIELDS_CALL_TRACKING,
-                    ['prefecture', 'campaign']
+                    ['prefecture', 'campaign', 'adGroup']
                 )
             );
 
