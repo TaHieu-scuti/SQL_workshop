@@ -808,8 +808,7 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignPrefecture;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupPrefecture;
-            }
-            if (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
                 $this->model = new RepoAdwKeywordPrefecture;
             }
         }
