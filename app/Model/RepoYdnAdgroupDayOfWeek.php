@@ -24,16 +24,6 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
         return $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
     }
 
-    protected function addJoinConditions(JoinClause $join)
-    {
-        parent::addJoinConditions($join);
-        $join->on(
-            DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
-            '=',
-            DB::raw("DAYNAME(`" . $this->table . "`" . ".`day`)")
-        );
-    }
-
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
         $groupedByField,
@@ -49,10 +39,12 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
     ) {
         $ydnDayOfWeekGroupByField = DB::raw('DAYNAME(`day`)');
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$ydnDayOfWeekGroupByField.' AS dayOfWeek')
             )->where('conversionName', $conversionName)
+                whereIn('adGroupID', $adGroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
