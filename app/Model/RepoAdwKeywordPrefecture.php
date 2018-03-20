@@ -231,6 +231,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
         $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        $adGroupIds = array_unique($conversionPoints->pluck('adgroupID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoAdwGeoReportConv;
             $queryGetConversion = $convModel->select(
@@ -263,6 +264,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
                         );
                     }
                 )->whereIn('campaignID', $campaignIDs)
+                ->whereIn('adGroupId', $adGroupIds)
                 ->groupBy('region');
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
