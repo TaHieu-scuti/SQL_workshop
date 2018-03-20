@@ -23,6 +23,25 @@ class SaveDatabaseConnectionIdToSession
         $this->connection = $connection;
     }
 
+    private function killOldConnections($oldConnectionIds)
+    {
+        foreach ($oldConnectionIds as $oldConnectionId) {
+            try {
+                Log::debug('Killing old mysql connection', [$oldConnectionId]);
+                $this->connection->statement('KILL ?', [$oldConnectionId]);
+            } catch (QueryException $e) {
+                if (strpos(
+                        $e->getMessage(),
+                        'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
+                    ) !== 0
+                ) {
+                    throw $e;
+                }
+                Log::notice($e->getMessage());
+            }
+        }
+    }
+
     /**
      *
      *
@@ -32,39 +51,47 @@ class SaveDatabaseConnectionIdToSession
      */
     public function handle($request, Closure $next)
     {
+        // TODO: don't run if this is an export request
         if ($request->isXmlHttpRequest()) {
-            Log::debug(getmypid() . ': Request vars: ', $request->all());
-            $session = $request->session();
-            Log::debug(getmypid() . ': SaveDatabaseConnectionIdToSession ' . $request->path());
-            Log::debug(getmypid() . ': current session vars', $session->get(self::SESSION_KEY_MYSQL_CONNECTION_IDS, []));
-
             $session = $request->session();
 
             $connectionId = $this->connection->select('SELECT CONNECTION_ID() as id')[0]->id;
-            Log::debug(getmypid() . ': Current connection id ' . $connectionId);
-            $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS . '_' . $request->path();
-            if ($session->has($sessionKey)) {
-                $oldConnectionIds = $session->pull($sessionKey);
-                foreach ($oldConnectionIds as $oldConnectionId) {
-                    try {
-                        Log::debug(getmypid() . ': Killing: ' . $oldConnectionId);
-                        $this->connection->statement('KILL ?', [$oldConnectionId]);
-                    } catch (QueryException $e) {
-                        Log::debug(getmypid() . ': ' . $e->getMessage());
-                        if (strpos(
-                            $e->getMessage(),
-                            'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
-                            ) !== 0) {
-                            throw $e;
-                        }
+
+            $windowName = $request->get('windowName');
+
+            $path = $request->path();
+
+            $sessionKey = self::SESSION_KEY_MYSQL_CONNECTION_IDS
+                . '$'
+                . $windowName
+                . '$'
+                . $path;
+
+            $explodedPath = explode('/', $path);
+            $basePath = $explodedPath[0];
+
+            /* kill old connections if the path is the same as for this
+               request or if the first part of the path is different
+               from the one of this request */
+            foreach ($session->all() as $key => $value) {
+                if (strpos($key, self::SESSION_KEY_MYSQL_CONNECTION_IDS . '$' . $windowName) === 0) {
+                    $explodedKey = explode('$', $key);
+                    if (count($explodedKey) !== 3) {
+                        continue;
+                    }
+
+                    $explodedUri = explode('/', $explodedKey[2]);
+                    $basePathKey = $explodedUri[0];
+
+                    if ($key === $sessionKey || $basePath !== $basePathKey) {
+                        $oldConnectionIds = $session->pull($key);
+                        $this->killOldConnections($oldConnectionIds);
                     }
                 }
             }
             $session->push($sessionKey, $connectionId);
             $session->save();
-            Log::debug(getmypid() . ': connection id saved to session', [$connectionId]);
-
-            //dd($session);
+            Log::debug('Mysql connection id saved to session', [$connectionId]);
         }
 
         return $next($request);
