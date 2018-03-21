@@ -211,7 +211,12 @@ class RepoYssAdgroupReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
-        if ($engine === 'adw') {
+        if ($engine === 'adw'
+            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::PREFECTURE
+            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== 'hourofday'
+            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== 'dayOfWeek'
+            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::DEVICE
+            ) {
             $reports = new \Illuminate\Pagination\LengthAwarePaginator(
                 array_slice($reports->toArray(), ($this->page - 1) * 20, 20),
                 count($reports->toArray()),
@@ -221,6 +226,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             );
         }
         $columns = $this->getAttributeFieldNames($reports);
+
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
