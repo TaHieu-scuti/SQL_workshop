@@ -78,7 +78,6 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv === true || $this->isCallTracking === true) {
             $columns = $fieldNames;
             if (($key = array_search(self::PAGE_ID, $columns)) !== false) {
@@ -157,7 +156,7 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $ydnDayOfWeekGroupByField = DB::raw('DAYNAME(`day`)');
-        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $convModel = new RepoYdnReport();
             $queryGetConversion = $convModel->select(

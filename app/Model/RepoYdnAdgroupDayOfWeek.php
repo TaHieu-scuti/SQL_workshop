@@ -44,7 +44,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$ydnDayOfWeekGroupByField.' AS dayOfWeek')
             )->where('conversionName', $conversionName)
-                ->whereIn('adGroupID', $adgroupIDs)
+                ->whereIn('adGroupID', $adGroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
@@ -103,7 +103,7 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'ydn')
-                ->whereRaw('traffic_type = "AD"')
+                ->whereRaw('traffice_type = "AD"')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);

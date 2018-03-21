@@ -11,11 +11,6 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
     protected $conversionPoints;
     protected $adGainerCampaigns;
 
-    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
-    {
-        return parent::getAggregatedToUpdateTemporatyTable($fieldNames, $higherLayerSelections, $tableName);
-    }
-
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
         $conversionNames = array_values(array_unique($this->conversionPoints->pluck('conversionName')->toArray()));
@@ -251,8 +246,8 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
             array_unshift($arraySelect, 'campaignID', 'adgroupID');
         }
 
-        if ($column === 'adID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
+        if ($column === 'keywordID') {
+            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keyword');
         }
 
         return $arraySelect;

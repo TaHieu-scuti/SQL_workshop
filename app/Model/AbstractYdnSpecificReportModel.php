@@ -36,17 +36,12 @@ abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
             $adGroupId,
             static::PAGE_ID
         );
-
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $campaigns = new Campaign;
-
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'ydn',
-            $campaignIDs,
-            static::PAGE_ID,
-            $adIDs
+            $campaignIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -80,13 +75,12 @@ abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
                 array_merge(
                     self::UNSET_COLUMNS,
                     self::FIELDS_CALL_TRACKING,
-                    ['campaignName', 'adgroupName', 'adName']
+                    ['campaignName', 'adgroupName']
                 )
             );
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
