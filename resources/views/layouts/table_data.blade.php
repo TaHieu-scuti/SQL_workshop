@@ -214,7 +214,8 @@
                     'ad',
                     'matchType',
                     'dayOfWeek',
-                    'hourofday'
+                    'hourofday',
+                    'device'
                 ];
                 $totalColspan = 0;
                 foreach ($fieldNames as $value) {

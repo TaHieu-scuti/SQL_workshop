@@ -110,9 +110,9 @@ class RepoYssKeywordTimeZone extends AbstractYssSpecificReportModel
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoYssKeywordReportConv();
+        $yssKeywordConvModel = new RepoYssKeywordReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        return $yssCampaignConvModel->select($aggregation)
+        return $yssKeywordConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
