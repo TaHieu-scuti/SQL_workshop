@@ -237,7 +237,7 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    protected function getAggregatedToUpdateTemporatyTable(
+    protected function getAggregatedToUpdateTemporaryTable(
         array $fieldNames,
         array $higherLayerSelections = null,
         $tableName = ''
@@ -310,7 +310,6 @@ abstract class AbstractReportModel extends Model
             ) {
                 if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                     $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
-                    continue;
                 } else {
                     $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
                 }
