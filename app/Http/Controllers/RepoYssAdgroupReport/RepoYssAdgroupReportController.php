@@ -226,7 +226,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             );
         }
         $columns = $this->getAttributeFieldNames($reports);
-
         session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(

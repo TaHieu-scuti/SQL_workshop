@@ -119,7 +119,7 @@ class RepoAdwAdgroupTimezone extends AbstractAdwSubReportModel
                 $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)
-                ->select($aggregated)
+                ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
                 ->orderBy($columnSort, $sort);
         }
