@@ -108,7 +108,8 @@ class KillOldMySqlConnections
             foreach ($session->all() as $key => $value) {
                 $this->processSessionKey($key, $windowName, $sessionKey, $basePath, $session, $now);
             }
-            $session->put($sessionKey . '.' . $now, $connectionId);
+            // TODO: Refactor (see if there are less race conditions that way)
+            $session->put($sessionKey . '_' . $now, $connectionId);
             $session->save();
             Log::debug('Mysql connection id saved to session', [$connectionId]);
         }
