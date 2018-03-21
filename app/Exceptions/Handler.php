@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class Handler extends ExceptionHandler
 {
@@ -35,12 +36,13 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof \Illuminate\Database\QueryException) {
             $message = $exception->getMessage();
+            $databaseName = DB::getDatabaseName();
             if (strpos(
                 $message,
-                "SQLSTATE[42S02]: Base table or view not found: 1146 Table 'default.temporary_"
+                "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
             ) === 0) {
                 $message .= ' This is most likely happening because the query was purposely killed';
-                Log::warning(getmypid() . ': ' . $message);
+                Log::warning($message);
                 return;
             }
         }
@@ -64,6 +66,17 @@ class Handler extends ExceptionHandler
                 ], 403);
             } else {
                 return redirect('/login');
+            }
+        } elseif ($exception instanceof \Illuminate\Database\QueryException) {
+            $message = $exception->getMessage();
+            $databaseName = DB::getDatabaseName();
+            if (strpos(
+                    $message,
+                    "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
+                ) === 0) {
+                return response()->json([
+                    'error' => 'no_temp_table'
+                ], 404);
             }
         }
         return parent::render($request, $exception);
