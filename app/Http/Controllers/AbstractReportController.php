@@ -6,6 +6,8 @@ use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Model\RepoYdnAdDayOfWeek;
+use App\Model\RepoYdnAdgroupTimeZone;
+use App\Model\RepoYdnAdTimeZone;
 use App\Model\RepoYssCampaignDevice;
 use App\Model\RepoYssKeywordDayOfWeek;
 use App\Model\RepoYssKeywordDevice;
@@ -825,7 +827,13 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoYssKeywordTimeZone;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $this->model = new RepoYdnTimezone;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnTimezone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupTimeZone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoYdnAdTimeZone;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignTimezone;
