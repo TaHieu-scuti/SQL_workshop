@@ -2,27 +2,16 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
-use App\Model\AbstractYdnReportModel;
-
-class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
+class RepoYdnAdDayOfWeek extends AbstractYdnSpecificReportModel
 {
     protected $table = 'repo_ydn_reports';
 
     public $timestamps = false;
 
-    const PAGE_ID = 'adgroupID';
-
-    protected function adjustTemporaryTableColumns(
-        $columns,
-        $campaignId = null,
-        $adGroupId = null
-    ) {
-        return $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
-    }
+    const PAGE_ID = 'adID';
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -38,13 +27,13 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $ydnDayOfWeekGroupByField = DB::raw('DAYNAME(`day`)');
-        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
+        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$ydnDayOfWeekGroupByField.' AS dayOfWeek')
             )->where('conversionName', $conversionName)
-                ->whereIn('adGroupID', $adgroupIDs)
+                ->whereIn('adID', $adIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
@@ -84,26 +73,19 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay,
-        $engine,
-        $clientId = null,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
-        $phoneTimeUseModel = new PhoneTimeUse();
-        $tableName = $phoneTimeUseModel->getTable();
+        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
 
-        foreach ($phoneNumbers as $i => $phoneNumber) {
-            $builder = $phoneTimeUseModel->select(
+        foreach ($phoneList as $i => $phoneNumber) {
+            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
+            $tableName = $repoPhoneTimeUseModel->getTable();
+            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'ydn')
-                ->whereRaw('traffic_type = "AD"')
+                ->where('traffic_type', 'AD')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);
@@ -113,9 +95,22 @@ class RepoYdnAdgroupDayOfWeek extends AbstractYdnReportModel
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
                 .self::TABLE_TEMPORARY.'.dayOfWeek = tbl.dayOfWeek'
             );
         }
+    }
+
+    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $this->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
     }
 }

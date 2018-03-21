@@ -261,10 +261,7 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 continue;
             }
-            if ($fieldName === 'dayOfWeek' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                $arrayCalculate[] = DB::raw('DAYNAME(`day`)');
-                continue;
-            }
+
             if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
                 if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                     $arrayCalculate[] = DB::raw(
@@ -312,7 +309,8 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
                 if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                    $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                    $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
+                    continue;
                 } else {
                     $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
                 }
