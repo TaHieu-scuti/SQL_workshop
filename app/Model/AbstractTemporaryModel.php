@@ -64,6 +64,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
     ];
 
     const FIELDS_TYPE_BIGINT = [
+        'region',
         'adGroupID',
         'clicks',
         'impressions',

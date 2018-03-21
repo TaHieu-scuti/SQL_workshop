@@ -134,6 +134,10 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 continue;
             }
+            if ($fieldName === 'region') {
+                $arrayCalculate[] = $fieldName;
+                continue;
+            }
             if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
                 if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                     $arrayCalculate[] = DB::raw(
@@ -181,6 +185,11 @@ abstract class AbstractReportModel extends Model
             ) {
                 if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                     $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
+                } elseif ($fieldName === self::HOUR_OF_DAY
+                    && static::PAGE_ID === 'keywordID'
+                    && $tableName !== 'temporary_table'
+                ) {
+                    $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
                 } else {
                     $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
                 }
@@ -228,7 +237,7 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    protected function getAggregatedToUpdateTemporatyTable(
+    protected function getAggregatedToUpdateTemporaryTable(
         array $fieldNames,
         array $higherLayerSelections = null,
         $tableName = ''
@@ -252,10 +261,7 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 continue;
             }
-            if ($fieldName === 'dayOfWeek' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                $arrayCalculate[] = DB::raw('DAYNAME(`day`)');
-                continue;
-            }
+
             if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
                 if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                     $arrayCalculate[] = DB::raw(
@@ -303,7 +309,7 @@ abstract class AbstractReportModel extends Model
                 || $fieldName === self::ADW_SEARCH_QUERY
             ) {
                 if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                    $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
+                    $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
                 } else {
                     $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
                 }
@@ -495,7 +501,7 @@ abstract class AbstractReportModel extends Model
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //replace prefecture with criteria.Name
             $key = array_search('prefecture', $fieldNames);
-            $fieldNames[$key] = 'criteria.Name';
+            $fieldNames[$key] = 'region';
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
@@ -524,16 +530,22 @@ abstract class AbstractReportModel extends Model
             $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         }
         $groupBy = $this->groupBy;
+
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
-                $item = $this->getTable() . '.' . $item;
+                if ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID') {
+                    $item = DB::raw('hour('.$this->getTable() . '.day)');
+                } else {
+                    $item = $this->getTable() . '.' . $item;
+                }
             }
         }
+
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
             unset($groupBy[$key]);
-            $groupedByField = 'criteria.Name';
+            $groupedByField = 'region';
             array_push($groupBy, $groupedByField);
         }
         foreach ($aggregations as &$aggregation) {
