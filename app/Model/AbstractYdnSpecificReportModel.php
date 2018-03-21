@@ -171,4 +171,17 @@ abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
 
         return $builder;
     }
+
+    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $aggregation = $this->getAggregatedConversionName($column);
+        return $this->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
 }
