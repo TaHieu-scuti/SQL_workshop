@@ -18,6 +18,11 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
         'adgroupID'
     ];
 
+    protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
+    {
+        return $this->getAggregatedToUpdateTemporaryTable($fieldNames, $higherLayerSelections, $tableName);
+    }
+
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
         $conversionNames = array_values(array_unique($this->conversionPoints->pluck('conversionName')->toArray()));
