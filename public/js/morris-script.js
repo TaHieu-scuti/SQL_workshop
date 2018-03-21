@@ -38,12 +38,10 @@ var Script = function () {
                     $('#fieldsOnModal').html(response.fieldsOnModal);
                     $('.result-per-page').html(response.keyPagination);
                     filterColumnChecked();
+                    hideSpinners();
                 },
                 error : function (response) {
                     checkErrorAjax(response);
-                },
-                complete : function () {
-                    completeRequestTable();
                 }
             });
         }

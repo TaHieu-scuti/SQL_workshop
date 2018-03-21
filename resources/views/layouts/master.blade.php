@@ -366,13 +366,11 @@
                     $('.summary_report').html(data.summaryReportLayout);
                     processDataTable(data);
                     history.pushState("", "", '?page=' + page);
+                    hideSpinners();
                 },
                 error: function (data) {
                     checkErrorAjax(data);
                     alert('Reports could not be loaded.');
-                },
-                complete : function () {
-                    completeRequestTable();
                 }
             });
         }

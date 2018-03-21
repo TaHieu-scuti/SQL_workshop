@@ -74,7 +74,7 @@ function showLoadingImageOnTopGraph() {
     $('.loading-gif-on-top-graph').show();
 }
 
-function completeRequestTable()
+function hideSpinners()
 {
     $('.loading-gif-on-table').addClass('hidden-table');
     $('.loading-gif-on-top-graph').addClass('hidden-graph');
@@ -120,12 +120,10 @@ $(".apply-button").click(function () {
             setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -180,12 +178,10 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
             setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -217,12 +213,10 @@ $('.apply-custom-period').click(function() {
             setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -266,12 +260,10 @@ $('.status-option li').click(function () {
             setSelectedGraphColumn();
             processDataTable(response);
             history.pushState("", "", link);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -319,12 +311,10 @@ $('.table_data_report').delegate('th', 'click', function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 })
@@ -351,12 +341,10 @@ $('.specific-filter-item').click(function() {
             setSelectedGraphColumn();
             let url = location.protocol + "//" + location.host + location.pathname;
             history.pushState(null, '', url);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -377,12 +365,10 @@ $('.normal-report').click(function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+            hideSpinners();
         },
         error : function (response) {
             checkErrorAjax(response);
-        },
-        complete : function () {
-            completeRequestTable();
         }
     });
 });
@@ -534,11 +520,15 @@ function checkErrorAjax (response) {
     if (response.readyState !== 4) {
         return false;
     }
-    if (response.status === 403 && isJson(response.responseText)) {
+    if (isJson(response.responseText)) {
         let obj = JSON.parse(response.responseText);
-        if (obj.error === 'session_expired') {
-            alert('Session expired');
-            window.location.href = obj.redirect_url;
+        if (response.status === 403) {
+            if (obj.error === 'session_expired') {
+                alert('Session expired');
+                window.location.href = obj.redirect_url;
+            }
+        } else if (response.status === 404) {
+            console.log(obj.error);
         }
     } else {
         alert('Something went wrong!');
