@@ -13,7 +13,7 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
-        return parent::getAggregatedToUpdateTemporatyTable($fieldNames, $higherLayerSelections, $tableName);
+        return $this->getAggregatedToUpdateTemporaryTable($fieldNames, $higherLayerSelections, $tableName);
     }
 
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
