@@ -302,7 +302,7 @@ abstract class AbstractReportModel extends Model
                 );
             }
         }
-        
+
         return $arrayCalculate;
     }
 
@@ -380,7 +380,8 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    private function getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key) {
+    private function getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key)
+    {
         if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
             $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
         } else {
