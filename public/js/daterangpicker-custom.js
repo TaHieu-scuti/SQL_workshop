@@ -3,11 +3,12 @@ $(function() {
     $('#img-datefilter').on('click', function() {
         $('#datefilter').click();
     });
+    let lang = $('html').attr('lang');
     $('#datefilter').dateRangePicker({
         autoClose: false,
         format: 'YYYY-MM-DD',
         separator: ' - ',
-        language: 'auto',
+        language: lang,
         startOfWeek: 'sunday',// or monday
         getValue: function()
         {

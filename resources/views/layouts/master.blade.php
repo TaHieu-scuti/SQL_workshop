@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@lang('language.language')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -180,8 +180,8 @@
                                 </a>
                             </li>
                             <li id="datepicker" class="custom-date" >
-                                <div class="input-group date">
-                                    <input  id="datefilter" class=" input form-control" type="text" name="datefilter" value=""/>
+                                <div class="input-group date" >
+                                    <input id="datefilter" class=" input form-control" type="text" name="datefilter" value="" onfocus="this.blur()"/>
                                     <span id="img-datefilter" class="input-group-addon dpd1-from">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>

@@ -129,4 +129,5 @@ return [
     '[conversionValues]' => 'Conversion Values',
     '[phoneNumberValues]' => 'PhoneNumber Values',
     'dailySpendingLimit' => 'Daily Budget',
+    'language' => 'en',
 ];
