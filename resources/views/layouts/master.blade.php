@@ -189,7 +189,6 @@
                                  <button class="btn btn-primary apply-custom-period"> Apply </button>
                                  <button class="btn btn-danger"> Cancel </button>
                             </li>
-
                         </ul>
                     </div>
                 </div>

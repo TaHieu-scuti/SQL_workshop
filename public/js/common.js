@@ -183,13 +183,15 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
         }
     });
 });
+
 $('#add-time-period').click(function(){
-        $('.cancel').click();
+    $('.cancel').click();
     $('.dropdown-divider').show();
     $('.selected-time .dropdown-menu.extended.tasks-bar li').not('.custom-li').show();
     $('.custom-date').hide();
     $('.selected-time .dropdown-menu.extended.tasks-bar').css('height', '294px');
 });
+
 $('.apply-custom-period').click(function() {
     $('.cancel').click();
     $('.dropdown-divider').show();

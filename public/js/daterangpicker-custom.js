@@ -1,4 +1,3 @@
-
 $(function() {
     $('#img-datefilter').on('click', function() {
         $('#datefilter').click();
@@ -23,15 +22,14 @@ $(function() {
         },
         startDate: false,
         endDate: false,
-        time: {
+        time:
+        {
             enabled: false
         },
         minDays: 0,
         maxDays: 0,
         showShortcuts: false,
-        shortcuts:
-            {
-            },
+        shortcuts:{},
         customShortcuts : [],
         inline:false,
         container:'body',
@@ -46,16 +44,16 @@ $(function() {
         applyBtnClass: 'cancel',
         singleMonth: 'auto',
         hoveringTooltip: function(days, startTime, hoveringTime)
-            {
-                return days > 1 ? days + ' ' : '';
-            },
+        {
+            return days > 1 ? days + ' ' : '';
+        },
         showTopbar: true,
         swapTime: false,
         selectForward: false,
         selectBackward: false,
-         showWeekNumbers: false,
+        showWeekNumbers: false,
         getWeekNumber: function(date) //date will be the first day of a week
-            {
+        {
             return moment(date).format('w');
         },
         monthSelect: true,
