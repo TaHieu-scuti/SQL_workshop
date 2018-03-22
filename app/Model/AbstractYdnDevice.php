@@ -5,8 +5,14 @@ namespace App\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
-class AbstractYdnDevice extends AbstractYdnRawExpressions
+abstract class AbstractYdnDevice extends AbstractYdnRawExpressions
 {
+    const ARR_FIELDS_NEED_UNSET = [
+        'campaignName',
+        'adgroupName',
+        'adName',
+        'device'
+    ];
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -50,7 +56,7 @@ class AbstractYdnDevice extends AbstractYdnRawExpressions
 
         $columns = $this->unsetColumns(
             $fieldNames,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'], ['device'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, self::ARR_FIELDS_NEED_UNSET)
         );
 
         $this->insertDataToTemporaryOfEngines(
@@ -131,7 +137,6 @@ class AbstractYdnDevice extends AbstractYdnRawExpressions
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
         $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = 'device';
         return $this->select($aggregation)
             ->distinct()
             ->where(
