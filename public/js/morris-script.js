@@ -108,8 +108,9 @@ var Script = function () {
 
         $('.apply-custom-period').click(function() {
             var option = $('.custom-li').data('date');
-            var startDay = $('.dpd1').val();
-            var endDay = $('.dpd2').val();
+            var date= $('#datefilter').val().split(" - ");
+            var startDay = date[0];
+            var endDay = date[1];
             var milestone = getFilterDate(option);
             $.ajax({
                 url : prefixRoute + "/display-graph",
