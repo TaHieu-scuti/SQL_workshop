@@ -314,9 +314,15 @@
     <script src="/js/moment-with-locales.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/js/daterangpicker-custom.js"></script>
-    
     <!-- Custom js-->
     <script>
+
+        $(document).ready(function() {
+            $(document).on('click', '.pagination a', function (e) {
+                getAccountReports($(this).attr('href').split('page=')[1]);
+                e.preventDefault();
+            });
+        });
 
         function getAccountReports(page) {
             $.ajaxSetup({
