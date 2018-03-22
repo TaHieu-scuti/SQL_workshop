@@ -241,51 +241,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
     private function getAggregatedOfAccountAdwPrefecture($fieldNames)
     {
-        array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
-        if (array_search('accountName', $fieldNames) === false) {
-            $key = array_search(static::GROUPED_BY_FIELD_NAME_ADW, $fieldNames);
-            if ($key !== false) {
-                unset($fieldNames[$key]);
-            }
-            $keyPageId = array_search(static::PAGE_ID, $fieldNames);
-            if ($keyPageId !== false) {
-                unset($fieldNames[$key]);
-            }
-        }
         $tableName = (new RepoAdwGeoReportCost)->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PREFECTURE
-            ) {
-                $key = array_search(static::PAGE_ID, $fieldNames);
-                if ($key !== false) {
-                    unset($fieldNames[$key]);
-                }
-            }
-        }
-
         $arrayCalculate = [];
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::PAGE_ID) {
-                $arrayCalculate[] = $tableName.'.'.self::ADW_CUSTOMER_ID.' as accountid';
-                continue;
-            }
             if ($fieldName === self::PREFECTURE) {
                 $arrayCalculate[] = DB::raw('`criteria`.`name` AS prefecture');
-                continue;
-            }
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PAGE_ID
-            ) {
-                $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
-                continue;
-            }
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME_ADW) {
-                $arrayCalculate[] = $tableName.'.'.$fieldName .' AS accountName';
                 continue;
             }
             if (in_array($fieldName, static::AVERAGE_FIELDS)) {
@@ -565,11 +525,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                         ->whereDate($yss->getTable().'.day', '<=', $endDay);
                 }
             }
-        )->where(
-            function (Builder $query) use ($clientId, $yss) {
-                $query->where($yss->getTable().'.account_id', '=', $clientId);
-            }
         )
+        ->where($yss->getTable().'.account_id', '=', $clientId)
         ->groupBy($groupedByField);
 
         if (!in_array($groupedByField, $this->groupByFieldName)) {
@@ -596,14 +553,10 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             . $this->getBindingSql($ydnData));
 
         //Adw
-        $adwAggregations = null;
+        $adwAggregations = [];
         $adwData = null;
         if ($groupedByField === 'prefecture') {
             $adwAggregations = $this->getAggregatedOfAccountAdwPrefecture($columns);
-        } else {
-            $adwAggregations = $this->getAggregatedOfGoogle($columns);
-        }
-        if ($groupedByField === 'prefecture') {
             $adwData = $this->getAdwDataInsertToTemporaryByPrefecture(
                 $adwAggregations,
                 $groupedByField,
@@ -612,6 +565,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 $endDay
             );
         } else {
+            $adwAggregations = $this->getAggregatedOfGoogle($columns);
             $adwData = RepoAdwAccountReportCost::select(
                 array_merge(
                     [DB::raw("'adw' as engine, repo_adw_account_report_cost.account_id as account_id")],
@@ -622,11 +576,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_account_report_cost');
                 }
-            )->where(
-                function (Builder $query) use ($clientId) {
-                    $query->where('repo_adw_account_report_cost.account_id', '=', $clientId);
-                }
-            )->where(
+            )
+            ->where('repo_adw_account_report_cost.account_id', '=', $clientId)
+            ->where(
                 function (Builder $query) {
                     $query->whereRaw("`repo_adw_account_report_cost`.`network` = 'SEARCH'")
                     ->orWhereRaw("`repo_adw_account_report_cost`.`network` = 'CONTENT'");
@@ -679,11 +631,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             function (Builder $query) use ($startDay, $endDay) {
                 $this->addTimeRangeCondition($startDay, $endDay, $query, 'repo_adw_geo_report_cost');
             }
-        )->where(
-            function (Builder $query) use ($clientId) {
-                $query->where('repo_adw_geo_report_cost.account_id', '=', $clientId);
-            }
-        )->where(
+        )
+        ->where('repo_adw_geo_report_cost.account_id', '=', $clientId)
+        ->where(
             function (Builder $query) {
                 $query->whereRaw("`repo_adw_geo_report_cost`.`network` = 'SEARCH'")
                 ->orWhereRaw("`repo_adw_geo_report_cost`.`network` = 'CONTENT'");
@@ -911,11 +861,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $ydnModel = new RepoYdnReport;
         return $ydnModel->select('campaign_id', 'campaignID')
             ->distinct()
-            ->where(
-                function (Builder $query) use ($clientId) {
-                    $query->where('account_id', '=', $clientId);
-                }
-            )
+            ->where('account_id', '=', $clientId)
             ->get();
     }
 
