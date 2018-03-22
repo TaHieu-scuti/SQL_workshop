@@ -166,14 +166,8 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     {
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         if (array_search('accountName', $fieldNames) === false) {
-            $key = array_search(static::GROUPED_BY_FIELD_NAME_ADW, $fieldNames);
-            if ($key !== false) {
-                unset($fieldNames[$key]);
-            }
-            $keyPageId = array_search(static::PAGE_ID, $fieldNames);
-            if ($keyPageId !== false) {
-                unset($fieldNames[$key]);
-            }
+            $this->unsetColumns($fieldNames, [static::GROUPED_BY_FIELD_NAME_ADW]);
+            $this->unsetColumns($fieldNames, [static::PAGE_ID]);
         }
         $tableName = (new RepoAdwAccountReportCost)->getTable();
         if (isset($fieldNames[0]) && $fieldNames[0] === self::PREFECTURE) {
@@ -185,10 +179,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                 || $fieldName === self::DAY_OF_WEEK
                 || $fieldName === self::PREFECTURE
             ) {
-                $key = array_search(static::PAGE_ID, $fieldNames);
-                if ($key !== false) {
-                    unset($fieldNames[$key]);
-                }
+                $this->unsetColumns($fieldNames, [static::PAGE_ID]);
             }
         }
 
