@@ -316,7 +316,8 @@ abstract class AbstractYdnDevice extends AbstractYdnRawExpressions
     {
         $columns = $this->unsetColumns(
             $columns,
-            array_merge(self::UNSET_COLUMNS,
+            array_merge(
+                self::UNSET_COLUMNS,
                 self::FIELDS_CALL_TRACKING,
                 ['campaignName', 'adgroupName', 'adName']
             )

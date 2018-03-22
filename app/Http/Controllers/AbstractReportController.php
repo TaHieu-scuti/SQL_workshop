@@ -886,7 +886,6 @@ abstract class AbstractReportController extends Controller
             } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
                 $this->model = new RepoYdnAdDevice;
             }
-
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignDevice;
