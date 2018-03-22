@@ -252,7 +252,8 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName) {
+    private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
+    {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
@@ -271,7 +272,8 @@ abstract class AbstractReportModel extends Model
         return $arrayCalculate;
     }
 
-    private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName) {
+    private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
+    {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
