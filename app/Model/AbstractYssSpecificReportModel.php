@@ -36,13 +36,16 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $adGroupId,
             static::PAGE_ID
         );
-
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'yss',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            null,
+            $adgroupIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -76,9 +79,12 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                 array_merge(
                     self::UNSET_COLUMNS,
                     self::FIELDS_CALL_TRACKING,
-                    ['campaignName', 'adgroupName']
+                    self::FIELDS_NEED_UNSET
                 )
             );
+            if ($engine === 'yss' && $key = array_search('matchType', $columns)) {
+                $columns[$key] = 'keywordMatchType';
+            }
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));

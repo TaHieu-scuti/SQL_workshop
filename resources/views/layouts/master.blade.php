@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@lang('language.language')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,6 +24,7 @@
     <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/css/daterangepicker.min.css"/>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="/js/html5shiv.js"></script>
@@ -178,37 +179,15 @@
                                     <div class="desc">@lang('language.custom')</div>
                                 </a>
                             </li>
-                            <li id="datepicker" class="custom-date">
-                            <form action="#" class="form-horizontal tasi-form">
-                                <div class="form-group row">
-                                    <div class='col-sm-6'>
-                                        <div class="form-group">
-                                            <span style="width: 100%; float: right;">@lang('language.from')</span>
-                                            <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control dpd1" id ="from" name="from" />
-                                                <span class="input-group-addon dpd1-from">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='col-sm-6'>
-                                        <div class="form-group">
-                                            <span style="width: 100%; float: right;">@lang('language.to')</span>
-                                            <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control dpd2" id ="to" name="to" />
-                                                <span class="input-group-addon dpd2-to">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both;">
-                                        <button type="button" class="btn btn-primary apply-custom-period">@lang('language.apply')</button>
-                                        <button type="button" class="btn btn-danger">@lang('language.cancel')</button>
-                                    </div>
+                            <li id="datepicker" class="custom-date" >
+                                <div class="input-group date" >
+                                    <input id="datefilter" class=" input form-control" type="text" name="datefilter" value="" onfocus="this.blur()"/>
+                                    <span id="img-datefilter" class="input-group-addon dpd1-from">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
-                            </form>
+                                 <button class="btn btn-primary apply-custom-period"> Apply </button>
+                                 <button class="btn btn-danger"> Cancel </button>
                             </li>
                         </ul>
                     </div>
@@ -323,8 +302,9 @@
     </section>
     <!--main content end-->
     <!-- Lib js -->
-    <script src="/js/jquery.js"></script>
-    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/js/moment.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.daterangepicker.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/jquery-date-range.js"></script>
@@ -333,6 +313,7 @@
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/js/daterangpicker-custom.js"></script>
     <!-- Custom js-->
     <script>
 

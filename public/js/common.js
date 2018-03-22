@@ -42,6 +42,7 @@ $('.dropdown-menu .custom-li').click(function () {
 */
 $('.btn-danger').click(function () {
     $('.dropdown-divider').show();
+    $('.cancel').click();
     $('.selected-time .dropdown-menu.extended.tasks-bar li').not('.custom-li').show();
     $('.custom-date').hide();
     $('.selected-time .dropdown-menu.extended.tasks-bar').css('height', '294px');
@@ -186,10 +187,24 @@ $('.date-option li:not(.custom-li, .custom-date)').click(function () {
     });
 });
 
+$('#add-time-period').click(function(){
+    $('.cancel').click();
+    $('.dropdown-divider').show();
+    $('.selected-time .dropdown-menu.extended.tasks-bar li').not('.custom-li').show();
+    $('.custom-date').hide();
+    $('.selected-time .dropdown-menu.extended.tasks-bar').css('height', '294px');
+});
+
 $('.apply-custom-period').click(function() {
+    $('.cancel').click();
+    $('.dropdown-divider').show();
+    $('.selected-time .dropdown-menu.extended.tasks-bar li').not('.custom-li').show();
+    $('.custom-date').hide();
+    $('.selected-time .dropdown-menu.extended.tasks-bar').css('height', '294px');
     var option = $('.custom-li').data('date');
-    var startDay = $('.dpd1').val();
-    var endDay = $('.dpd2').val();
+    var date= $('#datefilter').val().split(" - ");
+    var startDay = date[0];
+    var endDay = date[1];
     var milestone = getFilterDate(option);
     $.ajax({
         url : prefixRoute + "/update-table",

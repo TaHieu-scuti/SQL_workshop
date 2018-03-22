@@ -3,15 +3,12 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssCampaignDevice extends AbstractYssRawExpressions
+class RepoYssKeywordDevice extends AbstractYssRawExpressions
 {
-    protected $table = 'repo_yss_campaign_report_cost';
-
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'device';
+    protected $table = 'repo_yss_keyword_report_cost';
+    const PAGE_ID = 'keywordID';
 
     public $timestamps = false;
 
@@ -41,11 +38,15 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
-            'adw',
-            $campaignIDs
+            'yss',
+            $campaignIDs,
+            static::PAGE_ID,
+            null,
+            $adgroupIDs
         );
 
         $this->createTemporaryTable(
@@ -58,10 +59,10 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
 
         $columns = $this->unsetColumns(
             $fieldNames,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'], ['device'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['device'])
         );
 
-        $deviceDesktop = $this->getDataDeviceYssCampaign(
+        $deviceDesktop = $this->getDataDeviceYssKeyword(
             $columns,
             $groupedByField,
             $startDay,
@@ -77,7 +78,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         );
         $this->insertDataToTemporary($deviceDesktop, $fieldNames);
 
-        $deviceSmartPhone = $this->getDataDeviceYssCampaign(
+        $deviceSmartPhone = $this->getDataDeviceYssKeyword(
             $columns,
             $groupedByField,
             $startDay,
@@ -93,7 +94,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         );
         $this->insertDataToTemporary($deviceSmartPhone, $fieldNames);
 
-        $deviceNone = $this->getDataDeviceYssCampaign(
+        $deviceNone = $this->getDataDeviceYssKeyword(
             $columns,
             $groupedByField,
             $startDay,
@@ -188,10 +189,9 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoYssCampaignReportConv();
+        $yssKeywordConvModel = new RepoYssKeywordReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = 'device';
-        return $yssCampaignConvModel->select($aggregation)
+        return $yssKeywordConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -201,7 +201,7 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
             ->get();
     }
 
-    protected function getDataDeviceYssCampaign(
+    protected function getDataDeviceYssKeyword(
         $fieldNames,
         $groupedByField,
         $startDay,
@@ -252,9 +252,11 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
     {
         $columns = $this->unsetColumns(
             $columns,
-            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName'])
+            array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, self::FIELDS_NEED_UNSET)
         );
-
+        if ($key = array_search('matchType', $columns)) {
+            $columns[$key] = 'keywordMatchType';
+        }
         DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
             . $this->getBindingSql($builder));
     }
@@ -273,11 +275,13 @@ class RepoYssCampaignDevice extends AbstractYssRawExpressions
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoYssCampaignReportConv();
+            $convModel = new RepoYssKeywordReportConv();
             $queryGetConversion = $convModel->select(
-                DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+                DB::raw('SUM(repo_yss_keyword_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
+                ->whereIn('adGroupID', $adgroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,

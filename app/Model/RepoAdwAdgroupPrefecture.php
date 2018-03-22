@@ -2,24 +2,25 @@
 
 namespace App\Model;
 
+use App\Model\AbstractAdwPrefecture;
+
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssCampaignPrefecture extends AbstractYssPrefecture
+class RepoAdwAdgroupPrefecture extends AbstractAdwPrefecture
 {
-    protected $table = 'repo_yss_prefecture_report_cost';
+    const PAGE_ID = 'adgroupID';
 
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'prefecture';
+    protected $table = 'repo_adw_geo_report_cost';
 
     public $timestamps = false;
 
     protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssPrefectureConvModel = new RepoYssPrefectureReportConv();
+        $adwPrefectureConvModel = new RepoAdwGeoReportConv;
         $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = 'prefecture';
-        return $yssPrefectureConvModel->select($aggregation)
+        $aggregation[] = 'region';
+        return $adwPrefectureConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
