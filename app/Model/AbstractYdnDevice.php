@@ -346,7 +346,7 @@ abstract class AbstractYdnDevice extends AbstractYdnRawExpressions
 
     protected function addConditionForDeviceSmartPhone($builder, $joinTableName)
     {
-        $builder->WhereRaw($joinTableName.'.platform LIKE "iOS%"')
+        $builder->whereRaw($joinTableName.'.platform LIKE "iOS%"')
             ->orWhereRaw($joinTableName.'.platform LIKE "Android%"')
             ->orWhereRaw($joinTableName.'.platform LIKE "Symbian%"')
             ->orWhereRaw($joinTableName.'.platform LIKE "Blackberry%"');
@@ -354,7 +354,7 @@ abstract class AbstractYdnDevice extends AbstractYdnRawExpressions
 
     protected function addConditionForDeviceTablet($builder, $joinTableName)
     {
-        $builder->WhereRaw($joinTableName.'.platform LIKE "iOS%"')
+        $builder->whereRaw($joinTableName.'.platform LIKE "iOS%"')
             ->orWhereRaw($joinTableName.'.platform LIKE "Android%"')
             ->orWhereRaw($joinTableName.'.platform LIKE "Blackberry%"');
     }
