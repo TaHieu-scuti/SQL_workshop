@@ -5,14 +5,20 @@ namespace App\Http\Controllers;
 use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
+use App\Model\RepoYdnAdDayOfWeek;
+use App\Model\RepoYdnAdgroupTimeZone;
+use App\Model\RepoYdnAdTimeZone;
 use App\Model\RepoYssCampaignDevice;
 use App\Model\RepoYssKeywordDayOfWeek;
+use App\Model\RepoYssKeywordDevice;
+use App\Model\RepoYssKeywordTimeZone;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnAdgroupPrefecture;
 use App\Model\RepoYdnTimezone;
 use App\Model\RepoYdnDayOfWeek;
+use App\Model\RepoYdnAdgroupDayOfWeek;
 use App\Model\RepoYssAdgroupPrefecture;
 use App\Model\RepoAdwSearchQueryPerformanceReport;
 use App\Model\RepoYssSearchqueryReportCost;
@@ -21,12 +27,15 @@ use App\Model\RepoYssCampaignTimezone;
 use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
+use App\Model\RepoAdwAdgroupTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoAdwAdgroupDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
+use App\Model\RepoAdwCampaignPrefecture;
 use App\Model\RepoAdwCampaignDevice;
 use App\Model\RepoYdnDevice;
+use App\Model\RepoAdwAdgroupPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -111,6 +120,7 @@ abstract class AbstractReportController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware('killOldMySqlConnections');
     }
 
     protected function translateFieldNames(array $fieldNames)
@@ -785,7 +795,7 @@ abstract class AbstractReportController extends Controller
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare', 'matchType']);
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
@@ -801,7 +811,11 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoYdnAdgroupPrefecture;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            $this->model = new RepoAdwGeoReportCost;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoAdwCampaignPrefecture;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoAdwAdgroupPrefecture;
+            }
         }
     }
 
@@ -810,15 +824,24 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoYssAdgroupTimezone;
-            }
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignTimezone;
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoYssKeywordTimeZone;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $this->model = new RepoYdnTimezone;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnTimezone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupTimeZone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoYdnAdTimeZone;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignTimezone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoAdwAdgroupTimezone;
             }
         }
     }
@@ -834,7 +857,13 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoYssKeywordDayOfWeek;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            $this->model = new RepoYdnDayOfWeek;
+            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+                $this->model = new RepoYdnDayOfWeek;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoYdnAdgroupDayOfWeek;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoYdnAdDayOfWeek;
+            }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignDayOfWeek;
@@ -849,9 +878,10 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoYssAdgroupDevice;
-            }
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignDevice;
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoYssKeywordDevice;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             $this->model = new RepoYdnDevice;

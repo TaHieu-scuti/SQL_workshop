@@ -86,6 +86,22 @@ abstract class AbstractReportModel extends Model
         self::ADW_ADGROUP_NAME => self::YSS_ADGROUP_NAME,
     ];
 
+    const SUB_REPORT_ARRAY = [
+        self::DEVICE,
+        self::DAY_OF_WEEK,
+        self::HOUR_OF_DAY,
+        self::PREFECTURE,
+        self::YSS_SEARCH_QUERY,
+        self::ADW_SEARCH_QUERY,
+        'adType'
+    ];
+
+    const GROUP_SPECIAL_FIELDS = [
+        self::DAILY_SPENDING_LIMIT,
+        'matchType',
+        'accountid'
+    ];
+
     const YDN_FIELDS_MAP = [
 //      'columns' => 'alias'
         'keywordMatchType' => 'matchType',
@@ -134,101 +150,52 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 continue;
             }
-            if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
-                if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
-                    );
-                    continue;
-                } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
-                    $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
-                    continue;
-                } else {
-                    $arrayCalculate[] = DB::raw(
-                        'ROUND(AVG(' . $tableName . '.searchImprShare) + AVG(' .
-                        $tableName . '.contentImprShare), 2) AS ' . $fieldName
-                    );
-                    continue;
-                }
-            }
-            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
-                $arrayCalculate[] = DB::raw(
-                    'SUM( ' . $fieldName . ' ) AS ' . $fieldName
-                );
-            }
-            if ($fieldName === 'matchType') {
-                $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
-            }
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
-                    $arrayCalculate[] = static::PAGE_ID;
-                    $this->groupBy[] = static::PAGE_ID;
-                }
+            if ($fieldName === 'region') {
                 $arrayCalculate[] = $fieldName;
-                if (!empty($higherLayerSelections)) {
-                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
-                }
                 continue;
             }
-
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PREFECTURE
-                || $fieldName === 'adType'
-                || $fieldName === self::YSS_SEARCH_QUERY
-                || $fieldName === self::ADW_SEARCH_QUERY
-            ) {
-                if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                    $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
-                } else {
-                    $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
-                }
-
-                continue;
-            }
-
-            if ($fieldName === 'accountid') {
-                if ($tableName === 'temporary_account_table') {
-                    $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName);
-                } else {
-                    $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
-                }
-            }
-
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+            if ($fieldName === 'impressionShare') {
+                $arrayCalculate = $this->pushRoundedImpressionShareIntoCalculateArray(
+                    $arrayCalculate,
+                    $tableName,
+                    $fieldName
                 );
-            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if ($tableName === 'temporary_table'
-                    || $tableName === 'temporary_table_ad'
-                    || $tableName === 'temporary_account_table'
-                ) {
-                    $arrayCalculate[] = DB::raw(
-                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
-                    );
-                } else {
-                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                            ->getType()
-                            ->getName()
-                        === self::FIELD_TYPE
-                    ) {
-                        $arrayCalculate[] = DB::raw(
-                            'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
-                        );
-                    } else {
-                        $arrayCalculate[] = DB::raw(
-                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
-                        );
-                    }
-                }
+            }
+
+            if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
+                $arrayCalculate = $this->groupSpecialFieldsIntoCalculateArray(
+                    $arrayCalculate,
+                    $higherLayerSelections,
+                    $tableName,
+                    $joinTableName,
+                    $fieldName,
+                    $key
+                );
+            }
+
+            if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
+                $arrayCalculate = $this->getAggregatedNameSubReport(
+                    $arrayCalculate,
+                    $fieldName,
+                    $tableName,
+                    $key,
+                    'secondQuery'
+                );
+            }
+
+            if (in_array($fieldName, array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS))) {
+                $arrayCalculate = $this->groupRoundAverageAndSumFieldsIntoArray(
+                    $arrayCalculate,
+                    $tableName,
+                    $fieldName,
+                    $key
+                );
             }
         }
         return $arrayCalculate;
     }
 
-    protected function getAggregatedToUpdateTemporatyTable(
+    protected function getAggregatedToUpdateTemporaryTable(
         array $fieldNames,
         array $higherLayerSelections = null,
         $tableName = ''
@@ -252,95 +219,199 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 continue;
             }
-            if ($fieldName === 'dayOfWeek' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                $arrayCalculate[] = DB::raw('DAYNAME(`day`)');
-                continue;
+
+            if ($fieldName === 'impressionShare') {
+                $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
             }
-            if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
-                if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
-                    $arrayCalculate[] = DB::raw(
-                        'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
-                    );
-                    continue;
-                } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
-                    $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
-                    continue;
-                } else {
-                    $arrayCalculate[] = DB::raw(
-                        'AVG('. $tableName .'.searchImprShare) + AVG('.
-                        $tableName .'.contentImprShare) AS ' .$fieldName
-                    );
-                    continue;
-                }
-            }
-            if ($fieldName === self::DAILY_SPENDING_LIMIT) {
-                $arrayCalculate[] = DB::raw(
-                    'SUM( ' .$fieldName. ' ) AS ' . $fieldName
+
+            if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
+                $arrayCalculate = $this->groupSpecialFieldsIntoCalculateArray(
+                    $arrayCalculate,
+                    $higherLayerSelections,
+                    $tableName,
+                    $joinTableName,
+                    $fieldName,
+                    $key
                 );
             }
-            if ($fieldName === 'matchType') {
-                $arrayCalculate[] = DB::raw($tableName . '.' . $key.' as '.$fieldName);
-            }
-            if ($fieldName === static::GROUPED_BY_FIELD_NAME) {
-                if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
-                    $arrayCalculate[] = static::PAGE_ID;
-                    $this->groupBy[] = static::PAGE_ID;
-                }
-                $arrayCalculate[] = $fieldName;
-                if (!empty($higherLayerSelections)) {
-                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
-                }
 
-                continue;
+            if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
+                $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
             }
 
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PREFECTURE
-                || $fieldName === 'adType'
-                || $fieldName === self::YSS_SEARCH_QUERY
-                || $fieldName === self::ADW_SEARCH_QUERY
-            ) {
-                if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
-                    $arrayCalculate[] = DB::raw($key.' as '.$fieldName);
-                } else {
-                    $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
-                }
-
-                continue;
+            if (in_array($fieldName, array_merge(self::AVERAGE_FIELDS, self::SUM_FIELDS))) {
+                $arrayCalculate = $this->groupAverageAndSumFieldsIntoArray(
+                    $arrayCalculate,
+                    $tableName,
+                    $fieldName,
+                    $key
+                );
             }
+        }
 
-            if ($fieldName === 'accountid') {
+        return $arrayCalculate;
+    }
+
+    private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
+    {
+        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                $arrayCalculate[] = DB::raw(
+                    'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
+                );
+            } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw(
+                    'AVG('. $tableName .'.searchImprShare) + AVG('.
+                    $tableName .'.contentImprShare) AS ' .$fieldName
+                );
+            }
+        }
+
+        return $arrayCalculate;
+    }
+
+    private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
+    {
+        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
+                );
+            } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {
+                $arrayCalculate[] = DB::raw('0 AS '. $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw(
+                    'ROUND(AVG(' . $tableName . '.searchImprShare) + AVG(' .
+                    $tableName . '.contentImprShare), 2) AS ' . $fieldName
+                );
+            }
+        }
+
+        return $arrayCalculate;
+    }
+
+    private function groupSpecialFieldsIntoCalculateArray(
+        $arrayCalculate,
+        $higherLayerSelections,
+        $tableName,
+        $joinTableName,
+        $fieldName,
+        $key
+    ) {
+        if ($fieldName === self::DAILY_SPENDING_LIMIT) {
+            $arrayCalculate[] = DB::raw(
+                'SUM( ' .$fieldName. ' ) AS ' . $fieldName
+            );
+        } elseif ($fieldName === 'matchType') {
+            $arrayCalculate[] = DB::raw($tableName . '.' . $key.' as '.$fieldName);
+        } elseif ($fieldName === static::GROUPED_BY_FIELD_NAME) {
+            if (static::PAGE_ID !== 'accountid' && static::PAGE_ID !== 'pageId') {
+                $arrayCalculate[] = static::PAGE_ID;
+                $this->groupBy[] = static::PAGE_ID;
+            }
+            $arrayCalculate[] = $fieldName;
+            if (!empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+            }
+        } elseif ($fieldName === 'accountid') {
+            if ($tableName === 'temporary_account_table') {
+                $arrayCalculate[] = DB::raw($tableName . '.' . $fieldName);
+            } else {
                 $arrayCalculate[] = DB::raw($joinTableName . '.' . $fieldName);
             }
+        }
 
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+        return $arrayCalculate;
+    }
+
+    private function groupAverageAndSumFieldsIntoArray($arrayCalculate, $tableName, $fieldName, $key)
+    {
+        if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+            $arrayCalculate[] = DB::raw(
+                'IFNULL(AVG(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
+            );
+        } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+            if ($tableName === 'temporary_table') {
                 $arrayCalculate[] = DB::raw(
-                    'IFNULL(AVG(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
+                    'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                 );
-            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                if ($tableName === 'temporary_table') {
+            } else {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                        ->getType()
+                        ->getName()
+                    === self::FIELD_TYPE
+                ) {
+                    $arrayCalculate[] = DB::raw(
+                        'IFNULL(SUM(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
+                    );
+                } else {
                     $arrayCalculate[] = DB::raw(
                         'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
                     );
-                } else {
-                    if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
-                            ->getType()
-                            ->getName()
-                        === self::FIELD_TYPE
-                    ) {
-                        $arrayCalculate[] = DB::raw(
-                            'IFNULL(SUM(' . $tableName . '.' . $key . '), 0) AS ' . $fieldName
-                        );
-                    } else {
-                        $arrayCalculate[] = DB::raw(
-                            'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
-                        );
-                    }
                 }
             }
         }
+
+        return $arrayCalculate;
+    }
+
+    private function groupRoundAverageAndSumFieldsIntoArray($arrayCalculate, $tableName, $fieldName, $key)
+    {
+        if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+            $arrayCalculate[] = DB::raw(
+                'IFNULL(ROUND(AVG(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+            );
+        } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+            if ($tableName === 'temporary_table'
+                || $tableName === 'temporary_table_ad'
+                || $tableName === 'temporary_account_table'
+            ) {
+                $arrayCalculate[] = DB::raw(
+                    'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                );
+            } else {
+                if (DB::connection()->getDoctrineColumn($tableName, $fieldName)
+                        ->getType()
+                        ->getName()
+                    === self::FIELD_TYPE
+                ) {
+                    $arrayCalculate[] = DB::raw(
+                        'IFNULL(ROUND(SUM(' . $tableName . '.' . $key . '), 2), 0) AS ' . $fieldName
+                    );
+                } else {
+                    $arrayCalculate[] = DB::raw(
+                        'IFNULL(SUM( ' . $tableName . '.' . $key . ' ), 0) AS ' . $fieldName
+                    );
+                }
+            }
+        }
+
+        return $arrayCalculate;
+    }
+
+    private function getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key, $flag = "")
+    {
+        if ($flag !== "") {
+            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
+            } elseif ($fieldName === self::HOUR_OF_DAY
+                && static::PAGE_ID === 'keywordID'
+                && $tableName !== 'temporary_table'
+            ) {
+                $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
+            } else {
+                $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
+            }
+        } else {
+            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+                $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
+            } else {
+                $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
+            }
+        }
+
         return $arrayCalculate;
     }
 
@@ -495,7 +566,7 @@ abstract class AbstractReportModel extends Model
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //replace prefecture with criteria.Name
             $key = array_search('prefecture', $fieldNames);
-            $fieldNames[$key] = 'criteria.Name';
+            $fieldNames[$key] = 'region';
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
         if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
@@ -524,16 +595,22 @@ abstract class AbstractReportModel extends Model
             $this->groupBy = array_merge($this->groupBy, static::FIELDS);
         }
         $groupBy = $this->groupBy;
+
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
-                $item = $this->getTable() . '.' . $item;
+                if ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID') {
+                    $item = DB::raw('hour('.$this->getTable() . '.day)');
+                } else {
+                    $item = $this->getTable() . '.' . $item;
+                }
             }
         }
+
         if ($groupedByField === 'prefecture' && $engine === 'adw') {
             //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
             unset($groupBy[$key]);
-            $groupedByField = 'criteria.Name';
+            $groupedByField = 'region';
             array_push($groupBy, $groupedByField);
         }
         foreach ($aggregations as &$aggregation) {

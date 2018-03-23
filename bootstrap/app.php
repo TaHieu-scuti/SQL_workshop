@@ -41,6 +41,18 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->configureMonologUsing(function (\Monolog\Logger $monolog) {
+    $monolog->setHandlers(
+        [
+            new \Monolog\Handler\StreamHandler(
+                __DIR__ . '/../storage/logs/laravel.log'
+            )
+        ]
+    );
+
+    $monolog->pushProcessor(new \Monolog\Processor\ProcessIdProcessor());
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
