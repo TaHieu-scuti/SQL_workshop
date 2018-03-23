@@ -6,7 +6,7 @@ use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssAccountReportCost;
-use App\Model\RepoYssPrefectureReportCost;
+use App\Model\RepoAccountPrefecture;
 use App\Model\RepoAccountTimezone;
 use App\Model\RepoAccountDayOfWeek;
 
@@ -79,6 +79,10 @@ class RepoYssAccountReportController extends AbstractReportController
         'hourofday' => [
             'need' => ['hourofday'],
             'no_need' => ['accountName', 'accountid']
+        ],
+        'prefecture' => [
+            'need' => ['prefecture'],
+            'no_need' => ['accountName', 'accountid', 'dailySpendingLimit']
         ]
     ];
 
@@ -124,7 +128,7 @@ class RepoYssAccountReportController extends AbstractReportController
 
         session([self::SESSION_KEY_ACCOUNT_ID => null]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->model = new RepoAccountPrefecture;
         }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
@@ -143,7 +147,7 @@ class RepoYssAccountReportController extends AbstractReportController
     public function getDataForLayouts(Request $request)
     {
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->model = new RepoAccountPrefecture;
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
@@ -221,13 +225,9 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         $this->updateSessionData($request);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->model = new RepoAccountPrefecture;
         }
 
-        if ($request->specificItem === self::PREFECTURE) {
-            session()->put([self::SESSION_KEY_GROUPED_BY_FIELD => self::PREFECTURE]);
-            $this->model = new RepoYssPrefectureReportCost;
-        }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
             $this->model = new RepoAccountTimezone;
         }
@@ -321,7 +321,7 @@ class RepoYssAccountReportController extends AbstractReportController
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->model = new RepoAccountPrefecture;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
@@ -351,7 +351,7 @@ class RepoYssAccountReportController extends AbstractReportController
         $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
         $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoYssPrefectureReportCost;
+            $this->model = new RepoAccountPrefecture;
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
