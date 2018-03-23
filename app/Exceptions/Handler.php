@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class Handler extends ExceptionHandler
 {
@@ -32,6 +34,18 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Database\QueryException) {
+            $message = $exception->getMessage();
+            $databaseName = DB::getDatabaseName();
+            if (strpos(
+                $message,
+                "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
+            ) === 0) {
+                $message .= ' This is most likely happening because the query was purposely killed';
+                Log::warning($message);
+                return;
+            }
+        }
         parent::report($exception);
     }
 
@@ -44,16 +58,33 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $response = null;
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             if ($request->ajax()) {
-                return response()->json([
+                $response = response()->json([
                     'error' => 'session_expired',
                     'redirect_url' => '/login'
                 ], 403);
             } else {
-                return redirect('/login');
+                $response = redirect('/login');
+            }
+        } elseif ($exception instanceof \Illuminate\Database\QueryException) {
+            $message = $exception->getMessage();
+            $databaseName = DB::getDatabaseName();
+            if (strpos(
+                $message,
+                "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
+            ) === 0) {
+                $response = response()->json([
+                    'error' => 'no_temp_table'
+                ], 404);
             }
         }
+
+        if ($response !== null) {
+            return $response;
+        }
+
         return parent::render($request, $exception);
     }
 
