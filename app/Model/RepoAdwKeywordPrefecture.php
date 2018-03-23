@@ -50,8 +50,6 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
             $campaignIDs
         );
 
-        $fieldNames = $this->unsetColumns($fieldNames, ['keyword', 'matchType']);
-
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -302,7 +300,6 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['keyword', 'matchType']);
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
