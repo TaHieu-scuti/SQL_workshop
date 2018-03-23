@@ -58,14 +58,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $response = null;
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             if ($request->ajax()) {
-                return response()->json([
+                $response = response()->json([
                     'error' => 'session_expired',
                     'redirect_url' => '/login'
                 ], 403);
             } else {
-                return redirect('/login');
+                $response = redirect('/login');
             }
         } elseif ($exception instanceof \Illuminate\Database\QueryException) {
             $message = $exception->getMessage();
@@ -74,11 +75,16 @@ class Handler extends ExceptionHandler
                 $message,
                 "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
             ) === 0) {
-                return response()->json([
+                $response = response()->json([
                     'error' => 'no_temp_table'
                 ], 404);
             }
         }
+
+        if ($response !== null) {
+            return $response;
+        }
+
         return parent::render($request, $exception);
     }
 
