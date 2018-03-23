@@ -71,9 +71,9 @@ class Handler extends ExceptionHandler
             $message = $exception->getMessage();
             $databaseName = DB::getDatabaseName();
             if (strpos(
-                    $message,
-                    "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
-                ) === 0) {
+                $message,
+                "SQLSTATE[42S02]: Base table or view not found: 1146 Table '{$databaseName}.temporary_"
+            ) === 0) {
                 return response()->json([
                     'error' => 'no_temp_table'
                 ], 404);
