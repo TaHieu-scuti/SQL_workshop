@@ -142,6 +142,9 @@ function filterColumnChecked() {
     if (array.length === 1) {
         $("input[name='fieldName']:checked").attr("disabled", true);
     } else if(array.length > 1) {
+        if(array.length < 19) {
+            $('#selectAll').prop('checked', false);
+        }
         $("input[name='fieldName']:checkbox").removeAttr('disabled');
     }
 }
