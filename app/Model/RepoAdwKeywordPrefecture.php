@@ -175,33 +175,21 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $keywordId = null
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $campaignIdAdgainer = $this->getCampaignIdAdgainer(
-            $clientId,
-            $accountId,
-            $campaignId,
-            $adGroupId,
-            $utmCampaignList
-        );
         $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
 
         $phoneTimeUseModel = new PhoneTimeUse();
         $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
-        $campaignModel = new Campaign();
-        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
 
-        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
-            $customField = $this->getFieldName($campaign, 'adgroupid');
-
+        foreach ($phoneNumbers as $i => $phoneNumber) {
             $builder = $phoneTimeUseModel->select(
                 [
                     DB::raw('count(id) AS id'),
                     'visitor_city_state'
                 ]
             )
-            ->whereRaw($customField.' NOT LIKE ""')
             ->where('source', '=', $engine)
             ->whereRaw('traffic_type = "AD"')
-            ->where('phone_number', $phoneNumbers[$i])
+            ->where('phone_number', $phoneNumber)
             ->whereIn('utm_campaign', $utmCampaignList)
             ->where(
                 function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
@@ -274,19 +262,6 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
                 .self::TABLE_TEMPORARY.'.region'.' = tbl.region'
             );
         }
-    }
-
-    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId, $utmCampaignList)
-    {
-        return $this->select('campaign_id')
-            ->distinct()
-            ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
-                }
-            )
-            ->whereIn('campaignID', $utmCampaignList)
-            ->get();
     }
 
     protected function getBuilderForCalculateData(
