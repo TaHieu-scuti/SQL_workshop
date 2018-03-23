@@ -148,7 +148,6 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
     {
         $adwPrefectureConvModel = new RepoAdwGeoReportConv;
         $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation = $this->unsetColumns($aggregation, ['keywordID']);
         $aggregation[] = 'region';
         return $adwPrefectureConvModel->select($aggregation)
             ->distinct()

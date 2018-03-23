@@ -221,12 +221,10 @@ abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
         $arraySelect = ['conversionName'];
         if ($column === 'campaignID') {
             array_unshift($arraySelect, 'campaignID');
-        } elseif ($column === 'adgroupID') {
+        } elseif ($column === 'adgroupID' || $column === 'keywordID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID');
         } elseif ($column === 'adID') {
             array_unshift($arraySelect, 'campaignID', 'adgroupID', 'adID');
-        } elseif ($column === 'keywordID') {
-            array_unshift($arraySelect, 'campaignID', 'adgroupID', 'keywordID');
         }
         return $arraySelect;
     }
