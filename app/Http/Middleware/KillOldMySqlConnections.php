@@ -58,10 +58,9 @@ class KillOldMySqlConnections
                 $this->connection->statement('KILL ?', [$oldConnectionId]);
             } catch (QueryException $e) {
                 if (strpos(
-                        $e->getMessage(),
-                        'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
-                    ) !== 0
-                ) {
+                    $e->getMessage(),
+                    'SQLSTATE[HY000]: General error: 1094 Unknown thread id:'
+                ) !== 0) {
                     throw $e;
                 }
                 Log::notice($e->getMessage());
