@@ -32,7 +32,7 @@ class RepoYdnAdgroupDevice extends AbstractYdnDevice
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('adID', $adgroupIDs)
+                ->whereIn('adgroupID', $adgroupIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
