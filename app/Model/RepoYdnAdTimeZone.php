@@ -2,19 +2,16 @@
 
 namespace App\Model;
 
-use App\Model\AbstractYssReportModel;
-
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoYssCampaignTimezone extends AbstractYssSpecificReportModel
+class RepoYdnAdTimeZone extends AbstractYdnSpecificReportModel
 {
-    protected $table = 'repo_yss_campaign_report_cost';
-
-    const PAGE_ID = 'campaignID';
+    protected $table = 'repo_ydn_reports';
 
     public $timestamps = false;
+
+    const PAGE_ID = 'adID';
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -30,14 +27,14 @@ class RepoYssCampaignTimezone extends AbstractYssSpecificReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoYssCampaignReportConv();
-            $queryGetConversion = $convModel->select(
-                DB::raw('SUM(repo_yss_campaign_report_conv.conversions) AS conversions, hour(day) as '.$groupedByField)
+            $queryGetConversion = $this->select(
+                DB::raw('SUM(repo_ydn_reports.conversions) AS conversions,'.$groupedByField)
             )->where('conversionName', $conversionName)
+                ->whereIn('adID', $adIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
-                        $convModel,
                         $startDay,
                         $endDay,
                         $engine,
@@ -48,7 +45,7 @@ class RepoYssCampaignTimezone extends AbstractYssSpecificReportModel
                         $adReportId,
                         $keywordId
                     ) {
-                        $convModel->getCondition(
+                        $this->getCondition(
                             $query,
                             $startDay,
                             $endDay,
@@ -75,53 +72,30 @@ class RepoYssCampaignTimezone extends AbstractYssSpecificReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay,
-        $engine,
-        $clientId = null,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
+        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $tableName = $phoneTimeUseModel->getTable();
 
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+            $queryGetCallTracking = $phoneTimeUseModel->select(
                 DB::raw("hour(`time_of_call`) AS ".$groupedByField.", COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'yss')
+                ->where('source', 'ydn')
+                ->where('traffic_type', 'AD')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList)
                 ->groupBy($groupedByField);
-
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
                 .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
-    }
-
-    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
-    {
-        $yssCampaignConvModel = new RepoYssCampaignReportConv();
-        $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = DB::raw('hour(day) as hourofday');
-        return $yssCampaignConvModel->select($aggregation)
-            ->distinct()
-            ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
-                }
-            )
-            ->groupBy('hourofday')
-            ->get();
     }
 }

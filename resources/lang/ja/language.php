@@ -109,4 +109,5 @@ return [
     '[conversionValues]' => '変換値',
     '[phoneNumberValues]' => '電話番号値',
     'dailySpendingLimit' => '一日あたりの予算',
+    'language' => 'ja',
 ];
