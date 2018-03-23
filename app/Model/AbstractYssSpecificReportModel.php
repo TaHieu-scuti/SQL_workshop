@@ -11,12 +11,6 @@ use DB;
 
 abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
 {
-    const FIELDS_NEED_UNSET = [
-        'campaignName',
-        'adgroupName',
-        'keyword',
-        'adgroupID'
-    ];
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,

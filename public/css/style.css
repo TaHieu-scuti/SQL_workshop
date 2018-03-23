@@ -5988,7 +5988,6 @@ a.guest-on i {
     width: 18%;
     right: 0;
     line-height: 1.458571;
-    padding: 6px 2px;
 }
 
 .activeBlock {
@@ -6180,4 +6179,30 @@ div#content-auth-account .form-auth {
 div.container .row.report-table a#client_redirect {
     margin-bottom: 10px;
     float: left;
+}
+.date-picker-wrapper {
+    right: 101%;
+    top: 0;
+    color: #000 !important;
+    border: 1px solid #ffff !important;
+    background-color: #ffff !important;
+    position: fixed;
+}
+.apply-custom-period {
+    min-width: 0;
+    margin-left: 10%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+#datefilter {
+    width: 85%;
+    display: inline;
+}
+.input-group {
+    margin-left: 10%;
+    width: 83%;
+}
+.input-group-addon {
+    height:  34px;
+    padding: 0 0 ;
 }
