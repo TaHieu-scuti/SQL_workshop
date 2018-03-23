@@ -43,11 +43,15 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         );
 
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adGroupIds = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            null,
+            $adGroupIds
         );
 
         $builder = parent::getBuilderForGetDataForTable(
