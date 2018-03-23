@@ -4,16 +4,14 @@ namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use PhpParser\Builder;
 
-class RepoYdnDevice extends AbstractYdnDevice
+class RepoYdnAdDevice extends AbstractYdnDevice
 {
     protected $table = 'repo_ydn_reports';
 
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'device';
-
     public $timestamps = false;
+
+    const PAGE_ID = 'adID';
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -29,12 +27,12 @@ class RepoYdnDevice extends AbstractYdnDevice
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('campaignID', $campaignIDs)
+                ->whereIn('adID', $adIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
@@ -80,9 +78,9 @@ class RepoYdnDevice extends AbstractYdnDevice
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+            $phoneTimeUseModel = new PhoneTimeUse();
+            $tableName = $phoneTimeUseModel->getTable();
+            $queryGetCallTracking = $phoneTimeUseModel->select(
                 DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'ydn')
