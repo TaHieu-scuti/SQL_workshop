@@ -4,25 +4,14 @@ namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 
-use App\Model\AbstractYdnReportModel;
-
-class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
+class RepoYdnAdPrefecture extends AbstractYdnSpecificReportModel
 {
     protected $table = 'repo_ydn_reports';
 
     public $timestamps = false;
 
-    const PAGE_ID = 'adgroupID';
-
-    protected function adjustTemporaryTableColumns(
-        $columns,
-        $campaignId = null,
-        $adGroupId = null
-    ) {
-        return $this->unsetColumns($columns, [self::PAGE_ID, 'adgroupName']);
-    }
+    const PAGE_ID = 'adID';
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -38,12 +27,12 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('adgroupID', $adgroupIDs)
+                ->whereIn('adID', $adIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
@@ -83,14 +72,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay,
-        $engine,
-        $clientId = null,
-        $accountId = null,
-        $campaignId = null,
-        $adGroupId = null,
-        $adReportId = null,
-        $keywordId = null
+        $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
 
@@ -105,7 +87,7 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
                     'visitor_city_state'
                 ]
             )
-                ->where('source', '=', $engine)
+                ->where('source', '=', 'ydn')
                 ->whereRaw('traffic_type = "AD"')
                 ->whereIn('phone_number', $phoneNumbers)
                 ->whereIn('utm_campaign', $utmCampaignList)
