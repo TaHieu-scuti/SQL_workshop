@@ -160,6 +160,7 @@ abstract class AbstractReportModel extends Model
                     $tableName,
                     $fieldName
                 );
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
@@ -171,6 +172,7 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+                continue;
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
@@ -181,6 +183,7 @@ abstract class AbstractReportModel extends Model
                     $key,
                     'secondQuery'
                 );
+                continue;
             }
 
             if (in_array($fieldName, array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS))) {
@@ -222,6 +225,7 @@ abstract class AbstractReportModel extends Model
 
             if ($fieldName === 'impressionShare') {
                 $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
@@ -233,10 +237,12 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+                continue;
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::AVERAGE_FIELDS, self::SUM_FIELDS))) {
@@ -248,7 +254,6 @@ abstract class AbstractReportModel extends Model
                 );
             }
         }
-
         return $arrayCalculate;
     }
 
