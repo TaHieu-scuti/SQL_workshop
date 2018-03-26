@@ -216,7 +216,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'yss')
+                ->where('source', 'adw')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);
@@ -234,10 +234,10 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $yssCampaignConvModel = new RepoAdwCampaignReportConv();
+        $adwCampaignConvModel = new RepoAdwCampaignReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         $aggregation[] = 'dayOfWeek';
-        return $yssCampaignConvModel->select($aggregation)
+        return $adwCampaignConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
