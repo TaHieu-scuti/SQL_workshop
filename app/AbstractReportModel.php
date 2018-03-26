@@ -160,6 +160,8 @@ abstract class AbstractReportModel extends Model
                     $tableName,
                     $fieldName
                 );
+
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
@@ -171,6 +173,12 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
+            }
+
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
@@ -181,6 +189,8 @@ abstract class AbstractReportModel extends Model
                     $key,
                     'secondQuery'
                 );
+
+                continue;
             }
 
             if (in_array($fieldName, array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS))) {
@@ -190,6 +200,8 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
             }
         }
         return $arrayCalculate;
@@ -222,6 +234,8 @@ abstract class AbstractReportModel extends Model
 
             if ($fieldName === 'impressionShare') {
                 $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
+
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
@@ -233,10 +247,18 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
+            }
+
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
+
+                continue;
             }
 
             if (in_array($fieldName, array_merge(self::AVERAGE_FIELDS, self::SUM_FIELDS))) {
@@ -246,6 +268,8 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
             }
         }
 
@@ -312,6 +336,7 @@ abstract class AbstractReportModel extends Model
                 $this->groupBy[] = static::PAGE_ID;
             }
             $arrayCalculate[] = $fieldName;
+
             if (!empty($higherLayerSelections)) {
                 $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
@@ -1193,6 +1218,11 @@ abstract class AbstractReportModel extends Model
         }
 
         $all_higher_layers = static::ALL_HIGHER_LAYERS;
+
+        if ($this->preFixRoute === 'adgroup') {
+            $all_higher_layers = static::ALL_HIGHER_LAYERS_FOR_ADGROUP;
+        }
+
         foreach ($all_higher_layers as $key => $value) {
             if (in_array($value['aliasId'], $arrayAlias)) {
                 unset($all_higher_layers[$key]);

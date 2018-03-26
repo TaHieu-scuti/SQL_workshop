@@ -135,6 +135,7 @@ $('#fieldsOnModal').delegate('input[name="fieldName"]:checkbox', 'change', funct
 
 function filterColumnChecked() {
     var array= [];
+    var numberCheckbox = $("input[name='fieldName']:checkbox").length;
     $.each($("input[name='fieldName']:checked"), function() {
         array.push($(this).val());
     });
@@ -146,6 +147,9 @@ function filterColumnChecked() {
     if (array.length === 1) {
         $("input[name='fieldName']:checked").attr("disabled", true);
     } else if(array.length > 1) {
+        if(array.length < numberCheckbox) {
+            $('#selectAll').prop('checked', false);
+        }
         $("input[name='fieldName']:checkbox").removeAttr('disabled');
     }
 }

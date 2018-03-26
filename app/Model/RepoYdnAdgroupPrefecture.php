@@ -38,24 +38,14 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $adgroupIDs = array_unique($conversionPoints->pluck('adgroupID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-            ->where(
-                function (EloquentBuilder $query) use (
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                ) {
-                    $this->getCondition(
-                        $query,
+                ->whereIn('adgroupID', $adgroupIDs)
+                ->where(
+                    function (EloquentBuilder $query) use (
                         $startDay,
                         $endDay,
                         $engine,
@@ -65,9 +55,21 @@ class RepoYdnAdgroupPrefecture extends AbstractYdnReportModel
                         $adGroupId,
                         $adReportId,
                         $keywordId
-                    );
-                }
-            )->groupBy($groupedByField);
+                    ) {
+                        $this->getCondition(
+                            $query,
+                            $startDay,
+                            $endDay,
+                            $engine,
+                            $clientId,
+                            $accountId,
+                            $campaignId,
+                            $adGroupId,
+                            $adReportId,
+                            $keywordId
+                        );
+                    }
+                )->groupBy($groupedByField);
 
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
