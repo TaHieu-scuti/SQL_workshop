@@ -33,6 +33,16 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         ]
     ];
 
+    const ALL_HIGHER_LAYERS_FOR_ADGROUP = [
+        [
+            'columnName' => 'campaign',
+            'tableJoin' => 'repo_adw_ad_report_cost',
+            'columnId' => 'campaignID',
+            'aliasId' => 'campaignID',
+            'aliasName' => 'campaignName'
+        ]
+    ];
+
     const FIELDS = [
         'displayURL',
         'description'
@@ -169,7 +179,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 ->whereRaw($customField.' NOT LIKE ""')
                 ->where('source', '=', $engine)
                 ->whereRaw('traffic_type = "AD"')
-                ->whereIn('phone_number', $phoneNumbers)
+                ->where('phone_number', $phoneNumbers[$i])
                 ->whereIn('utm_campaign', $utmCampaignList)
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
@@ -299,6 +309,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
                 $adGroupId,
                 self::TABLE_TEMPORARY_AD
             );
+
             $builder = DB::table(self::TABLE_TEMPORARY_AD)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
@@ -328,7 +339,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
         $this->conversionPoints = $conversionPoints;
         $this->adGainerCampaigns = $adGainerCampaigns;
         $fieldNames = $this->checkConditionFieldName($fieldNames);
-
+        $this->preFixRoute = 'adgroup';
         $builder = AbstractReportModel::getBuilderForCalculateData(
             $engine,
             $fieldNames,
