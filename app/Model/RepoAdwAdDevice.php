@@ -49,12 +49,13 @@ class RepoAdwAdDevice extends AbstractAdwDevice
                 DB::raw('SUM(repo_adw_ad_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
                 ->where(
-                    function (EloquentBuilder $query) use ($startDay, $endDay) {
-                        $this->addTimeRangeCondition($startDay, $endDay, $query);
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $convModel) {
+                        $convModel->addTimeRangeCondition($startDay, $endDay, $query);
                     }
                 )
                 ->where(
                     function (EloquentBuilder $query) use (
+                        $convModel,
                         $clientId,
                         $accountId,
                         $campaignId,
@@ -63,7 +64,7 @@ class RepoAdwAdDevice extends AbstractAdwDevice
                         $keywordId,
                         $engine
                     ) {
-                        $this->addQueryConditions(
+                        $convModel->addQueryConditions(
                             $query,
                             $clientId,
                             $engine,
@@ -76,8 +77,8 @@ class RepoAdwAdDevice extends AbstractAdwDevice
                     }
                 )
                 ->where(
-                    function (EloquentBuilder $query) use ($engine) {
-                        $this->addConditionNetworkQuery($query);
+                    function (EloquentBuilder $query) use ($engine, $convModel) {
+                        $convModel->addConditionNetworkQuery($query);
                     }
                 )
                 ->groupBy($groupedByField);

@@ -362,15 +362,4 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         );
         $this->insertDataToTemporary($highEndMobileDevice, $fieldNames);
     }
-
-    private function addConditionNetworkQuery(EloquentBuilder $query) {
-        if (static::PAGE_ID === 'keywordID') {
-            $query->where($this->getTable() . '.network', 'SEARCH');
-        } elseif (static::PAGE_ID === 'adID') {
-            $query->where($this->getTable() . '.network', 'CONTENT');
-        } else {
-            $query->where($this->getTable() . '.network', 'SEARCH')
-                ->orWhere($this->getTable() . '.network', 'CONTENT');
-        }
-    }
 }
