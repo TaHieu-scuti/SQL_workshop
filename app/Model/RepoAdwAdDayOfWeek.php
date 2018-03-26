@@ -48,8 +48,7 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
             'adw',
             $campaignIDs,
             static::PAGE_ID,
-            $adIDs,
-            null
+            $adIDs
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $builder = parent::getBuilderForGetDataForTable(
