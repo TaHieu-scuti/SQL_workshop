@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Facades\Redis as Redis;
 use App\User;
 
 class SharingSessionGuard implements Guard
@@ -25,6 +26,14 @@ class SharingSessionGuard implements Guard
         if (session_id() === '') {
             session_start();
         }
+        try {
+            $redis = Redis::connection();
+        } catch(Exception $e) {
+            throw $e->getMessage();
+        }
+
+        $sessionData = $redis->get('ci_session:'.session_id());
+        session_decode($sessionData);
 
         if (array_key_exists('account_id', $_SESSION)) {
             $currentUser = $this->user->where('account_id', '=', $_SESSION['account_id'])->first();
