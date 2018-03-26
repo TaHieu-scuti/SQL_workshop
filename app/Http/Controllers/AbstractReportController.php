@@ -33,6 +33,7 @@ use App\Model\RepoYssCampaignDayofweek;
 use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwAdgroupTimezone;
+use App\Model\RepoAdwAdTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoAdwAdDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
@@ -851,6 +852,8 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignTimezone;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupTimezone;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoAdwAdTimezone;
             }
         }
     }
