@@ -32,7 +32,6 @@ class ModifyDataTypeOfIdFieldPhoneTimeUseTable extends Migration
     public function down()
     {
         if (!App::environment('production')) {
-
             Schema::table(
                 'phone_time_use',
                 function (Blueprint $table) {

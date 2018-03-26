@@ -68,7 +68,6 @@ class AlterUsersTable extends Migration
     public function down()
     {
         if (!App::environment('production')) {
-
             Schema::table(
                 'users',
                 function (Blueprint $table) {
