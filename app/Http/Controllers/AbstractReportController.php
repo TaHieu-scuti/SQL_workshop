@@ -9,10 +9,12 @@ use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
 use App\Model\RepoYdnAdgroupDevice;
 use App\Model\RepoYdnAdgroupTimeZone;
+use App\Model\RepoYdnAdPrefecture;
 use App\Model\RepoYdnAdTimeZone;
 use App\Model\RepoYssCampaignDevice;
 use App\Model\RepoYssKeywordDayOfWeek;
 use App\Model\RepoYssKeywordDevice;
+use App\Model\RepoYssKeywordPrefecture;
 use App\Model\RepoYssKeywordTimeZone;
 use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
@@ -804,12 +806,16 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoYssAdgroupPrefecture;
             } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYssCampaignPrefecture;
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoYssKeywordPrefecture;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoYdnPrefecture;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoYdnAdgroupPrefecture;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoYdnAdPrefecture;
             }
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {

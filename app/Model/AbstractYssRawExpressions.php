@@ -15,7 +15,8 @@ abstract class AbstractYssRawExpressions extends AbstractTemporaryModel
         'campaignName',
         'adgroupName',
         'keyword',
-        'adgroupID'
+        'adgroupID',
+        'campaignID'
     ];
 
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')

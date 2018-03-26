@@ -3,12 +3,13 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Facades\DB;
 
-class RepoYssAdgroupPrefecture extends AbstractYssPrefecture
+class RepoYssKeywordPrefecture extends AbstractYssPrefecture
 {
     protected $table = 'repo_yss_prefecture_report_cost';
 
-    const PAGE_ID = 'adgroupID';
+    const PAGE_ID = 'keywordID';
 
     public $timestamps = false;
 
@@ -81,5 +82,11 @@ class RepoYssAdgroupPrefecture extends AbstractYssPrefecture
                 }
             )
             ->get();
+    }
+    protected function getAggregatedConversionName($column)
+    {
+        $arraySelect = ['conversionName'];
+        array_unshift($arraySelect, 'campaignID', 'adgroupID');
+        return $arraySelect;
     }
 }
