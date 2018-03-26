@@ -28,7 +28,7 @@ class SharingSessionGuard implements Guard
         }
         try {
             $redis = Redis::connection();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw $e->getMessage();
         }
 
