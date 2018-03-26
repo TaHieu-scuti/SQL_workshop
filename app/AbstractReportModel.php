@@ -177,10 +177,8 @@ abstract class AbstractReportModel extends Model
                 continue;
             }
 
-            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID') {
-                if (!empty($higherLayerSelections)) {
-                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
-                }
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
@@ -253,10 +251,8 @@ abstract class AbstractReportModel extends Model
                 continue;
             }
 
-            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID') {
-                if (!empty($higherLayerSelections)) {
-                    $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
-                }
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
