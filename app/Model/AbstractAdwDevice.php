@@ -5,7 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\DB;
 
-class AbstractAdwDevice extends AbstractAdwSubReportModel
+abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
 {
     const ARRAY_ADW_NEED_UNSET = [
         'campaign',
