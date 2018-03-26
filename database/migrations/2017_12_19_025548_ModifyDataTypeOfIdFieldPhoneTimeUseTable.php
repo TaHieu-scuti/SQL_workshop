@@ -14,12 +14,14 @@ class ModifyDataTypeOfIdFieldPhoneTimeUseTable extends Migration
      */
     public function up()
     {
-        Schema::table(
-            'phone_time_use',
-            function (Blueprint $table) {
-                $table->integer('id', true)->change();
-            }
-        );
+        if (!App::environment('production')) {
+            Schema::table(
+                'phone_time_use',
+                function (Blueprint $table) {
+                    $table->integer('id', true)->change();
+                }
+            );
+        }
     }
 
     /**
@@ -29,11 +31,14 @@ class ModifyDataTypeOfIdFieldPhoneTimeUseTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'phone_time_use',
-            function (Blueprint $table) {
-                $table->increments('id')->change();
-            }
-        );
+        if (!App::environment('production')) {
+
+            Schema::table(
+                'phone_time_use',
+                function (Blueprint $table) {
+                    $table->increments('id')->change();
+                }
+            );
+        }
     }
 }
