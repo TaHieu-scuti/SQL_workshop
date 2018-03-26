@@ -41,11 +41,15 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $phoneTimeUseWithDayOfWeek = new RepoPhoneTimeUse;
         $this->adGainerCampaigns = $phoneTimeUseWithDayOfWeek->getPhoneTimeUseWithDayOfWeek(
             $clientId,
             'adw',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            $adIDs,
+            null
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $builder = parent::getBuilderForGetDataForTable(
