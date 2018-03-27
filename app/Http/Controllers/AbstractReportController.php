@@ -113,7 +113,7 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-        $this->middleware('auth');
+        $this->middleware('auth:custom');
         $this->middleware('language');
         $this->middleware(
             function (Request $request, $next) {
