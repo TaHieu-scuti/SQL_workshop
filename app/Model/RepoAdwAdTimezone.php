@@ -26,7 +26,7 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
         $sort,
         $groupedByField,
         $agencyId = null,
-        $accountId = null,';'
+        $accountId = null,
         $clientId = null,
         $campaignId = null,
         $adGroupId = null,
