@@ -162,7 +162,7 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
     ) {
         $aggregations = $this->getAggregated($fieldNames);
 
-         return $this->select(array_merge([DB::raw('"'.$deviceName. '" AS device')], $aggregations))
+        return $this->select(array_merge([DB::raw('"'.$deviceName. '" AS device')], $aggregations))
             ->where('device', '=', $deviceName)
             ->where(
                 function (EloquentBuilder $query) use ($startDay, $endDay) {
