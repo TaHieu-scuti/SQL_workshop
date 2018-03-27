@@ -7,6 +7,7 @@ use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Model\RepoAdwAdDevice;
 use App\Model\RepoAdwAdgroupDevice;
+use App\Model\RepoAdwKeywordDevice;
 use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
 use App\Model\RepoYdnAdgroupDevice;
@@ -114,7 +115,7 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-        $this->middleware('auth:custom');
+        $this->middleware('auth');
         $this->middleware('language');
         $this->middleware(
             function (Request $request, $next) {
@@ -908,6 +909,11 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwAdgroupDevice;
             } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
                 $this->model = new RepoAdwAdDevice;
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+                $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+                session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+                $this->model = new RepoAdwKeywordDevice;
             }
         }
     }
