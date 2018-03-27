@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
+use App\Model\RepoAdwAdDevice;
 use App\Model\RepoAdwAdgroupDevice;
 use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
@@ -36,12 +37,14 @@ use App\Model\RepoAdwAdgroupTimezone;
 use App\Model\RepoAdwAdTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoAdwAdDayOfWeek;
+use App\Model\RepoAdwAdgroupDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
 use App\Model\RepoAdwCampaignPrefecture;
 use App\Model\RepoAdwCampaignDevice;
 use App\Model\RepoYdnDevice;
 use App\Model\RepoAdwAdgroupPrefecture;
+use App\Model\RepoAdwKeywordPrefecture;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -114,7 +117,7 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-        $this->middleware('auth');
+        $this->middleware('auth:custom');
         $this->middleware('language');
         $this->middleware(
             function (Request $request, $next) {
@@ -801,7 +804,7 @@ abstract class AbstractReportController extends Controller
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare', 'matchType']);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare', 'matchType', 'keyword']);
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
@@ -825,6 +828,8 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignPrefecture;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupPrefecture;
+            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+                $this->model = new RepoAdwKeywordPrefecture;
             }
         }
     }
@@ -881,6 +886,8 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignDayOfWeek;
             } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
                 $this->model = new RepoAdwAdDayOfWeek;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoAdwAdgroupDayOfWeek;
             }
         }
     }
@@ -908,6 +915,8 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignDevice;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupDevice;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoAdwAdDevice;
             }
         }
     }

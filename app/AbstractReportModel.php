@@ -1269,4 +1269,16 @@ abstract class AbstractReportModel extends Model
             }
         }
     }
+
+    protected function addConditionNetworkQuery(Builder $query)
+    {
+        if (static::PAGE_ID === 'keywordID') {
+            $query->where($this->getTable() . '.network', 'SEARCH');
+        } elseif (static::PAGE_ID === 'adID') {
+            $query->where($this->getTable() . '.network', 'CONTENT');
+        } else {
+            $query->where($this->getTable() . '.network', 'SEARCH')
+                ->orWhere($this->getTable() . '.network', 'CONTENT');
+        }
+    }
 }
