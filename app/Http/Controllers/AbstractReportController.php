@@ -805,31 +805,46 @@ abstract class AbstractReportController extends Controller
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssAdgroupPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYssCampaignPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoYssKeywordPrefecture;
-            }
+            $this->updateModelForYssPrefecture(static::SESSION_KEY_PREFIX);
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYdnPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYdnAdgroupPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoYdnAdPrefecture;
-            }
+            $this->updateModelForYdnPrefecture(static::SESSION_KEY_PREFIX);
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoAdwCampaignPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoAdwAdgroupPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoAdwKeywordPrefecture;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoAdwAdPrefectureReport;
-            }
+            $this->updateModelForAdwPrefecture(static::SESSION_KEY_PREFIX);
+        }
+    }
+
+    private function updateModelForAdwPrefecture($keyPrefix)
+    {
+        if ($keyPrefix === 'campaignReport.') {
+            $this->model = new RepoAdwCampaignPrefecture;
+        } elseif ($keyPrefix === 'adgroupReport.') {
+            $this->model = new RepoAdwAdgroupPrefecture;
+        } elseif ($keyPrefix === 'keywordReport.') {
+            $this->model = new RepoAdwKeywordPrefecture;
+        } elseif ($keyPrefix === 'adReport.') {
+            $this->model = new RepoAdwAdPrefectureReport;
+        }
+    }
+
+    private function updateModelForYssPrefecture($keyPrefix)
+    {
+        if ($keyPrefix === 'adgroupReport.') {
+            $this->model = new RepoYssAdgroupPrefecture;
+        } elseif ($keyPrefix === 'campaignReport.') {
+            $this->model = new RepoYssCampaignPrefecture;
+        } elseif ($keyPrefix === 'keywordReport.') {
+            $this->model = new RepoYssKeywordPrefecture;
+        }
+    }
+
+    private function updateModelForYdnPrefecture($keyPrefix)
+    {
+        if ($keyPrefix === 'campaignReport.') {
+            $this->model = new RepoYdnPrefecture;
+        } elseif ($keyPrefix === 'adgroupReport.') {
+            $this->model = new RepoYdnAdgroupPrefecture;
+        } elseif ($keyPrefix === 'adReport.') {
+            $this->model = new RepoYdnAdPrefecture;
         }
     }
 
