@@ -426,6 +426,12 @@ abstract class AbstractReportModel extends Model
                 && $tableName !== 'temporary_table'
             ) {
                 $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
+            } elseif ($fieldName === self::HOUR_OF_DAY
+                && static::PAGE_ID === 'adID'
+                && session(static::SESSION_KEY_ENGINE) === 'adw'
+                && $tableName !== 'temporary_table'
+            ) {
+                $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
             } else {
                 $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
             }
@@ -624,6 +630,10 @@ abstract class AbstractReportModel extends Model
         foreach ($groupBy as &$item) {
             if (is_string($item)) {
                 if ($item === self::HOUR_OF_DAY && static::PAGE_ID === 'keywordID') {
+                    $item = DB::raw('hour('.$this->getTable() . '.day)');
+                } elseif ($item === self::HOUR_OF_DAY
+                            && static::PAGE_ID === 'adID'
+                            && $engine === 'adw') {
                     $item = DB::raw('hour('.$this->getTable() . '.day)');
                 } else {
                     $item = $this->getTable() . '.' . $item;
