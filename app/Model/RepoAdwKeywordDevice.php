@@ -47,24 +47,25 @@ class RepoAdwKeywordDevice extends AbstractAdwDevice
                 DB::raw('SUM(repo_adw_keywords_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
                 ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $convModel) {
+                        $convModel->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,
-                        $startDay,
-                        $endDay,
-                        $engine,
                         $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
-                        $keywordId
+                        $keywordId,
+                        $engine
                     ) {
-                        $convModel->getCondition(
+                        $convModel->addQueryConditions(
                             $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
                             $clientId,
+                            $engine,
                             $accountId,
                             $campaignId,
                             $adGroupId,
@@ -72,7 +73,13 @@ class RepoAdwKeywordDevice extends AbstractAdwDevice
                             $keywordId
                         );
                     }
-                )->groupBy($groupedByField);
+                )
+                ->where(
+                    function (EloquentBuilder $query) use ($convModel) {
+                        $convModel->addConditionNetworkQuery($query);
+                    }
+                )
+                ->groupBy($groupedByField);
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
