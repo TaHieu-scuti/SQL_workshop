@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
+use App\Model\RepoAdwAdDevice;
 use App\Model\RepoAdwAdgroupDevice;
 use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
@@ -905,6 +906,8 @@ abstract class AbstractReportController extends Controller
                 $this->model = new RepoAdwCampaignDevice;
             } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
                 $this->model = new RepoAdwAdgroupDevice;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoAdwAdDevice;
             }
         }
     }
