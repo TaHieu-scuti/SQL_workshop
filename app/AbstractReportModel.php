@@ -1260,7 +1260,8 @@ abstract class AbstractReportModel extends Model
         }
     }
 
-    protected function addConditionNetworkQuery(Builder $query) {
+    protected function addConditionNetworkQuery(Builder $query)
+    {
         if (static::PAGE_ID === 'keywordID') {
             $query->where($this->getTable() . '.network', 'SEARCH');
         } elseif (static::PAGE_ID === 'adID') {
