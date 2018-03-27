@@ -4,16 +4,14 @@ namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use PhpParser\Builder;
 
-class RepoYdnDevice extends AbstractYdnDevice
+class RepoYdnAdPrefecture extends AbstractYdnSpecificReportModel
 {
     protected $table = 'repo_ydn_reports';
 
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'device';
-
     public $timestamps = false;
+
+    const PAGE_ID = 'adID';
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -29,12 +27,12 @@ class RepoYdnDevice extends AbstractYdnDevice
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($conversionPoints->pluck('adID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
             $queryGetConversion = $this->select(
                 DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('campaignID', $campaignIDs)
+                ->whereIn('adID', $adIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
                         $startDay,
@@ -74,51 +72,35 @@ class RepoYdnDevice extends AbstractYdnDevice
         $adGainerCampaigns,
         $groupedByField,
         $startDay,
-        $endDay,
-        $device
+        $endDay
     ) {
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
-        foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
-            )->where('phone_number', $phoneNumber)
-                ->where('source', 'ydn')
-                ->where('traffic_type', 'AD')
-                ->where(
-                    function (EloquentBuilder $builder) use ($tableName, $device) {
-                        if ($device === "PC") {
-                            $this->addConditionForDevicePC($builder, $tableName);
-                        } elseif ($device === "SmartPhone") {
-                            $this->addConditionForDeviceSmartPhone($builder, $tableName);
-                        } elseif ($device === "Tablet") {
-                            $this->addConditionForDeviceTablet($builder, $tableName);
-                        } else {
-                            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
-                        }
-                    }
-                )
-                ->where(
-                    function (EloquentBuilder $query) use ($tableName, $device) {
-                        if ($device === "PC" || $device === "Tablet") {
-                            $query->where($tableName.'.mobile', '=', 'No');
-                        } elseif ($device === "SmartPhone") {
-                            $query->whereRaw($tableName.'.mobile LIKE "Yes%"');
-                        }
-                    }
-                )
-                ->where(
-                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
-                    }
-                )->whereIn('utm_campaign', $utmCampaignList);
 
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+        foreach ($phoneNumbers as $i => $phoneNumber) {
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    'visitor_city_state'
+                ]
+            )
+                ->where('source', '=', 'ydn')
+                ->whereRaw('traffic_type = "AD"')
+                ->whereIn('phone_number', $phoneNumbers)
+                ->whereIn('utm_campaign', $utmCampaignList)
+                ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                        $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                    }
+                )
+                ->groupBy('visitor_city_state');
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.device = tbl.device'
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                .'tbl.visitor_city_state LIKE CONCAT("%",'.self::TABLE_TEMPORARY.'.prefecture," (Japan)")'
             );
         }
     }
