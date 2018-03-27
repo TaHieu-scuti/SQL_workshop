@@ -192,7 +192,7 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
                 }
             )
             ->where(
-                function (EloquentBuilder $query) use ($engine) {
+                function (EloquentBuilder $query) {
                     $this->addConditionNetworkQuery($query);
                 }
             )

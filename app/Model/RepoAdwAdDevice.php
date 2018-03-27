@@ -77,7 +77,7 @@ class RepoAdwAdDevice extends AbstractAdwDevice
                     }
                 )
                 ->where(
-                    function (EloquentBuilder $query) use ($engine, $convModel) {
+                    function (EloquentBuilder $query) use ($convModel) {
                         $convModel->addConditionNetworkQuery($query);
                     }
                 )
