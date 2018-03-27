@@ -183,10 +183,12 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
                             $keywordId
                         );
                     }
-                )->where(
+                )
+                ->where(
                     function (EloquentBuilder $query) use ($convModel) {
                         $convModel->addConditionNetworkQuery($query);
-                    }->groupBy($groupedByField);
+                    }
+                )->groupBy($groupedByField);
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
