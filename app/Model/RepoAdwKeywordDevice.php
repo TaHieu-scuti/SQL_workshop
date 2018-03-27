@@ -24,6 +24,7 @@ class RepoAdwKeywordDevice extends AbstractAdwDevice
                     $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
                 }
             )
+            ->where('network', 'SEARCH')
             ->get();
     }
 
