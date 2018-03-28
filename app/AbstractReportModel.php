@@ -160,10 +160,6 @@ abstract class AbstractReportModel extends Model
                     $tableName,
                     $fieldName
                 );
-<<<<<<< HEAD
-=======
-
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -176,16 +172,11 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
-<<<<<<< HEAD
-                continue;
-=======
-
                 continue;
             }
 
             if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
                 $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
@@ -196,10 +187,6 @@ abstract class AbstractReportModel extends Model
                     $key,
                     'secondQuery'
                 );
-<<<<<<< HEAD
-=======
-
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -244,10 +231,6 @@ abstract class AbstractReportModel extends Model
 
             if ($fieldName === 'impressionShare') {
                 $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
-<<<<<<< HEAD
-=======
-
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -260,24 +243,15 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
-<<<<<<< HEAD
-                continue;
-=======
-
                 continue;
             }
 
             if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
                 $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
-<<<<<<< HEAD
-=======
-
->>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
