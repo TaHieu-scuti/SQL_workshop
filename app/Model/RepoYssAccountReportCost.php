@@ -165,19 +165,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
     protected function getAggregatedOfGoogle(array $fieldNames)
     {
+        $tableName = (new RepoAdwAccountReportCost)->getTable();
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         if (array_search('accountName', $fieldNames) === false) {
             $fieldNames = $this->unsetColumns($fieldNames, [static::GROUPED_BY_FIELD_NAME_ADW]);
             $fieldNames = $this->unsetColumns($fieldNames, [static::PAGE_ID]);
-        }
-        $tableName = (new RepoAdwAccountReportCost)->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-            ) {
-                $fieldNames= $this->unsetColumns($fieldNames, [static::PAGE_ID]);
-            }
         }
 
         $arrayCalculate = [];
@@ -187,7 +179,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             } elseif ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PAGE_ID
             ) {
                 $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
             } elseif ($fieldName === static::GROUPED_BY_FIELD_NAME_ADW) {

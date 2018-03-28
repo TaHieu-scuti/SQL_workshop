@@ -14,7 +14,7 @@ class RepoAccountDevice extends RepoYssAccountReportCost
     protected $groupBy = 'device';
 
     const YSS_PLATFORM = [
-        'PC' => [
+        'DESKTOP' => [
             'MOBILE' => 'No',
             'PLATFORM_NOT_LIKE' => 'Windows Phone%',
             'PLATFORM_LIKE' => [
@@ -29,7 +29,7 @@ class RepoAccountDevice extends RepoYssAccountReportCost
                 'Blackberry%'
             ]
         ],
-        'MOBILE' => [
+        'SMART PHONE' => [
             'MOBILE' => 'Yes%',
             'PLATFORM_NOT_LIKE' => null,
             'PLATFORM_LIKE' => [
@@ -69,7 +69,7 @@ class RepoAccountDevice extends RepoYssAccountReportCost
                 'Blackberry%'
             ],
         ],
-        'MOBILE' => [
+        'SmartPhone' => [
             'MOBILE' => 'Yes%',
             'PLATFORM_NOT_LIKE' => null,
             'PLATFORM_LIKE' => [
@@ -87,7 +87,7 @@ class RepoAccountDevice extends RepoYssAccountReportCost
     ];
 
     const ADW_PLATFORM = [
-        'PC' => [
+        'DESKTOP' => [
             'MOBILE' => 'No',
             'PLATFORM_NOT_LIKE' => 'Windows Phone%',
             'PLATFORM_LIKE' => [
@@ -108,7 +108,7 @@ class RepoAccountDevice extends RepoYssAccountReportCost
                 'Blackberry%'
             ],
         ],
-        'MOBILE' => [
+        'HIGH_END_MOBILE' => [
             'MOBILE' => 'Yes',
             'PLATFORM_NOT_LIKE' => null,
             'PLATFORM_LIKE' => null
