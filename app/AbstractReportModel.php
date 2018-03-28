@@ -160,6 +160,10 @@ abstract class AbstractReportModel extends Model
                     $tableName,
                     $fieldName
                 );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -172,7 +176,16 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+<<<<<<< HEAD
                 continue;
+=======
+
+                continue;
+            }
+
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
@@ -183,6 +196,10 @@ abstract class AbstractReportModel extends Model
                     $key,
                     'secondQuery'
                 );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -193,6 +210,8 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
             }
         }
         return $arrayCalculate;
@@ -225,6 +244,10 @@ abstract class AbstractReportModel extends Model
 
             if ($fieldName === 'impressionShare') {
                 $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -237,11 +260,24 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+<<<<<<< HEAD
                 continue;
+=======
+
+                continue;
+            }
+
+            if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
+                $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
             }
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512b5f58e43b08e31439919d9337694919920e38
                 continue;
             }
 
@@ -252,6 +288,8 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
+
+                continue;
             }
         }
         return $arrayCalculate;
@@ -317,6 +355,7 @@ abstract class AbstractReportModel extends Model
                 $this->groupBy[] = static::PAGE_ID;
             }
             $arrayCalculate[] = $fieldName;
+
             if (!empty($higherLayerSelections)) {
                 $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
@@ -1198,6 +1237,11 @@ abstract class AbstractReportModel extends Model
         }
 
         $all_higher_layers = static::ALL_HIGHER_LAYERS;
+
+        if ($this->preFixRoute === 'adgroup') {
+            $all_higher_layers = static::ALL_HIGHER_LAYERS_FOR_ADGROUP;
+        }
+
         foreach ($all_higher_layers as $key => $value) {
             if (in_array($value['aliasId'], $arrayAlias)) {
                 unset($all_higher_layers[$key]);
@@ -1232,6 +1276,18 @@ abstract class AbstractReportModel extends Model
                 $query->where($this->getTable() . '.network', 'SEARCH')
                     ->orWhere($this->getTable() . '.network', 'CONTENT');
             }
+        }
+    }
+
+    protected function addConditionNetworkQuery(Builder $query)
+    {
+        if (static::PAGE_ID === 'keywordID') {
+            $query->where($this->getTable() . '.network', 'SEARCH');
+        } elseif (static::PAGE_ID === 'adID') {
+            $query->where($this->getTable() . '.network', 'CONTENT');
+        } else {
+            $query->where($this->getTable() . '.network', 'SEARCH')
+                ->orWhere($this->getTable() . '.network', 'CONTENT');
         }
     }
 }

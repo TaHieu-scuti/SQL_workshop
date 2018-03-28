@@ -2,33 +2,19 @@
 
 namespace App\Model;
 
-use App\Model\AbstractTemporaryModel;
+use App\Model\AbstractAdwPrefecture;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
+class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
 {
-    const PAGE_ID = "campaignID";
+    const PAGE_ID = 'keywordID';
+    const GROUPED_BY_FIELD_NAME = 'keyword';
 
-    protected $table = 'repo_adw_campaign_report_cost';
+    protected $table = 'repo_adw_geo_report_cost';
 
     public $timestamps = false;
-
-    protected function addJoinConditions(JoinClause $join)
-    {
-        $join->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
-                '=',
-                $this->table . '.dayOfWeek'
-            )
-            ->where('phone_time_use.source', '=', 'adw')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
 
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -47,6 +33,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -54,14 +41,19 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             $adGroupId,
             static::PAGE_ID
         );
+
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        $phoneTimeUseWithDayOfWeek = new RepoPhoneTimeUse;
-        $this->adGainerCampaigns = $phoneTimeUseWithDayOfWeek->getPhoneTimeUseWithDayOfWeek(
+        $adGroupIds = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
+        $campaigns = new Campaign;
+        $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            null,
+            $adGroupIds
         );
-        $fieldNames = $this->checkConditionFieldName($fieldNames);
+
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
             $fieldNames,
@@ -81,6 +73,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
+            array_unshift($fieldNames, 'region');
             $this->createTemporaryTable(
                 $fieldNames,
                 $this->isConv,
@@ -90,26 +83,17 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             );
             $columns = $this->unsetColumns(
                 $fieldNames,
-                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName', 'campaign'])
+                array_merge(
+                    self::UNSET_COLUMNS,
+                    self::FIELDS_CALL_TRACKING,
+                    ['prefecture', 'adgroupID']
+                )
             );
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-            if ($this->isCallTracking) {
-                $this->updateTemporaryTableWithCallTracking(
-                    $this->adGainerCampaigns,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
+            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
+                `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
 
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
@@ -127,23 +111,98 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
                 );
             }
 
-            $arr = [];
-            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
-                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            if ($this->isCallTracking) {
+                $this->updateTemporaryTableWithCallTracking(
+                    $this->adGainerCampaigns,
+                    $groupedByField,
+                    $startDay,
+                    $endDay,
+                    $engine,
+                    $clientId,
+                    $accountId,
+                    $campaignId,
+                    $adGroupId,
+                    $adReportId,
+                    $keywordId
+                );
             }
-            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
-            $aggregated = $this->processGetAggregated(
-                $fields,
-                $groupedByField,
-                $campaignId,
-                $adGroupId
-            );
-            $builder = DB::table(self::TABLE_TEMPORARY)
-                ->select(array_merge($aggregated, $arr))
-                ->groupby($groupedByField)
-                ->orderBy($columnSort, $sort);
         }
-        return $builder;
+        $arr = [];
+        if (in_array('impressionShare', $fieldNames)) {
+            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+        }
+        $fields = $this->unsetColumns($fieldNames, ['impressionShare', 'region']);
+        $aggregated = $this->processGetAggregated(
+            $fields,
+            $groupedByField,
+            $campaignId,
+            $adGroupId
+        );
+        return DB::table(self::TABLE_TEMPORARY)
+            ->select($aggregated)
+            ->groupby($groupedByField)
+            ->orderBy($columnSort, $sort);
+    }
+
+    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $adwPrefectureConvModel = new RepoAdwGeoReportConv;
+        $aggregation = $this->getAggregatedConversionName($column);
+        $aggregation[] = 'region';
+        return $adwPrefectureConvModel->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->where('network', '=', "SEARCH")
+            ->get();
+    }
+
+    protected function updateTemporaryTableWithCallTracking(
+        $adGainerCampaigns,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+
+        foreach ($phoneNumbers as $i => $phoneNumber) {
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    'visitor_city_state'
+                ]
+            )
+            ->where('source', '=', $engine)
+            ->whereRaw('traffic_type = "AD"')
+            ->where('phone_number', $phoneNumber)
+            ->whereIn('utm_campaign', $utmCampaignList)
+            ->where(
+                function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                    $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                }
+            )
+            ->groupBy('visitor_city_state');
+
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                . 'tbl.visitor_city_state LIKE CONCAT("%",'.self::TABLE_TEMPORARY.'.prefecture," (Japan)")'
+            );
+        }
     }
 
     protected function updateTemporaryTableWithConversion(
@@ -159,11 +218,12 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
+        $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
+        $adGroupIds = array_unique($conversionPoints->pluck('adgroupID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoAdwCampaignReportConv();
+            $convModel = new RepoAdwGeoReportConv;
             $queryGetConversion = $convModel->select(
-                DB::raw('SUM(repo_adw_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+                DB::raw('SUM(repo_adw_geo_report_conv.conversions) AS conversions, region')
             )->where('conversionName', $conversionName)
                 ->where(
                     function (EloquentBuilder $query) use (
@@ -191,60 +251,14 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
                             $keywordId
                         );
                     }
-                )->groupBy($groupedByField);
-
+                )->whereIn('adGroupId', $adGroupIds)
+                ->groupBy('region');
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
-                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
+                .self::TABLE_TEMPORARY.'.region'.' = tbl.region'
             );
         }
-    }
-
-    protected function updateTemporaryTableWithCallTracking(
-        $adGainerCampaigns,
-        $groupedByField,
-        $startDay,
-        $endDay
-    ) {
-        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
-        $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
-
-        foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
-            )->where('phone_number', $phoneNumber)
-                ->where('source', 'adw')
-                ->where(
-                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
-                    }
-                )->whereIn('utm_campaign', $utmCampaignList)
-                ->groupBy($groupedByField);
-
-            DB::update(
-                'update '.self::TABLE_TEMPORARY.', ('
-                .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.dayOfWeek = tbl.dayOfWeek'
-            );
-        }
-    }
-
-    public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
-    {
-        $adwCampaignConvModel = new RepoAdwCampaignReportConv();
-        $aggregation = $this->getAggregatedConversionName($column);
-        $aggregation[] = 'dayOfWeek';
-        return $adwCampaignConvModel->select($aggregation)
-            ->distinct()
-            ->where(
-                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
-                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
-                }
-            )
-            ->get();
     }
 
     protected function getBuilderForCalculateData(
@@ -262,8 +276,6 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->checkConditionFieldName($fieldNames);
-
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
@@ -281,22 +293,13 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            $arr = [];
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fields,
+                $fieldNames,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
-
-            $builder = DB::table(self::TABLE_TEMPORARY)->select(
-                array_merge(
-                    $aggregated,
-                    $arr
-                )
-            );
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
         }
 
         return $builder;

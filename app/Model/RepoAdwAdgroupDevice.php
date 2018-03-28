@@ -2,18 +2,31 @@
 
 namespace App\Model;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use PhpParser\Builder;
+use Illuminate\Support\Facades\DB;
 
-class RepoYdnDevice extends AbstractYdnDevice
+class RepoAdwAdgroupDevice extends AbstractAdwDevice
 {
-    protected $table = 'repo_ydn_reports';
-
-    const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'device';
+    const PAGE_ID = "adgroupID";
 
     public $timestamps = false;
+
+    protected $table = 'repo_adw_adgroup_report_cost';
+
+    protected function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
+    {
+        $yssAdgroupConvModel = new RepoAdwAdgroupReportConv();
+        $aggregation = $this->getAggregatedConversionName($column);
+        $aggregation[] = 'device';
+        return $yssAdgroupConvModel->select($aggregation)
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->get();
+    }
 
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
@@ -29,14 +42,14 @@ class RepoYdnDevice extends AbstractYdnDevice
         $keywordId = null
     ) {
         $conversionNames = array_values(array_unique($conversionPoints->pluck('conversionName')->toArray()));
-        $campaignIDs = array_unique($conversionPoints->pluck('campaignID')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $queryGetConversion = $this->select(
-                DB::raw('SUM(repo_ydn_reports.conversions) AS conversions, '.$groupedByField)
+            $convModel = new RepoAdwAdgroupReportConv;
+            $queryGetConversion = $convModel->select(
+                DB::raw('SUM(repo_adw_adgroup_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
-                ->whereIn('campaignID', $campaignIDs)
                 ->where(
                     function (EloquentBuilder $query) use (
+                        $convModel,
                         $startDay,
                         $endDay,
                         $engine,
@@ -47,7 +60,7 @@ class RepoYdnDevice extends AbstractYdnDevice
                         $adReportId,
                         $keywordId
                     ) {
-                        $this->getCondition(
+                        $convModel->getCondition(
                             $query,
                             $startDay,
                             $endDay,
@@ -61,7 +74,6 @@ class RepoYdnDevice extends AbstractYdnDevice
                         );
                     }
                 )->groupBy($groupedByField);
-
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetConversion).')AS tbl set conversions'.$key.' = tbl.conversions where '
@@ -80,45 +92,37 @@ class RepoYdnDevice extends AbstractYdnDevice
         $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
         $phoneList = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
-                DB::raw("'".$device."' AS device,COUNT(`id`) AS id")
+            $phoneTimeUseModel = new PhoneTimeUse;
+            $tableName = $phoneTimeUseModel->getTable();
+            $queryGetCallTracking = $phoneTimeUseModel->select(
+                DB::raw("'".$device."' AS device, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'ydn')
+                ->where('source', 'adw')
                 ->where('traffic_type', 'AD')
                 ->where(
                     function (EloquentBuilder $builder) use ($tableName, $device) {
-                        if ($device === "PC") {
-                            $this->addConditionForDevicePC($builder, $tableName);
-                        } elseif ($device === "SmartPhone") {
-                            $this->addConditionForDeviceSmartPhone($builder, $tableName);
-                        } elseif ($device === "Tablet") {
-                            $this->addConditionForDeviceTablet($builder, $tableName);
-                        } else {
-                            $builder->whereRaw($tableName.'.platform LIKE "Unknown Platform%"');
+                        if ($device === 'DESKTOP' || $device === 'TABLET') {
+                            $builder->where($tableName.'.mobile', '=', 'No');
                         }
+
+                        if ($device === 'HIGH_END_MOBILE') {
+                            $builder->where($tableName.'.mobile', '=', 'Yes');
+                        }
+                    }
+                )->where(
+                    function (EloquentBuilder $builder) use ($tableName, $device) {
+                        $this->checkingConditionForDevice($builder, $tableName, $device);
                     }
                 )
                 ->where(
-                    function (EloquentBuilder $query) use ($tableName, $device) {
-                        if ($device === "PC" || $device === "Tablet") {
-                            $query->where($tableName.'.mobile', '=', 'No');
-                        } elseif ($device === "SmartPhone") {
-                            $query->whereRaw($tableName.'.mobile LIKE "Yes%"');
-                        }
-                    }
-                )
-                ->where(
-                    function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                    function (EloquentBuilder $builder) use ($startDay, $tableName, $endDay) {
+                        $this->addConditonForDate($builder, $tableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList);
-
             DB::update(
                 'update '.self::TABLE_TEMPORARY.', ('
                 .$this->getBindingSql($queryGetCallTracking).') AS tbl set call'.$i.' = tbl.id where '
-                .self::TABLE_TEMPORARY.'.device = tbl.device'
+                .self::TABLE_TEMPORARY.'.'.$groupedByField.' = tbl.'.$groupedByField
             );
         }
     }
