@@ -8,27 +8,13 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
-class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
+class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
 {
-    const PAGE_ID = "campaignID";
+    const PAGE_ID = "adID";
 
-    protected $table = 'repo_adw_campaign_report_cost';
+    protected $table = 'repo_adw_ad_report_cost';
 
     public $timestamps = false;
-
-    protected function addJoinConditions(JoinClause $join)
-    {
-        $join->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
-                '=',
-                $this->table . '.dayOfWeek'
-            )
-            ->where('phone_time_use.source', '=', 'adw')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
 
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -55,11 +41,14 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $phoneTimeUseWithDayOfWeek = new RepoPhoneTimeUse;
         $this->adGainerCampaigns = $phoneTimeUseWithDayOfWeek->getPhoneTimeUseWithDayOfWeek(
             $clientId,
             'adw',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID,
+            $adIDs
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $builder = parent::getBuilderForGetDataForTable(
@@ -90,7 +79,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             );
             $columns = $this->unsetColumns(
                 $fieldNames,
-                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName', 'campaign'])
+                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaign', 'adGroup', 'ad'])
             );
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
@@ -127,19 +116,14 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
                 );
             }
 
-            $arr = [];
-            if (static::PAGE_ID !== 'adID' && in_array('impressionShare', $fieldNames)) {
-                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-            }
-            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fields,
+                $fieldNames,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
             $builder = DB::table(self::TABLE_TEMPORARY)
-                ->select(array_merge($aggregated, $arr))
+                ->select($aggregated)
                 ->groupby($groupedByField)
                 ->orderBy($columnSort, $sort);
         }
@@ -161,35 +145,41 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
     ) {
         $conversionNames = array_unique($conversionPoints->pluck('conversionName')->toArray());
         foreach ($conversionNames as $key => $conversionName) {
-            $convModel = new RepoAdwCampaignReportConv();
+            $convModel = new RepoAdwAdReportConv();
             $queryGetConversion = $convModel->select(
-                DB::raw('SUM(repo_adw_campaign_report_conv.conversions) AS conversions, '.$groupedByField)
+                DB::raw('SUM(repo_adw_ad_report_conv.conversions) AS conversions, '.$groupedByField)
             )->where('conversionName', $conversionName)
+                ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $convModel) {
+                        $convModel->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
                 ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,
-                        $startDay,
-                        $endDay,
-                        $engine,
                         $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
-                        $keywordId
+                        $keywordId,
+                        $engine
                     ) {
-                        $convModel->getCondition(
+                        $convModel->addQueryConditions(
                             $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
                             $clientId,
+                            $engine,
                             $accountId,
                             $campaignId,
                             $adGroupId,
                             $adReportId,
                             $keywordId
                         );
+                    }
+                )
+                ->where(
+                    function (EloquentBuilder $query) use ($convModel) {
+                        $convModel->addConditionNetworkQuery($query);
                     }
                 )->groupBy($groupedByField);
 
@@ -216,7 +206,7 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
             $queryGetCallTracking = $repoPhoneTimeUseModel->select(
                 DB::raw("DAYNAME(`time_of_call`) AS dayOfWeek, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
-                ->where('source', 'adw')
+                ->where('source', 'yss')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
                         $this->addConditonForDate($query, $tableName, $startDay, $endDay);
@@ -234,10 +224,10 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
 
     public function getAllDistinctConversionNames($account_id, $accountId, $campaignId, $adGroupId, $column)
     {
-        $adwCampaignConvModel = new RepoAdwCampaignReportConv();
+        $adwAdConvModel = new RepoAdwAdReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
         $aggregation[] = 'dayOfWeek';
-        return $adwCampaignConvModel->select($aggregation)
+        return $adwAdConvModel->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -281,21 +271,15 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            $arr = [];
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fields,
+                $fieldNames,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
 
             $builder = DB::table(self::TABLE_TEMPORARY)->select(
-                array_merge(
-                    $aggregated,
-                    $arr
-                )
+                $aggregated
             );
         }
 

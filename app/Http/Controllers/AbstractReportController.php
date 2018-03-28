@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\AbstractReportModel;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
+use App\Model\RepoAdwAdDevice;
 use App\Model\RepoAdwAdgroupDevice;
+use App\Model\RepoAdwKeywordDevice;
 use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
 use App\Model\RepoYdnAdgroupDevice;
@@ -34,6 +36,8 @@ use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwAdgroupTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
+use App\Model\RepoAdwAdDayOfWeek;
+use App\Model\RepoAdwAdgroupDayOfWeek;
 use App\Model\RepoYssAdgroupDevice;
 use App\Model\RepoYssCampaignPrefecture;
 use App\Model\RepoAdwCampaignPrefecture;
@@ -113,7 +117,7 @@ abstract class AbstractReportController extends Controller
     ) {
         $this->responseFactory = $responseFactory;
         $this->model = $model;
-        $this->middleware('auth:custom');
+        $this->middleware('auth');
         $this->middleware('language');
         $this->middleware(
             function (Request $request, $next) {
@@ -878,6 +882,10 @@ abstract class AbstractReportController extends Controller
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
             if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
                 $this->model = new RepoAdwCampaignDayOfWeek;
+            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+                $this->model = new RepoAdwAdDayOfWeek;
+            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+                $this->model = new RepoAdwAdgroupDayOfWeek;
             }
         }
     }
@@ -885,27 +893,49 @@ abstract class AbstractReportController extends Controller
     public function updateModelForDevice()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssAdgroupDevice;
-            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYssCampaignDevice;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoYssKeywordDevice;
-            }
+            $this->updateModelForYssDevice();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYdnDevice;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYdnAdgroupDevice;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoYdnAdDevice;
-            }
+            $this->updateModelForYdnDevice();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoAdwCampaignDevice;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoAdwAdgroupDevice;
-            }
+            $this->updateModelForAdwDevice();
+        }
+    }
+
+    private function updateModelForYssDevice()
+    {
+        if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYssAdgroupDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYssCampaignDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoYssKeywordDevice;
+        }
+    }
+
+    private function updateModelForYdnDevice()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYdnDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYdnAdgroupDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoYdnAdDevice;
+        }
+    }
+
+    private function updateModelForAdwDevice()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoAdwCampaignDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoAdwAdgroupDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoAdwAdDevice;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+            $this->model = new RepoAdwKeywordDevice;
         }
     }
 

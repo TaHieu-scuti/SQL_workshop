@@ -160,7 +160,6 @@ abstract class AbstractReportModel extends Model
                     $tableName,
                     $fieldName
                 );
-
                 continue;
             }
 
@@ -173,7 +172,6 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
-
                 continue;
             }
 
@@ -189,7 +187,6 @@ abstract class AbstractReportModel extends Model
                     $key,
                     'secondQuery'
                 );
-
                 continue;
             }
 
@@ -234,7 +231,6 @@ abstract class AbstractReportModel extends Model
 
             if ($fieldName === 'impressionShare') {
                 $arrayCalculate = $this->pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName);
-
                 continue;
             }
 
@@ -247,7 +243,6 @@ abstract class AbstractReportModel extends Model
                     $fieldName,
                     $key
                 );
-
                 continue;
             }
 
@@ -257,7 +252,6 @@ abstract class AbstractReportModel extends Model
 
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
-
                 continue;
             }
 
@@ -272,7 +266,6 @@ abstract class AbstractReportModel extends Model
                 continue;
             }
         }
-
         return $arrayCalculate;
     }
 
@@ -1257,6 +1250,18 @@ abstract class AbstractReportModel extends Model
                 $query->where($this->getTable() . '.network', 'SEARCH')
                     ->orWhere($this->getTable() . '.network', 'CONTENT');
             }
+        }
+    }
+
+    protected function addConditionNetworkQuery(Builder $query)
+    {
+        if (static::PAGE_ID === 'keywordID') {
+            $query->where($this->getTable() . '.network', 'SEARCH');
+        } elseif (static::PAGE_ID === 'adID') {
+            $query->where($this->getTable() . '.network', 'CONTENT');
+        } else {
+            $query->where($this->getTable() . '.network', 'SEARCH')
+                ->orWhere($this->getTable() . '.network', 'CONTENT');
         }
     }
 }
