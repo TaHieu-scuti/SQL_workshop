@@ -37,7 +37,7 @@ class AccountGenerator extends Seeder
         $account->accountName = str_random(10);
         $account->dept = '';
         $account->username = 'admin'.$account_id;
-        $account->password = bcrypt('admin');
+        $account->password = md5('admin');
         $account->account_pin = 0;
         $account->account_code = 0;
         $account->email = 'admin'.$account_id.'@gmail.com';
