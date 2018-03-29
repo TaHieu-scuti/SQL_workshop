@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\User;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Services\Auth\SharingSessionGuard;
 use App\Services\Auth\RedisGuard;
 use Illuminate\Support\Facades\Auth;
 
