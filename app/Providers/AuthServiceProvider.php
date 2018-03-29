@@ -36,13 +36,6 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        // $this->app['auth']->extend(
-        //     'custom',
-        //     function () {
-        //         return new SharingSessionGuard(new User);
-        //     }
-        // );
-
         Auth::extend('redisGuard', function ($app, $name, array $config) {
             // Return an instance of Illuminate\Contracts\Auth\Guard...
 
