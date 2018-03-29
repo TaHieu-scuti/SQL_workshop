@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Redis as Redis;
 
+use App\User;
+
 use Auth;
 
 class RedisGuard implements Guard
@@ -56,7 +58,7 @@ class RedisGuard implements Guard
             session_decode($sessionData);
             if (array_key_exists('account_id', $_SESSION)) {
                 $currentUser = User::where('account_id', '=', $_SESSION['account_id'])->first();
-                Auth::setUser($this->user()); // set current User to default "web" guard.
+                Auth::setUser($currentUser); // set current User to default "web" guard.
                 return $currentUser;
             }
         } catch (Exception $e) {
