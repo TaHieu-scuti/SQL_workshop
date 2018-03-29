@@ -7,7 +7,7 @@ use App\Model\Campaign;
 // @codingStandardsIgnoreLine
 class CampaignsGenerator extends Seeder
 {
-    const NUMBER_OF_ACCOUNTS = 2;
+    const NUMBER_OF_ACCOUNTS = 8;
     const NUMBER_OF_CAMPAIGNS_PER_ACCOUNT = 9;
 
     private function processCampaigns($account_id)

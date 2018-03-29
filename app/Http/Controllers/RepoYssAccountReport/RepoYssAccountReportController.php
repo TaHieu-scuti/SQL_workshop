@@ -9,6 +9,7 @@ use App\Model\RepoYssAccountReportCost;
 use App\Model\RepoAccountPrefecture;
 use App\Model\RepoAccountTimezone;
 use App\Model\RepoAccountDayOfWeek;
+use App\Model\RepoAccountDevice;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -74,7 +75,7 @@ class RepoYssAccountReportController extends AbstractReportController
         ],
         'accountName' => [
             'need' => ['accountName', 'accountid'],
-            'no_need' => ['dayOfWeek']
+            'no_need' => ['dayOfWeek', 'prefecture', 'hourofday', 'device']
         ],
         'hourofday' => [
             'need' => ['hourofday'],
@@ -82,6 +83,10 @@ class RepoYssAccountReportController extends AbstractReportController
         ],
         'prefecture' => [
             'need' => ['prefecture'],
+            'no_need' => ['accountName', 'accountid', 'dailySpendingLimit']
+        ],
+        'device' => [
+            'need' => ['device'],
             'no_need' => ['accountName', 'accountid', 'dailySpendingLimit']
         ]
     ];
@@ -154,6 +159,9 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->model = new RepoAccountDayOfWeek;
+        }
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'device') {
+            $this->model = new RepoAccountDevice;
         }
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
@@ -234,6 +242,10 @@ class RepoYssAccountReportController extends AbstractReportController
 
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
             $this->model = new RepoAccountDayOfWeek;
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'device') {
+            $this->model = new RepoAccountDevice;
         }
 
         $this->handlerSession();

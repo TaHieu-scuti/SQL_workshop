@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UsersTableSeeder::class);
+        $this->call(AccountsTableSeeder::class);
         $this->call(CriteriaTableSeeder::class);
 
         $this->call(RepoYssAccountsTable::class);
@@ -22,8 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoYssCampaignReportCostsTable::class);
         $this->call(RepoYssAdgroupReportCostTable::class);
         $this->call(RepoYssAdgroupReportConvTable::class);
-        $this->call(RepoYssAdReportConvTable::class);
-        $this->call(RepoYssAdReportCostTable::class);
         $this->call(RepoYssKeywordReportCostTable::class);
         $this->call(RepoYssKeywordReportConvTable::class);
         $this->call(RepoYssPrefectureReportCostTable::class);
@@ -41,8 +39,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CampaignsSeeder::class);
         $this->call(PhoneTimeUseTable::class);
-        $this->call(RepoPhoneTimeUseTable::class);
-        $this->call(AccountsTableSeeder::class);
+        $this->call(RepoPhoneTimeUseGenerator::class);
         $this->call(RepoAdwDisplayKeywordReportCost::class);
         $this->call(RepoYssSearchQueryPostCost::class);
         $this->call(RepoAdwSearchQueryPerformanceReportCost::class);

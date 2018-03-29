@@ -7,6 +7,7 @@ use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Model\RepoAdwAdDevice;
 use App\Model\RepoAdwAdgroupDevice;
+use App\Model\RepoAdwKeywordDayOfWeek;
 use App\Model\RepoAdwKeywordDevice;
 use App\Model\RepoYdnAdDayOfWeek;
 use App\Model\RepoYdnAdDevice;
@@ -864,29 +865,49 @@ abstract class AbstractReportController extends Controller
     public function updateModelForDayOfWeek()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssAdgroupDayofweek;
-            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYssCampaignDayofweek;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoYssKeywordDayOfWeek;
-            }
+            $this->updateModelForYssDayOfWeek();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYdnDayOfWeek;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYdnAdgroupDayOfWeek;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoYdnAdDayOfWeek;
-            }
+            $this->updateModelForYdnDayOfWeek();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoAdwCampaignDayOfWeek;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoAdwAdDayOfWeek;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoAdwAdgroupDayOfWeek;
-            }
+            $this->updateModelForAdwDayOfWeek();
+        }
+    }
+
+    private function updateModelForYssDayOfWeek()
+    {
+        if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYssAdgroupDayofweek;
+        } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYssCampaignDayofweek;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoYssKeywordDayOfWeek;
+        }
+    }
+
+    private function updateModelForYdnDayOfWeek()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYdnDayOfWeek;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYdnAdgroupDayOfWeek;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoYdnAdDayOfWeek;
+        }
+    }
+
+    private function updateModelForAdwDayOfWeek()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoAdwCampaignDayOfWeek;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoAdwAdDayOfWeek;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoAdwAdgroupDayOfWeek;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+            $this->model = new RepoAdwKeywordDayOfWeek;
         }
     }
 
