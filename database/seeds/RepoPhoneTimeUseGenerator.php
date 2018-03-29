@@ -38,7 +38,7 @@ class RepoPhoneTimeUseGenerator extends Seeder
     public function createRecord()
     {
         $phoneTimeUse = new PhoneTimeUse;
-        $phoneTimeUse = $phoneTimeUse->limit(1050)->get();
+        $phoneTimeUse = $phoneTimeUse->limit(1050)->orderBy('id', 'desc')->get();
 
         foreach ($phoneTimeUse as $key => $value) {
             $repoPhoneTimeUse = new RepoPhoneTimeUse;
