@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AbstractAdwSubReportModel extends AbstractTemporaryModel
 {
+    protected $conversionPoints;
+    protected $adGainerCampaigns;
+
     protected function addRawExpressionsConversionPoint(array $expressions, $tableName = "")
     {
         $conversionNames = array_unique($this->conversionPoints->pluck('conversionName')->toArray());

@@ -9,7 +9,9 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
 {
     const ARRAY_ADW_NEED_UNSET = [
         'campaign',
-        'adGroup'
+        'adGroup',
+        'keyword',
+        'adgroupID'
     ];
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -37,12 +39,16 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
+        $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
             $campaignIDs,
-            static::PAGE_ID
+            static::PAGE_ID,
+            $adIDs,
+            $adgroupIDs
         );
 
         $this->createTemporaryTable(
@@ -163,29 +169,35 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         return $this->select(array_merge([DB::raw('"'.$deviceName. '" AS device')], $aggregations))
             ->where('device', '=', $deviceName)
             ->where(
+                function (EloquentBuilder $query) use ($startDay, $endDay) {
+                    $this->addTimeRangeCondition($startDay, $endDay, $query);
+                }
+            )
+            ->where(
                 function (EloquentBuilder $query) use (
-                    $startDay,
-                    $endDay,
-                    $engine,
                     $clientId,
                     $accountId,
                     $campaignId,
                     $adGroupId,
                     $adReportId,
-                    $keywordId
+                    $keywordId,
+                    $engine
                 ) {
-                    $this->getCondition(
+                    $this->addQueryConditions(
                         $query,
-                        $startDay,
-                        $endDay,
-                        $engine,
                         $clientId,
+                        $engine,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
                         $keywordId
                     );
+                }
+            )
+            ->where(
+                function (EloquentBuilder $query) {
+                    $this->addConditionNetworkQuery($query);
                 }
             )
             ->groupBy($groupedByField);

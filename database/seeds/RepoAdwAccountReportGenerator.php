@@ -9,16 +9,10 @@ class RepoAdwAccountReportGenerator extends Seeder
     const START_DATE = '2017-12-01 00:00:00';
     const INTERVAL = 'P1D';
     const END_DATE = '2018-03-01 00:00:00';
-    const NUMBER_OF_ACCOUNTS = 2;
-    const NUMBER_OF_MEDIA_ACCOUNTS = [
-        2,
-        1,
-        5,
-        1,
-        3
-    ];
+    const NUMBER_OF_ACCOUNTS = 8;
+    const NUMBER_OF_MEDIA_ACCOUNTS = 1;
     const MIN_NUMBER_OF_CAMPAIGNS = 1;
-    const MAX_NUMBER_OF_CAMPAIGNS = 5;
+    const MAX_NUMBER_OF_CAMPAIGNS = 3;
     const MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 0;
     const MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN = 5;
     const MIN_COST = 0;
@@ -45,7 +39,7 @@ class RepoAdwAccountReportGenerator extends Seeder
 
     private function processAGAccount(DateTime $day, $agAccountNumber)
     {
-        $numberOfMediaAccounts = self::NUMBER_OF_MEDIA_ACCOUNTS[$agAccountNumber];
+        $numberOfMediaAccounts = 1;
 
         for ($i = 0; $i < $numberOfMediaAccounts; $i++) {
             $this->processMediaAccount($day, $agAccountNumber, (($agAccountNumber + 1) * 10) + $i);
@@ -66,10 +60,7 @@ class RepoAdwAccountReportGenerator extends Seeder
 
     private function processCampaign(DateTime $day, $agAccountNumber, $mediaAccountNumber, $campaignNumber)
     {
-        $numberOfReports = rand(
-            self::MIN_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN,
-            self::MAX_NUMBER_OF_REPORTS_PER_DAY_PER_CAMPAIGN
-        );
+        $numberOfReports = 2;
 
         for ($i = 0; $i < $numberOfReports + 1; ++$i) {
             $this->createReport($day, $agAccountNumber, $mediaAccountNumber, $campaignNumber);

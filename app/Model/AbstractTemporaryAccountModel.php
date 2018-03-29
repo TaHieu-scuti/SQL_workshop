@@ -23,7 +23,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         'accountid',
         'accountName',
         'dayOfWeek',
-        'prefecture'
+        'prefecture',
+        'device'
     ];
 
     const FIELDS_TYPE_INT = [

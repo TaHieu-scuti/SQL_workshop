@@ -33,10 +33,10 @@ class UsersTableSeeder extends Seeder
             $user->dept = 'Sales';
             $user->type = 1;
             $user->active = 1;
-            $user->account_id = '3';
+            $user->account_id = '1';
             $user->level = 3;
             if ($i === 1) {
-                $user->account_id = '4';
+                $user->account_id = '2';
                 $user->level = 1;
                 $user->email = "info@example.com";
                 $user->username = 'admin';
