@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Events\StatementPrepared;
 use Illuminate\Support\Facades\Event;
+use Auth;
 
 use DateTime;
 use Exception;
@@ -859,7 +860,15 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $ydnModel = new RepoYdnReport;
         return $ydnModel->select('campaign_id', 'campaignID')
             ->distinct()
-            ->where('account_id', '=', $clientId)
+            ->where(
+                function (Builder $query) use ($clientId) {
+                    if ($clientId === null) {
+                        $query->where('account_id', Auth::id());
+                    } else {
+                        $query->where('account_id', $clientId);
+                    }
+                }
+            )
             ->get();
     }
 
