@@ -22,7 +22,7 @@ class RepoYdnReport extends AbstractAccountReportModel
 
     public $timestamps = false;
 
-    private function getAggregatedOfYdn(array $fieldNames)
+    public function getAggregatedOfYdn(array $fieldNames)
     {
         if (array_search('accountName', $fieldNames) === false) {
             $keyPageId = array_search(static::PAGE_ID, $fieldNames);
@@ -126,12 +126,9 @@ class RepoYdnReport extends AbstractAccountReportModel
     public function getAllAccountYdn(
         array $fieldNames,
         $groupedByField,
-        $columnSort,
-        $sort,
         $startDay,
         $endDay,
-        $clientId = null,
-        $accountId = null
+        $clientId = null
     ) {
         $aggregations = $this->getAggregatedOfYdn($fieldNames);
         $arraySelection = array_merge(

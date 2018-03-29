@@ -36,5 +36,6 @@ class ResourceGenerator extends Seeder
 
         $this->call(CampaignsGenerator::class);
         $this->call(PhoneTimeUseGenerator::class);
+        $this->call(AccountGenerator::class);
     }
 }
