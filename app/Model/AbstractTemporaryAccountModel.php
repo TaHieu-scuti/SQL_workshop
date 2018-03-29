@@ -156,7 +156,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         );
     }
 
-    protected function getAccountYss($startDay, $endDay, $agency = "")
+    protected function getAccountYss($startDay, $endDay, $columnSort, $sort, $pagination, $agency = "")
     {
         $modelYssAccount = new RepoYssAccountReportCost;
         $column = $this->checkIssetVariable($agency);
@@ -164,7 +164,10 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
-            $endDay
+            $endDay,
+            $columnSort,
+            $sort,
+            $pagination
         );
         $rawExpressions = $this->setFieldNameToUpdate('yss');
 
@@ -175,7 +178,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         );
     }
 
-    protected function getAccountYdn($startDay, $endDay, $agency = "")
+    protected function getAccountYdn($startDay, $endDay, $columnSort, $sort, $pagination, $agency = "")
     {
         $modelYdnAccount = new RepoYdnReport;
         $column = $this->checkIssetVariable($agency);
@@ -183,7 +186,10 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
-            $endDay
+            $endDay,
+            $columnSort,
+            $sort,
+            $pagination
         );
 
         $rawExpressions = $this->setFieldNameToUpdate('ydn');
@@ -195,7 +201,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         );
     }
 
-    protected function getAccountAdw($startDay, $endDay, $agency = "")
+    protected function getAccountAdw($startDay, $endDay, $columnSort, $sort, $pagination, $agency = "")
     {
         $modelAdwAccount = new RepoAdwAccountReportCost;
         $column = $this->checkIssetVariable($agency);
@@ -203,7 +209,10 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             static::SUBQUERY_FIELDS,
             $startDay,
-            $endDay
+            $endDay,
+            $columnSort,
+            $sort,
+            $pagination
         );
 
         $rawExpressions = $this->setFieldNameToUpdate('adw');
