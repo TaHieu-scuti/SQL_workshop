@@ -17,7 +17,7 @@ class RedisGuard implements Guard
     public function __construct(UserProvider $provider)
     {
         $this->provider = $provider;
-        $this->user = NULL;
+        $this->user = null;
     }
 
         /**
@@ -59,7 +59,7 @@ class RedisGuard implements Guard
                 Auth::setUser($this->user()); // set current User to default "web" guard.
                 return $currentUser;
             }
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             throw $e->getMessage();
         }
         if (! is_null($this->user)) {
@@ -87,7 +87,6 @@ class RedisGuard implements Guard
      */
     public function validate(array $credentials = [])
     {
-        
     }
 
     /**
