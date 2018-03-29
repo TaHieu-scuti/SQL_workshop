@@ -411,7 +411,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             ->groupBy('day');
     }
 
-    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay, $columnSort = "", $sort = "", $pagination = "")
+    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay, $columnSort, $sort, $pagination)
     {
         $getAggregatedYssAccounts = $this->getAggregatedAgency($fieldNames);
 
