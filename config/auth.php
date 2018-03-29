@@ -50,6 +50,11 @@ return [
             'driver' => 'custom',
             'provider' => 'users',
         ],
+
+        'redisGuard' => [
+            'driver' => 'redisGuard',
+            'provider' => 'users',
+        ],
     ],
 
     /*

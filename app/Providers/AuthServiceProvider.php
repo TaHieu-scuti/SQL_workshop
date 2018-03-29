@@ -6,6 +6,8 @@ use App\User;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Services\Auth\SharingSessionGuard;
+use App\Services\Auth\RedisGuard;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,11 +36,17 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app['auth']->extend(
-            'custom',
-            function () {
-                return new SharingSessionGuard(new User);
-            }
-        );
+        // $this->app['auth']->extend(
+        //     'custom',
+        //     function () {
+        //         return new SharingSessionGuard(new User);
+        //     }
+        // );
+
+        Auth::extend('redisGuard', function ($app, $name, array $config) {
+            // Return an instance of Illuminate\Contracts\Auth\Guard...
+
+            return new RedisGuard(Auth::createUserProvider($config['provider']));
+        });
     }
 }
