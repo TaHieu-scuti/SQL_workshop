@@ -5,6 +5,9 @@ namespace App\Services\Auth;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Redis as Redis;
+
+use Auth;
 
 class RedisGuard implements Guard
 {
@@ -24,7 +27,7 @@ class RedisGuard implements Guard
      */
     public function check()
     {
-        return ! is_null($this->user());
+        return (!is_null($this->user()) || !is_null(Auth::user()));
     }
 
     /**
@@ -44,6 +47,21 @@ class RedisGuard implements Guard
      */
     public function user()
     {
+        try {
+            $redisConnection = Redis::connection();
+            if (session_id() === '') {
+                session_start();
+            }
+            $sessionData = $redisConnection->get('ci_session:'.session_id());
+            session_decode($sessionData);
+            if (array_key_exists('account_id', $_SESSION)) {
+                $currentUser = User::where('account_id', '=', $_SESSION['account_id'])->first();
+                Auth::setUser($this->user()); // set current User to default "web" guard.
+                return $currentUser;
+            }
+        }catch(Exception $e) {
+            throw $e->getMessage();
+        }
         if (! is_null($this->user)) {
             return $this->user;
         }
