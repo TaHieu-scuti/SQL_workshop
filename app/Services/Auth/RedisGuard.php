@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redis as Redis;
 use App\User;
 
 use Auth;
+use Log;
 
 class RedisGuard implements Guard
 {
@@ -62,7 +63,7 @@ class RedisGuard implements Guard
                 return $currentUser;
             }
         } catch (Exception $e) {
-            throw $e->getMessage();
+            Log::warning($e->getMessage());
         }
         if (! is_null($this->user)) {
             return $this->user;
