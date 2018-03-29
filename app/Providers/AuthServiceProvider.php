@@ -35,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        Auth::extend('redisGuard', function ($app, $name, array $config) {
+        Auth::extend('redisGuard', function ($app, $name, array $config) { // NOSONAR
             // Return an instance of Illuminate\Contracts\Auth\Guard...
 
             return new RedisGuard(Auth::createUserProvider($config['provider']));
