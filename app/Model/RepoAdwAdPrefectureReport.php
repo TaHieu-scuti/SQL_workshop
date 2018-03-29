@@ -60,8 +60,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
             'adw',
             $campaignIDs,
             static::PAGE_ID,
-            $adIDs,
-            null
+            $adIDs
         );
 
         $builder = parent::getBuilderForGetDataForTable(
@@ -137,11 +136,6 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
                 );
             }
         }
-        $arr = [];
-        if (in_array('impressionShare', $fieldNames)) {
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-        }
-        $fields = $this->unsetColumns($fieldNames, ['impressionShare', 'region']);
         $aggregated = $this->processGetAggregated(
             $fields,
             $groupedByField,
@@ -191,30 +185,36 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
                 DB::raw('SUM(repo_adw_geo_report_conv.conversions) AS conversions, region')
             )->where('conversionName', $conversionName)
                 ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $convModel) {
+                        $convModel->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,
-                        $startDay,
-                        $endDay,
-                        $engine,
                         $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
-                        $keywordId
+                        $keywordId,
+                        $engine
                     ) {
-                        $convModel->getCondition(
+                        $convModel->addQueryConditions(
                             $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
                             $clientId,
+                            $engine,
                             $accountId,
                             $campaignId,
                             $adGroupId,
                             $adReportId,
                             $keywordId
                         );
+                    }
+                )
+                ->where(
+                    function (EloquentBuilder $query) use ($convModel) {
+                        $convModel->addConditionNetworkQuery($query);
                     }
                 )->whereIn('adGroupId', $adGroupIds)
                 ->groupBy('region');
