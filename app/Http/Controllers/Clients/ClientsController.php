@@ -101,6 +101,11 @@ class ClientsController extends AbstractReportController
      */
     public function index()
     {
+        $currentAccountId = \Auth::user()->id;
+        $currentIsAgency = (new Account())->isAgency($currentAccountId);
+        if ($currentIsAgency) {
+            session()->put([self::SESSION_KEY_AGENCY_ID => $currentAccountId]);
+        }
         session()->forget(self::SESSION_KEY_ENGINE);
         session()->put([self::SESSION_KEY_CLIENT_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
