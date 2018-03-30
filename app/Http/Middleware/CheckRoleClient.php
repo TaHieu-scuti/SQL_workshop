@@ -22,6 +22,9 @@ class CheckRoleClient
         if ($model->isAgency(Auth::user()->account_id)
             && session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
             return redirect('/client-report');
+        } elseif ($model->isAdmin(Auth::user()->account_id)
+            && session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
+            return redirect('/agency-report');
         }
         return $next($request);
     }
