@@ -313,7 +313,7 @@ $("#selectAll").click(function () {
 * sort table
 */
 $('.table_data_report').delegate('th', 'click', function() {
-    var th = $("th").eq($(this).index());
+    let columnSort = $(this).data('value');
     $.ajax({
         url : prefixRoute + "/update-table",
         type : "POST",
@@ -321,7 +321,7 @@ $('.table_data_report').delegate('th', 'click', function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data : {
-            'columnSort' : th.data('value'),
+            'columnSort' : columnSort,
             'windowName' : self.window.name,
         },
         beforeSend : function () {
