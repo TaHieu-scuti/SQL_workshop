@@ -11,6 +11,7 @@ use App\User;
 
 use Auth;
 use Log;
+use Exception;
 
 class RedisGuard implements Guard
 {
