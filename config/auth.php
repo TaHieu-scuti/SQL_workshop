@@ -46,8 +46,8 @@ return [
             'provider' => 'users',
         ],
 
-        'custom' => [
-            'driver' => 'custom',
+        'redisGuard' => [
+            'driver' => 'redisGuard',
             'provider' => 'users',
         ],
     ],
