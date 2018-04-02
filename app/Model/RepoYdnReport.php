@@ -218,7 +218,7 @@ class RepoYdnReport extends AbstractAccountReportModel
             ->groupBy('day');
     }
 
-    public function getYdnAccountAgency(array $fieldNames, $startDay, $endDay, $columnSort, $sort, $pagination)
+    public function getYdnAccountAgency(array $fieldNames, $startDay, $endDay)
     {
         $getAggregatedYdnAccounts = $this->getAggregatedAgency($fieldNames);
 
@@ -228,11 +228,7 @@ class RepoYdnReport extends AbstractAccountReportModel
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
-            ->orderBy($columnSort, $sort)
-            ->limit($pagination)
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-
-        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }

@@ -335,7 +335,7 @@ class RepoYssAdgroupDevice extends AbstractYssRawExpressions
                 )
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $phoneTimeUseTableName, $endDay) {
-                        $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                        $this->addConditionForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList);
             DB::update(

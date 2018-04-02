@@ -94,9 +94,10 @@ class Agency extends Account
                 "(SELECT COUNT(b.`id`) FROM `accounts` AS b WHERE b.`agent_id` = `accounts`.account_id) = 0"
             );
         $this->insertDataToTemporary($directClientQuery);
-        $this->getAccountYss($startDay, $endDay, $columnSort, $sort, $pagination, self::AGENCY);
-        $this->getAccountYdn($startDay, $endDay, $columnSort, $sort, $pagination, self::AGENCY);
-        $this->getAccountAdw($startDay, $endDay, $columnSort, $sort, $pagination, self::AGENCY);
+
+        $this->getAccountYss($startDay, $endDay, self::AGENCY);
+        $this->getAccountYdn($startDay, $endDay, self::AGENCY);
+        $this->getAccountAdw($startDay, $endDay, self::AGENCY);
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
             ->select(array_merge($getAggregation))

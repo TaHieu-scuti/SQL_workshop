@@ -116,7 +116,7 @@ class RepoAdwAdgroupDevice extends AbstractAdwDevice
                 )
                 ->where(
                     function (EloquentBuilder $builder) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($builder, $tableName, $startDay, $endDay);
+                        $this->addConditionForDate($builder, $tableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList);
             DB::update(

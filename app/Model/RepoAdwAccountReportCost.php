@@ -32,7 +32,7 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
         return 'adw';
     }
 
-    public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay, $columnSort, $sort, $pagination)
+    public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay)
     {
         $getAggregatedAdwAccounts = $this->getAggregatedAgency($fieldNames);
 
@@ -49,11 +49,7 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
                         ->orWhere($tableName . '.network', '=', 'CONTENT');
                 }
             )
-            ->orderBy($columnSort, $sort)
-            ->limit($pagination)
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-
-        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }

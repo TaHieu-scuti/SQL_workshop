@@ -476,9 +476,9 @@ class Account extends AbstractTemporaryAccountModel
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' (account_id, accountName) '
             . $this->getBindingSql($sql));
 
-        $this->getAccountYss($startDay, $endDay, $columnSort, $sort, $pagination);
-        $this->getAccountYdn($startDay, $endDay, $columnSort, $sort, $pagination);
-        $this->getAccountAdw($startDay, $endDay, $columnSort, $sort, $pagination);
+        $this->getAccountYss($startDay, $endDay);
+        $this->getAccountYdn($startDay, $endDay);
+        $this->getAccountAdw($startDay, $endDay);
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
             ->select(array_merge($getAggreatedAgency))

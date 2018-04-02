@@ -411,20 +411,16 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             ->groupBy('day');
     }
 
-    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay, $columnSort, $sort, $pagination)
+    public function getYssAccountAgency(array $fieldNames, $startDay, $endDay)
     {
         $getAggregatedYssAccounts = $this->getAggregatedAgency($fieldNames);
-
         $accounts = self::select($getAggregatedYssAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
-            ->orderBy($columnSort, $sort)
-            ->limit($pagination)
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-        $this->addJoinOnPhoneTimeUse($accounts);
 
         return $accounts;
     }
@@ -716,7 +712,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->where('utm_campaign', $utmCampaignList)
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addConditonForDate($query, 'phone_time_use', $startDay, $endDay);
+                $this->addConditionForDate($query, 'phone_time_use', $startDay, $endDay);
             }
         )
         ->groupBy($customField);
