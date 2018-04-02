@@ -9,7 +9,9 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
 {
     const ARRAY_ADW_NEED_UNSET = [
         'campaign',
-        'adGroup'
+        'adGroup',
+        'keyword',
+        'adgroupID'
     ];
     protected function getBuilderForGetDataForTable(
         $engine,
@@ -38,13 +40,15 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
+        $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
         $campaigns = new Campaign;
         $this->adGainerCampaigns = $campaigns->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
             $campaignIDs,
             static::PAGE_ID,
-            $adIDs
+            $adIDs,
+            $adgroupIDs
         );
 
         $this->createTemporaryTable(

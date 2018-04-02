@@ -43,6 +43,8 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $table = 'accounts';
+
     public function setPasswordAttribute($password)
     {
 

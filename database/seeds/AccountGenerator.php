@@ -6,9 +6,8 @@ use App\Model\Account;
 // @codingStandardsIgnoreLine
 class AccountGenerator extends Seeder
 {
-    const NUMBER_OF_ACCOUNTS = 12;
+    const NUMBER_OF_ACCOUNTS = 8;
     const LEVEL = 3;
-    private $agentId = [''];
     /**
      * Run the database seeds.
      *
@@ -17,9 +16,6 @@ class AccountGenerator extends Seeder
 
     public function processAccounts($account_id)
     {
-        if ($account_id !== 1) {
-            array_push($this->agentId, $account_id);
-        }
         $account = new Account();
         $account->account_id = $account_id;
         $account->account_subsidiary = '';
@@ -31,19 +27,17 @@ class AccountGenerator extends Seeder
         $account->api_key = '';
         $account->super_agent_id = '';
         $account->level = self::LEVEL;
-        if ((int)$account_id === 4) {
+        if ((int)$account_id === 1) {
             $account->level = 1;
         }
-        $account->agent_id = $this->agentId[mt_rand(0, count($this->agentId) - 1)];
-        if ((int)$account_id === 3 || (int)$account_id === 1 || (int)$account_id === 4) {
-            $account->agent_id = '';
-        } elseif ((int)$account_id === 2) {
-            $account->agent_id = 3;
+        $account->agent_id = '';
+        if ((int)$account_id > 3 && (int)$account_id < 9) {
+            $account->agent_id = 2;
         }
         $account->accountName = str_random(10);
         $account->dept = '';
         $account->username = 'admin'.$account_id;
-        $account->password = bcrypt('admin');
+        $account->password = md5('admin');
         $account->account_pin = 0;
         $account->account_code = 0;
         $account->email = 'admin'.$account_id.'@gmail.com';

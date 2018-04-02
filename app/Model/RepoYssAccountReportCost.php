@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Events\StatementPrepared;
 use Illuminate\Support\Facades\Event;
+use Auth;
 
 use DateTime;
 use Exception;
@@ -52,6 +53,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     ];
 
     const DEFAULT_COLUMNS = [
+        'device',
         'prefecture',
         'hourofday',
         'dayOfWeek',
@@ -162,21 +164,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         return $arrSelect;
     }
 
-    private function getAggregatedOfGoogle(array $fieldNames)
+    protected function getAggregatedOfGoogle(array $fieldNames)
     {
+        $tableName = (new RepoAdwAccountReportCost)->getTable();
         array_unshift($fieldNames, self::GROUPED_BY_FIELD_NAME_ADW);
         if (array_search('accountName', $fieldNames) === false) {
             $fieldNames = $this->unsetColumns($fieldNames, [static::GROUPED_BY_FIELD_NAME_ADW]);
             $fieldNames = $this->unsetColumns($fieldNames, [static::PAGE_ID]);
-        }
-        $tableName = (new RepoAdwAccountReportCost)->getTable();
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === self::DEVICE
-                || $fieldName === self::HOUR_OF_DAY
-                || $fieldName === self::DAY_OF_WEEK
-            ) {
-                $fieldNames= $this->unsetColumns($fieldNames, [static::PAGE_ID]);
-            }
         }
 
         $arrayCalculate = [];
@@ -186,7 +180,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             } elseif ($fieldName === self::DEVICE
                 || $fieldName === self::HOUR_OF_DAY
                 || $fieldName === self::DAY_OF_WEEK
-                || $fieldName === self::PAGE_ID
             ) {
                 $arrayCalculate[] = DB::raw($tableName.'.'.$fieldName.' AS '.$fieldName);
             } elseif ($fieldName === static::GROUPED_BY_FIELD_NAME_ADW) {
@@ -475,6 +468,43 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         array_unshift($columns, 'account_id');
         array_unshift($columns, 'engine');
 
+        // YSS
+        $this->insertYssDataToTemporaryTable($clientId, $joinTableName, $groupedByField, $columns, $startDay, $endDay);
+
+        // YDN
+        $this->insertYdnDataToTemporaryTable($clientId, $groupedByField, $columns, $startDay, $endDay);
+
+        //Adw
+        $this->insertAdwDataToTemporaryTable($clientId, $groupedByField, $columns, $startDay, $endDay);
+
+        //update total phone time use
+        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'yss', $startDay, $endDay);
+        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'adw', $startDay, $endDay);
+        $this->updateTemporaryTableWithPhoneTimeUseForYdn($clientId, $startDay, $endDay);
+
+        //update daily spending limit
+        if ($groupedByField !== 'prefecture' && $groupedByField !== 'device') {
+            $this->updateTemporaryTableWithDailySpendingLimitForYss($clientId, $startDay, $endDay);
+            $this->updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay);
+        }
+
+        $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
+
+        return DB::table(self::TEMPORARY_ACCOUNT_TABLE)
+        ->select($selections)
+        ->groupBy($groupedByField)
+        ->orderBy($columnSort, $sort)
+        ->paginate($pagination);
+    }
+
+    protected function insertYssDataToTemporaryTable(
+        $clientId,
+        $joinTableName,
+        $groupedByField,
+        $columns,
+        $startDay,
+        $endDay
+    ) {
         $yssModel = $this;
         if ($groupedByField === 'prefecture') {
             $yssModel = new RepoYssPrefectureReportCost();
@@ -512,24 +542,35 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
 
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' ('.implode(', ', $columns).', sumConversions) '
             . $this->getBindingSql($yssData));
+    }
 
-        // YDN
+    protected function insertYdnDataToTemporaryTable(
+        $clientId,
+        $groupedByField,
+        $columns,
+        $startDay,
+        $endDay
+    ) {
         $accountYdnReport = new RepoYdnReport;
         $ydnData = $accountYdnReport->getAllAccountYdn(
             $columns,
             $groupedByField,
-            $columnSort,
-            $sort,
             $startDay,
             $endDay,
-            $clientId,
-            $accountId
+            $clientId
         );
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.'(adID, '.implode(', ', $columns)
             .', dailySpendingLimit, sumConversions) '
             . $this->getBindingSql($ydnData));
+    }
 
-        //Adw
+    protected function insertAdwDataToTemporaryTable(
+        $clientId,
+        $groupedByField,
+        $columns,
+        $startDay,
+        $endDay
+    ) {
         $adwAggregations = [];
         $adwData = null;
         if ($groupedByField === 'prefecture') {
@@ -569,25 +610,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         }
         DB::insert('INSERT into '.self::TEMPORARY_ACCOUNT_TABLE.' ('.implode(', ', $columns).', sumConversions) '
             . $this->getBindingSql($adwData));
-
-        //update total phone time use
-        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'yss', $startDay, $endDay);
-        $this->updateTemporaryTableWithPhoneTimeUseForYssAdw($clientId, 'AD', 'adw', $startDay, $endDay);
-        $this->updateTemporaryTableWithPhoneTimeUseForYdn($clientId, 'AD', 'adw', $startDay, $endDay);
-
-        //update daily spending limit
-        if ($groupedByField !== 'prefecture') {
-            $this->updateTemporaryTableWithDailySpendingLimitForYss($clientId, $startDay, $endDay);
-            $this->updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay);
-        }
-
-        $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
-
-        return DB::table(self::TEMPORARY_ACCOUNT_TABLE)
-        ->select($selections)
-        ->groupBy($groupedByField)
-        ->orderBy($columnSort, $sort)
-        ->paginate($pagination);
     }
 
     private function getAdwDataInsertToTemporaryByPrefecture(
@@ -838,7 +860,15 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         $ydnModel = new RepoYdnReport;
         return $ydnModel->select('campaign_id', 'campaignID')
             ->distinct()
-            ->where('account_id', '=', $clientId)
+            ->where(
+                function (Builder $query) use ($clientId) {
+                    if ($clientId === null) {
+                        $query->where('account_id', Auth::id());
+                    } else {
+                        $query->where('account_id', $clientId);
+                    }
+                }
+            )
             ->get();
     }
 
