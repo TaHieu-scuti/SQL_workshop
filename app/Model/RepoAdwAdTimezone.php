@@ -133,6 +133,7 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
                     $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
                 }
             )
+            ->where('network', 'CONTENT')
             ->get();
     }
 
