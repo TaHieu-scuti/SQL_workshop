@@ -21,36 +21,36 @@ class RepoYssAdgroupReportGenerator extends Seeder
     const MIN_CLICKS = 0;
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
-    const MIN_IMPRESSION_SHARE = 1000000;
+    const MIN_IMPRESSION_SHARE = 100;
     const MAX_IMPRESSION_SHARE = 89489437437880;
-    const MIN_EXACT_MATCH_IMPRESSION_SHARE = 1000000;
+    const MIN_EXACT_MATCH_IMPRESSION_SHARE = 100;
     const MAX_EXACT_MATCH_IMPRESSION_SHARE = 89489437437880;
-    const MIN_BUDGET_LOST_IMPRESSION_SHARE = 1000000;
+    const MIN_BUDGET_LOST_IMPRESSION_SHARE = 100;
     const MAX_BUDGET_LOST_IMPRESSION_SHARE = 89489437437880;
-    const MIN_QUALITY_LOST_IMPRESSION_SHARE = 1000000;
+    const MIN_QUALITY_LOST_IMPRESSION_SHARE = 100;
     const MAX_QUALITY_LOST_IMPRESSION_SHARE = 89489437437880;
     const TRACKING_URL = 'http://we.track.people/';
     const CUSTOM_PARAMETERS = 'Custom Parameters';
     const MIN_CONVERSIONS = 0;
-    const MIN_CONV_VALUE = 1000000;
+    const MIN_CONV_VALUE = 100;
     const MAX_CONV_VALUE = 89489437437880;
-    const MIN_COST_PER_CONV = 1000000;
+    const MIN_COST_PER_CONV = 100;
     const MAX_COST_PER_CONV = 89489437437880;
-    const MIN_VALUE_PER_CONV = 1000000;
+    const MIN_VALUE_PER_CONV = 100;
     const MAX_VALUE_PER_CONV = 89489437437880;
-    const MIN_MOBILE_BID_ADJ = 1000000;
+    const MIN_MOBILE_BID_ADJ = 100;
     const MAX_MOBILE_BID_ADJ = 89489437437880;
-    const MIN_DESKTOP_BID_ADJ = 1000000;
+    const MIN_DESKTOP_BID_ADJ = 100;
     const MAX_DESKTOP_BID_ADJ = 89489437437880;
-    const MIN_TABLET_BID_ADJ = 1000000;
+    const MIN_TABLET_BID_ADJ = 100;
     const MAX_TABLET_BID_ADJ = 89489437437880;
-    const MIN_COST_PER_ALL_CONV = 1000000;
+    const MIN_COST_PER_ALL_CONV = 100;
     const MAX_COST_PER_ALL_CONV = 89489437437880;
-    const MIN_VALUE_PER_ALL_CONV = 1000000;
+    const MIN_VALUE_PER_ALL_CONV = 100;
     const MAX_VALUE_PER_ALL_CONV = 89489437437880;
-    const MIN_ALL_CONV = 1000000;
+    const MIN_ALL_CONV = 100;
     const MAX_ALL_CONV = 89489437437880;
-    const MIN_ALL_CONV_VALUE = 1000000;
+    const MIN_ALL_CONV_VALUE = 100;
     const MAX_ALL_CONV_VALUE = 89489437437880;
     const NETWORKS = ['network1', 'network2', 'network3'];
     const DEVICES = ['DESKTOP', 'SMART_PHONE', 'NONE'];
@@ -143,11 +143,19 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->account_id = $campaignReport->account_id;
                 $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->campaignID = $campaignReport->campaignID;
-                $adgroupReportCost->adgroupID = (string) $campaignReport->account_id
+                if ($campaignReport->account_id === 'dbc087db3467fabd8d46cb04667f5eaa') {
+                    $adgroupReportCost->adgroupID = (string) round($campaignReport->campaignID / 10)
                     . (string) $campaignReport->campaign_id
                     . (string) $campaignReport->accountid
                     . (string) $campaignReport->campaignID
                     . ($i + 1);
+                } else {
+                    $adgroupReportCost->adgroupID = (string) $campaignReport->account_id
+                    . (string) $campaignReport->campaign_id
+                    . (string) $campaignReport->accountid
+                    . (string) $campaignReport->campaignID
+                    . ($i + 1);
+                }
                 $adgroupReportCost->campaignName = $campaignReport->campaignName;
                 $adgroupReportCost->adgroupName = 'YSS Adgroup Name ' . $adgroupReportCost->adgroupID;
                 $adgroupReportCost->adgroupDistributionSettings = 'Adgroup Distribution setting';

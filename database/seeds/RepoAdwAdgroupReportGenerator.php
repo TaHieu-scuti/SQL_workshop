@@ -19,8 +19,8 @@ class RepoAdwAdgroupReportGenerator extends Seeder
     const MIN_AVERAGE_POSITION = 1;
     const MAX_AVERAGE_POSITION = 20;
     const MIN_CONVERSIONS = 0;
-    const MIN_ALL_CONV_VALUE = 1000000;
-    const MAX_ALL_CONV_VALUE = 894894374;
+    const MIN_ALL_CONV_VALUE = 100;
+    const MAX_ALL_CONV_VALUE = 8948;
     const DEVICES = ['UNKNOWN', 'DESKTOP', 'HIGH_END_MOBILE', 'TABLET'];
     /**
      * Run the database seeds.
@@ -43,11 +43,19 @@ class RepoAdwAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->account_id = $campaignReport->account_id;
                 $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->account = $campaignReport->account;
-                $adgroupReportCost->adGroupID = (string) $campaignReport->account_id
+                if ($campaignReport->account_id === 'dbc087db3467fabd8d46cb04667f5eaa') {
+                    $adgroupReportCost->adGroupID = (string) round($campaignReport->campaignID / 10)
                     . (string) $campaignReport->campaign_id
                     . (string) $campaignReport->accountid
                     . (string) $campaignReport->campaignID
                     . ($i + 1);
+                } else {
+                    $adgroupReportCost->adGroupID = (string) $campaignReport->account_id
+                    . (string) $campaignReport->campaign_id
+                    . (string) $campaignReport->accountid
+                    . (string) $campaignReport->campaignID
+                    . ($i + 1);
+                }
                 $adgroupReportCost->adGroup = 'ADW Adgroup Name ' . ($i + 1);
                 $adgroupReportCost->campaignID = $campaignReport->campaignID;
                 $adgroupReportCost->campaign = $campaignReport->campaign;

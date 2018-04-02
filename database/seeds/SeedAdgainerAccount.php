@@ -25,6 +25,7 @@ class SeedAdgainerAccount extends Seeder
         $rfariseAccount->api_key = '9a3e12522d7e176ea5d0aed01a61f608';
         $rfariseAccount->api_limit = 500;
         $rfariseAccount->ppc_markup = 0;
+        $rfariseAccount->agent_id = 2;
         $rfariseAccount->accountName = '1298rfarise';
         $rfariseAccount->username = 'rfarise';
         $rfariseAccount->password = md5('e51a7a6467');
