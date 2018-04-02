@@ -29,6 +29,9 @@ class RepoAuthAccountController extends Controller
                 if ($accountModel->isAdmin($account_id)) {
                     return redirect('agency-report');
                 }
+                session()->put([
+                    'clientId' => $account_id
+                ]);
                 return $next($request);
             }
         );
