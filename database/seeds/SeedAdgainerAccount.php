@@ -44,7 +44,7 @@ class SeedAdgainerAccount extends Seeder
         $rfariseAccount->status = 'FULL';
         $rfariseAccount->phone_data_level = 0;
         $rfariseAccount->demograph_data_level = 0;
-        $rfariseAccount->marin_id = NULL;
+        $rfariseAccount->marin_id = null;
         $rfariseAccount->billing_date = 0;
         $rfariseAccount->exp_m = 0;
         $rfariseAccount->exp_y = 0;
