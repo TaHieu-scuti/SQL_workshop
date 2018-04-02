@@ -14,6 +14,7 @@ class ResourceGenerator extends Seeder
     {
         $this->call(AccountGenerator::class);
         $this->call(CriteriaTableSeeder::class);
+        $this->call(SeedAdgainerAccount::class);
 
         $this->call(RepoYssAccountReportCoGenerator::class);
         $this->call(RepoYssAccounts::class);
