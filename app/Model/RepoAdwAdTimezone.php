@@ -208,9 +208,9 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
         $phoneList = array_unique($adGainerCampaigns->pluck('phone_number')->toArray());
 
         foreach ($phoneList as $i => $phoneNumber) {
-            $repoPhoneTimeUseModel = new RepoPhoneTimeUse();
-            $tableName = $repoPhoneTimeUseModel->getTable();
-            $queryGetCallTracking = $repoPhoneTimeUseModel->select(
+            $phoneTimeUseModel = new PhoneTimeUse();
+            $tableName = $phoneTimeUseModel->getTable();
+            $queryGetCallTracking = $phoneTimeUseModel->select(
                 DB::raw("HOUR(`time_of_call`) AS hourOfDay, COUNT(`id`) AS id")
             )->where('phone_number', $phoneNumber)
                 ->where('source', 'adw')
