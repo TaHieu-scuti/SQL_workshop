@@ -82,11 +82,13 @@ abstract class AbstractReportController extends Controller
     const PREFECTURE = 'prefecture';
     const DEVICE = 'device';
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
+    const TIME_PERIOD_TITLE_FOR_AGENCY = 'timePeriodTitleForAgency';
     const STATUS_TITLE = 'statusTitle';
     const START_DAY = 'startDay';
     const END_DAY = 'endDay';
     const SESSION_KEY_ACCOUNT_STATUS = 'accountStatus';
     const SESSION_KEY_TIME_PERIOD_TITLE = self::TIME_PERIOD_TITLE;
+    const SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY = self::TIME_PERIOD_TITLE_FOR_AGENCY;
     const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::START_DAY;
     const SESSION_KEY_END_DAY = self::END_DAY;
@@ -316,7 +318,15 @@ abstract class AbstractReportController extends Controller
         $endDay = $today->format('Y-m-d');
         $startDay = $today->modify('-90 days')->format('Y-m-d');
         $timePeriodTitle = "Last 90 days";
-        session([static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+        if (static::SESSION_KEY_PREFIX === 'agencyReport.') {
+            $today = new DateTime;
+            $endDay = $today->modify('-1 days')->format('Y-m-d');
+            $startDay = $endDay;
+            $timePeriodTitle = "Yesterday";
+            session([static::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => $timePeriodTitle]);
+        } else {
+            session([static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
+        }
         session([static::SESSION_KEY_START_DAY => $startDay]);
         session([static::SESSION_KEY_END_DAY => $endDay]);
     }
