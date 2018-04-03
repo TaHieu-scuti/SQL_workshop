@@ -71,13 +71,13 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            // $this->createTemporaryTable(
-            //     $fieldNames,
-            //     $this->isConv,
-            //     $this->isCallTracking,
-            //     $this->conversionPoints,
-            //     $this->adGainerCampaigns
-            // );
+            $this->createTemporaryTable(
+                $fieldNames,
+                $this->isConv,
+                $this->isCallTracking,
+                $this->conversionPoints,
+                $this->adGainerCampaigns
+            );
             $columns = $this->unsetColumns(
                 $fieldNames,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adGroup', 'adgroupID'])
