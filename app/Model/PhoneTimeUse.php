@@ -18,7 +18,7 @@ class PhoneTimeUse extends AbstractReportModel
 
     public function getPhoneTimeUseId($startDay, $endDay, $engine)
     {
-        return $this->select('count(id) AS id', 'account_id')
+        return $this->select(DB::raw('count(`id`) AS id'), 'account_id')
             ->where(
                 function (EloquentBuilder $query) use ($startDay, $endDay) {
                     $this->addConditionForDate($query, $this->getTable(), $startDay, $endDay);

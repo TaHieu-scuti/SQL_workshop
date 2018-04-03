@@ -64,7 +64,11 @@ class Agency extends Account
     ) {
         $this->createTemporaryAccountTable(self::AGENCY);
         array_unshift($fieldNames, 'account_id');
-        $getAggregation = $this->getAggregatedTemporary($fieldNames, 'agencyName');
+        $getAggregation = $this->getAggregatedForAgencyReportFromTemporaryTable(
+            $fieldNames,
+            'agencyName'
+        );
+
         $agencyClientQuery = $this->select(
             'parentAccounts.account_id',
             'parentAccounts.accountName',
@@ -129,7 +133,11 @@ class Agency extends Account
     ) {
         $fieldNames = $this->unsetColumns($fieldNames, ['accountName', 'account_id']);
 
-        $rawExpressions = $this->getRawExpressions($fieldNames, self::TEMPORARY_ACCOUNT_TABLE);
+        $rawExpressions = $this->getRawExpressions(
+            $fieldNames,
+            self::TEMPORARY_ACCOUNT_TABLE,
+            self::AGENCY
+        );
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
             ->select($rawExpressions);

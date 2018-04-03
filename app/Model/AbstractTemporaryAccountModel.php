@@ -65,6 +65,12 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         'adw_call_cv'
     ];
 
+    const SUM_FIELDS_FOR_AGENCY_OF_ENGINES = [
+        'ydn_web_cv',
+        'yss_web_cv',
+        'adw_web_cv'
+    ];
+
     const AVERAGE_FIELDS_OF_ENGINES = [
         'ydn_web_cvr',
         'ydn_web_cpa',
@@ -78,6 +84,15 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         'yss_call_cpa',
         'adw_call_cvr',
         'adw_call_cpa',
+    ];
+
+    const AVERAGE_FIELDS_FOR_AGENCY_OF_ENGINES = [
+        'ydn_web_cvr',
+        'ydn_web_cpa',
+        'yss_web_cvr',
+        'yss_web_cpa',
+        'adw_web_cvr',
+        'adw_web_cpa'
     ];
 
     const DEFAULT_COLUMNS = [
@@ -175,7 +190,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             $fieldNames,
             $startDay,
-            $endDay
+            $endDay,
+            $agency
         );
         $rawExpressions = $this->setFieldNameToUpdate($fieldNames, 'yss');
 
@@ -185,7 +201,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'. $column.' = tbl.account_id'
         );
 
-        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'yss');
+        if ($agency === 'agency') {
+            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'yss');
+        }
     }
 
     protected function getAccountYdn($startDay, $endDay, $agency = "")
@@ -197,7 +215,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             $fieldNames,
             $startDay,
-            $endDay
+            $endDay,
+            $agency
         );
 
         $rawExpressions = $this->setFieldNameToUpdate($fieldNames, 'ydn');
@@ -208,7 +227,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
 
-        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'ydn');
+        if ($agency === "agency") {
+            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'ydn');
+        }
     }
 
     protected function getAccountAdw($startDay, $endDay, $agency = "")
@@ -221,7 +242,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             $fieldNames,
             $startDay,
-            $endDay
+            $endDay,
+            $agency
         );
 
         $rawExpressions = $this->setFieldNameToUpdate($fieldNames, 'adw');
@@ -232,7 +254,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
 
-        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'adw');
+        if ($agency === "agency") {
+            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'adw');
+        }
     }
 
     protected function updatePhoneTimeUseId($startDay, $endDay, $column, $engine)
@@ -433,7 +457,127 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         return DB::raw($rawExpression);
     }
 
-    public function getAggregatedTemporaryForAgency(
+    protected function getRawExpressionToCalculateAgencyReportFromTemporaryTable($fieldName)
+    {
+        if ($fieldName === 'ctr') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn_ctr) + AVG(yss_ctr) + AVG(adw_ctr)) / 3, 0) AS ctr'
+            );
+        } elseif ($fieldName === 'averageCpc') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn_averageCpc) + AVG(yss_averageCpc) + AVG(adw_averageCpc)) / 3, 0) '
+                . 'AS averageCpc'
+            );
+        } elseif ($fieldName === 'averagePosition') {
+            $rawExpression = DB::raw(
+                'IFNULL((AVG(ydn_averagePosition) + AVG(yss_averagePosition) + '
+                . 'AVG(adw_averagePosition)) / 3, 0) AS averagePosition'
+            );
+        } elseif (in_array($fieldName, self::SUM_FIELDS_FOR_AGENCY_OF_ENGINES)) {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM('.$fieldName.'), 0) AS '.$fieldName
+            );
+        } elseif (in_array($fieldName, self::AVERAGE_FIELDS_FOR_AGENCY_OF_ENGINES)) {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG('.$fieldName.'), 0) AS '.$fieldName
+            );
+        } elseif ($fieldName === 'web_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(ydn_web_cv) + SUM(yss_web_cv) + SUM(adw_web_cv), 0) AS web_cv'
+            );
+        } elseif ($fieldName === 'web_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_web_cv) + SUM(yss_web_cv) + SUM(adw_web_cv)) / '
+                . '(SUM(ydn_clicks) + SUM(yss_clicks) + SUM(adw_clicks)), 0) AS web_cvr'
+            );
+        } elseif ($fieldName === 'web_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_cost) + SUM(yss_cost) + SUM(adw_cost)) / '
+                . '(SUM(ydn_web_cv) + SUM(yss_web_cv) + SUM(adw_web_cv)), 0) AS web_cpa'
+            );
+        } elseif ($fieldName === 'ydn_call_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(ydn_ptu_id), 0) AS ydn_call_cv'
+            );
+        } elseif ($fieldName === 'ydn_call_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((ydn_ptu_id / ydn_clicks) * 100), 0) AS ydn_call_cvr'
+            );
+        } elseif ($fieldName === 'ydn_call_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((ydn_cost / ydn_ptu_id)), 0) AS ydn_call_cpa'
+            );
+        } elseif ($fieldName === 'yss_call_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(yss_ptu_id), 0) AS yss_call_cv'
+            );
+        } elseif ($fieldName === 'yss_call_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((yss_ptu_id / yss_clicks) * 100), 0) AS yss_call_cvr'
+            );
+        } elseif ($fieldName === 'yss_call_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((yss_cost / yss_ptu_id)), 0) AS yss_call_cpa'
+            );
+        } elseif ($fieldName === 'adw_call_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(adw_ptu_id), 0) AS adw_call_cv'
+            );
+        } elseif ($fieldName === 'adw_call_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((adw_ptu_id / adw_clicks) * 100), 0) AS adw_call_cvr'
+            );
+        } elseif ($fieldName === 'adw_call_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL(AVG((adw_cost / adw_ptu_id)), 0) AS adw_call_cpa'
+            );
+        } elseif ($fieldName === 'call_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id), 0) AS call_cv'
+            );
+        } elseif ($fieldName === 'call_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id)) / '
+                . '(SUM(ydn_clicks) + SUM(yss_clicks) + SUM(adw_clicks)), 0) AS call_cvr'
+            );
+        } elseif ($fieldName === 'call_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_cost) + SUM(yss_cost) + SUM(adw_cost)) / '
+                . '(SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id)), 0) AS call_cpa'
+            );
+        } elseif ($fieldName === 'total_cv') {
+            $rawExpression = DB::raw(
+                'IFNULL(SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id) + SUM(ydn_web_cv) + '
+                . 'SUM(yss_web_cv) + SUM(adw_web_cv), 0) AS total_cv'
+            );
+        } elseif ($fieldName === 'total_cvr') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id) + SUM(ydn_web_cv) + '
+                . 'SUM(yss_web_cv) + SUM(adw_web_cv)) / '
+                . '(SUM(ydn_clicks) + SUM(yss_clicks) + SUM(adw_clicks)), 0) AS total_cvr'
+            );
+        } elseif ($fieldName === 'total_cpa') {
+            $rawExpression = DB::raw(
+                'IFNULL((SUM(ydn_cost) + SUM(yss_cost) + SUM(adw_cost)) / '
+                . '(SUM(ydn_ptu_id) + SUM(yss_ptu_id) + SUM(adw_ptu_id) + SUM(ydn_web_cv) + '
+                . 'SUM(yss_web_cv) + SUM(adw_web_cv)), 0) AS total_cpa'
+            );
+        } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+            $rawExpression = 'IFNULL(SUM('
+                . $this->getSummedFieldNamesForTableAliasesTemporary($fieldName)
+                . '), 0) AS ' . $fieldName;
+        } elseif (in_array($fieldName, static::AVERAGE_FIELDS)) {
+            $rawExpression = 'IFNULL(AVG('
+                . $this->getSummedFieldNamesForTableAliasesTemporary($fieldName)
+                . '), 0) AS ' . $fieldName;
+        } else {
+            throw new \InvalidArgumentException('Unsupported field name provided: `' . $fieldName . '`!');
+        }
+
+        return DB::raw($rawExpression);
+    }
+
+    public function getAggregatedForAgencyReportFromTemporaryTable(
         array $fieldNames,
         $accountNameAlias = 'clientName'
     ) {
@@ -457,7 +601,10 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
                 );
             } elseif (in_array(
                 $fieldName,
-                ['yss_web_cv', 'ydn_web_cv', 'adw_web_cv']
+                array_merge(
+                    self::SUM_FIELDS_FOR_AGENCY_OF_ENGINES,
+                    self::AVERAGE_FIELDS_FOR_AGENCY_OF_ENGINES
+                )
             )) {
                 $arrayCalculate[] = DB::raw(
                     'IFNULL('.$fieldName.', 0) AS '.$fieldName
