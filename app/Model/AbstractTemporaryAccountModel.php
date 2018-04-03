@@ -602,7 +602,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         return $arrayCalculate;
     }
 
-    private function groupSumFieldsAndAverageFields($arrayCalculate, $fieldName) {
+    private function groupSumFieldsAndAverageFields($arrayCalculate, $fieldName)
+    {
         if (in_array($fieldName, static::AVERAGE_FIELDS)) {
             $arrayCalculate[] = DB::raw(
                 'IFNULL((adw_'. $fieldName .' +  ydn_'.$fieldName.' + yss_'.$fieldName.')/3, 0) AS '.$fieldName
