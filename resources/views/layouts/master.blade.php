@@ -47,8 +47,8 @@
                     <li><a href="{{URL::asset('')}}language/ja"><img src="/images/jp.png"></a></li>
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span id="username" class="username" value="{{ Auth::user()->username }}">
-                                {{Auth::user()->username}}
+                            <span id="username" class="username" value="{{ !is_null(Auth::user()) ? Auth::user()->username : Auth::guard('redisGuard')->user()->username }}">
+                                {{!is_null(Auth::user()) ? Auth::user()->username : Auth::guard('redisGuard')->user()->username}}
                             </span>
                             <b class="caret"></b>
                         </a>
