@@ -114,8 +114,16 @@ class AgencyController extends AbstractReportController
         if (!session('accountStatus')) {
             $this->initializeStatusSession();
         }
-        if (!session('timePeriodTitle')) {
+        if (!session('timePeriodTitleForAgency')) {
             $this->initializeTimeRangeSession();
+        }
+
+        if (session('timePeriodTitle')) {
+            session()->put(
+                [
+                    self::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => session('timePeriodTitle')
+                ]
+            );
         }
 
         return $this->responseFactory->view(
@@ -178,7 +186,7 @@ class AgencyController extends AbstractReportController
         $timePeriodLayout = view('layouts.time-period')
             ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
             ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+            ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY))
             ->render();
         $statusLayout = view('layouts.status-title')
             ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
@@ -269,7 +277,7 @@ class AgencyController extends AbstractReportController
         $timePeriodLayout = view('layouts.time-period')
                     ->with(self::START_DAY, session(self::SESSION_KEY_START_DAY))
                     ->with(self::END_DAY, session(self::SESSION_KEY_END_DAY))
-                    ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE))
+                    ->with(self::TIME_PERIOD_TITLE, session(self::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY))
                     ->render();
         $statusLayout = view('layouts.status-title')
                         ->with(self::STATUS_TITLE, session(self::SESSION_KEY_STATUS_TITLE))
