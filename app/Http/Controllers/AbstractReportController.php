@@ -124,16 +124,6 @@ abstract class AbstractReportController extends Controller
         $this->model = $model;
         $this->middleware('auth');
         $this->middleware('language');
-        $this->middleware(
-            function (Request $request, $next) {
-                if (!\Auth::check()) {
-                    return redirect('/login');
-                }
-                $this->adgainerId = \Auth::id(); // you can access user id here
-
-                return $next($request);
-            }
-        );
         $this->middleware('killOldMySqlConnections');
     }
 
