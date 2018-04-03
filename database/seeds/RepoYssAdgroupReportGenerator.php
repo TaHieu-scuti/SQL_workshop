@@ -143,19 +143,11 @@ class RepoYssAdgroupReportGenerator extends Seeder
                 $adgroupReportCost->account_id = $campaignReport->account_id;
                 $adgroupReportCost->campaign_id = $campaignReport->campaign_id;
                 $adgroupReportCost->campaignID = $campaignReport->campaignID;
-                if ($campaignReport->account_id === 'dbc087db3467fabd8d46cb04667f5eaa') {
-                    $adgroupReportCost->adgroupID = (string) round($campaignReport->campaignID / 10)
-                    . (string) $campaignReport->campaign_id
-                    . (string) $campaignReport->accountid
-                    . (string) $campaignReport->campaignID
-                    . ($i + 1);
-                } else {
-                    $adgroupReportCost->adgroupID = (string) $campaignReport->account_id
-                    . (string) $campaignReport->campaign_id
-                    . (string) $campaignReport->accountid
-                    . (string) $campaignReport->campaignID
-                    . ($i + 1);
-                }
+                $adgroupReportCost->adgroupID = (string) round($campaignReport->campaignID / 10)
+                . (string) $campaignReport->campaign_id
+                . (string) $campaignReport->accountid
+                . (string) $campaignReport->campaignID
+                . ($i + 1);
                 $adgroupReportCost->campaignName = $campaignReport->campaignName;
                 $adgroupReportCost->adgroupName = 'YSS Adgroup Name ' . $adgroupReportCost->adgroupID;
                 $adgroupReportCost->adgroupDistributionSettings = 'Adgroup Distribution setting';
