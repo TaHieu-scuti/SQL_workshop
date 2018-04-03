@@ -32,7 +32,7 @@ class RepoAdwAccountReportGenerator extends Seeder
 
     private function processDay(DateTime $day)
     {
-        for ($i = 0; $i < self::NUMBER_OF_ACCOUNTS; ++$i) {
+        for ($i = 0; $i <= self::NUMBER_OF_ACCOUNTS; ++$i) {
             $this->processAGAccount($day, $i);
         }
     }
@@ -71,7 +71,13 @@ class RepoAdwAccountReportGenerator extends Seeder
     {
         $costReport = new RepoAdwAccountReportCost;
 
-        $costReport->account_id = $agAccountNumber + 1;
+        if ($agAccountNumber === self::NUMBER_OF_ACCOUNTS) {
+            $costReport->account_id = 'dbc087db3467fabd8d46cb04667f5eaa';
+            $costReport->campaign_id = (($agAccountNumber + 1) * 10) + $campaignNumber + 1;
+        } else {
+            $costReport->account_id = $agAccountNumber + 1;
+            $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
+        }
 
         $costReport->account = 'ADW Account'.($mediaAccountNumber + 1);
 
@@ -128,8 +134,6 @@ class RepoAdwAccountReportGenerator extends Seeder
         ) / mt_getrandmax();
 
         $costReport->customerID = $mediaAccountNumber + 1;
-
-        $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
 
         $costReport->network = self::NETWORKS[mt_rand(0, count(self::NETWORKS) - 1)];
 

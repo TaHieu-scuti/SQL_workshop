@@ -55,7 +55,7 @@ class RepoYssAccountReportCoGenerator extends Seeder
 
     private function processDay(DateTime $day)
     {
-        for ($i = 0; $i < self::NUMBER_OF_ACCOUNTS; ++$i) {
+        for ($i = 0; $i <= self::NUMBER_OF_ACCOUNTS; ++$i) {
             $this->processAGAccount($day, $i);
         }
     }
@@ -97,14 +97,18 @@ class RepoYssAccountReportCoGenerator extends Seeder
     {
         $costReport = new RepoYssAccountReportCost;
         $convReport = new RepoYssAccountReportConv;
-
-        $costReport->account_id = $agAccountNumber + 1;
+        if ($agAccountNumber === self::NUMBER_OF_ACCOUNTS) {
+            $costReport->account_id = 'dbc087db3467fabd8d46cb04667f5eaa';
+            $costReport->campaign_id = ((self::NUMBER_OF_ACCOUNTS + 1) * 10) + $campaignNumber + 1;
+        } else {
+            $costReport->account_id = $agAccountNumber + 1;
+            $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
+        }
         $convReport->account_id = $costReport->account_id;
 
         $costReport->accountid = $mediaAccountNumber + 1;
         $convReport->accountid = $costReport->accountid;
 
-        $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
         $convReport->campaign_id = $costReport->campaign_id;
 
         $costReport->cost = mt_rand(

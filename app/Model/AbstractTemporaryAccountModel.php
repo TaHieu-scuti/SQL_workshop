@@ -15,11 +15,11 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
     const ACCOUNT_ID = 'account_id';
 
     const FIELDS_TYPE_BIGINT = [
-        'client_id',
-        'account_id'
+        'client_id'
     ];
 
     const FIELDS_TYPE_STRING = [
+        'account_id',
         'accountid',
         'accountName',
         'dayOfWeek',
