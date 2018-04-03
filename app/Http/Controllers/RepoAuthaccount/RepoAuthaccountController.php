@@ -164,7 +164,7 @@ class RepoAuthAccountController extends Controller
     private function checkPermissionUpdateAccountApi($account_id)
     {
         $accountModel = new Account();
-        $currentAccountId = A!is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        $currentAccountId = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         if ($accountModel->isAgency($currentAccountId)) {
             if ($currentAccountId === $account_id) {
                 return false;
