@@ -64,6 +64,7 @@ abstract class AbstractReportModel extends Model
         self::IMPRESSIONS,
         self::COST,
         self::CONVERSIONS,
+        'ptu_id'
     ];
 
     const SUMMARY_FIELDS = [
@@ -1266,6 +1267,19 @@ abstract class AbstractReportModel extends Model
         } else {
             $query->where($this->getTable() . '.network', 'SEARCH')
                 ->orWhere($this->getTable() . '.network', 'CONTENT');
+        }
+    }
+
+    protected function addConditionForDate(Builder $query, $tableName, $startDay, $endDay)
+    {
+        if ($startDay === $endDay) {
+            $query->whereRaw('STR_TO_DATE('.$tableName.
+                '.time_of_call, "%Y-%m-%d %H:%i:%s") LIKE "'.$endDay.'%"');
+        } else {
+            $query->whereRaw('STR_TO_DATE('.$tableName.
+                '.time_of_call, "%Y-%m-%d %H:%i:%s") >= "'.$startDay.'"')
+                ->whereRaw('STR_TO_DATE('.$tableName.
+                    '.time_of_call, "%Y-%m-%d %H:%i:%s") <= "'.$endDay.'"');
         }
     }
 }

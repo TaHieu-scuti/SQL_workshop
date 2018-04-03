@@ -217,14 +217,15 @@ class Account extends AbstractTemporaryAccountModel
         return DB::raw($rawExpression);
     }
 
-    protected function getRawExpressions($fieldNames, $temporary = "")
+    protected function getRawExpressions($fieldNames, $temporary = "", $agency = "")
     {
         $rawExpression = [];
         foreach ($fieldNames as $fieldName) {
             if (in_array($fieldName, $this->groupByFieldName) || $fieldName === 'accountName') {
                 $rawExpression[] = DB::raw($fieldName. ' AS agencyName');
-            }
-            if ($temporary !== "") {
+            } elseif ($temporary !== "" && $agency === "agency") {
+                $rawExpression[] = $this->getRawExpressionToCalculateAgencyReportFromTemporaryTable($fieldName);
+            } elseif ($temporary !== "" && $agency === "") {
                 $rawExpression[] = $this->getRawExpressionTemporary($fieldName);
             } else {
                 $rawExpression[] = $this->getRawExpression($fieldName);

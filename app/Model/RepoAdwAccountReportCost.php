@@ -32,7 +32,7 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
         return 'adw';
     }
 
-    public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay)
+    public function getAdwAccountAgency(array $fieldNames, $startDay, $endDay, $agency = "")
     {
         $getAggregatedAdwAccounts = $this->getAggregatedAgency($fieldNames);
 
@@ -51,7 +51,9 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
 
-        $this->addJoinOnPhoneTimeUse($accounts);
+        if ($agency !== 'agency') {
+            $this->addJoinOnPhoneTimeUse($accounts);
+        }
 
         return $accounts;
     }
