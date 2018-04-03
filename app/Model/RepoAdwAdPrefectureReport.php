@@ -258,7 +258,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
             ->whereIn('utm_campaign', $utmCampaignList)
             ->where(
                 function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
-                    $this->addConditonForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                    $this->addConditionForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
                 }
             )
             ->groupBy('visitor_city_state');

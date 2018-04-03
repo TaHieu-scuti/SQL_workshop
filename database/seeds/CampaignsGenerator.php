@@ -16,7 +16,11 @@ class CampaignsGenerator extends Seeder
             $campaign = new Campaign;
 
             $campaign->campaign_id = ($account_id * 10) + $campaign_id;
-            $campaign->account_id = $account_id;
+            if ($account_id === self::NUMBER_OF_ACCOUNTS + 1) {
+                $campaign->account_id = 'dbc087db3467fabd8d46cb04667f5eaa';
+            } else {
+                $campaign->account_id = $account_id;
+            }
 
             $campaign->yahoojpn_aid = '';
             $campaign->yahoojpn_cid = '';
@@ -119,7 +123,7 @@ class CampaignsGenerator extends Seeder
      */
     public function run()
     {
-        for ($account_id = 1; $account_id < self::NUMBER_OF_ACCOUNTS + 1; $account_id++) {
+        for ($account_id = 1; $account_id <= self::NUMBER_OF_ACCOUNTS + 1; $account_id++) {
             $this->processCampaigns($account_id);
         }
     }

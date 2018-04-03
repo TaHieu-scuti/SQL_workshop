@@ -710,14 +710,14 @@ a, a:hover, a:focus {
     color: #797979;
 }
 
-.wrapper .row.csv-file .btn-primary, .apply-custom-period {
-    border-color: #569fd4;
-    background-color: #569fd4;
+.wrapper .row.csv-file .btn-primary, .btnColor, .apply-custom-period {
+    border-color: #569fd4 !important;
+    background-color: #569fd4 !important;
 }
 
-.wrapper .row.csv-file .btn-primary:hover, .apply-custom-period:hover {
-    border-color: #0d88e0;
-    background-color: #0d88e0;
+.wrapper .row.csv-file .btn-primary:hover, .btnColor:hover, .apply-custom-period:hover {
+    border-color: #0d88e0 !important;
+    background-color: #0d88e0 !important;
 }
 
 .wrapper .row.csv-file .dropdown-menu.extended {

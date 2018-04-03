@@ -182,26 +182,57 @@ class RepoYdnReportGenerator extends Seeder
 
             $costReport->mediaName = 'YDN ' . str_random(10);
 
-            $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
+            if ($account->account_id === 'dbc087db3467fabd8d46cb04667f5eaa') {
+                $costReport->campaign_id = $account->accountId;
 
-            $costReport->campaignID = ($costReport->account_id * 10) + $campaignNumber + 1;
+                $costReport->campaignID = $account->accountId;
 
-            $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
-
-            $costReport->adgroupID = (string) $costReport->account_id
+                $costReport->adgroupID = (string) (($account->accountId - 1) / 10)
                 . (string) $costReport->campaign_id
                 . (string) $costReport->accountid
                 . (string) $costReport->campaignID
                 . ($adGroupNumber + 1);
 
-            $costReport->adgroupName = 'YDN AdGroup ' . ($adGroupNumber + 1);
-
-            $costReport->adID = (string) $costReport->account_id
+                $costReport->adID = (string) (($account->accountId - 1) / 10)
                 . (string) $costReport->campaign_id
                 . (string) $costReport->accountid
                 . (string) $costReport->campaignID
                 . (string) $costReport->adgroupID
                 . ($adReportNumber + 1);
+
+                $costReport->conversionName = 'YDN conversion '
+                . (string) (($account->accountId - 1) / 10)
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . $conversionNumber;
+            } else {
+                $costReport->campaign_id = ($costReport->account_id * 10) + $campaignNumber + 1;
+
+                $costReport->campaignID = ($costReport->account_id * 10) + $campaignNumber + 1;
+
+                $costReport->adgroupID = (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . (string) $costReport->campaignID
+                . ($adGroupNumber + 1);
+
+                $costReport->adID = (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . (string) $costReport->campaignID
+                . (string) $costReport->adgroupID
+                . ($adReportNumber + 1);
+
+                $costReport->conversionName = 'YDN conversion '
+                . (string) $costReport->account_id
+                . (string) $costReport->campaign_id
+                . (string) $costReport->accountid
+                . $conversionNumber;
+            }
+
+            $costReport->campaignName = 'YDN Campaign ' . ($campaignNumber + 1);
+
+            $costReport->adgroupName = 'YDN AdGroup ' . ($adGroupNumber + 1);
 
             $costReport->adName = 'YDN Ad Report ' . ($adReportNumber + 1);
 
@@ -233,12 +264,6 @@ class RepoYdnReportGenerator extends Seeder
                 self::MIN_CONVERSIONS,
                 $costReport->clicks
             );
-
-            $costReport->conversionName = 'YDN conversion '
-                . (string) $costReport->account_id
-                . (string) $costReport->campaign_id
-                . (string) $costReport->accountid
-                . $conversionNumber;
 
             if ($costReport->clicks === 0) {
                 $costReport->convRate = 0;

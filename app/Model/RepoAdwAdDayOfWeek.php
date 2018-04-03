@@ -209,7 +209,7 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
                 ->where('source', 'yss')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                        $this->addConditionForDate($query, $tableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList)
                 ->groupBy($groupedByField);

@@ -3,9 +3,9 @@
     <div class="container" id="content-auth-account">
         <input type="hidden" id="account_id" value="{{ $account_id }}">
         <div class="menu_left col-lg-3">
-            <a class="btn btn-primary" href="#adw_form">GOOGLE ADWORDS</a>
-            <a class="btn btn-primary" href="#ydn_form">YAHOO DISPLAY NETWORK</a>
-            <a class="btn btn-primary" href="#yss_form">YAHOO SPONSORED SEARCH</a>
+            <a class="btn btn-primary btnColor" href="#adw_form">GOOGLE ADWORDS</a>
+            <a class="btn btn-primary btnColor" href="#ydn_form">YAHOO DISPLAY NETWORK</a>
+            <a class="btn btn-primary btnColor" href="#yss_form">YAHOO SPONSORED SEARCH</a>
         </div>
 
         <div class="menu_right col-lg-7">
@@ -56,14 +56,14 @@
                         <div class="form-group form-auth-account">
                             <label class="control-label col-sm-4" for="">OnBehalfOfPassword</label>
                             <div class="col-sm-8">
-                                <textarea class="form-control" rows="5" id="onBehalfOfPassword" name="onBehalfOfPassword">{{ isset($adw_record->onBehalfOfPassword) ? $adw_record->onBehalfOfPassword : '' }}</textarea>
+                                <input class="form-control" type="password" id="onBehalfOfPassword" name="onBehalfOfPassword" value="{{ isset($adw_record->onBehalfOfPassword) ? $adw_record->onBehalfOfPassword : '' }}" />
                             </div>
                         </div>
 
                         <div id="error_onBehalfOfPassword"></div>
 
                         <div class="col-sm-offset-2 col-sm-8">
-                            <button type="button" class="btn btn-primary" onclick="updateAdwApi()">Save</button>
+                            <button type="button" class="btn btn-primary btnColor" onclick="updateAdwApi()">Save</button>
                         </div>
                     </div>
                 </form>
@@ -114,14 +114,14 @@
                         <div class="form-group form-auth-account">
                             <label class="control-label col-sm-4" for="">APIAccountPassword</label>
                             <div class="col-sm-8">
-                                <textarea  class="form-control" rows="5" id="apiAccountPassword" name="apiAccountPassword">{{ isset($ydn_record->apiAccountPassword) ? $ydn_record->apiAccountPassword : '' }}</textarea>
+                                <input  class="form-control" type="password" id="apiAccountPassword" name="apiAccountPassword" value="{{ isset($ydn_record->apiAccountPassword) ? $ydn_record->apiAccountPassword : '' }}" />
                             </div>
                         </div>
 
                         <div id="error_apiAccountPassword"></div>
 
                         <div class="col-sm-offset-2 col-sm-8">
-                            <button type="button" class="btn btn-primary" onclick="updateYdnApi()">Save</button>
+                            <button type="button" class="btn btn-primary btnColor" onclick="updateYdnApi()">Save</button>
                         </div>
                     </div>
                 </form>
@@ -172,14 +172,14 @@
                         <div class="form-group form-auth-account">
                             <label class="control-label col-sm-4" for="">APIAccountPassword</label>
                             <div class="col-sm-8">
-                                <textarea  class="form-control" rows="5" id="apiAccountPassword" name="apiAccountPassword">{{ isset($yss_record->apiAccountPassword) ? $yss_record->apiAccountPassword : '' }}</textarea>
+                                <input  class="form-control" type="password" id="apiAccountPassword" name="apiAccountPassword" value="{{ isset($yss_record->apiAccountPassword) ? $yss_record->apiAccountPassword : '' }}" />
                             </div>
                         </div>
 
                         <div id="error_apiAccountPassword"></div>
 
                         <div class="col-sm-offset-2 col-sm-8">
-                            <button type="button" class="btn btn-primary" onclick="updateYssApi()">Save</button>
+                            <button type="button" class="btn btn-primary btnColor" onclick="updateYssApi()">Save</button>
                         </div>
                     </div>
                 </form>
@@ -188,10 +188,10 @@
 
         <div class="menu_right menu_redirect col-lg-2">
             @if ($isAgency)
-                <a href="/client-report" class="btn btn-primary">Client page</a>
+                <a href="/client-report" class="btn btn-primary btnColor">Client page</a>
                 <a href="/auth-account" class="btn btn-danger">Cancel</a>
             @else
-                <a href="/account_report" class="btn btn-primary" id="btn_cancel" style="display: {{ $isEmptyApi ? 'none' : 'block' }}">Account page</a>
+                <a href="/account_report" class="btn btn-primary btnColor" id="btn_cancel" style="display: {{ $isEmptyApi ? 'none' : 'block' }}">Account page</a>
             @endif
         </div>
 

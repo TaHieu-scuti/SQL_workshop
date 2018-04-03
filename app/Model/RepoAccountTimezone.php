@@ -57,7 +57,7 @@ class RepoAccountTimezone extends RepoYssAccountReportCost
         ->where('utm_campaign', $utmCampaignList)
         ->where(
             function (Builder $query) use ($startDay, $endDay) {
-                $this->addConditonForDate($query, 'phone_time_use', $startDay, $endDay);
+                $this->addConditionForDate($query, 'phone_time_use', $startDay, $endDay);
             }
         )
         ->groupBy('hourofday');
