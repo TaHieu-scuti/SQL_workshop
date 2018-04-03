@@ -289,4 +289,3 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
         return $builder;
     }
 }
-    
