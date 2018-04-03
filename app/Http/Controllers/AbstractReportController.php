@@ -858,31 +858,43 @@ abstract class AbstractReportController extends Controller
     public function updateModelForTimezone()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssAdgroupTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYssCampaignTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoYssKeywordTimeZone;
-            }
+            $this->updateModelForYssTimezone();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYdnTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYdnAdgroupTimeZone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoYdnAdTimeZone;
-            }
+            $this->updateModelForYdnTimezone();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoAdwCampaignTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoAdwAdgroupTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoAdwAdTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoAdwKeywordTimezone;
-            }
+            $this->updateModelForAdwTimezone();
+        }
+    }
+
+    private function updateModelForYssTimezone() {
+        if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYssAdgroupTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYssCampaignTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoYssKeywordTimeZone;
+        }
+    }
+
+    private function updateModelForYdnTimezone() {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYdnTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYdnAdgroupTimeZone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoYdnAdTimeZone;
+        }
+    }
+
+    private function updateModelForAdwTimezone() {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoAdwCampaignTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoAdwAdgroupTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoAdwAdTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoAdwKeywordTimezone;
         }
     }
 
