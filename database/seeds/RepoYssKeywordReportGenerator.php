@@ -61,7 +61,7 @@ class RepoYssKeywordReportGenerator extends Seeder
     const MIN_ALL_CONV_VALUE = 100;
     const MAX_ALL_CONV_VALUE = 89489;
     const NETWORKS = ['network1', 'network2', 'network3'];
-    const DEVICES = ['mobile', 'tablet', 'pc', 'apple'];
+    const DEVICES = ['DESKTOP', 'SMART_PHONE', 'NONE'];
     const CLICK_TYPE = [
         'Click Type 1', 'Click Type 2',
         'Click Type 3', 'Click Type 4'
