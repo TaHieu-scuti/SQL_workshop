@@ -322,15 +322,8 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
                 $arrayCalculate[] = DB::raw($tableName.'.account_id AS account_id');
             }
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL((adw_'. $fieldName .' +  ydn_'.$fieldName.' + yss_'.$fieldName.')/3, 0) AS '.$fieldName
-                );
-            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_'. $fieldName . ' +  ydn_' . $fieldName . ' + yss_' . $fieldName . ', 0)'
-                    . ' AS '. $fieldName
-                );
+            if (in_array($fieldName, array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS))) {
+                $arrayCalculate = $this->groupSumFieldsAndAverageFields($arrayCalculate, $fieldName);
             } elseif (in_array(
                 $fieldName,
                 array_merge(self::SUM_FIELDS_OF_ENGINES, self::AVERAGE_FIELDS_OF_ENGINES)
@@ -557,15 +550,9 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             if ($fieldName === self::FOREIGN_KEY_YSS_ACCOUNTS) {
                 $arrayCalculate[] = DB::raw($tableName.'.account_id AS account_id');
             }
-            if (in_array($fieldName, static::AVERAGE_FIELDS)) {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL((adw_'. $fieldName .' +  ydn_'.$fieldName.' + yss_'.$fieldName.')/3, 0) AS '.$fieldName
-                );
-            } elseif (in_array($fieldName, static::SUM_FIELDS)) {
-                $arrayCalculate[] = DB::raw(
-                    'IFNULL(adw_'. $fieldName . ' +  ydn_' . $fieldName . ' + yss_' . $fieldName . ', 0)'
-                    . ' AS '. $fieldName
-                );
+
+            if (in_array($fieldName, array_merge(static::AVERAGE_FIELDS, static::SUM_FIELDS))) {
+                $arrayCalculate = $this->groupSumFieldsAndAverageFields($arrayCalculate, $fieldName);
             } elseif (in_array(
                 $fieldName,
                 array_merge(
@@ -610,6 +597,21 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
                     . 'ydn_web_cv + yss_web_cv + adw_web_cv), 0) AS total_cpa'
                 );
             }
+        }
+
+        return $arrayCalculate;
+    }
+
+    private function groupSumFieldsAndAverageFields($arrayCalculate, $fieldName) {
+        if (in_array($fieldName, static::AVERAGE_FIELDS)) {
+            $arrayCalculate[] = DB::raw(
+                'IFNULL((adw_'. $fieldName .' +  ydn_'.$fieldName.' + yss_'.$fieldName.')/3, 0) AS '.$fieldName
+            );
+        } elseif (in_array($fieldName, static::SUM_FIELDS)) {
+            $arrayCalculate[] = DB::raw(
+                'IFNULL(adw_'. $fieldName . ' +  ydn_' . $fieldName . ' + yss_' . $fieldName . ', 0)'
+                . ' AS '. $fieldName
+            );
         }
 
         return $arrayCalculate;
