@@ -13,6 +13,8 @@ use Auth;
 
 class RepoAuthAccountController extends Controller
 {
+    const SESSION_KEY_CLIENT_ID = 'clientId';
+
     private $model;
 
     const ADW_MEDIA = 0;
@@ -30,7 +32,7 @@ class RepoAuthAccountController extends Controller
                     return redirect('agency-report');
                 }
                 session()->put([
-                    'clientId' => $account_id
+                    self::SESSION_KEY_CLIENT_ID => $account_id
                 ]);
                 return $next($request);
             }
