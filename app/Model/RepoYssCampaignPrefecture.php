@@ -10,7 +10,6 @@ class RepoYssCampaignPrefecture extends AbstractYssPrefecture
     protected $table = 'repo_yss_prefecture_report_cost';
 
     const PAGE_ID = 'campaignID';
-    const GROUPED_BY_FIELD_NAME = 'prefecture';
 
     public $timestamps = false;
 
