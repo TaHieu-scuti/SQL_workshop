@@ -28,7 +28,8 @@ class RepoAuthAccountController extends Controller
         $this->middleware(
             function (Request $request, $next) {
                 $accountModel = new Account();
-                $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+                $account_id = !is_null(Auth::user())
+                    ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
                 if ($accountModel->isAdmin($account_id)) {
                     return redirect('agency-report');
                 }
@@ -132,7 +133,8 @@ class RepoAuthAccountController extends Controller
     public function config($account_id)
     {
         $accountModel = new Account();
-        $currentAccountId = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        $currentAccountId = !is_null(Auth::user())
+            ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         $isAgency = false;
         $isEmptyApi = false;
 
@@ -165,7 +167,8 @@ class RepoAuthAccountController extends Controller
     private function checkPermissionUpdateAccountApi($account_id)
     {
         $accountModel = new Account();
-        $currentAccountId = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        $currentAccountId = !is_null(Auth::user())
+            ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         if ($accountModel->isAgency($currentAccountId)) {
             if ($currentAccountId === $account_id) {
                 return false;
