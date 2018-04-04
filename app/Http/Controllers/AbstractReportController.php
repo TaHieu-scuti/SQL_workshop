@@ -20,7 +20,6 @@ use App\Model\RepoYssKeywordDayOfWeek;
 use App\Model\RepoYssKeywordDevice;
 use App\Model\RepoYssKeywordPrefecture;
 use App\Model\RepoYssKeywordTimeZone;
-use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnAdgroupPrefecture;
@@ -51,12 +50,13 @@ use App\Model\RepoAdwKeywordPrefecture;
 use App\Model\RepoAdwAdPrefectureReport;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 use DateTime;
 use Exception;
 use StdClass;
 use Auth;
-use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractReportController extends Controller
 {
