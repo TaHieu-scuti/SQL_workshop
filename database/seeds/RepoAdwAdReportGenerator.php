@@ -33,6 +33,7 @@ class RepoAdwAdReportGenerator extends Seeder
         'Click Type 1', 'Click Type 2',
         'Click Type 3', 'Click Type 4'
     ];
+    const AD_TYPE = ['TEXT_AD', 'IMAGE_AD'];
     /**
      * Run the database seeds.
      *
@@ -64,10 +65,12 @@ class RepoAdwAdReportGenerator extends Seeder
                 $adReportCost->adID = (string)$adReportCost->adGroupID . ($i + 1);
 
                 if ($i % 2 === 0) {
+                    $adReportCost->adType = self::AD_TYPE[0];
                     $adReportCost->ad = 'Some text advertisement';
                     $adReportCost->displayURL = 'https://some-text-avertisement.adg';
                     $adReportCost->description = 'Some text advertisement description';
                 } else {
+                    $adReportCost->adType = self::AD_TYPE[1];
                     $adReportCost->imageAdURL =
                         'https://flydigitalprint.com/wp/wp-content/uploads/2016/12/banner-sign.jpg';
                 }
