@@ -866,7 +866,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                     if ($clientId === null) {
                         $account_id = !is_null(Auth::user())
                             ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
-                        $query->where('account_id', $accountid);
+                        $query->where('account_id', $account_id);
                     } else {
                         $query->where('account_id', $clientId);
                     }

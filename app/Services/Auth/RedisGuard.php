@@ -59,8 +59,7 @@ class RedisGuard implements Guard
             $sessionData = $redisConnection->get('ci_session:'.session_id());
             session_decode($sessionData);
             if (array_key_exists('account_id', $_SESSION)) {
-                $currentUser = User::where('account_id', '=', $_SESSION['account_id'])->first();
-                return $currentUser;
+                return User::where('account_id', '=', $_SESSION['account_id'])->first();
             }
         } catch (Exception $e) {
             Log::warning($e->getMessage());
