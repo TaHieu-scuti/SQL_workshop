@@ -31,7 +31,7 @@ class RedisGuard implements Guard
      */
     public function check()
     {
-        return (!is_null($this->user()) || !is_null(Auth::user()));
+        return !is_null($this->user());
     }
 
     /**
@@ -60,7 +60,6 @@ class RedisGuard implements Guard
             session_decode($sessionData);
             if (array_key_exists('account_id', $_SESSION)) {
                 $currentUser = User::where('account_id', '=', $_SESSION['account_id'])->first();
-                Auth::setUser($currentUser); // set current User to default "web" guard.
                 return $currentUser;
             }
         } catch (Exception $e) {
