@@ -866,7 +866,8 @@ abstract class AbstractReportController extends Controller
         }
     }
 
-    private function updateModelForYssTimezone() {
+    private function updateModelForYssTimezone()
+    {
         if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
             $this->model = new RepoYssAdgroupTimezone;
         } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
@@ -876,7 +877,8 @@ abstract class AbstractReportController extends Controller
         }
     }
 
-    private function updateModelForYdnTimezone() {
+    private function updateModelForYdnTimezone()
+    {
         if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
             $this->model = new RepoYdnTimezone;
         } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
@@ -886,7 +888,8 @@ abstract class AbstractReportController extends Controller
         }
     }
 
-    private function updateModelForAdwTimezone() {
+    private function updateModelForAdwTimezone()
+    {
         if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
             $this->model = new RepoAdwCampaignTimezone;
         } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
