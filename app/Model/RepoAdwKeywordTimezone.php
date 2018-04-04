@@ -69,7 +69,6 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv || $this->isCallTracking) {
             $this->createTemporaryTable(
                 $fieldNames,
@@ -167,30 +166,36 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
                 DB::raw('SUM(repo_adw_keywords_report_conv.conversions) AS conversions, HOUR(day) AS ' .$groupedByField)
             )->where('conversionName', $conversionName)
                 ->where(
+                    function (EloquentBuilder $query) use ($startDay, $endDay, $convModel) {
+                        $convModel->addTimeRangeCondition($startDay, $endDay, $query);
+                    }
+                )
+                ->where(
                     function (EloquentBuilder $query) use (
                         $convModel,
-                        $startDay,
-                        $endDay,
-                        $engine,
                         $clientId,
                         $accountId,
                         $campaignId,
                         $adGroupId,
                         $adReportId,
-                        $keywordId
+                        $keywordId,
+                        $engine
                     ) {
-                        $convModel->getCondition(
+                        $convModel->addQueryConditions(
                             $query,
-                            $startDay,
-                            $endDay,
-                            $engine,
                             $clientId,
+                            $engine,
                             $accountId,
                             $campaignId,
                             $adGroupId,
                             $adReportId,
                             $keywordId
                         );
+                    }
+                )
+                ->where(
+                    function (EloquentBuilder $query) use ($convModel) {
+                        $convModel->addConditionNetworkQuery($query);
                     }
                 )->groupBy($groupedByField);
 
@@ -221,7 +226,7 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
                 ->whereRaw('traffic_type = "AD"')
                 ->where(
                     function (EloquentBuilder $query) use ($startDay, $tableName, $endDay) {
-                        $this->addConditonForDate($query, $tableName, $startDay, $endDay);
+                        $this->addConditionForDate($query, $tableName, $startDay, $endDay);
                     }
                 )->whereIn('utm_campaign', $utmCampaignList)
                 ->groupBy($groupedByField);
