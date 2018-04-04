@@ -24,6 +24,7 @@ class RepoAuthAccountController extends Controller
     public function __construct(RepoAuthAccount $model)
     {
         $this->model = $model;
+        $this->middleware('redisAuth');
         $this->middleware(
             function (Request $request, $next) {
                 $accountModel = new Account();
