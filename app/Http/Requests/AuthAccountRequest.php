@@ -14,7 +14,7 @@ class AuthAccountRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (!Auth::check() || !Auth::guard('redisGuard')->check()) {
             return false;
         }
         return true;

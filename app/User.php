@@ -138,6 +138,7 @@ class User extends Authenticatable
     }
     public static function getIdAdgainer()
     {
-        return Auth::user()->account_id;
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        return $account_id;
     }
 }

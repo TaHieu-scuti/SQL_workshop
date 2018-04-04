@@ -17,7 +17,8 @@ class UpdateAuthAccountRequest extends AuthAccountRequest
     public function authorize()
     {
         $authAcount = RepoAuthAccount::find($this->route()->parameters['id']);
-        if (Auth::user()->account_id === $authAcount->account_id) {
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        if ($account_id === $authAcount->account_id) {
             return true;
         }
         return false;

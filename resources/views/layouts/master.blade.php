@@ -365,7 +365,7 @@
         {
             @php
                 $accountModel = new App\Model\Account;
-                $currentAccountId = Auth::user()->account_id;
+                $currentAccountId = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
                 $levelCurrentUser = 'directClient';
                 if ($accountModel->isAdmin($currentAccountId)) {
                     $levelCurrentUser = 'admin';
