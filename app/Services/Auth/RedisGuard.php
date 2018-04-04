@@ -31,7 +31,7 @@ class RedisGuard implements Guard
      */
     public function check()
     {
-        return !is_null($this->user());
+        return (!is_null($this->user()) || !is_null(Auth::user()));
     }
 
     /**
