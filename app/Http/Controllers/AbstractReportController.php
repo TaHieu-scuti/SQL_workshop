@@ -102,8 +102,6 @@ abstract class AbstractReportController extends Controller
         'averagePosition',
     ];
 
-    private $adgainerId;
-
     protected $isObjectStdClass = true;
 
     protected $displayNoDataFoundMessageOnGraph = true;
