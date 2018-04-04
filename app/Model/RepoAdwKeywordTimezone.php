@@ -114,7 +114,6 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
                 $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
             }
             $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
-
             $aggregated = $this->processGetAggregated(
                 $fields,
                 $groupedByField,
@@ -273,22 +272,14 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
         );
 
         if ($this->isConv || $this->isCallTracking) {
-            $arr = [];
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-            $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
-                $fields,
+                $fieldNames,
                 $groupedByField,
                 $campaignId,
                 $adGroupId
             );
 
-            $builder = DB::table(self::TABLE_TEMPORARY)->select(
-                array_merge(
-                    $aggregated,
-                    $arr
-                )
-            );
+            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
         }
 
         return $builder;
