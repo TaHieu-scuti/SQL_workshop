@@ -63,6 +63,6 @@ class Kernel extends HttpKernel
         'checkRole' => \App\Http\Middleware\CheckRole::class,
         'checkRoleClient' => \App\Http\Middleware\CheckRoleClient::class,
         'killOldMySqlConnections' => KillOldMySqlConnections::class,
-        'redisAuth' => KillOldMySqlConnections::class
+        'redisAuth' => RedisAuth::class
     ];
 }
