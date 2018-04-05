@@ -19,10 +19,11 @@ class CheckRoleClient
     public function handle($request, Closure $next)
     {
         $model = new Account();
-        if ($model->isAgency(Auth::user()->account_id)
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        if ($model->isAgency($account_id)
             && session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
             return redirect('/client-report');
-        } elseif ($model->isAdmin(Auth::user()->account_id)
+        } elseif ($model->isAdmin($account_id)
             && session(AbstractReportController::SESSION_KEY_CLIENT_ID) === null) {
             return redirect('/agency-report');
         }

@@ -19,12 +19,12 @@ class CheckRole
     public function handle($request, Closure $next)
     {
         $model = new Account();
-
-        if ($model->isAgency(Auth::user()->account_id)) {
-            session([AbstractReportController::SESSION_KEY_AGENCY_ID => Auth::user()->id]);
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        if ($model->isAgency($account_id)) {
+            session([AbstractReportController::SESSION_KEY_AGENCY_ID => $account_id]);
             return redirect('/client-report');
-        } elseif (!$model->isAdmin(Auth::user()->account_id)) {
-            session([AbstractReportController::SESSION_KEY_CLIENT_ID => Auth::user()->id]);
+        } elseif (!$model->isAdmin($account_id)) {
+            session([AbstractReportController::SESSION_KEY_CLIENT_ID => $account_id]);
             return redirect('/account_report');
         }
         return $next($request);

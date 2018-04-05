@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\KillOldMySqlConnections;
+use App\Http\Middleware\RedisAuth;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,6 +62,7 @@ class Kernel extends HttpKernel
         'engine' =>\App\Http\Middleware\Engine::class,
         'checkRole' => \App\Http\Middleware\CheckRole::class,
         'checkRoleClient' => \App\Http\Middleware\CheckRoleClient::class,
-        'killOldMySqlConnections' => KillOldMySqlConnections::class
+        'killOldMySqlConnections' => KillOldMySqlConnections::class,
+        'redisAuth' => RedisAuth::class
     ];
 }

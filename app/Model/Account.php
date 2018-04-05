@@ -658,9 +658,10 @@ class Account extends AbstractTemporaryAccountModel
 
     public function checkConditonForBreadcumbs($title)
     {
-        if (($title === 'Agency' && !$this->isAdmin(Auth::user()->account_id))
-            || ($title === 'Client' && !$this->isAgency(Auth::user()->account_id)
-            && !$this->isAdmin(Auth::user()->account_id))
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+        if (($title === 'Agency' && !$this->isAdmin($account_id))
+            || ($title === 'Client' && !$this->isAgency($account_id)
+            && !$this->isAdmin($account_id))
 
         ) {
             return true;

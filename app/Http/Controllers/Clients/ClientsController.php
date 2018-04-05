@@ -5,11 +5,12 @@ use Illuminate\Http\Request;
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
 use App\Http\Controllers\AbstractReportController;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Model\Account;
-use DateTime;
 use Illuminate\Support\Facades\Lang;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
+use DateTime;
+use Auth;
 
 class ClientsController extends AbstractReportController
 {

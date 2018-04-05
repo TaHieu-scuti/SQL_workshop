@@ -24,10 +24,12 @@ class RepoAuthAccountController extends Controller
     public function __construct(RepoAuthAccount $model)
     {
         $this->model = $model;
+        $this->middleware('redisAuth');
         $this->middleware(
             function (Request $request, $next) {
                 $accountModel = new Account();
-                $account_id = Auth::user()->account_id;
+                $account_id = !is_null(Auth::user())
+                    ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
                 if ($accountModel->isAdmin($account_id)) {
                     return redirect('agency-report');
                 }
@@ -44,7 +46,7 @@ class RepoAuthAccountController extends Controller
     public function index()
     {
         $accountModel = new Account();
-        $account_id = Auth::user()->account_id;
+        $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         $authAccountModel = new RepoAuthAccount();
         if (!$accountModel->isAgency($account_id)) {
             return redirect()->route('config-account', ['id' => $account_id]);
@@ -131,7 +133,8 @@ class RepoAuthAccountController extends Controller
     public function config($account_id)
     {
         $accountModel = new Account();
-        $currentAccountId = Auth::user()->account_id;
+        $currentAccountId = !is_null(Auth::user())
+            ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         $isAgency = false;
         $isEmptyApi = false;
 
@@ -164,7 +167,8 @@ class RepoAuthAccountController extends Controller
     private function checkPermissionUpdateAccountApi($account_id)
     {
         $accountModel = new Account();
-        $currentAccountId = Auth::user()->account_id;
+        $currentAccountId = !is_null(Auth::user())
+            ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
         if ($accountModel->isAgency($currentAccountId)) {
             if ($currentAccountId === $account_id) {
                 return false;
