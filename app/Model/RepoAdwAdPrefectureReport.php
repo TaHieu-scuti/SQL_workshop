@@ -136,6 +136,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
                 );
             }
         }
+        $fields = $this->unsetColumns($fieldNames, ['region']);
         $aggregated = $this->processGetAggregated(
             $fields,
             $groupedByField,

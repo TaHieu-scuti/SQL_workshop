@@ -235,6 +235,11 @@ abstract class AbstractReportModel extends Model
                 continue;
             }
 
+            if ($fieldName === 'region') {
+                $arrayCalculate[] = $fieldName;
+                continue;
+            }
+
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
                 $arrayCalculate = $this->groupSpecialFieldsIntoCalculateArray(
                     $arrayCalculate,
