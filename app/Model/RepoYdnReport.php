@@ -222,19 +222,13 @@ class RepoYdnReport extends AbstractAccountReportModel
     {
         $getAggregatedYdnAccounts = $this->getAggregatedAgency($fieldNames);
 
-        $accounts = self::select($getAggregatedYdnAccounts)
+        return self::select($getAggregatedYdnAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-
-        if ($agency !== 'agency') {
-            $this->addJoinOnPhoneTimeUse($accounts);
-        }
-
-        return $accounts;
     }
 
     public function getGraphForAgencyYdn($column, $startDay, $endDay, $arrAccountsAgency)

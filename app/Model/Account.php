@@ -392,38 +392,6 @@ class Account extends AbstractTemporaryAccountModel
         return (array) $result;
     }
 
-    protected function getQueryBuilderForTable($select, $startDay, $endDay)
-    {
-        $modelYssAccount = new RepoYssAccountReportCost;
-        $modelYdnAccount = new RepoYdnReport;
-        $modelAdwAccount = new RepoAdwAccountReportCost;
-
-        $yssAccountAgency = $modelYssAccount->getYssAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-        $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-        $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(self::SUBQUERY_FIELDS, $startDay, $endDay);
-
-        $query = $this->select($select)
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($yssAccountAgency) . ') AS yss'),
-                'accounts.account_id',
-                '=',
-                'yss.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($ydnAccountAgency) . ') AS ydn'),
-                'accounts.account_id',
-                '=',
-                'ydn.account_id'
-            )
-            ->leftJoin(
-                DB::raw('(' . $this->getBindingSql($adwAccountAgency) . ') AS adw'),
-                'accounts.account_id',
-                '=',
-                'adw.account_id'
-            );
-        return $query;
-    }
-
     /**
      * @param string[] $fieldNames
      * @param string   $accountStatus

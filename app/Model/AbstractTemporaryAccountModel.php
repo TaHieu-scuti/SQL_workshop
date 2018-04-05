@@ -200,7 +200,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
     {
         $modelYssAccount = new RepoYssAccountReportCost;
         $column = $this->checkIssetVariable($agency);
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             $fieldNames,
@@ -216,16 +216,14 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'. $column.' = tbl.account_id'
         );
 
-        if ($agency === 'agency') {
-            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'yss');
-        }
+        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'yss');
     }
 
     protected function getAccountYdn($startDay, $endDay, $agency = "")
     {
         $modelYdnAccount = new RepoYdnReport;
         $column = $this->checkIssetVariable($agency);
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             $fieldNames,
@@ -242,9 +240,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
 
-        if ($agency === "agency") {
-            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'ydn');
-        }
+        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'ydn');
     }
 
     protected function getAccountAdw($startDay, $endDay, $agency = "")
@@ -252,7 +248,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $modelAdwAccount = new RepoAdwAccountReportCost;
         $column = $this->checkIssetVariable($agency);
 
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             $fieldNames,
@@ -269,9 +265,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
             .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
         );
 
-        if ($agency === "agency") {
-            $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'adw');
-        }
+        $this->updatePhoneTimeUseId($startDay, $endDay, $column, 'adw');
     }
 
     protected function updatePhoneTimeUseId($startDay, $endDay, $column, $engine)
@@ -280,21 +274,25 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
 
         $phoneTimeUseIds = $model->getPhoneTimeUseId($startDay, $endDay, $engine);
 
-        DB::update(
-            'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
-            .$this->getBindingSql($phoneTimeUseIds).')AS tbl set '.$engine.'_ptu_id = tbl.id where '
-            .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
-        );
+        if (get_class($this) === 'App\Model\Agency') {
+            DB::update(
+                'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
+                .$this->getBindingSql($phoneTimeUseIds).')AS tbl set '.$engine.'_ptu_id = tbl.id where '
+                .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
+            );
+        } else {
+            DB::update(
+                'update '.self::TEMPORARY_ACCOUNT_TABLE.', ('
+                .$this->getBindingSql($phoneTimeUseIds).')AS tbl set '.$engine.'_call_cv = tbl.id where '
+                .self::TEMPORARY_ACCOUNT_TABLE.'.'.$column.' = tbl.account_id'
+            );
+        }
     }
 
-    private function updateColumnsForAgency($agency)
+    private function updateColumnsForAgency()
     {
         $fieldNames = static::SUBQUERY_FIELDS;
-        if ($agency === 'agency') {
-            $fieldNames = array_values($this->unsetColumns($fieldNames, self::UNSET_COLUMNS_FOR_AGENCY));
-        }
-
-        return $fieldNames;
+        return array_values($this->unsetColumns($fieldNames, self::UNSET_COLUMNS_FOR_AGENCY));
     }
 
     private function setFieldNameToUpdate($fieldNames, $engine)
