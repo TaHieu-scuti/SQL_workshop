@@ -121,7 +121,10 @@ class DirectClient extends Account
         $keywordId = null
     ) {
         $this->createTemporaryAccountTable();
-        $directClientAggregations = $this->getAggregatedTemporary($fieldNames, 'directClients');
+        $directClientAggregations = $this->getAggregatedForAgencyReportFromTemporaryTable(
+            $fieldNames,
+            'directClients'
+        );
         $sql = $this->select('account_id', 'accountName')
             ->where('accounts.level', '=', 3)
             ->where('accounts.agent_id', '=', '')
