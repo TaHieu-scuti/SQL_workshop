@@ -415,15 +415,13 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
     public function getYssAccountAgency(array $fieldNames, $startDay, $endDay, $agency = "")
     {
         $getAggregatedYssAccounts = $this->getAggregatedAgency($fieldNames);
-        $accounts = self::select($getAggregatedYssAccounts)
+        return self::select($getAggregatedYssAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-
-        return $accounts;
     }
 
     public function getGraphForAgencyYss($column, $startDay, $endDay, $arrAccountsAgency)

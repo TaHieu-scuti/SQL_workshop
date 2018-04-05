@@ -38,7 +38,7 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
 
         $tableName = $this->getTable();
 
-        $accounts = self::select($getAggregatedAdwAccounts)
+        return self::select($getAggregatedAdwAccounts)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
                     $this->addTimeRangeCondition($startDay, $endDay, $query);
@@ -50,8 +50,6 @@ class RepoAdwAccountReportCost extends AbstractAccountReportModel
                 }
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
-
-        return $accounts;
     }
 
     public function getDataForGraphAdw($column)
