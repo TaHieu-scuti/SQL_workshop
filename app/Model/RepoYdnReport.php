@@ -230,10 +230,6 @@ class RepoYdnReport extends AbstractAccountReportModel
             )
             ->groupBy(self::FOREIGN_KEY_YSS_ACCOUNTS);
 
-        if ($agency !== 'agency') {
-            $this->addJoinOnPhoneTimeUse($accounts);
-        }
-
         return $accounts;
     }
 
