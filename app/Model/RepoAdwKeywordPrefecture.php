@@ -127,11 +127,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
                 );
             }
         }
-        $arr = [];
-        if (in_array('impressionShare', $fieldNames)) {
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
-        }
-        $fields = $this->unsetColumns($fieldNames, ['impressionShare', 'region']);
+        $fields = $this->unsetColumns($fieldNames, ['region']);
         $aggregated = $this->processGetAggregated(
             $fields,
             $groupedByField,
