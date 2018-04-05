@@ -20,7 +20,6 @@ use App\Model\RepoYssKeywordDayOfWeek;
 use App\Model\RepoYssKeywordDevice;
 use App\Model\RepoYssKeywordPrefecture;
 use App\Model\RepoYssKeywordTimeZone;
-use Illuminate\Http\Request;
 use App\Model\RepoAdwGeoReportCost;
 use App\Model\RepoYdnPrefecture;
 use App\Model\RepoYdnAdgroupPrefecture;
@@ -37,6 +36,7 @@ use App\Model\RepoYssAdgroupDayofweek;
 use App\Model\RepoAdwCampaignTimezone;
 use App\Model\RepoAdwAdgroupTimezone;
 use App\Model\RepoAdwAdTimezone;
+use App\Model\RepoAdwKeywordTimezone;
 use App\Model\RepoAdwCampaignDayOfWeek;
 use App\Model\RepoAdwAdDayOfWeek;
 use App\Model\RepoAdwAdgroupDayOfWeek;
@@ -50,12 +50,13 @@ use App\Model\RepoAdwKeywordPrefecture;
 use App\Model\RepoAdwAdPrefectureReport;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 use DateTime;
 use Exception;
 use StdClass;
 use Auth;
-use Illuminate\Support\Facades\Lang;
 
 abstract class AbstractReportController extends Controller
 {
@@ -867,29 +868,46 @@ abstract class AbstractReportController extends Controller
     public function updateModelForTimezone()
     {
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
-            if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYssAdgroupTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYssCampaignTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
-                $this->model = new RepoYssKeywordTimeZone;
-            }
+            $this->updateModelForYssTimezone();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoYdnTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoYdnAdgroupTimeZone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoYdnAdTimeZone;
-            }
+            $this->updateModelForYdnTimezone();
         } elseif (session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
-                $this->model = new RepoAdwCampaignTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
-                $this->model = new RepoAdwAdgroupTimezone;
-            } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
-                $this->model = new RepoAdwAdTimezone;
-            }
+            $this->updateModelForAdwTimezone();
+        }
+    }
+
+    private function updateModelForYssTimezone()
+    {
+        if (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYssAdgroupTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYssCampaignTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoYssKeywordTimeZone;
+        }
+    }
+
+    private function updateModelForYdnTimezone()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoYdnTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoYdnAdgroupTimeZone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoYdnAdTimeZone;
+        }
+    }
+
+    private function updateModelForAdwTimezone()
+    {
+        if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
+            $this->model = new RepoAdwCampaignTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
+            $this->model = new RepoAdwAdgroupTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'adReport.') {
+            $this->model = new RepoAdwAdTimezone;
+        } elseif (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $this->model = new RepoAdwKeywordTimezone;
         }
     }
 
