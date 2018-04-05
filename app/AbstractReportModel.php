@@ -419,20 +419,20 @@ abstract class AbstractReportModel extends Model
         if ($flag !== "") {
             if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
-            } elseif ($fieldName === self::HOUR_OF_DAY
-                && $tableName !== 'temporary_table'
-                && (static::PAGE_ID === 'keywordID'
-                    || (static::PAGE_ID === 'adID'
-                        && session(static::SESSION_KEY_ENGINE) === 'adw')
-                    )
-            ) {
-                $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
             } else {
                 $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
             }
         } else {
             if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
                 $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
+            } elseif ($fieldName === self::HOUR_OF_DAY
+                && $tableName !== 'temporary_table'
+                && (static::PAGE_ID === 'keywordID'
+                    || (static::PAGE_ID === 'adID'
+                        && session(static::SESSION_KEY_ENGINE) === 'adw')
+                )
+            ) {
+                $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
             } else {
                 $arrayCalculate[] = DB::raw($tableName.'.'.$key.' as '.$fieldName);
             }

@@ -16,6 +16,15 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
 
     protected $table = 'repo_adw_keywords_report_cost';
 
+    const FIELDS_NEED_UNSET_FOR_ADW_KEYWORD_TIME_ZONE = [
+        'adGroup',
+        'adgroupID',
+        'campaignID',
+        'campaign',
+        'keyword',
+        'keywordID'
+    ];
+
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
@@ -69,6 +78,7 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
             $adReportId,
             $keywordId
         );
+
         if ($this->isConv || $this->isCallTracking) {
             $this->createTemporaryTable(
                 $fieldNames,
@@ -79,7 +89,11 @@ class RepoAdwKeywordTimezone extends AbstractAdwSubReportModel
             );
             $columns = $this->unsetColumns(
                 $fieldNames,
-                array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['adGroup', 'adgroupID'])
+                array_merge(
+                    self::UNSET_COLUMNS,
+                    self::FIELDS_CALL_TRACKING,
+                    self::FIELDS_NEED_UNSET_FOR_ADW_KEYWORD_TIME_ZONE
+                )
             );
             $columns = array_keys($this->updateFieldNames($columns));
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '

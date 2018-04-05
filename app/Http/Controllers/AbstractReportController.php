@@ -888,6 +888,11 @@ abstract class AbstractReportController extends Controller
 
     private function updateModelForAdwTimezone()
     {
+        if (static::SESSION_KEY_PREFIX === 'adReport.' || static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+            $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare']);
+            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
+        }
         if (static::SESSION_KEY_PREFIX === 'campaignReport.') {
             $this->model = new RepoAdwCampaignTimezone;
         } elseif (static::SESSION_KEY_PREFIX === 'adgroupReport.') {
