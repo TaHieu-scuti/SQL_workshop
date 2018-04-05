@@ -9,7 +9,7 @@ $model = new Account();
         @foreach ($breadcrumbs as $breadcrumb)
             <?php $titleBreadCumbs = App\User::getArrayAttribute($breadcrumb->title);
             ?>
-            @if ($model->checkConditonForBreadcumbs($breadcrumb->title)
+            @if ($model->checkConditionForBreadcrumbs($breadcrumb->title)
                 || $model->isDirectClient($breadcrumb->title)
             )
                 @continue;
