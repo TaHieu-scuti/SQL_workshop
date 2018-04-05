@@ -16,9 +16,9 @@ class RedisAuth
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::check() || !Auth::guard('redisGuard')->check()) {
-            return redirect('/login');
+        if (Auth::check() || Auth::guard('redisGuard')->check()) {
+            return $next($request);
         }
-        return $next($request);
+        return redirect('/login');
     }
 }
