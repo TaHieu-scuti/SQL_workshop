@@ -200,7 +200,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
     {
         $modelYssAccount = new RepoYssAccountReportCost;
         $column = $this->checkIssetVariable($agency);
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $yssAccountAgency = $modelYssAccount->getYssAccountAgency(
             $fieldNames,
@@ -223,7 +223,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
     {
         $modelYdnAccount = new RepoYdnReport;
         $column = $this->checkIssetVariable($agency);
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $ydnAccountAgency = $modelYdnAccount->getYdnAccountAgency(
             $fieldNames,
@@ -248,7 +248,7 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         $modelAdwAccount = new RepoAdwAccountReportCost;
         $column = $this->checkIssetVariable($agency);
 
-        $fieldNames = $this->updateColumnsForAgency($agency);
+        $fieldNames = $this->updateColumnsForAgency();
 
         $adwAccountAgency = $modelAdwAccount->getAdwAccountAgency(
             $fieldNames,
@@ -289,12 +289,10 @@ abstract class AbstractTemporaryAccountModel extends AbstractTemporaryModel
         }
     }
 
-    private function updateColumnsForAgency($agency)
+    private function updateColumnsForAgency()
     {
         $fieldNames = static::SUBQUERY_FIELDS;
-        $fieldNames = array_values($this->unsetColumns($fieldNames, self::UNSET_COLUMNS_FOR_AGENCY));
-
-        return $fieldNames;
+        return array_values($this->unsetColumns($fieldNames, self::UNSET_COLUMNS_FOR_AGENCY));
     }
 
     private function setFieldNameToUpdate($fieldNames, $engine)
