@@ -78,6 +78,7 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING, ['campaignName', 'campaign'])
             );
             $columns = array_keys($this->updateFieldNames($columns));
+
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
             if ($this->isConv) {
@@ -116,6 +117,7 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
                 $campaignId,
                 $adGroupId
             );
+
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby($groupedByField)
@@ -260,7 +262,9 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
 
         if ($this->isConv || $this->isCallTracking) {
             $arr = [];
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            if (in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
             $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
                 $fields,
