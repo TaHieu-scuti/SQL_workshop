@@ -267,7 +267,9 @@ class RepoAdwAdgroupDayOfWeek extends AbstractAdwSubReportModel
 
         if ($this->isConv || $this->isCallTracking) {
             $arr = [];
-            $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            if (in_array('impressionShare', $fieldNames)) {
+                $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
+            }
             $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
             $aggregated = $this->processGetAggregated(
                 $fields,
