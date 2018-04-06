@@ -345,6 +345,7 @@
                     $('.table_data_report').html('');
                     $('.table_data_report').html(data.tableDataLayout);
                     $('.summary_report').html(data.summaryReportLayout);
+                    setSelectedGraphColumn();
                     processDataTable(data);
                     history.pushState("", "", '?page=' + page);
                     hideSpinners();
