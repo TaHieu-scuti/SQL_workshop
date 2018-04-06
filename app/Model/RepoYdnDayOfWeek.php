@@ -15,16 +15,6 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
 
     public $timestamps = false;
 
-    protected function addJoinConditions(JoinClause $join)
-    {
-        parent::addJoinConditions($join);
-        $join->on(
-            DB::raw("DAYNAME(`phone_time_use`.`time_of_call`)"),
-            '=',
-            DB::raw("DAYNAME(`" . $this->table . "`" . ".`day`)")
-        );
-    }
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,

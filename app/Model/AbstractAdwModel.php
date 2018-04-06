@@ -224,17 +224,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         return $expressions;
     }
 
-    /* TODO: check if we still need it */
-    protected function addJoin(EloquentBuilder $builder)
-    {
-        $builder->leftJoin(
-            'phone_time_use',
-            function (JoinClause $join) {
-                $this->addJoinConditions($join);
-            }
-        );
-    }
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,
