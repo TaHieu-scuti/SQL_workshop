@@ -314,6 +314,10 @@ abstract class AbstractReportModel extends Model
                     $tableName . '.contentImprShare), 2) AS ' . $fieldName
                 );
             }
+        } elseif ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'yss') {
+            $arrayCalculate[] = DB::raw(
+                'ROUND(AVG(' . $tableName . '.impressionShare), 2) AS ' . $fieldName
+            );
         }
 
         return $arrayCalculate;

@@ -30,6 +30,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -133,6 +134,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $campaignId,
             $adGroupId
         );
+
         return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
@@ -253,6 +255,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,

@@ -28,6 +28,9 @@ abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
+        if ($groupedByField === "prefecture") {
+            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        }
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -143,6 +146,9 @@ abstract class AbstractYdnSpecificReportModel extends AbstractYdnRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
+        if ($groupedByField === "prefecture") {
+            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        }
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
