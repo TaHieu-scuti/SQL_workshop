@@ -135,8 +135,7 @@ class Agency extends Account
 
         $rawExpressions = $this->getRawExpressions(
             $fieldNames,
-            self::TEMPORARY_ACCOUNT_TABLE,
-            self::AGENCY
+            self::TEMPORARY_ACCOUNT_TABLE
         );
 
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)

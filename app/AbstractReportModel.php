@@ -564,11 +564,6 @@ abstract class AbstractReportModel extends Model
         return DB::raw('SUM( ' . $fieldName . ' ) AS ' . $fieldName);
     }
 
-    protected function getAggregatedForTable()
-    {
-        return [];
-    }
-
     protected function getBuilderForGetDataForTable(
         $engine,
         array $fieldNames,

@@ -21,38 +21,6 @@ class RepoAdwCampaignReportCost extends AbstractAdwModel
      **/
     public $timestamps = false;
 
-    protected function addJoinConditions(JoinClause $join)
-    {
-        $join->on('phone_time_use.account_id', '=', $this->table . '.account_id')
-            ->on('phone_time_use.campaign_id', '=', $this->table . '.campaign_id')
-            ->on('phone_time_use.utm_campaign', '=', $this->table . '.campaignID')
-            ->on(
-                DB::raw("STR_TO_DATE(`phone_time_use`.`time_of_call`, '%Y-%m-%d')"),
-                '=',
-                $this->table . '.day'
-            )
-            ->where('phone_time_use.source', '=', 'adw')
-            ->where('phone_time_use.traffic_type', '=', 'AD');
-    }
-
-    /**
-     * @return Expression[]
-     */
-    protected function getAggregatedForTable()
-    {
-        return [
-            DB::raw('COUNT(`phone_time_use`.`id`) AS call_tracking'),
-            DB::raw(
-                "((SUM(`{$this->table}`.`conversions`) + COUNT(`phone_time_use`.`id`)) "
-                . "/ SUM(`{$this->table}`.`clicks`)) * 100 AS call_cvr"
-            ),
-            DB::raw(
-                "SUM(`{$this->table}`.`cost`) / (SUM(`{$this->table}`.`conversions`) "
-                . "+ COUNT(`phone_time_use`.`id`)) AS call_cpa"
-            )
-        ];
-    }
-
     protected function updateTemporaryTableWithConversion(
         $conversionPoints,
         $groupedByField,
