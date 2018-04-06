@@ -118,14 +118,6 @@ class AgencyController extends AbstractReportController
             $this->initializeTimeRangeSession();
         }
 
-        if (session('timePeriodTitle')) {
-            session()->put(
-                [
-                    self::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => session('timePeriodTitle')
-                ]
-            );
-        }
-
         return $this->responseFactory->view(
             'agencyReport.index',
             [

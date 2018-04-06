@@ -383,9 +383,10 @@ abstract class AbstractReportController extends Controller
     {
         session()->put(
             [
-            static::SESSION_KEY_START_DAY => $startDay,
-            static::SESSION_KEY_END_DAY => $endDay,
-            static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle
+                static::SESSION_KEY_START_DAY => $startDay,
+                static::SESSION_KEY_END_DAY => $endDay,
+                static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle,
+                static::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => $timePeriodTitle
             ]
         );
     }
