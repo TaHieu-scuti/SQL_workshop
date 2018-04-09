@@ -241,6 +241,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        if ($groupedByField === "prefecture") {
+            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        }
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -365,6 +368,9 @@ abstract class AbstractYdnReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        if ($groupedByField === "prefecture") {
+            $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        }
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,

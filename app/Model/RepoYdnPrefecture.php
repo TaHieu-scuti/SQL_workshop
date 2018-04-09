@@ -31,6 +31,7 @@ class RepoYdnPrefecture extends AbstractYdnReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,

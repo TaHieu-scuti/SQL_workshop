@@ -807,7 +807,7 @@ abstract class AbstractReportController extends Controller
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['impressionShare', 'matchType', 'keyword', 'adType']);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['matchType', 'keyword', 'adType']);
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {

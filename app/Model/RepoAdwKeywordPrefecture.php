@@ -33,6 +33,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -272,6 +273,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
