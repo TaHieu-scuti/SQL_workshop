@@ -202,12 +202,6 @@ var Script = function () {
             updateMorris(columnName);
         });
 
-        $('.specific-filter-item').click(function(){
-            var value = $(this).data('value');
-            $('.panel .panel-body').removeClass('active');
-            $('.specific-filter-item[data-value = "'+ value +'" ]').addClass('active');
-        });
-
         $('.normal-report').click(function () {
             $('.specific-filter-item').removeClass('active');
             $('.panel .normal-report').addClass('active');
@@ -275,7 +269,6 @@ var Script = function () {
                 data.push({ "date" : response.data[i].day, "clicks" : response.data[i].data });
             }
             setMorris(data, field);
-
             global_graph_field_selected = response.field;
             setSelectedGraphColumn();
         }
@@ -299,10 +292,12 @@ var Script = function () {
                 success : function(response)
                 {
                     processData(response);
+                    global_graph_field_selected = columnName;
                     $('#time-period').html(response.timePeriodLayout);
                     $('#selectpickerGraph').selectpicker('val', columnName);
                     $('.selectionOnGraph li a[data-tokens="'+ columnName +'"]').parent().addClass('selected');
                     $('button[data-id=selectpickerGraph] span.filter-option').text(response.column);
+                    setSelectedGraphColumn();
                 },
                 error : function (response) {
                     checkErrorAjax(response);

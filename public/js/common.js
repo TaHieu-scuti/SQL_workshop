@@ -66,7 +66,6 @@ function sendingRequestTable() {
     $('.report-table').css('display', 'none');
     $('.loading-gif-on-table').removeClass('hidden-table');
     $('.loading-gif-on-table').show();
-    global_graph_field_selected = '';
 }
 
 function showLoadingImageOnTopGraph() {
@@ -334,6 +333,9 @@ $('.table_data_report').delegate('th', 'click', function() {
 })
 
 $('.specific-filter-item').click(function() {
+    let value = $(this).data('value');
+    $('.panel .panel-body').removeClass('active');
+    $('.specific-filter-item[data-value = "'+ value +'" ]').addClass('active');
     $.ajax({
         url : prefixRoute + "/update-table",
         type : "POST",
