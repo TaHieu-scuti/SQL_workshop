@@ -197,7 +197,7 @@ var Script = function () {
         * onclicking column button
         * update graph with selected column
         */
-        $('#selectpickerGraph').on('change', function() {
+        $('#selectpickerGraph').on('hidden.bs.select', function (e) {
             let columnName = $(this).find("option:selected").data('column');
             updateMorris(columnName);
         });
