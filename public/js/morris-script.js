@@ -197,7 +197,7 @@ var Script = function () {
         * onclicking column button
         * update graph with selected column
         */
-        $('#selectpickerGraph').on('hidden.bs.select', function (e) {
+        $('#selectpickerGraph').on('changed.bs.select', function (e) {
             let columnName = $(this).find("option:selected").data('column');
             updateMorris(columnName);
         });
@@ -300,8 +300,8 @@ var Script = function () {
                 {
                     processData(response);
                     $('#time-period').html(response.timePeriodLayout);
-                    $('#selectpickerGraph').find("option:selected").attr('selected', false);
-                    $('#selectpickerGraph option[data-column="'+ columnName +'"]').attr('selected',true);
+                    $('#selectpickerGraph').selectpicker('val', columnName);
+                    $('.selectionOnGraph li a[data-tokens="'+ columnName +'"]').parent().addClass('selected');
                     $('button[data-id=selectpickerGraph] span.filter-option').text(response.column);
                 },
                 error : function (response) {
