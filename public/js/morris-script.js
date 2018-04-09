@@ -56,13 +56,6 @@ var Script = function () {
                 $(this).find('.small-blue-stuff').addClass('fa fa-circle');
                 $active.find('.small-blue-stuff').removeClass('fa fa-circle');
             }
-            //remove and add class active,selected in dropdown select option
-            $('li.active').removeClass('active');
-            $('li.selected').removeClass('selected');
-            if(!$('a[data-tokens = "' + columnName + '"]').parent().hasClass('active')){
-                $('a[data-tokens = "' + columnName + '"]').parent().addClass('active');
-                $('a[data-tokens = "' + columnName + '"]').parent().addClass('selected');
-            }
         });
         /*
         *
