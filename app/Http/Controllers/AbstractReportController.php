@@ -82,6 +82,8 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
     const PREFECTURE = 'prefecture';
     const DEVICE = 'device';
+    const DAY_OF_WEEK = "dayOfWeek";
+    const HOUR_OF_DAY = "hourofday";
     const TIME_PERIOD_TITLE = 'timePeriodTitle';
     const TIME_PERIOD_TITLE_FOR_AGENCY = 'timePeriodTitleForAgency';
     const STATUS_TITLE = 'statusTitle';
@@ -93,6 +95,13 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::START_DAY;
     const SESSION_KEY_END_DAY = self::END_DAY;
+
+    const SUB_REPORT_ARRAY = [
+        self::PREFECTURE,
+        self::DEVICE,
+        self::HOUR_OF_DAY,
+        self::DAY_OF_WEEK
+    ];
 
     const DEFAULT_COLUMNS_GRAPH = [
         'impressions',
@@ -512,17 +521,24 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
+        $subReport = session(static::SESSION_KEY_GROUPED_BY_FIELD);
+        if (in_array($subReport, self::SUB_REPORT_ARRAY)) {
+            $key = array_search($subReport, $array);
+            $array[$key] = static::MEDIA_ID;
+            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
 
-        if (session(static::SESSION_KEY_ENGINE) === 'yss'
-            || session(static::SESSION_KEY_ENGINE) === 'ydn'
-            || session(static::SESSION_KEY_ENGINE) === null
-        ) {
+            if (session(static::SESSION_KEY_ENGINE) === 'adw') {
+                session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+            }
+        } else {
             $array[1] = static::GROUPED_BY_FIELD;
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
-        } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
-            $array[1] = static::ADW_GROUPED_BY_FIELD;
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+            if (session(static::SESSION_KEY_ENGINE) === 'adw') {
+                $array[1] = static::ADW_GROUPED_BY_FIELD;
+                session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
+            }
         }
+
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
     }
 
