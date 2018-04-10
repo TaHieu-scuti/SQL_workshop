@@ -186,8 +186,8 @@
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
-                                 <button class="btn btn-primary apply-custom-period"> Apply </button>
-                                 <button class="btn btn-danger"> Cancel </button>
+                                 <button class="btn btn-primary apply-custom-period"> @lang('language.apply') </button>
+                                 <button class="btn btn-danger"> @lang('language.cancel') </button>
                             </li>
                         </ul>
                     </div>
@@ -345,6 +345,7 @@
                     $('.table_data_report').html('');
                     $('.table_data_report').html(data.tableDataLayout);
                     $('.summary_report').html(data.summaryReportLayout);
+                    setSelectedGraphColumn();
                     processDataTable(data);
                     history.pushState("", "", '?page=' + page);
                     hideSpinners();
