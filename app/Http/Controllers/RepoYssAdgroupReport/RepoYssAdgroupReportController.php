@@ -302,7 +302,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             ) {
                 return false; // same campaign => no update
             }
-            return true; // same engine, different campaign_id => update back to normal report
+            return true; // same engine, different campaignId => update back to normal report
         }
         return true;
     }
