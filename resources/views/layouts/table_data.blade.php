@@ -193,7 +193,9 @@
                         || $fieldName === 'impressionShare'
                         || strrpos(strtolower($fieldName), 'cvr') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
-                    @elseif ($fieldName === 'averagePosition')
+                    @elseif ($fieldName === 'averagePosition'
+                        || $fieldName === 'conversions'
+                        || strrpos($fieldName, ' CV') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $report[$fieldName] }}</td>
