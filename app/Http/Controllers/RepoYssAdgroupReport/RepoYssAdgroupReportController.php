@@ -43,7 +43,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'adGroup';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
-    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ENGINE = self::SESSION_KEY_PREFIX . 'oldEngine';
     const SESSION_KEY_OLD_ID = 'oldId';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -302,7 +302,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
             ) {
                 return false; // same campaign => no update
             }
-            return true; // same engine, different account id or campaign_id => update back to normal report
+            return true; // same engine, different campaign_id => update back to normal report
         }
         return true;
     }
