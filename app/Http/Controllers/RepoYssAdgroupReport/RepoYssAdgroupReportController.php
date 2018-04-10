@@ -296,7 +296,8 @@ class RepoYssAdgroupReportController extends AbstractReportController
         }
     }
 
-    private function checkoutConditionOfCampaignForUpdateColumn($engine) {
+    private function checkoutConditionOfCampaignForUpdateColumn($engine)
+    {
         if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
             if (session(self::SESSION_KEY_OLD_CAMPAIGN_ID) === session(self::SESSION_KEY_CAMPAIGNID)
             ) {
