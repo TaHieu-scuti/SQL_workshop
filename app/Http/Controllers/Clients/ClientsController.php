@@ -98,7 +98,8 @@ class ClientsController extends AbstractReportController
         $this->middleware(
             function (Request $request, $next) {
                 $model = new Account;
-                $account_id = !is_null(Auth::user()) ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
+                $account_id = !is_null(Auth::user())
+                    ? Auth::user()->account_id : Auth::guard('redisGuard')->user()->account_id;
                 if (!$model->isAdmin($account_id) && !$model->isAgency($account_id)) {
                     return redirect('/account_report');
                 }
