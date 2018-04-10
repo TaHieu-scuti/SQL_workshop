@@ -522,7 +522,7 @@ abstract class AbstractReportController extends Controller
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
         $subReport = session(static::SESSION_KEY_GROUPED_BY_FIELD);
-        if (in_array($subReport, self::SUB_REPORT_ARRAY)) {
+        if (in_array($subReport, static::SUB_REPORT_ARRAY)) {
             $key = array_search($subReport, $array);
             $array[$key] = static::MEDIA_ID;
             session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::GROUPED_BY_FIELD]);
