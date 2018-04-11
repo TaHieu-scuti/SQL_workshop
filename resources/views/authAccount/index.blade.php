@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row report-table">
             <div class="col-md-12">
-            <a href="/client-report" class="btn btn-primary" id="client_redirect">Client page</a>
+            <a href="/client-report" class="btn btn-primary btnColor" id="client_redirect">Client page</a>
             <table class="table table-striped table-bordered" id="reportTable">
                 <thead>
                     <th>ID</th>
