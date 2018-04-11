@@ -74,6 +74,7 @@ class RepoYssAdReportController extends AbstractReportController
         RepoYssAdReportCost $model
     ) {
         $this->middleware('engine');
+        $this->middleware('PreventAccessingWhenChoosingYssEngine');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
