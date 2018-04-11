@@ -175,7 +175,7 @@
                         </td>
                         @elseif($report['adType'] === 'IMAGE_AD')
                         <td>
-                            <img class="ad-name" src="{{ $report['ad'] }}" style="width: 50px;height: 20px;"><br>
+                            <img class="ad-name" src="{{ $report['ad'] }}" alt='' style="width: 50px;height: 20px;"><br>
                             <span class="display-url">{{ $report['displayURL'] }}</span><br>
                             <span> {{ $report['description'] }}</span>
                         </td>
@@ -193,7 +193,9 @@
                         || $fieldName === 'impressionShare'
                         || strrpos(strtolower($fieldName), 'cvr') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}%</td>
-                    @elseif ($fieldName === 'averagePosition')
+                    @elseif ($fieldName === 'averagePosition'
+                        || $fieldName === 'conversions'
+                        || strrpos($fieldName, ' CV') === strlen($fieldName) - 3)
                         <td>{{ number_format($report[$fieldName], 2, '.', ',') }}</td>
                     @else
                         <td>{{ $report[$fieldName] }}</td>
