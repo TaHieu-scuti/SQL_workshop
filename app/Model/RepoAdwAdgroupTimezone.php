@@ -42,8 +42,8 @@ class RepoAdwAdgroupTimezone extends AbstractAdwSubReportModel
             static::PAGE_ID
         );
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
-        $phoneTimeUseModel = new Campaign;
-        $this->adGainerCampaigns = $phoneTimeUseModel->getAdGainerCampaignsWithPhoneNumber(
+        $campaignModel = new Campaign;
+        $this->adGainerCampaigns = $campaignModel->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
             $campaignIDs
