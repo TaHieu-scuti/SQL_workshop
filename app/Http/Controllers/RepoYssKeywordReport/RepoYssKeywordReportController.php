@@ -41,6 +41,7 @@ class RepoYssKeywordReportController extends AbstractReportController
     const GROUPED_BY_FIELD = 'keyword';
     const ADW_GROUPED_BY_FIELD = self::GROUPED_BY_FIELD;
     const PREFIX_ROUTE = 'prefixRoute';
+    const SESSION_KEY_OLD_ENGINE = self::SESSION_KEY_PREFIX . 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -94,7 +95,9 @@ class RepoYssKeywordReportController extends AbstractReportController
             $this->initializeSession($defaultColumns);
         }
         //update column fieldnames and grouped by field when change engine
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if ($this->checkoutConditionOfAdgroupForUpdateColumn($engine)) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssKeywordReport.index',
@@ -231,5 +234,18 @@ class RepoYssKeywordReportController extends AbstractReportController
             array_unshift($tableColumns, 'campaignName');
         }
         return $tableColumns;
+    }
+
+    private function checkoutConditionOfAdgroupForUpdateColumn($engine)
+    {
+        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+            if (session(self::SESSION_KEY_OLD_ADGROUP_ID) === session(self::SESSION_KEY_AD_GROUP_ID)
+                && self::SESSION_KEY_PREFIX === session(self::SESSION_KEY_PREVIOUS_PREFIX)
+            ) {
+                return false; // same campaign => no update
+            }
+            return true; // same engine, different campaignId => update back to normal report
+        }
+        return true;
     }
 }
