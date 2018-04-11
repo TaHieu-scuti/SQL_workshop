@@ -45,7 +45,8 @@ class RepoAdwCampaignDayOfWeek extends AbstractAdwSubReportModel
         $this->adGainerCampaigns = $campaignModel->getAdGainerCampaignsWithPhoneNumber(
             $clientId,
             'adw',
-            $campaignIDs
+            $campaignIDs,
+            static::PAGE_ID
         );
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $builder = parent::getBuilderForGetDataForTable(
