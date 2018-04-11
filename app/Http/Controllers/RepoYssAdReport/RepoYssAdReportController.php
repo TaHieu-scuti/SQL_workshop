@@ -86,7 +86,7 @@ class RepoYssAdReportController extends AbstractReportController
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD, 'adType');
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, 'adType');
+            array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD, 'adType');
         }
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
