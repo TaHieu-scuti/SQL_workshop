@@ -175,7 +175,7 @@
                         </td>
                         @elseif($report['adType'] === 'IMAGE_AD')
                         <td>
-                            <img class="ad-name" src="{{ $report['ad'] }}" style="width: 50px;height: 20px;"><br>
+                            <img class="ad-name" src="{{ $report['ad'] }}" alt='' style="width: 50px;height: 20px;"><br>
                             <span class="display-url">{{ $report['displayURL'] }}</span><br>
                             <span> {{ $report['description'] }}</span>
                         </td>
