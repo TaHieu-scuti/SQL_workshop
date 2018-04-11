@@ -77,6 +77,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
+    const SESSION_KEY_OLD_CAMPAIGN_ID = 'oldCampaignId';
     const SESSION_KEY_CLIENT_ID = 'clientId';
     const SESSION_KEY_AGENCY_ID = 'agencyId';
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
@@ -350,7 +351,8 @@ abstract class AbstractReportController extends Controller
 
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
-        session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        session()->put([self::SESSION_KEY_OLD_CAMPAIGN_ID => session(self::SESSION_KEY_CAMPAIGNID)]);
+        session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
     }
 
     public function checkoutSessionFieldName()
@@ -455,6 +457,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_CAMPAIGNID => $campaignId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_CAMPAIGN_ID)) {
+            session()->put([self::SESSION_KEY_OLD_CAMPAIGN_ID => session(self::SESSION_KEY_CAMPAIGNID)]);
+        }
     }
 
     public function updateSessionAdGroupId($adGroupId)
@@ -513,8 +518,8 @@ abstract class AbstractReportController extends Controller
         // the first time we will update session key engine,
         // after that we check if old engine doesn't exit, we will update session for old engine.
         session()->put([self::SESSION_KEY_ENGINE => $engine]);
-        if (!session()->has(self::SESSION_KEY_OLD_ENGINE)) {
-            session()->put([self::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        if (!session()->has(static::SESSION_KEY_OLD_ENGINE)) {
+            session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
     }
 
@@ -1093,14 +1098,7 @@ abstract class AbstractReportController extends Controller
 
     public function checkoutConditionForUpdateColumn($engine)
     {
-        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
-            if (session(self::SESSION_KEY_OLD_ACCOUNT_ID) === session(self::SESSION_KEY_ACCOUNT_ID)) {
-                return false; // same campaign => no update
-            }
-            return true; // same engine, different account id => update back to normal report
-        } else {
-            return true; // different engine => update back to normal report
-        }
+        return session(static::SESSION_KEY_OLD_ENGINE) !== $engine;
     }
 
     public function updateColumnAccountNameToClientNameOrAgencyName(array $columns, $prefixRoute)

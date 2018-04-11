@@ -43,7 +43,7 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const ADW_GROUPED_BY_FIELD = 'adGroup';
     const PREFIX_ROUTE = 'prefixRoute';
     const PREFECTURE = 'prefecture';
-    const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_OLD_ENGINE = self::SESSION_KEY_PREFIX . 'oldEngine';
     const SESSION_KEY_OLD_ID = 'oldId';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
@@ -103,7 +103,9 @@ class RepoYssAdgroupReportController extends AbstractReportController
         // on changing account
         // when current filter is Devices, Prefectures, Timezone, DayOfWeek to
         // normal report type
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if ($this->checkoutConditionOfCampaignForUpdateColumn($engine)) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
 
         $this->checkOldId();
         $this->checkoutSessionFieldName();
@@ -292,5 +294,17 @@ class RepoYssAdgroupReportController extends AbstractReportController
             session()->put([self::SESSION_KEY_OLD_ID => session(static::SESSION_KEY_CAMPAIGNID)]);
             session()->put([self::SESSION_KEY_OLD_ENGINE => session(static::SESSION_KEY_ENGINE)]);
         }
+    }
+
+    private function checkoutConditionOfCampaignForUpdateColumn($engine)
+    {
+        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+            if (session(self::SESSION_KEY_OLD_CAMPAIGN_ID) === session(self::SESSION_KEY_CAMPAIGNID)
+            ) {
+                return false; // same campaign => no update
+            }
+            return true; // same engine, different campaignId => update back to normal report
+        }
+        return true;
     }
 }
