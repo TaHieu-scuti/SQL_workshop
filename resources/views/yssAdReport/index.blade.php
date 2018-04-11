@@ -40,11 +40,23 @@ use App\Http\Controllers\RepoYssAdReport\RepoYssAdReportController;
             @lang('language.ADS')
         </li>
     @else
-        <li class="panel-body active">
-            <a href="{{ route('ad-report') }}">
-                @lang('language.ADS')
-            </a>
-        </li>
+        @if (session(RepoYssAdReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'device'
+            || session(RepoYssAdReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday'
+            || session(RepoYssAdReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek'
+            || session(RepoYssAdReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture'
+        )
+            <li class="panel-body normal-report">
+                <a href="javascript:void(0)">
+                    @lang('language.ADS')
+                </a>
+            </li>
+        @else
+            <li class="panel-body normal-report active">
+                <a href="javascript:void(0)">
+                    @lang('language.ADS')
+                </a>
+            </li>
+        @endif
     @endif
     <li class="panel-body separator">
     </li>
