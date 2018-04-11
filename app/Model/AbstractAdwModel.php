@@ -404,7 +404,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         $keywordId = null
     ) {
         $fieldNames = $this->checkConditionFieldName($fieldNames);
-
+        $fieldNames = $this->unsetColumns($fieldNames, ['adType']);
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,
