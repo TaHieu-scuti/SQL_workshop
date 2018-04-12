@@ -335,7 +335,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
@@ -365,7 +365,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $this->getDataForTable();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);

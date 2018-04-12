@@ -337,7 +337,7 @@ class ClientsController extends AbstractReportController
         $clients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($clients);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', self::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
@@ -366,7 +366,7 @@ class ClientsController extends AbstractReportController
         $clients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($clients);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', self::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
