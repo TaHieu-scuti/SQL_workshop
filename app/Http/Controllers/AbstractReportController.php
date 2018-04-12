@@ -113,6 +113,14 @@ abstract class AbstractReportController extends Controller
         'averagePosition',
     ];
 
+    const UNNECCESARY_FIELD_WHEN_EXPORT = [
+        'account_id',
+        'campaignID',
+        'adgroupID',
+        'keywordID',
+        'adID'
+    ];
+
     protected $isObjectStdClass = true;
 
     protected $displayNoDataFoundMessageOnGraph = true;
@@ -140,7 +148,14 @@ abstract class AbstractReportController extends Controller
     {
         $translatedFieldNames = [];
         foreach ($fieldNames as $fieldName) {
-            $translatedFieldNames[] = __('language.' . strtolower($fieldName));
+            if (in_array($fieldName, self::UNNECCESARY_FIELD_WHEN_EXPORT)) {
+                continue;
+            } elseif (in_array($fieldName, self::DEFAULT_COLUMNS_GRAPH)) {
+                $translatedFieldNames[] = __('language.' . strtolower($fieldName));
+                continue;
+            } else {
+                $translatedFieldNames[] = str_replace('<br>', "\r\n", $fieldName);
+            }
         }
 
         return $translatedFieldNames;
@@ -199,14 +214,13 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -234,13 +248,12 @@ abstract class AbstractReportController extends Controller
         }
         $data = $this->getDataForTable();
 
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
