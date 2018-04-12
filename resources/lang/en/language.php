@@ -131,4 +131,9 @@ return [
     'dailySpendingLimit' => 'Daily Budget',
     'language' => 'en',
     'matchType' => 'Match Type',
+    'goBack'=> 'Go Back',
+    'contact' => 'Please contact us if you think this is a server error. Thank you very much.',
+    'request' => 'The above error occurred while the web server was processing the request.',
+    'notFound' => 'Page Not Found',
+    'error' => 'Error 404!'
 ];

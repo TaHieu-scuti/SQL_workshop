@@ -76,6 +76,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         RepoYssKeywordReportCost $model
     ) {
         $this->middleware('engine');
+        $this->middleware('PreventAccessingWhenChoosingYdnEngine');
         parent::__construct($responseFactory, $model);
         $this->model = $model;
     }
