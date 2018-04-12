@@ -35,18 +35,6 @@
                 <!-- user login dropdown start-->
                 <li><a href="{{URL::asset('')}}language/en"><img src="/images/english.png"></a></li>
                 <li><a href="{{URL::asset('')}}language/ja"><img src="/images/jp.png"></a></li>
-                <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span id="username" class="username" value="{{ !is_null(Auth::user()) ? Auth::user()->username : Auth::guard('redisGuard')->user()->username }}">
-                                {{!is_null(Auth::user()) ? Auth::user()->username : Auth::guard('redisGuard')->user()->username}}
-                            </span>
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu extended logout">
-                        <div class="log-arrow-up"></div>
-                        <li><a href="/logout"><i class="fa fa-key"></i>@lang('language.log_out')</a></li>
-                    </ul>
-                </li>
                 <!-- user login dropdown end -->
             </ul>
             <!--search & user info end-->

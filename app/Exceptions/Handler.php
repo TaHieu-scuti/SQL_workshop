@@ -86,7 +86,7 @@ class Handler extends ExceptionHandler
             return $response;
         }
 
-        if($exception instanceof NotFoundHttpException) {
+        if ($exception instanceof NotFoundHttpException) {
             return redirect('/error');
         }
 

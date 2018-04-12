@@ -328,3 +328,5 @@ Route::prefix('auth-account')->group(function () {
         'RepoAuthAccount\RepoAuthAccountController@update'
     )->name('update-account');
 });
+
+Route::get('/error', 'DirectClient\DirectClientController@error404');
