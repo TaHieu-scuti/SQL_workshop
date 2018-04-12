@@ -36,10 +36,18 @@ class NativePHPCsvExporter implements CSVExporterInterface
     /** @var string[] */
     private $aliases;
 
+    /** @var string */
+    private $engine;
+
+    /** @var string */
+    private $reportType;
+
     /**
      * NativePHPCsvExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
+     * @param string $engine Engine of report (YSS, YDN, ADW)
+     * @param string $reportType Type of report
      * @param string[] $fieldNames Optional fieldNames to export.
      *                             When set only the fields of this array will be exported,
      *                             even if the models in the collection have other values as well.
@@ -48,10 +56,14 @@ class NativePHPCsvExporter implements CSVExporterInterface
      */
     public function __construct(
         Collection $exportData,
+        $engine,
+        $reportType,
         array $fieldNames = null,
         array $aliases = null
     ) {
         $this->exportData = $exportData;
+        $this->engine = $engine;
+        $this->reportType = $reportType;
         $this->fieldNames = $fieldNames;
         $this->aliases = $aliases;
     }
@@ -62,7 +74,7 @@ class NativePHPCsvExporter implements CSVExporterInterface
         if (is_array($this->exportData->first())) {
             $tableName = 'account_list';
         } else {
-            $tableName = $this->exportData->first()->getTable();
+            $tableName = $this->engine.'-'.$this->reportType;
         }
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
@@ -118,7 +130,6 @@ class NativePHPCsvExporter implements CSVExporterInterface
             }
             $this->writeLine($this->aliases);
         }
-
         $this->exportData->each(
             function ($value) use ($fieldNames) {
                 if (is_array($value)) {
