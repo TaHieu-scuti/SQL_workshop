@@ -31,16 +31,12 @@ class SpoutExcelExporter implements ExcelExporterInterface
     private $aliases;
 
     /** @var string */
-    private $engine;
-
-    /** @var string */
     private $reportType;
 
     /**
      * SpoutExcelExporter constructor.
      *
      * @param \Illuminate\Database\Eloquent\Collection $exportData
-     * @param string $engine Engine of report (YSS, YDN, ADW)
      * @param string $reportType Type of report
      * @param string[] $fieldNames Optional fieldNames to export.
      *                             When set only the fields of this array will be exported,
@@ -50,13 +46,11 @@ class SpoutExcelExporter implements ExcelExporterInterface
      */
     public function __construct(
         Collection $exportData,
-        $engine,
         $reportType,
         array $fieldNames = null,
         array $aliases = null
     ) {
         $this->exportData = $exportData;
-        $this->engine = $engine;
         $this->reportType = $reportType;
         $this->fieldNames = $fieldNames;
         $this->aliases = $aliases;
@@ -68,7 +62,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
         if (is_array($this->exportData->first())) {
             $tableName = 'account_list';
         } else {
-            $tableName = $this->engine.'-'.$this->reportType;
+            $tableName = $this->reportType;
         }
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")

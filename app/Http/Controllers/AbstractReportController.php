@@ -209,9 +209,8 @@ abstract class AbstractReportController extends Controller
         $collection = $data->getCollection();
         $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $engine = session(self::SESSION_KEY_ENGINE);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new SpoutExcelExporter($collection, $engine, $reportType, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -243,9 +242,8 @@ abstract class AbstractReportController extends Controller
         $collection = $data->getCollection();
         $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $engine = session(self::SESSION_KEY_ENGINE);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new NativePHPCsvExporter($collection, $engine, $reportType, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
