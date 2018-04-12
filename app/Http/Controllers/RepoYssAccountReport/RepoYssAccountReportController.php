@@ -12,7 +12,6 @@ use App\Model\RepoAccountDayOfWeek;
 use App\Model\RepoAccountDevice;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 
 use DateTime;
