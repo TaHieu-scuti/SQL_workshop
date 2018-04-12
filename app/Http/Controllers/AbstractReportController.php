@@ -217,7 +217,7 @@ abstract class AbstractReportController extends Controller
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
@@ -250,7 +250,7 @@ abstract class AbstractReportController extends Controller
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
@@ -1162,5 +1162,16 @@ abstract class AbstractReportController extends Controller
             unset($columnTable[array_search('clicks', $columnTable)]);
         }
         return $columnTable;
+    }
+
+    protected function getFieldNamesForExport($data)
+    {
+        $columns = $this->getAttributeFieldNames($data);
+        foreach (self::UNNECCESARY_FIELD_WHEN_EXPORT as $column) {
+            if (in_array($column, $columns)) {
+                $columns = $this->model->unsetColumns($columns, [$column]);
+            }
+        }
+        return $columns;
     }
 }

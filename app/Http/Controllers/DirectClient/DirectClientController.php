@@ -305,7 +305,7 @@ class DirectClientController extends AbstractReportController
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $directClients = $this->getDataForTable();
         $collection = $this->convertDataToArray($directClients);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
@@ -334,7 +334,7 @@ class DirectClientController extends AbstractReportController
         $directClients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($directClients);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
