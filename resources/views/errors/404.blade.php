@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@lang('language.language')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,6 @@
     <link rel="shortcut icon" href="/images/favicon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title')</title>
-
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/bootstrap-reset.css" rel="stylesheet">
@@ -19,16 +17,9 @@
     <link href="/css/morris.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/style-responsive.css" rel="stylesheet" />
     <link href="/css/jquery-ui.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
-    <!--[if lt IE 9]>
-    <script src="/js/html5shiv.js"></script>
-    <script src="/js/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body class="full-width">
 <section id="container" class="">
@@ -66,15 +57,15 @@
     <section id="main-content">
         <section class="wrapper">
             <div class="container" style="text-align: center; font-size: 20px">
-                <h1>Error 404!</h1>
+                <h1>@lang('language.error')</h1>
 
-                <div class="alert alert-danger">Page Not Found</div>
+                <div class="alert alert-danger">@lang('language.notFound')</div>
 
-                <p>The above error occurred while the web server was processing the request.</p>
+                <p>@lang('language.request')</p>
 
-                <p>Please contact us if you think this is a server error. Thank you very much.</p>
+                <p>@lang('language.contact')</p>
 
-                <a href="javascript:history.go(-1)">Go Back</a>
+                <a href="javascript:history.go(-1)">@lang('language.goBack')</a>
             </div>
         </section>
     </section>
@@ -85,26 +76,6 @@
 <script src="/js/jquery-1.8.3.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery-ui.min.js"></script>
-<script src="/js/jquery-date-range.js"></script>
-<script src="/js/morris.min.js"></script>
-<script src="/js/raphael-min.js"></script>
-<script src="/js/jquery.tablesorter.min.js"></script>
-<script src="/js/moment-with-locales.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-<!-- Custom js-->
-<script>
-    $("#myselect").on("change", function() {
-        $("#" + $(this).val()).show().siblings().hide();
-    });
-
-    function getRoutePrefix()
-    {
-        return '{{ route("auth-account") }}';
-    }
-</script>
-
-<script src="/js/common-function.js"></script>
-<script src="/js/auth-account-function.js"></script>
 <!-- s -->
 </body>
 </html>

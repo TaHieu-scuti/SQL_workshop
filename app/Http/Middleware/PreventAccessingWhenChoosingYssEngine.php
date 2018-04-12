@@ -16,7 +16,7 @@ class PreventAccessingWhenChoosingYssEngine
     public function handle($request, Closure $next)
     {
         if (session('engine') === 'yss') {
-            return Response(view('errors.error404'));
+            return redirect('/error');
         }
         return $next($request);
     }

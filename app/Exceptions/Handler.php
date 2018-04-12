@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -83,6 +84,10 @@ class Handler extends ExceptionHandler
 
         if ($response !== null) {
             return $response;
+        }
+
+        if($exception instanceof NotFoundHttpException) {
+            return redirect('/error');
         }
 
         return parent::render($request, $exception);

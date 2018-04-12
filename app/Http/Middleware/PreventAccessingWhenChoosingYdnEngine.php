@@ -16,7 +16,7 @@ class PreventAccessingWhenChoosingYdnEngine
     public function handle($request, Closure $next)
     {
         if (session('engine') === 'ydn') {
-            return Response(view('errors.error404'));
+            return redirect('/error');
         }
         return $next($request);
     }
