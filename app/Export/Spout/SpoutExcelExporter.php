@@ -59,11 +59,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
     private function generateFilename()
     {
         // get table name
-        if (is_array($this->exportData->first())) {
-            $tableName = 'account_list';
-        } else {
-            $tableName = $this->reportType;
-        }
+        $tableName = $this->reportType;
 
         $this->fileName = (new DateTime)->format("Y_m_d h_i ")
             . "{$tableName}"

@@ -333,18 +333,14 @@ class ClientsController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
-            session()->get(self::SESSION_KEY_FIELD_NAME),
-            self::SESSION_KEY_PREFIX_ROUTE
-        );
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $clients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($clients);
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
+        $reportType = str_replace('/', '', self::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -366,19 +362,14 @@ class ClientsController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
-            session()->get(self::SESSION_KEY_FIELD_NAME),
-            self::SESSION_KEY_PREFIX_ROUTE
-        );
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $clients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($clients);
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-
-        $exporter = new SpoutExcelExporter(collect($collection), $fieldNames, $aliases);
+        $reportType = str_replace('/', '', self::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(

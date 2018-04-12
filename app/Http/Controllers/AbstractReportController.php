@@ -113,6 +113,14 @@ abstract class AbstractReportController extends Controller
         'averagePosition',
     ];
 
+    const UNNECCESARY_FIELD_WHEN_EXPORT = [
+        'account_id',
+        'campaignID',
+        'adgroupID',
+        'keywordID',
+        'adID'
+    ];
+
     protected $isObjectStdClass = true;
 
     protected $displayNoDataFoundMessageOnGraph = true;
@@ -140,7 +148,9 @@ abstract class AbstractReportController extends Controller
     {
         $translatedFieldNames = [];
         foreach ($fieldNames as $fieldName) {
-            if (in_array($fieldName, self::DEFAULT_COLUMNS_GRAPH)) {
+            if (in_array($fieldName, self::UNNECCESARY_FIELD_WHEN_EXPORT)) {
+                continue;
+            } elseif (in_array($fieldName, self::DEFAULT_COLUMNS_GRAPH)) {
                 $translatedFieldNames[] = __('language.' . strtolower($fieldName));
                 continue;
             } else {

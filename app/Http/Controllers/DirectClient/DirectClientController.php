@@ -302,19 +302,13 @@ class DirectClientController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
-            session()->get(self::SESSION_KEY_FIELD_NAME),
-            self::SESSION_KEY_PREFIX_ROUTE
-        );
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
-
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $directClients = $this->getDataForTable();
-
         $collection = $this->convertDataToArray($directClients);
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter(collect($collection), $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -336,20 +330,14 @@ class DirectClientController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = $this->updateColumnAccountNameToClientNameOrAgencyName(
-            session()->get(self::SESSION_KEY_FIELD_NAME),
-            self::SESSION_KEY_PREFIX_ROUTE
-        );
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::ACCOUNT_ID]);
-
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $directClients = $this->getDataForTable();
 
         $collection = $this->convertDataToArray($directClients);
-
+        $fieldNames = $this->getAttributeFieldNames($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-
-        $exporter = new SpoutExcelExporter(collect($collection), $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
