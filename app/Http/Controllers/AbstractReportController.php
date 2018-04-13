@@ -78,6 +78,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_OLD_CAMPAIGN_ID = 'oldCampaignId';
+    const SESSION_KEY_OLD_ADGROUP_ID = 'oldAdgroupId';
     const SESSION_KEY_CLIENT_ID = 'clientId';
     const SESSION_KEY_AGENCY_ID = 'agencyId';
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
@@ -96,6 +97,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::START_DAY;
     const SESSION_KEY_END_DAY = self::END_DAY;
+    const SESSION_KEY_PREVIOUS_PREFIX = 'previousPrefix';
 
     const SUB_REPORT_ARRAY = [
         self::PREFECTURE,
@@ -114,6 +116,7 @@ abstract class AbstractReportController extends Controller
     ];
 
     const UNNECCESARY_FIELD_WHEN_EXPORT = [
+        'accountid',
         'account_id',
         'campaignID',
         'adgroupID',
@@ -217,7 +220,7 @@ abstract class AbstractReportController extends Controller
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
@@ -250,7 +253,7 @@ abstract class AbstractReportController extends Controller
 
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $collection = $data->getCollection();
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
@@ -365,7 +368,9 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
         session()->put([self::SESSION_KEY_OLD_CAMPAIGN_ID => session(self::SESSION_KEY_CAMPAIGNID)]);
+        session()->put([self::SESSION_KEY_OLD_ADGROUP_ID => session(self::SESSION_KEY_AD_GROUP_ID)]);
         session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        session()->put([self::SESSION_KEY_PREVIOUS_PREFIX => static::SESSION_KEY_PREFIX]);
     }
 
     public function checkoutSessionFieldName()
@@ -482,6 +487,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_AD_GROUP_ID=> $adGroupId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_ADGROUP_ID)) {
+            session()->put([self::SESSION_KEY_OLD_ADGROUP_ID => session(self::SESSION_KEY_AD_GROUP_ID)]);
+        }
     }
 
     public function updateSessionKeywordId($keywordId)
@@ -698,6 +706,10 @@ abstract class AbstractReportController extends Controller
 
         if ($request->normalReport !== null) {
             $this->updateNormalReport();
+        }
+
+        if (!session()->has(self::SESSION_KEY_PREVIOUS_PREFIX)) {
+            session()->put([self::SESSION_KEY_PREVIOUS_PREFIX => static::SESSION_KEY_PREFIX]);
         }
     }
 
@@ -1162,5 +1174,16 @@ abstract class AbstractReportController extends Controller
             unset($columnTable[array_search('clicks', $columnTable)]);
         }
         return $columnTable;
+    }
+
+    protected function getFieldNamesForExport($data)
+    {
+        $columns = $this->getAttributeFieldNames($data);
+        foreach (self::UNNECCESARY_FIELD_WHEN_EXPORT as $column) {
+            if (in_array($column, $columns)) {
+                $columns = $this->model->unsetColumns($columns, [$column]);
+            }
+        }
+        return $columns;
     }
 }

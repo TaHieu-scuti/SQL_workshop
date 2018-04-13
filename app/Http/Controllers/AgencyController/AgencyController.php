@@ -310,7 +310,7 @@ class AgencyController extends AbstractReportController
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $agencies = $this->getDataForTable();
         $collection = $this->convertDataToArray($agencies);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
@@ -341,7 +341,7 @@ class AgencyController extends AbstractReportController
         /** @var $collection \Illuminate\Database\Eloquent\Collection */
         $agencies = $this->getDataForTable();
         $collection = $this->convertDataToArray($agencies);
-        $fieldNames = $this->getAttributeFieldNames($collection);
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
         $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);

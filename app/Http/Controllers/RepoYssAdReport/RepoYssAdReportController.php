@@ -41,6 +41,7 @@ class RepoYssAdReportController extends AbstractReportController
     const GROUPED_BY_FIELD = 'adName';
     const ADW_GROUPED_BY_FIELD = 'ad';
     const PREFIX_ROUTE = 'prefixRoute';
+    const SESSION_KEY_OLD_ENGINE = self::SESSION_KEY_PREFIX . 'oldEngine';
 
     const COLUMNS_FOR_FILTER = 'columnsInModal';
     const DEFAULT_COLUMNS = [
@@ -86,12 +87,14 @@ class RepoYssAdReportController extends AbstractReportController
         if ($engine === 'yss' || $engine === 'ydn') {
             array_unshift($defaultColumns, self::MEDIA_ID, self::GROUPED_BY_FIELD, 'adType');
         } elseif ($engine === 'adw') {
-            array_unshift($defaultColumns, self::ADW_GROUPED_BY_FIELD, 'adType');
+            array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD, 'adType');
         }
         if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
-        $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        if ($this->checkoutConditionOfAdgroupForUpdateColumn($engine)) {
+            $this->updateGroupByFieldWhenSessionEngineChange($defaultColumns);
+        }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssAdReport.index',
@@ -233,5 +236,18 @@ class RepoYssAdReportController extends AbstractReportController
             array_unshift($tableColumns, 'campaignName');
         }
         return $tableColumns;
+    }
+
+    private function checkoutConditionOfAdgroupForUpdateColumn($engine)
+    {
+        if (session(self::SESSION_KEY_OLD_ENGINE) === $engine) {
+            if (session(self::SESSION_KEY_OLD_ADGROUP_ID) === session(self::SESSION_KEY_AD_GROUP_ID)
+                && self::SESSION_KEY_PREFIX === session(self::SESSION_KEY_PREVIOUS_PREFIX)
+            ) {
+                return false; // same campaign => no update
+            }
+            return true; // same engine, different campaignId => update back to normal report
+        }
+        return true;
     }
 }
