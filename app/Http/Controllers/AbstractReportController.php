@@ -110,7 +110,6 @@ abstract class AbstractReportController extends Controller
         'impressions',
         'cost',
         'clicks',
-        'ctr',
         'averageCpc',
         'averagePosition',
     ];

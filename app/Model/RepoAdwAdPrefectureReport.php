@@ -96,7 +96,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
                 array_merge(
                     self::UNSET_COLUMNS,
                     self::FIELDS_CALL_TRACKING,
-                    ['prefecture', 'adgroupID', 'adType']
+                    ['prefecture', 'adgroupID', 'adType', 'ad']
                 )
             );
             $columns = array_keys($this->updateFieldNames($columns));
