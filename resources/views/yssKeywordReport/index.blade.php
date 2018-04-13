@@ -26,11 +26,23 @@ use App\Http\Controllers\RepoYssKeywordReport\RepoYssKeywordReportController;
                 @lang('language.keywords')
             </li>
         @else
-            <li class="panel-body active">
-                <a href="{{ route('keyword-report') }}">
-                    @lang('language.keywords')
-                </a>
-            </li>
+            @if (session(RepoYssKeywordReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'device'
+                || session(RepoYssKeywordReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday'
+                || session(RepoYssKeywordReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek'
+                || session(RepoYssKeywordReportController::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture'
+            )
+                <li class="panel-body normal-report">
+                    <a href="javascript:void(0)">
+                        @lang('language.keyword')
+                    </a>
+                </li>
+            @else
+                <li class="panel-body normal-report active">
+                    <a href="javascript:void(0)">
+                        @lang('language.keyword')
+                    </a>
+                </li>
+            @endif
         @endif
         {{--YSS has no ads report--}}
         @if(session('engine') !== null && session('engine') === 'yss')

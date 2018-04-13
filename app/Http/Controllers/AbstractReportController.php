@@ -78,6 +78,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_OLD_CAMPAIGN_ID = 'oldCampaignId';
+    const SESSION_KEY_OLD_ADGROUP_ID = 'oldAdgroupId';
     const SESSION_KEY_CLIENT_ID = 'clientId';
     const SESSION_KEY_AGENCY_ID = 'agencyId';
     const SESSION_KEY_DIRECT_CLIENT = 'directClients';
@@ -96,6 +97,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_STATUS_TITLE = self::STATUS_TITLE;
     const SESSION_KEY_START_DAY = self::START_DAY;
     const SESSION_KEY_END_DAY = self::END_DAY;
+    const SESSION_KEY_PREVIOUS_PREFIX = 'previousPrefix';
 
     const SUB_REPORT_ARRAY = [
         self::PREFECTURE,
@@ -111,6 +113,15 @@ abstract class AbstractReportController extends Controller
         'ctr',
         'averageCpc',
         'averagePosition',
+    ];
+
+    const UNNECCESARY_FIELD_WHEN_EXPORT = [
+        'accountid',
+        'account_id',
+        'campaignID',
+        'adgroupID',
+        'keywordID',
+        'adID'
     ];
 
     protected $isObjectStdClass = true;
@@ -140,7 +151,14 @@ abstract class AbstractReportController extends Controller
     {
         $translatedFieldNames = [];
         foreach ($fieldNames as $fieldName) {
-            $translatedFieldNames[] = __('language.' . strtolower($fieldName));
+            if (in_array($fieldName, self::UNNECCESARY_FIELD_WHEN_EXPORT)) {
+                continue;
+            } elseif (in_array($fieldName, self::DEFAULT_COLUMNS_GRAPH)) {
+                $translatedFieldNames[] = __('language.' . strtolower($fieldName));
+                continue;
+            } else {
+                $translatedFieldNames[] = str_replace('<br>', "\r\n", $fieldName);
+            }
         }
 
         return $translatedFieldNames;
@@ -199,14 +217,15 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter($data, $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -233,14 +252,15 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
-
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter($data, $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -352,7 +372,9 @@ abstract class AbstractReportController extends Controller
         session([static::SESSION_KEY_FIELD_NAME => $columns]);
         session()->put([self::SESSION_KEY_OLD_ACCOUNT_ID => session(self::SESSION_KEY_ACCOUNT_ID)]);
         session()->put([self::SESSION_KEY_OLD_CAMPAIGN_ID => session(self::SESSION_KEY_CAMPAIGNID)]);
+        session()->put([self::SESSION_KEY_OLD_ADGROUP_ID => session(self::SESSION_KEY_AD_GROUP_ID)]);
         session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        session()->put([self::SESSION_KEY_PREVIOUS_PREFIX => static::SESSION_KEY_PREFIX]);
     }
 
     public function checkoutSessionFieldName()
@@ -377,6 +399,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionFieldNameAndPagination($fieldName, $pagination)
     {
+        if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
+            array_unshift($fieldName, 'adType');
+        }
         array_unshift($fieldName, session(static::SESSION_KEY_GROUPED_BY_FIELD));
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $fieldName)) {
             $positionOfFirstFieldName = 1;
@@ -469,6 +494,9 @@ abstract class AbstractReportController extends Controller
                 self::SESSION_KEY_AD_GROUP_ID=> $adGroupId
             ]
         );
+        if (!session()->has(self::SESSION_KEY_OLD_ADGROUP_ID)) {
+            session()->put([self::SESSION_KEY_OLD_ADGROUP_ID => session(self::SESSION_KEY_AD_GROUP_ID)]);
+        }
     }
 
     public function updateSessionKeywordId($keywordId)
@@ -685,6 +713,10 @@ abstract class AbstractReportController extends Controller
 
         if ($request->normalReport !== null) {
             $this->updateNormalReport();
+        }
+
+        if (!session()->has(self::SESSION_KEY_PREVIOUS_PREFIX)) {
+            session()->put([self::SESSION_KEY_PREVIOUS_PREFIX => static::SESSION_KEY_PREFIX]);
         }
     }
 
@@ -1149,5 +1181,16 @@ abstract class AbstractReportController extends Controller
             unset($columnTable[array_search('clicks', $columnTable)]);
         }
         return $columnTable;
+    }
+
+    protected function getFieldNamesForExport($data)
+    {
+        $columns = $this->getAttributeFieldNames($data);
+        foreach (self::UNNECCESARY_FIELD_WHEN_EXPORT as $column) {
+            if (in_array($column, $columns)) {
+                $columns = $this->model->unsetColumns($columns, [$column]);
+            }
+        }
+        return $columns;
     }
 }

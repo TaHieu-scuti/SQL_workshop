@@ -330,15 +330,16 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoAccountPrefecture;
         }
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+
+        /** @var $collection Array data get from table */
+        $collection = $this->getDataForTable()->items();
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -360,17 +361,15 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        $fieldNames = session()->get(self::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [self::MEDIA_ID]);
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoAccountPrefecture;
         }
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
-
+        /** @var $collection Array data get from table */
+        $collection = $this->getDataForTable()->items();
+        $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
-
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(

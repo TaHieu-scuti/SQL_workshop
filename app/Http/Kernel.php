@@ -62,6 +62,8 @@ class Kernel extends HttpKernel
         'engine' =>\App\Http\Middleware\Engine::class,
         'checkRole' => \App\Http\Middleware\CheckRole::class,
         'checkRoleClient' => \App\Http\Middleware\CheckRoleClient::class,
+        'PreventAccessingWhenChoosingYssEngine' => \App\Http\Middleware\PreventAccessingWhenChoosingYssEngine::class,
+        'PreventAccessingWhenChoosingYdnEngine' => \App\Http\Middleware\PreventAccessingWhenChoosingYdnEngine::class,
         'killOldMySqlConnections' => KillOldMySqlConnections::class,
         'redisAuth' => RedisAuth::class
     ];
