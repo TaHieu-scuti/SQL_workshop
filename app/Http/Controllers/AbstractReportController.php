@@ -216,13 +216,15 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-        $fieldNames = $this->getFieldNamesForExport($collection);
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter($data, $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -249,13 +251,15 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
         $data = $this->getDataForTable();
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-        $fieldNames = $this->getFieldNamesForExport($collection);
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter($data, $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
