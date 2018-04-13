@@ -764,8 +764,9 @@ abstract class AbstractReportModel extends Model
         }
         if ($groupedByField === 'keyword') {
             $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
+        } else {
+            $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         }
-        $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
         $data = self::select($aggregations)
             ->where(
