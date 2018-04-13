@@ -87,7 +87,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof NotFoundHttpException) {
-            return redirect('/error');
+            return redirect('/error404');
         }
 
         return parent::render($request, $exception);
