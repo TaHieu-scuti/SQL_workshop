@@ -399,6 +399,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionFieldNameAndPagination($fieldName, $pagination)
     {
+        if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
+            array_unshift($fieldName, 'adType');
+        }
         array_unshift($fieldName, session(static::SESSION_KEY_GROUPED_BY_FIELD));
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $fieldName)) {
             $positionOfFirstFieldName = 1;
