@@ -333,12 +333,13 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoAccountPrefecture;
         }
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+
+        /** @var $collection Array data get from table */
+        $collection = $this->getDataForTable()->items();
         $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new NativePHPCsvExporter($collection, $reportType, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -363,12 +364,12 @@ class RepoYssAccountReportController extends AbstractReportController
         if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
             $this->model = new RepoAccountPrefecture;
         }
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $this->getDataForTable();
+        /** @var $collection Array data get from table */
+        $collection = $this->getDataForTable()->items();
         $fieldNames = $this->getFieldNamesForExport($collection);
         $aliases = $this->translateFieldNames($fieldNames);
         $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new SpoutExcelExporter($collection, $reportType, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter(collect($collection), $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(

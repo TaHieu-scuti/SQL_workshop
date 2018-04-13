@@ -116,6 +116,7 @@ abstract class AbstractReportController extends Controller
     ];
 
     const UNNECCESARY_FIELD_WHEN_EXPORT = [
+        'accountid',
         'account_id',
         'campaignID',
         'adgroupID',
