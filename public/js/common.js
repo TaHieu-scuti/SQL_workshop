@@ -407,8 +407,8 @@ $(document).ready(function(){
         objectUser['title'] = 'Agency';
         objectUser['name'] = 'Agency';
     } else {
-        objectUser['title'] = 'Direct Client';
-        objectUser['name'] = 'Direct Client';
+        objectUser['title'] = 'Client';
+        objectUser['name'] = 'Client';
     }
     objectUser['engine'] = "";
     objectUser['value'] = $('#username').attr('value');
