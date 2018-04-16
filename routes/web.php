@@ -329,4 +329,4 @@ Route::prefix('auth-account')->group(function () {
     )->name('update-account');
 });
 
-Route::get('/error', 'DirectClient\DirectClientController@error404');
+Route::get('/error404', 'ErrorController@error404');
