@@ -341,10 +341,10 @@ abstract class AbstractReportController extends Controller
             $endDay = $today->modify('-1 days')->format('Y-m-d');
             $startDay = $endDay;
             $timePeriodTitle = "Yesterday";
-            session([static::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => $timePeriodTitle]);
         } else {
             session([static::SESSION_KEY_TIME_PERIOD_TITLE => $timePeriodTitle]);
         }
+        session([static::SESSION_KEY_TIME_PERIOD_TITLE_FOR_AGENCY => $timePeriodTitle]);
         session([static::SESSION_KEY_START_DAY => $startDay]);
         session([static::SESSION_KEY_END_DAY => $endDay]);
     }
