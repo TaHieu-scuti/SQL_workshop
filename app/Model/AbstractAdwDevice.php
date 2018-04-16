@@ -11,7 +11,8 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         'campaign',
         'adGroup',
         'keyword',
-        'adgroupID'
+        'adgroupID',
+        'ad'
     ];
     protected function getBuilderForGetDataForTable(
         $engine,
