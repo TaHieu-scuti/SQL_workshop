@@ -65,63 +65,60 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $adReportId,
             $keywordId
         );
+        array_unshift($fieldNames, 'region');
+        $this->createTemporaryTable(
+            $fieldNames,
+            $this->isConv,
+            $this->isCallTracking,
+            $this->conversionPoints,
+            $this->adGainerCampaigns
+        );
 
-        if ($this->isConv || $this->isCallTracking) {
-            array_unshift($fieldNames, 'region');
-            $this->createTemporaryTable(
-                $fieldNames,
-                $this->isConv,
-                $this->isCallTracking,
+        $columns = $this->unsetColumns(
+            $fieldNames,
+            array_merge(
+                self::UNSET_COLUMNS,
+                self::FIELDS_CALL_TRACKING,
+                ['prefecture', 'campaign', 'adGroup']
+            )
+        );
+
+        $columns = array_keys($this->updateFieldNames($columns));
+        DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+            . $this->getBindingSql($builder));
+        DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
+            `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
+
+        if ($this->isConv) {
+            $this->updateTemporaryTableWithConversion(
                 $this->conversionPoints,
-                $this->adGainerCampaigns
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
             );
+        }
 
-            $columns = $this->unsetColumns(
-                $fieldNames,
-                array_merge(
-                    self::UNSET_COLUMNS,
-                    self::FIELDS_CALL_TRACKING,
-                    ['prefecture', 'campaign', 'adGroup']
-                )
+        if ($this->isCallTracking) {
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
             );
-
-            $columns = array_keys($this->updateFieldNames($columns));
-            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
-                . $this->getBindingSql($builder));
-            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
-                `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
-
-            if ($this->isConv) {
-                $this->updateTemporaryTableWithConversion(
-                    $this->conversionPoints,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
-
-            if ($this->isCallTracking) {
-                $this->updateTemporaryTableWithCallTracking(
-                    $this->adGainerCampaigns,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
         }
         $arr = [];
         if (in_array('impressionShare', $fieldNames)) {
@@ -135,10 +132,13 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $adGroupId
         );
 
-        return DB::table(self::TABLE_TEMPORARY)
+        $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
             ->orderBy($columnSort, $sort);
+
+
+        return $builder;
     }
 
     protected function updateTemporaryTableWithConversion(
