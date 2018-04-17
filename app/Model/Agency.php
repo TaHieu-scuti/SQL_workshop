@@ -63,7 +63,7 @@ class Agency extends Account
         $keywordId = null
     ) {
         $this->createTemporaryAccountTable(self::AGENCY);
-        array_unshift($fieldNames, 'account_id');
+
         $getAggregation = $this->getAggregatedForAgencyReportFromTemporaryTable(
             $fieldNames,
             'agencyName'

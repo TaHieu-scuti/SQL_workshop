@@ -401,7 +401,8 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
             array_unshift($fieldName, 'adType');
         }
-        array_unshift($fieldName, session(static::SESSION_KEY_GROUPED_BY_FIELD));
+        array_unshift($fieldName, static::MEDIA_ID, session(static::SESSION_KEY_GROUPED_BY_FIELD));
+
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $fieldName)) {
             $positionOfFirstFieldName = 1;
             session()->put(static::SESSION_KEY_COLUMN_SORT, $fieldName[$positionOfFirstFieldName]);

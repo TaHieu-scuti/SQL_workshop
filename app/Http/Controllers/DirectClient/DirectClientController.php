@@ -17,6 +17,7 @@ class DirectClientController extends AbstractReportController
 {
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
+    const MEDIA_ID = self::ACCOUNT_ID;
     const PREFIX_ROUTE = 'prefixRoute';
     const GROUPED_BY_FIELD = 'accountName';
     const SORT = 'sort';
