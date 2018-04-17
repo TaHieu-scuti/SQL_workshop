@@ -571,6 +571,9 @@ abstract class AbstractReportController extends Controller
             }
         }
 
+        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $array)) {
+            session([static::SESSION_KEY_COLUMN_SORT => static::GROUPED_BY_FIELD]);
+        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
     }
 
