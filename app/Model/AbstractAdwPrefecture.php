@@ -132,13 +132,10 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $adGroupId
         );
 
-        $builder = DB::table(self::TABLE_TEMPORARY)
+        return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
             ->orderBy($columnSort, $sort);
-
-
-        return $builder;
     }
 
     protected function updateTemporaryTableWithConversion(
