@@ -257,29 +257,4 @@ abstract class AbstractYdnRawExpressions extends AbstractTemporaryModel
 
         return $arraySelect;
     }
-
-    protected function checkConditionFieldName($fieldNames)
-    {
-        foreach ($fieldNames as $fieldName) {
-            if ($fieldName === '[conversionValues]') {
-                $this->isConv = true;
-            }
-
-            if (in_array($fieldName, self::FIELDS_CALL_TRACKING)) {
-                $this->isCallTracking = true;
-            }
-        }
-
-        if ($this->isConv || $this->isCallTracking) {
-            if (!in_array('cost', $fieldNames)) {
-                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
-                array_splice($fieldNames, $key + 1, 0, ['cost']);
-            }
-            if (!in_array('clicks', $fieldNames)) {
-                $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
-                array_splice($fieldNames, $key + 1, 0, ['clicks']);
-            }
-        }
-        return $fieldNames;
-    }
 }
