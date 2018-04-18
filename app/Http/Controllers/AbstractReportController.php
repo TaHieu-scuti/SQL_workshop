@@ -760,12 +760,15 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        // dd(session(static::SESSION_KEY_OLD_ENGINE));
         $sort = session(static::SESSION_KEY_COLUMN_SORT);
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
         $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
 
         if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
-            if (in_array($sort, $allFieldNames)
+            if (session(static::SESSION_KEY_ENGINE) !== session(static::SESSION_KEY_OLD_ENGINE)) {
+                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
+            } elseif (in_array($sort, $allFieldNames)
                 && in_array($sort, self::FIRST_COLUMNS)
                 && !in_array($sort, $fieldNames)
             ) {
@@ -803,8 +806,7 @@ abstract class AbstractReportController extends Controller
     private function getFirstColumnSort($fieldNames)
     {
         $arrayIDs = [
-            'accountID',
-            'accountId',
+            'account_id',
             'accountid',
             'campaignID',
             'adgroupID',
