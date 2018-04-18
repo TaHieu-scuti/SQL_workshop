@@ -814,7 +814,6 @@ abstract class AbstractReportController extends Controller
             'keywordID'
         ];
         $fieldNames = array_diff($fieldNames, $arrayIDs);
-        // dd($fieldNames);
         return empty($fieldNames) ? session(static::SESSION_KEY_COLUMN_SORT) : array_values($fieldNames)[0];
     }
 
