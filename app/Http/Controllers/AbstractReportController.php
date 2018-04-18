@@ -76,6 +76,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_SWITCH_ENGINE = 'switchEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_OLD_CAMPAIGN_ID = 'oldCampaignId';
     const SESSION_KEY_OLD_ADGROUP_ID = 'oldAdgroupId';
@@ -143,6 +144,8 @@ abstract class AbstractReportController extends Controller
     protected $displayNoDataFoundMessageOnTable = true;
 
     protected $page = 1;
+
+    private $isSwitchEngine = false;
     /**
      * AbstractReportController constructor.
      *
@@ -563,6 +566,9 @@ abstract class AbstractReportController extends Controller
         if (!session()->has(static::SESSION_KEY_OLD_ENGINE)) {
             session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
+        if (!session()->has(static::SESSION_KEY_SWITCH_ENGINE)) {
+            session()->put([static::SESSION_KEY_SWITCH_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        }
     }
 
     public function updateNormalReport()
@@ -764,20 +770,22 @@ abstract class AbstractReportController extends Controller
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
         $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
 
-        if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
-            if (session(static::SESSION_KEY_ENGINE) !== session(static::SESSION_KEY_OLD_ENGINE) ||
-                ((in_array($sort, $allFieldNames)
+        if (session(self::SESSION_KEY_ENGINE) !== session(self::SESSION_KEY_SWITCH_ENGINE)) {
+            $this->setSessionSortColumn($fieldNames);
+            session([self::SESSION_KEY_SWITCH_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        } elseif (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
+            if (in_array($sort, $allFieldNames)
                 && in_array($sort, self::FIRST_COLUMNS)
-                && !in_array($sort, $fieldNames))
+                && !in_array($sort, $fieldNames)
             ) {
-                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
+                $this->setSessionSortColumn($fieldNames);
             }
         } elseif (!in_array($sort, $fieldNames)) {
             if ($sort !== 'agencyName'
                 && $sort !== 'clientName'
                 && $sort !== 'directClients'
             ) {
-                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
+                $this->setSessionSortColumn($fieldNames);
             }
         }
 
@@ -799,6 +807,11 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+    }
+
+    private function setSessionSortColumn($fieldNames)
+    {
+        session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
     }
 
     private function getFirstColumnSort($fieldNames)
