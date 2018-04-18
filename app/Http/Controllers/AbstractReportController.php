@@ -760,7 +760,6 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
-        // dd(session(static::SESSION_KEY_OLD_ENGINE));
         $sort = session(static::SESSION_KEY_COLUMN_SORT);
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
         $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
