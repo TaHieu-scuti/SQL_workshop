@@ -18,6 +18,7 @@ class AgencyController extends AbstractReportController
 {
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
+    const MEDIA_ID = self::ACCOUNT_ID;
     const PREFIX_ROUTE = 'prefixRoute';
     const GROUPED_BY_FIELD = 'accountName';
     const SORT = 'sort';
@@ -106,7 +107,7 @@ class AgencyController extends AbstractReportController
         session()->forget(self::SESSION_KEY_ENGINE);
         session()->put([self::SESSION_KEY_AGENCY_ID => null]);
         $defaultColumns = self::DEFAULT_COLUMNS;
-        array_unshift($defaultColumns, 'accountName');
+        array_unshift($defaultColumns, 'accountName', self::MEDIA_ID);
 
         if (!session('agencyReport')) {
             $this->initializeSession($defaultColumns);
