@@ -144,8 +144,6 @@ abstract class AbstractReportController extends Controller
     protected $displayNoDataFoundMessageOnTable = true;
 
     protected $page = 1;
-
-    private $isSwitchEngine = false;
     /**
      * AbstractReportController constructor.
      *
