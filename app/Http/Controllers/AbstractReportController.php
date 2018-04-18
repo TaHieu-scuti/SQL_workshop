@@ -721,6 +721,7 @@ abstract class AbstractReportController extends Controller
         if ($request->specificItem !== null) {
             $this->updateSessionGroupedByFieldName($request->specificItem);
         }
+
         if ($request->normalReport !== null) {
             $this->updateNormalReport();
         }
