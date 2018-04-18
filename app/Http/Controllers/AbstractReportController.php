@@ -401,7 +401,15 @@ abstract class AbstractReportController extends Controller
         if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
             array_unshift($fieldName, 'adType');
         }
-        array_unshift($fieldName, static::MEDIA_ID, session(static::SESSION_KEY_GROUPED_BY_FIELD));
+        if (in_array(session(static::SESSION_KEY_GROUPED_BY_FIELD), self::SUB_REPORT_ARRAY)) {
+            $groupByField = static::GROUPED_BY_FIELD;
+            if (session(self::SESSION_KEY_ENGINE) === 'adw') {
+                $groupByField = static::ADW_GROUPED_BY_FIELD;
+            }
+            array_unshift($fieldName, session(static::SESSION_KEY_GROUPED_BY_FIELD), $groupByField);
+        } else {
+            array_unshift($fieldName, static::MEDIA_ID, session(static::SESSION_KEY_GROUPED_BY_FIELD));
+        }
 
         if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $fieldName)) {
             $positionOfFirstFieldName = 1;
@@ -713,7 +721,6 @@ abstract class AbstractReportController extends Controller
         if ($request->specificItem !== null) {
             $this->updateSessionGroupedByFieldName($request->specificItem);
         }
-
         if ($request->normalReport !== null) {
             $this->updateNormalReport();
         }
