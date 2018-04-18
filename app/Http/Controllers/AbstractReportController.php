@@ -76,6 +76,7 @@ abstract class AbstractReportController extends Controller
     const SESSION_KEY_KEYWORD_ID = "KeywordID";
     const SESSION_KEY_ENGINE = "engine";
     const SESSION_KEY_OLD_ENGINE = 'oldEngine';
+    const SESSION_KEY_SWITCH_ENGINE = 'switchEngine';
     const SESSION_KEY_OLD_ACCOUNT_ID = 'oldAccountId';
     const SESSION_KEY_OLD_CAMPAIGN_ID = 'oldCampaignId';
     const SESSION_KEY_OLD_ADGROUP_ID = 'oldAdgroupId';
@@ -121,6 +122,20 @@ abstract class AbstractReportController extends Controller
         'adgroupID',
         'keywordID',
         'adID'
+    ];
+
+    const FIRST_COLUMNS = [
+        self::PREFECTURE,
+        self::DEVICE,
+        self::HOUR_OF_DAY,
+        self::DAY_OF_WEEK,
+        'campaignName',
+        'campaign',
+        'adgroupName',
+        'adgroup',
+        'keyword',
+        'ad',
+        'adName'
     ];
 
     protected $isObjectStdClass = true;
@@ -549,6 +564,9 @@ abstract class AbstractReportController extends Controller
         if (!session()->has(static::SESSION_KEY_OLD_ENGINE)) {
             session()->put([static::SESSION_KEY_OLD_ENGINE => session(self::SESSION_KEY_ENGINE)]);
         }
+        if (!session()->has(static::SESSION_KEY_SWITCH_ENGINE)) {
+            session()->put([static::SESSION_KEY_SWITCH_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        }
     }
 
     public function updateNormalReport()
@@ -570,10 +588,6 @@ abstract class AbstractReportController extends Controller
                 $array[1] = static::ADW_GROUPED_BY_FIELD;
                 session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
             }
-        }
-
-        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $array)) {
-            session([static::SESSION_KEY_COLUMN_SORT => static::GROUPED_BY_FIELD]);
         }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
     }
@@ -750,26 +764,29 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
-        if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
-            if (!in_array(
-                session(static::SESSION_KEY_COLUMN_SORT),
-                session(static::SESSION_KEY_ALL_FIELD_NAME)
-            )) {
-                session([static::SESSION_KEY_COLUMN_SORT
-                    => $this->getFirstColumnSort(session(static::SESSION_KEY_ALL_FIELD_NAME))]);
-            }
-        } elseif (!in_array(
-            session(static::SESSION_KEY_COLUMN_SORT),
-            session(static::SESSION_KEY_FIELD_NAME)
-        )) {
-            if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName'
-                && session(static::SESSION_KEY_COLUMN_SORT) !== 'clientName'
-                && session(static::SESSION_KEY_COLUMN_SORT) !== 'directClients'
+        $sort = session(static::SESSION_KEY_COLUMN_SORT);
+        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+        $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
+
+        if (session(self::SESSION_KEY_ENGINE) !== session(self::SESSION_KEY_SWITCH_ENGINE)) {
+            $this->setSessionSortColumn($fieldNames);
+            session([self::SESSION_KEY_SWITCH_ENGINE => session(self::SESSION_KEY_ENGINE)]);
+        } elseif (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
+            if (in_array($sort, $allFieldNames)
+                && in_array($sort, self::FIRST_COLUMNS)
+                && !in_array($sort, $fieldNames)
             ) {
-                session([static::SESSION_KEY_COLUMN_SORT
-                    => $this->getFirstColumnSort(session(static::SESSION_KEY_FIELD_NAME))]);
+                $this->setSessionSortColumn($fieldNames);
+            }
+        } elseif (!in_array($sort, $fieldNames)) {
+            if ($sort !== 'agencyName'
+                && $sort !== 'clientName'
+                && $sort !== 'directClients'
+            ) {
+                $this->setSessionSortColumn($fieldNames);
             }
         }
+
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -790,9 +807,16 @@ abstract class AbstractReportController extends Controller
         );
     }
 
+    private function setSessionSortColumn($fieldNames)
+    {
+        session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
+    }
+
     private function getFirstColumnSort($fieldNames)
     {
         $arrayIDs = [
+            'account_id',
+            'accountid',
             'campaignID',
             'adgroupID',
             'keywordID',
