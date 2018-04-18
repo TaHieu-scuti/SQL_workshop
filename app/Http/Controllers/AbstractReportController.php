@@ -123,6 +123,20 @@ abstract class AbstractReportController extends Controller
         'adID'
     ];
 
+    const FIRST_COLUMNS = [
+        self::PREFECTURE,
+        self::DEVICE,
+        self::HOUR_OF_DAY,
+        self::DAY_OF_WEEK,
+        'campaignName',
+        'campaign',
+        'adgroupName',
+        'adgroup',
+        'keyword',
+        'ad',
+        'adName'
+    ];
+
     protected $isObjectStdClass = true;
 
     protected $displayNoDataFoundMessageOnGraph = true;
@@ -571,10 +585,6 @@ abstract class AbstractReportController extends Controller
                 session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => static::ADW_GROUPED_BY_FIELD]);
             }
         }
-
-        if (!in_array(session(static::SESSION_KEY_COLUMN_SORT), $array)) {
-            session([static::SESSION_KEY_COLUMN_SORT => static::GROUPED_BY_FIELD]);
-        }
         session()->put([static::SESSION_KEY_FIELD_NAME => $array]);
     }
 
@@ -750,26 +760,26 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        $sort = session(static::SESSION_KEY_COLUMN_SORT);
+        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
+        $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
+
         if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
-            if (!in_array(
-                session(static::SESSION_KEY_COLUMN_SORT),
-                session(static::SESSION_KEY_ALL_FIELD_NAME)
-            )) {
-                session([static::SESSION_KEY_COLUMN_SORT
-                    => $this->getFirstColumnSort(session(static::SESSION_KEY_ALL_FIELD_NAME))]);
-            }
-        } elseif (!in_array(
-            session(static::SESSION_KEY_COLUMN_SORT),
-            session(static::SESSION_KEY_FIELD_NAME)
-        )) {
-            if (session(static::SESSION_KEY_COLUMN_SORT) !== 'agencyName'
-                && session(static::SESSION_KEY_COLUMN_SORT) !== 'clientName'
-                && session(static::SESSION_KEY_COLUMN_SORT) !== 'directClients'
+            if (in_array($sort, $allFieldNames)
+                && in_array($sort, self::FIRST_COLUMNS)
+                && !in_array($sort, $fieldNames)
             ) {
-                session([static::SESSION_KEY_COLUMN_SORT
-                    => $this->getFirstColumnSort(session(static::SESSION_KEY_FIELD_NAME))]);
+                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
+            }
+        } elseif (!in_array($sort, $fieldNames)) {
+            if ($sort !== 'agencyName'
+                && $sort !== 'clientName'
+                && $sort !== 'directClients'
+            ) {
+                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
             }
         }
+
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
             session(static::SESSION_KEY_FIELD_NAME),
@@ -793,6 +803,9 @@ abstract class AbstractReportController extends Controller
     private function getFirstColumnSort($fieldNames)
     {
         $arrayIDs = [
+            'accountID',
+            'accountId',
+            'accountid',
             'campaignID',
             'adgroupID',
             'keywordID',
@@ -801,6 +814,7 @@ abstract class AbstractReportController extends Controller
             'keywordID'
         ];
         $fieldNames = array_diff($fieldNames, $arrayIDs);
+        // dd($fieldNames);
         return empty($fieldNames) ? session(static::SESSION_KEY_COLUMN_SORT) : array_values($fieldNames)[0];
     }
 
