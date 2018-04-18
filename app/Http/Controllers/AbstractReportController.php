@@ -765,11 +765,10 @@ abstract class AbstractReportController extends Controller
         $allFieldNames = session(static::SESSION_KEY_ALL_FIELD_NAME);
 
         if (session()->has(static::SESSION_KEY_ALL_FIELD_NAME)) {
-            if (session(static::SESSION_KEY_ENGINE) !== session(static::SESSION_KEY_OLD_ENGINE)) {
-                session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
-            } elseif (in_array($sort, $allFieldNames)
+            if (session(static::SESSION_KEY_ENGINE) !== session(static::SESSION_KEY_OLD_ENGINE) ||
+                ((in_array($sort, $allFieldNames)
                 && in_array($sort, self::FIRST_COLUMNS)
-                && !in_array($sort, $fieldNames)
+                && !in_array($sort, $fieldNames))
             ) {
                 session([static::SESSION_KEY_COLUMN_SORT => $this->getFirstColumnSort($fieldNames)]);
             }
