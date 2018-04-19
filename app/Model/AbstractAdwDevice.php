@@ -265,6 +265,8 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
             $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");
         }
         $fields = $this->unsetColumns($fieldNames, ['impressionShare']);
+        $fields = $this->unsetColumns($fields, ['adType']);
+
         $aggregated = $this->processGetAggregated(
             $fields,
             $groupedByField,
