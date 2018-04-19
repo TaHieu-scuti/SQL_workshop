@@ -245,6 +245,7 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
         $keywordId = null
     ) {
         $fieldNames = $this->checkConditionFieldName($fieldNames);
+        $fieldNames = $this->unsetColumns($fieldNames, ['adType']);
 
         $builder = parent::getBuilderForCalculateData(
             $engine,
