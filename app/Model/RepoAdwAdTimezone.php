@@ -33,6 +33,7 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['adType']);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -244,6 +245,7 @@ class RepoAdwAdTimezone extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['adType']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
         $builder = parent::getBuilderForCalculateData(
