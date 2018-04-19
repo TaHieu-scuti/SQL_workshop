@@ -250,7 +250,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         return true;
     }
 
-    private function updateColumnForFieldsOnModal($fieldNames) {
+    private function updateColumnForFieldsOnModal($fieldNames)
+    {
         return $this->model->unsetColumns($fieldNames, ['matchType']);
     }
 }
