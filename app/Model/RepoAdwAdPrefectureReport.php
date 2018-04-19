@@ -33,7 +33,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare', 'adType']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -82,60 +82,58 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
             $keywordId
         );
 
-        if ($this->isConv || $this->isCallTracking) {
-            array_unshift($fieldNames, 'region');
-            $this->createTemporaryTable(
-                $fieldNames,
-                $this->isConv,
-                $this->isCallTracking,
+        array_unshift($fieldNames, 'region');
+        $this->createTemporaryTable(
+            $fieldNames,
+            $this->isConv,
+            $this->isCallTracking,
+            $this->conversionPoints,
+            $this->adGainerCampaigns
+        );
+        $columns = $this->unsetColumns(
+            $fieldNames,
+            array_merge(
+                self::UNSET_COLUMNS,
+                self::FIELDS_CALL_TRACKING,
+                ['prefecture', 'adgroupID', 'ad']
+            )
+        );
+        $columns = array_keys($this->updateFieldNames($columns));
+        DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+            . $this->getBindingSql($builder));
+        DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
+            `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
+
+        if ($this->isConv) {
+            $this->updateTemporaryTableWithConversion(
                 $this->conversionPoints,
-                $this->adGainerCampaigns
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
             );
-            $columns = $this->unsetColumns(
-                $fieldNames,
-                array_merge(
-                    self::UNSET_COLUMNS,
-                    self::FIELDS_CALL_TRACKING,
-                    ['prefecture', 'adgroupID', 'adType', 'ad']
-                )
+        }
+
+        if ($this->isCallTracking) {
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
             );
-            $columns = array_keys($this->updateFieldNames($columns));
-            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
-                . $this->getBindingSql($builder));
-            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
-                `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
-
-            if ($this->isConv) {
-                $this->updateTemporaryTableWithConversion(
-                    $this->conversionPoints,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
-
-            if ($this->isCallTracking) {
-                $this->updateTemporaryTableWithCallTracking(
-                    $this->adGainerCampaigns,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
         }
         $fields = $this->unsetColumns($fieldNames, ['region']);
         $aggregated = $this->processGetAggregated(
@@ -144,6 +142,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
             $campaignId,
             $adGroupId
         );
+
         return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
@@ -288,7 +287,7 @@ class RepoAdwAdPrefectureReport extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare', 'adType']);
         $builder = parent::getBuilderForCalculateData(
             $engine,
             $fieldNames,

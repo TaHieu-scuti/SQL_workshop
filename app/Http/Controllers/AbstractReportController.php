@@ -413,7 +413,7 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionFieldNameAndPagination($fieldName, $pagination)
     {
-        if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
+        if (session(self::SESSION_KEY_ENGINE) === 'adw' && static::SESSION_KEY_PREFIX === 'adReport.') {
             array_unshift($fieldName, 'adType');
         }
         if (in_array(session(static::SESSION_KEY_GROUPED_BY_FIELD), self::SUB_REPORT_ARRAY)) {
@@ -895,10 +895,6 @@ abstract class AbstractReportController extends Controller
 
     public function updateModelForPrefecture()
     {
-        $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['adType']);
-        session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
-
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
             $this->updateModelForYssPrefecture(static::SESSION_KEY_PREFIX);
         } elseif (session(self::SESSION_KEY_ENGINE) === 'ydn') {
