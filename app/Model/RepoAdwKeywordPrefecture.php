@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
 {
     const PAGE_ID = 'keywordID';
-    const GROUPED_BY_FIELD_NAME = 'keyword';
 
     protected $table = 'repo_adw_geo_report_cost';
 
@@ -33,7 +32,8 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare', 'matchType']);
+
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -54,6 +54,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
             null,
             $adGroupIds
         );
+        array_unshift($fieldNames, 'region');
 
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
@@ -73,61 +74,60 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
             $keywordId
         );
 
-        if ($this->isConv || $this->isCallTracking) {
-            array_unshift($fieldNames, 'region');
-            $this->createTemporaryTable(
-                $fieldNames,
-                $this->isConv,
-                $this->isCallTracking,
+        $this->createTemporaryTable(
+            $fieldNames,
+            $this->isConv,
+            $this->isCallTracking,
+            $this->conversionPoints,
+            $this->adGainerCampaigns
+        );
+        $columns = $this->unsetColumns(
+            $fieldNames,
+            array_merge(
+                self::UNSET_COLUMNS,
+                self::FIELDS_CALL_TRACKING,
+                ['prefecture', 'adgroupID', 'keyword']
+            )
+        );
+        $columns = array_keys($this->updateFieldNames($columns));
+        DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
+            . $this->getBindingSql($builder));
+
+        DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
+            `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
+
+        if ($this->isConv) {
+            $this->updateTemporaryTableWithConversion(
                 $this->conversionPoints,
-                $this->adGainerCampaigns
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
             );
-            $columns = $this->unsetColumns(
-                $fieldNames,
-                array_merge(
-                    self::UNSET_COLUMNS,
-                    self::FIELDS_CALL_TRACKING,
-                    ['prefecture', 'adgroupID']
-                )
-            );
-            $columns = array_keys($this->updateFieldNames($columns));
-            DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
-                . $this->getBindingSql($builder));
-            DB::update('update '.self::TABLE_TEMPORARY.', (SELECT Name, CriteriaID from criteria) as 
-                `criteria` SET prefecture = criteria.name WHERE temporary_table.region = criteria.CriteriaID');
-
-            if ($this->isConv) {
-                $this->updateTemporaryTableWithConversion(
-                    $this->conversionPoints,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
-
-            if ($this->isCallTracking) {
-                $this->updateTemporaryTableWithCallTracking(
-                    $this->adGainerCampaigns,
-                    $groupedByField,
-                    $startDay,
-                    $endDay,
-                    $engine,
-                    $clientId,
-                    $accountId,
-                    $campaignId,
-                    $adGroupId,
-                    $adReportId,
-                    $keywordId
-                );
-            }
         }
+
+        if ($this->isCallTracking) {
+            $this->updateTemporaryTableWithCallTracking(
+                $this->adGainerCampaigns,
+                $groupedByField,
+                $startDay,
+                $endDay,
+                $engine,
+                $clientId,
+                $accountId,
+                $campaignId,
+                $adGroupId,
+                $adReportId,
+                $keywordId
+            );
+        }
+
         $fields = $this->unsetColumns($fieldNames, ['region']);
         $aggregated = $this->processGetAggregated(
             $fields,
@@ -135,6 +135,7 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
             $campaignId,
             $adGroupId
         );
+
         return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
@@ -273,33 +274,15 @@ class RepoAdwKeywordPrefecture extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
-        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
-        $builder = parent::getBuilderForCalculateData(
-            $engine,
+        $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare', 'matchType']);
+
+        $aggregated = $this->processGetAggregated(
             $fieldNames,
-            $accountStatus,
-            $startDay,
-            $endDay,
             $groupedByField,
-            $agencyId,
-            $accountId,
-            $clientId,
             $campaignId,
-            $adGroupId,
-            $adReportId,
-            $keywordId
+            $adGroupId
         );
 
-        if ($this->isConv || $this->isCallTracking) {
-            $aggregated = $this->processGetAggregated(
-                $fieldNames,
-                $groupedByField,
-                $campaignId,
-                $adGroupId
-            );
-            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
-        }
-
-        return $builder;
+        return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
     }
 }

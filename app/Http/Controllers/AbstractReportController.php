@@ -413,6 +413,9 @@ abstract class AbstractReportController extends Controller
 
     public function updateSessionFieldNameAndPagination($fieldName, $pagination)
     {
+        if (static::SESSION_KEY_PREFIX === 'keywordReport.') {
+            array_unshift($fieldName, 'matchType');
+        }
         if (session(self::SESSION_KEY_ENGINE) === 'adw' && session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'ad') {
             array_unshift($fieldName, 'adType');
         }
@@ -580,6 +583,7 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
+
         $subReport = session(static::SESSION_KEY_GROUPED_BY_FIELD);
         if (in_array($subReport, static::SUB_REPORT_ARRAY)) {
             $key = array_search($subReport, $array);
@@ -895,7 +899,7 @@ abstract class AbstractReportController extends Controller
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['matchType', 'keyword', 'adType']);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['adType']);
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {
@@ -1214,6 +1218,10 @@ abstract class AbstractReportController extends Controller
         if (!in_array('clicks', session(static::SESSION_KEY_FIELD_NAME))
             && array_search('clicks', $columnTable) !== false) {
             unset($columnTable[array_search('clicks', $columnTable)]);
+        }
+        if (!in_array('conversions', session(static::SESSION_KEY_FIELD_NAME))
+            && array_search('conversions', $columnTable) !== false) {
+            unset($columnTable[array_search('conversions', $columnTable)]);
         }
         return $columnTable;
     }
