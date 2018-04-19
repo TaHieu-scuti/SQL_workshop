@@ -1215,6 +1215,10 @@ abstract class AbstractReportController extends Controller
             && array_search('clicks', $columnTable) !== false) {
             unset($columnTable[array_search('clicks', $columnTable)]);
         }
+        if (!in_array('conversions', session(static::SESSION_KEY_FIELD_NAME))
+            && array_search('conversions', $columnTable) !== false) {
+            unset($columnTable[array_search('conversions', $columnTable)]);
+        }
         return $columnTable;
     }
 

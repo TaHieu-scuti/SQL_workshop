@@ -1295,7 +1295,7 @@ abstract class AbstractReportModel extends Model
     protected function checkConditionFieldName($fieldNames)
     {
         foreach ($fieldNames as $fieldName) {
-            if ($fieldName === '[conversionValues]') {
+            if (in_array($fieldName, static::UNSET_COLUMNS)) {
                 $this->isConv = true;
             }
 
@@ -1312,6 +1312,9 @@ abstract class AbstractReportModel extends Model
             if (!in_array('clicks', $fieldNames)) {
                 $key = array_search(static::GROUPED_BY_FIELD_NAME, $fieldNames);
                 array_splice($fieldNames, $key + 1, 0, ['clicks']);
+            }
+            if (!in_array('conversions', $fieldNames)) {
+                array_push($fieldNames, 'conversions');
             }
         }
         return $fieldNames;

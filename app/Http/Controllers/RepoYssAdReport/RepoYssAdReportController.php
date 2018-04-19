@@ -51,7 +51,6 @@ class RepoYssAdReportController extends AbstractReportController
         'ctr',
         'averageCpc',
         'averagePosition',
-        'conversions',
         '[conversionValues]',
         'web_cv',
         'web_cvr',
