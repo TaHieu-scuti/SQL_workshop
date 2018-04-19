@@ -31,6 +31,7 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
@@ -260,6 +261,7 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
         $arr = [];
         if (in_array('impressionShare', $fieldNames)) {
             $arr[] = DB::raw("IFNULL(ROUND(impressionShare, 2), 0) AS impressionShare");

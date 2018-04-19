@@ -30,6 +30,7 @@ class RepoAdwKeywordDayOfWeek extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
         $this->conversionPoints = $this->getAllDistinctConversionNames(
             $clientId,
             $accountId,
@@ -146,6 +147,7 @@ class RepoAdwKeywordDayOfWeek extends AbstractAdwSubReportModel
         $adReportId = null,
         $keywordId = null
     ) {
+        $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
         $fieldNames = $this->checkConditionFieldName($fieldNames);
 
         $builder = parent::getBuilderForCalculateData(

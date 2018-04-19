@@ -580,6 +580,7 @@ abstract class AbstractReportController extends Controller
     public function updateNormalReport()
     {
         $array = session(static::SESSION_KEY_FIELD_NAME);
+
         $subReport = session(static::SESSION_KEY_GROUPED_BY_FIELD);
         if (in_array($subReport, static::SUB_REPORT_ARRAY)) {
             $key = array_search($subReport, $array);
@@ -895,7 +896,7 @@ abstract class AbstractReportController extends Controller
     public function updateModelForPrefecture()
     {
         $fieldNames = session(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, ['matchType', 'keyword', 'adType']);
+        $fieldNames = $this->model->unsetColumns($fieldNames, ['adType']);
         session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
 
         if (session(self::SESSION_KEY_ENGINE) === 'yss') {

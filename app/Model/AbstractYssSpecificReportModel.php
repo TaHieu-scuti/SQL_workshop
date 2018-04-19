@@ -28,6 +28,9 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
+        if (in_array($groupedByField, $this->groupByFieldName)) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
+        }
         if ($groupedByField === "prefecture") {
             $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         }
@@ -155,6 +158,10 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
         $adReportId = null,
         $keywordId = null
     ) {
+        if (in_array($groupedByField, $this->groupByFieldName)) {
+            $fieldNames = $this->unsetColumns($fieldNames, ['matchType']);
+        }
+
         if ($groupedByField === "prefecture") {
             $fieldNames = $this->unsetColumns($fieldNames, ['impressionShare']);
         }

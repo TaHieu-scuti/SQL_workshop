@@ -121,7 +121,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         //add more columns higher layer to fieldnames
 
         $columns = $this->getAttributeFieldNames($dataReports);
-
+        $columnsFilter = $this->updateColumnForFieldsOnModal(self::DEFAULT_COLUMNS);
         $summaryReportLayout = view(
             'layouts.summary_report',
             [
@@ -143,8 +143,8 @@ class RepoYssKeywordReportController extends AbstractReportController
         $fieldsOnModal = view(
             'layouts.fields_on_modal',
             [
-                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => self::DEFAULT_COLUMNS
+                self::COLUMNS_FOR_FILTER => $columnsFilter,
+                self::FIELD_NAMES => $columnsFilter
             ]
         )->render();
         $timePeriodLayout = view('layouts.time-period')
@@ -248,5 +248,9 @@ class RepoYssKeywordReportController extends AbstractReportController
             return true; // same engine, different campaignId => update back to normal report
         }
         return true;
+    }
+
+    private function updateColumnForFieldsOnModal($fieldNames) {
+        return $this->model->unsetColumns($fieldNames, ['matchType']);
     }
 }
