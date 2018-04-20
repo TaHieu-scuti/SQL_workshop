@@ -231,6 +231,7 @@ a, a:hover, a:focus {
 
 .wrapper .row .panel {
     margin-bottom: 0px;
+    background: none;
 }
 /*breadcrumb*/
 .wrapper .row.breadcrumb-list .breadcrumb {
