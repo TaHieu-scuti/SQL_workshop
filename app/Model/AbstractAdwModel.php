@@ -351,7 +351,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             );
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
-                ->groupby($groupedByField)
+                ->groupby(array_unique($this->groupBy))
                 ->orderBy($columnSort, $sort);
         }
 
