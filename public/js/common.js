@@ -353,6 +353,9 @@ $('.specific-filter-item').click(function() {
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
             $('.summary_report').html(response.summaryReportLayout);
+            if (response.isLoadFilterColumn) {
+                $('#fieldsOnModal').html(response.isLoadFilterColumn);
+            }
             setSelectedGraphColumn();
             let url = location.protocol + "//" + location.host + location.pathname;
             history.pushState(null, '', url);
@@ -380,6 +383,9 @@ $('.normal-report').click(function() {
         },
         success : function (response) {
             $('.table_data_report').html(response.tableDataLayout);
+            if (response.isLoadFilterColumn) {
+                $('#fieldsOnModal').html(response.isLoadFilterColumn);
+            }
             hideSpinners();
         },
         error : function (response) {

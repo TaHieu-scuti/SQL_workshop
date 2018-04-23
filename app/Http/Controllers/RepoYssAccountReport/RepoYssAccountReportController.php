@@ -71,23 +71,28 @@ class RepoYssAccountReportController extends AbstractReportController
     const SESSION_NEED_FIELDS = [
         'dayOfWeek' => [
             'need' => ['dayOfWeek'],
-            'no_need' => ['accountName', 'accountid']
+            'no_need' => ['accountName', 'accountid'],
+            'not_display' => ['dailySpendingLimit']
         ],
         'accountName' => [
             'need' => ['accountName', 'accountid'],
-            'no_need' => ['dayOfWeek', 'prefecture', 'hourofday', 'device']
+            'no_need' => ['dayOfWeek', 'prefecture', 'hourofday', 'device'],
+            'not_display' => []
         ],
         'hourofday' => [
             'need' => ['hourofday'],
-            'no_need' => ['accountName', 'accountid']
+            'no_need' => ['accountName', 'accountid'],
+            'not_display' => ['dailySpendingLimit']
         ],
         'prefecture' => [
             'need' => ['prefecture'],
-            'no_need' => ['accountName', 'accountid', 'dailySpendingLimit']
+            'no_need' => ['accountName', 'accountid'],
+            'not_display' => ['dailySpendingLimit']
         ],
         'device' => [
             'need' => ['device'],
-            'no_need' => ['accountName', 'accountid', 'dailySpendingLimit']
+            'no_need' => ['accountName', 'accountid'],
+            'not_display' => ['dailySpendingLimit']
         ]
     ];
 
@@ -132,9 +137,7 @@ class RepoYssAccountReportController extends AbstractReportController
         }
 
         session([self::SESSION_KEY_ACCOUNT_ID => null]);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoAccountPrefecture;
-        }
+
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
             'yssAccountReport.index',
@@ -151,18 +154,8 @@ class RepoYssAccountReportController extends AbstractReportController
      */
     public function getDataForLayouts(Request $request)
     {
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoAccountPrefecture;
-        }
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
-            $this->model = new RepoAccountTimezone;
-        }
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
-            $this->model = new RepoAccountDayOfWeek;
-        }
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'device') {
-            $this->model = new RepoAccountDevice;
-        }
+        $this->updateModel();
+
         $dataReports = $this->getDataForTable();
         if (isset($request->page)) {
             $this->updateNumberPage($request->page);
@@ -180,18 +173,22 @@ class RepoYssAccountReportController extends AbstractReportController
             [
                 self::REPORTS => $dataReports,
                 'isObjectStdClass' => $this->isObjectStdClass,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->getColumnDisplay(),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
                 'groupedByField' => session(self::SESSION_KEY_GROUPED_BY_FIELD),
             ]
         )->render();
+        $defaultColumns = array_diff(
+            self::DEFAULT_COLUMNS,
+            self::SESSION_NEED_FIELDS[session(self::SESSION_KEY_GROUPED_BY_FIELD)]['not_display']
+        );
         $fieldsOnModal = view(
             'layouts.fields_on_modal',
             [
-                self::COLUMNS_FOR_FILTER => self::DEFAULT_COLUMNS,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME)
+                self::COLUMNS_FOR_FILTER => $defaultColumns,
+                self::FIELD_NAMES => $this->getColumnDisplay()
             ]
         )->render();
         $timePeriodLayout = view('layouts.time-period')
@@ -232,21 +229,8 @@ class RepoYssAccountReportController extends AbstractReportController
             $this->initializeSession($columns);
         }
         $this->updateSessionData($request);
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
-            $this->model = new RepoAccountPrefecture;
-        }
 
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
-            $this->model = new RepoAccountTimezone;
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
-            $this->model = new RepoAccountDayOfWeek;
-        }
-
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'device') {
-            $this->model = new RepoAccountDevice;
-        }
+        $this->updateModel();
 
         $this->handlerSession();
 
@@ -257,12 +241,23 @@ class RepoYssAccountReportController extends AbstractReportController
         $totalDataArray = $this->getCalculatedData();
         $summaryReportData = $this->getCalculatedSummaryReport();
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
+        $defaultColumns = array_diff(
+            self::DEFAULT_COLUMNS,
+            self::SESSION_NEED_FIELDS[session(self::SESSION_KEY_GROUPED_BY_FIELD)]['not_display']
+        );
+        $fieldsOnModal = view(
+            'layouts.fields_on_modal',
+            [
+                self::COLUMNS_FOR_FILTER => $defaultColumns,
+                self::FIELD_NAMES => $this->getColumnDisplay()
+            ]
+        )->render();
         $tableDataLayout = view(
             'layouts.table_data',
             [
                 self::REPORTS => $reports,
                 'isObjectStdClass' => $this->isObjectStdClass,
-                self::FIELD_NAMES => session(self::SESSION_KEY_FIELD_NAME),
+                self::FIELD_NAMES => $this->getColumnDisplay(),
                 self::COLUMN_SORT => session(self::SESSION_KEY_COLUMN_SORT),
                 self::SORT => session(self::SESSION_KEY_SORT),
                 self::TOTAL_DATA_ARRAY => $totalDataArray,
@@ -279,6 +274,7 @@ class RepoYssAccountReportController extends AbstractReportController
             [
                 'summaryReportLayout' => $summaryReportLayout,
                 'tableDataLayout' => $tableDataLayout,
+                'isLoadFilterColumn' => $fieldsOnModal,
                 'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
@@ -408,5 +404,32 @@ class RepoYssAccountReportController extends AbstractReportController
             array_unshift($sessionFieldNeeds, $value);
         }
         session()->put([self::SESSION_KEY_FIELD_NAME => array_unique($sessionFieldNeeds)]);
+    }
+
+    private function getColumnDisplay()
+    {
+        return array_diff(
+            session(self::SESSION_KEY_FIELD_NAME),
+            self::SESSION_NEED_FIELDS[session(self::SESSION_KEY_GROUPED_BY_FIELD)]['not_display']
+        );
+    }
+
+    private function updateModel()
+    {
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === self::PREFECTURE) {
+            $this->model = new RepoAccountPrefecture;
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+            $this->model = new RepoAccountTimezone;
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+            $this->model = new RepoAccountDayOfWeek;
+        }
+
+        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'device') {
+            $this->model = new RepoAccountDevice;
+        }
     }
 }
