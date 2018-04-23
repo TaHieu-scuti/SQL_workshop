@@ -1210,9 +1210,11 @@ abstract class AbstractReportModel extends Model
         $adGroupId = null,
         $tableName = ""
     ) {
+        $flag = false;
         $table = $this->getTable();
         if ($tableName !== "") {
             $table = $tableName;
+            $flag = true;
         }
         $arrayAlias = [];
         $arraySelections = [];
@@ -1237,10 +1239,15 @@ abstract class AbstractReportModel extends Model
         }
 
         foreach ($all_higher_layers as $key => $value) {
-            $querySelectId = $value['columnId'];
-            $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin']
-                . ' WHERE '. $table .'.'.$value['columnId']
-                .' = '.$value['tableJoin'].'.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
+            if ($flag) {
+                $querySelectId = $value['columnId'];
+                $querySelectName = DB::raw($value['columnName']. ' AS '. $value['aliasName']);
+            } else {
+                $querySelectId = $value['columnId'];
+                $querySelectName = DB::raw('(SELECT ' . $value['columnName'] .' FROM '. $value['tableJoin']
+                    . ' as tbl  WHERE '. $table .'.'.$value['columnId']
+                    .' = tbl.'.$value['columnId'].' LIMIT 1) AS '.$value['aliasName']);
+            }
             array_push($arraySelections, $querySelectId, $querySelectName);
             array_push($this->groupBy, $value['columnId']);
         }

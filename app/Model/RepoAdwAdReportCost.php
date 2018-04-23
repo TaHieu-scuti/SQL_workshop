@@ -312,7 +312,7 @@ class RepoAdwAdReportCost extends AbstractAdwModel
 
             $builder = DB::table(self::TABLE_TEMPORARY_AD)
                 ->select(array_merge($aggregated, $arr))
-                ->groupby($groupedByField)
+                ->groupby(array_unique($this->groupBy))
                 ->orderBy($columnSort, $sort);
         }
 
