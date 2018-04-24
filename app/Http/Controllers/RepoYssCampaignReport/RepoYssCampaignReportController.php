@@ -118,6 +118,7 @@ class RepoYssCampaignReportController extends AbstractReportController
         $summaryReportData = $this->getCalculatedSummaryReport();
         $fieldNames = session(self::SESSION_KEY_FIELD_NAME);
         $columns = $this->getAttributeFieldNames($dataReports);
+        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
         $defaultColumns = self::DEFAULT_COLUMNS;
         if ($engine == 'ydn') {
             $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
