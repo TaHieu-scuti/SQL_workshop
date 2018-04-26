@@ -206,9 +206,9 @@ class RepoYssKeywordReportController extends AbstractReportController
         }
         return $this->responseFactory->json(
             [
-                            'summaryReportLayout' => $summaryReportLayout,
-                            'tableDataLayout' => $tableDataLayout,
-                            'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
+                'summaryReportLayout' => $summaryReportLayout,
+                'tableDataLayout' => $tableDataLayout,
+                'displayNoDataFoundMessageOnTable' => $this->displayNoDataFoundMessageOnTable
             ]
         );
     }
