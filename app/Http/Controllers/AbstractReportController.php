@@ -52,7 +52,6 @@ use App\Model\RepoAdwAdPrefectureReport;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Log;
 
 use DateTime;
 use Exception;
