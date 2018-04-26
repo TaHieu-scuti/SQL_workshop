@@ -349,6 +349,8 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
+            $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns);
+            $columnSort = $this->getSortColumn($allColumns, $columnSort);
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby(array_unique($this->groupBy))

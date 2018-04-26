@@ -342,6 +342,8 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $adGroupId
             );
 
+            $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+            $columnSort = $this->getSortColumn($allColumns, $columnSort);
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)

@@ -1326,4 +1326,93 @@ abstract class AbstractReportModel extends Model
         }
         return $fieldNames;
     }
+
+    protected function getAllColumns(array $arrayColumns)
+    {
+        $columns = [];
+        foreach ($arrayColumns as $key => $expression) {
+            if (is_object($expression) && get_class($expression) === 'Illuminate\Database\Query\Expression') {
+                if (count(explode('AS', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('AS', $expression)[1]));
+                } elseif (count(explode('As', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('As', $expression)[1]));
+                } elseif (count(explode('as', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('as', $expression)[1]));
+                }
+            } else {
+                $columns[] = $expression;
+            }
+        }
+        return $columns;
+    }
+
+    private function removeSingleQuote($str)
+    {
+        //remove first single quote
+        if (substr($str, 0, 1) === "'") {
+            $str = substr($str, 1);
+        }
+        //remove last single quote
+        if (substr($str, -1) === "'") {
+            $str = substr($str, 0, -1);
+        }
+        return $str;
+    }
+
+    protected function getSortColumn($arrayColumns, $sortColumn)
+    {
+        $sessionSortName = '';
+
+        $classCampaigns = [
+            'App\Model\RepoYssCampaignReportCost',
+            'App\Model\RepoAdwCampaignReportCost',
+            'App\Model\RepoYdnCampaignReport'
+        ];
+        $classAdgroups = [
+            'App\Model\RepoYssAdgroupReportCost',
+            'App\Model\RepoAdwAdgroupReportCost',
+            'App\Model\RepoYdnAdgroupReport'
+        ];
+        $classAds = [
+            'App\Model\RepoYssAdReportCost',
+            'App\Model\RepoAdwAdReportCost',
+            'App\Model\RepoYdnAdReport'
+        ];
+        $classKeywords = [
+            'App\Model\RepoYssKeywordReportCost',
+            'App\Model\RepoAdwKeywordReportCost'
+        ];
+
+        if (in_array(get_class($this), $classCampaigns)) {
+            $sessionSortName = 'campaignReport.columnSort';
+        } elseif (in_array(get_class($this), $classAdgroups)) {
+            $sessionSortName = 'adgroupReport.columnSort';
+        } elseif (in_array(get_class($this), $classAds)) {
+            $sessionSortName = 'adReport.columnSort';
+        } elseif (in_array(get_class($this), $classKeywords)) {
+            $sessionSortName = 'keywordReport.columnSort';
+        }
+
+        if (!in_array($sortColumn, $arrayColumns)) {
+            $sortColumn = $this->getFirstColumnSort($arrayColumns, $sortColumn);
+        }
+        session([$sessionSortName => $sortColumn]);
+        return $sortColumn;
+    }
+
+    private function getFirstColumnSort($arrayColumns, $sortColumn)
+    {
+        $arrayIDs = [
+            'account_id',
+            'accountid',
+            'campaignID',
+            'adgroupID',
+            'keywordID',
+            'adGroupID',
+            'adID',
+            'keywordID'
+        ];
+        $fieldNames = array_diff($arrayColumns, $arrayIDs);
+        return empty($fieldNames) ? $sortColumn : array_values($fieldNames)[0];
+    }
 }
