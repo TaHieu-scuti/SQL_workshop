@@ -1330,7 +1330,7 @@ abstract class AbstractReportModel extends Model
     protected function getAllColumns(array $arrayColumns)
     {
         $columns = [];
-        foreach ($arrayColumns as $key => $expression) {
+        foreach ($arrayColumns as $expression) {
             if (is_object($expression) && get_class($expression) === 'Illuminate\Database\Query\Expression') {
                 if (count(explode('AS', $expression)) === 2) {
                     $columns[] = $this->removeSingleQuote(trim(explode('AS', $expression)[1]));
