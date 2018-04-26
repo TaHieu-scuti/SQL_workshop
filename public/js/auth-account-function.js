@@ -1,5 +1,23 @@
 var prefixRoute = getRoutePrefix();
 
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
 function updateAdwApi() {
     let id = $('#adw_id').val().trim();
     let url = prefixRoute +'/store-account';
@@ -27,9 +45,9 @@ function updateAdwApi() {
         success: function(response) {
             if (response.create === 'success') {
                 $('#btn_cancel').css('display', 'block');
-                alert('Create success');
+                toastr.success('Create success');
             } else if (response.update === 'success') {
-                alert('Update success');
+                toastr.success('Update success');
             }
             $('.alert-danger').parent().empty();
         },
@@ -76,9 +94,9 @@ function updateYdnApi() {
         success: function(response) {
             if (response.create === 'success') {
                 $('#btn_cancel').css('display', 'block');
-                alert('Create success');
+                toastr.success('Create success');
             } else if (response.update === 'success') {
-                alert('Update success');
+                toastr.success('Update success');
             }
             $('.alert-danger').parent().empty();
         },
@@ -125,9 +143,9 @@ function updateYssApi() {
         success: function(response) {
             if (response.create === 'success') {
                 $('#btn_cancel').css('display', 'block');
-                alert('Create success');
+                toastr.success('Create success');
             } else if (response.update === 'success') {
-                alert('Update success');
+                toastr.success('Update success');
             }
             $('.alert-danger').parent().empty();
         },
