@@ -24,6 +24,8 @@
     <link href="/css/jquery-ui.structure.min.css" rel="stylesheet" />
     <link href="/css/jquery-ui.theme.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/css/toastr.css"/>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="/js/html5shiv.js"></script>
@@ -92,7 +94,7 @@
             return '{{ route("auth-account") }}';
         }
     </script>
-
+    <script src="/js/toastr.js"></script>
     <script src="/js/common-function.js"></script>
     <script src="/js/auth-account-function.js"></script>
 <!-- s -->
