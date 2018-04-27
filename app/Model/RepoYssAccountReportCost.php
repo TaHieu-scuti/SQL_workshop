@@ -484,6 +484,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         }
 
         $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
+
         return DB::table(self::TEMPORARY_ACCOUNT_TABLE)
         ->select($selections)
         ->groupBy($groupedByField)
