@@ -783,7 +783,7 @@ abstract class AbstractReportController extends Controller
             session(static::SESSION_KEY_COLUMN_SORT),
             session(static::SESSION_KEY_SORT),
             session(static::SESSION_KEY_GROUPED_BY_FIELD),
-            session(static::SESSION_KEY_PREFIX),
+            static::SESSION_KEY_PREFIX,
             session(self::SESSION_KEY_AGENCY_ID),
             session(self::SESSION_KEY_ACCOUNT_ID),
             session(self::SESSION_KEY_CLIENT_ID),
