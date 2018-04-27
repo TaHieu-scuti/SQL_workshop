@@ -380,6 +380,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $builder = $builder->union($query);
             $outerQuery = DB::query()
                 ->from(DB::raw("({$this->getBindingSql($builder)}) AS tbl"))
+                ->groupby(array_unique($this->groupBy))
                 ->orderBy($columnSort, $sort);
             $results = $outerQuery->get();
             return isset($results) ? $results : [];
