@@ -484,7 +484,6 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         }
 
         $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
-
         return DB::table(self::TEMPORARY_ACCOUNT_TABLE)
         ->select($selections)
         ->groupBy($groupedByField)
@@ -676,9 +675,9 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
                         (sumConversions / SUM('.self::TEMPORARY_ACCOUNT_TABLE.'.clicks)) * 100) / 2 AS total_cvr');
                     break;
                 case 'total_cpa':
-                    $expressions[] = DB::raw('
+                    $expressions[] = DB::raw('IFNULL(
                         SUM('.self::TEMPORARY_ACCOUNT_TABLE.'.cost) / totalPhoneTimeUse +
-                        SUM('.self::TEMPORARY_ACCOUNT_TABLE.'.cost) / sumConversions
+                        SUM('.self::TEMPORARY_ACCOUNT_TABLE.'.cost) / sumConversions, 0)
                         AS total_cpa');
                     break;
             }
