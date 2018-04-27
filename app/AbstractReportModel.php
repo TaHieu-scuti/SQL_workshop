@@ -1381,7 +1381,9 @@ abstract class AbstractReportModel extends Model
             'keywordID',
             'adGroupID',
             'adID',
-            'keywordID'
+            'keywordID',
+            'displayURL',
+            'description1'
         ];
         $fieldNames = array_diff($arrayColumns, $arrayIDs);
         return empty($fieldNames) ? $sortColumn : array_values($fieldNames)[0];
