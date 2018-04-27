@@ -25,6 +25,7 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -58,6 +59,7 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -118,6 +120,10 @@ class RepoAdwCampaignTimezone extends AbstractAdwSubReportModel
                 $campaignId,
                 $adGroupId
             );
+            $allColumns = $this->getAllColumns(
+                DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns
+            );
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
 
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))

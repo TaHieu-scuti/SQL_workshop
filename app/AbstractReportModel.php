@@ -972,6 +972,7 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -989,6 +990,7 @@ abstract class AbstractReportModel extends Model
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -1359,44 +1361,12 @@ abstract class AbstractReportModel extends Model
         return $str;
     }
 
-    protected function getSortColumn($arrayColumns, $sortColumn)
+    protected function getSortColumn($keyPrefix, $arrayColumns, $sortColumn)
     {
-        $sessionSortName = '';
-
-        $classCampaigns = [
-            'App\Model\RepoYssCampaignReportCost',
-            'App\Model\RepoAdwCampaignReportCost',
-            'App\Model\RepoYdnCampaignReport'
-        ];
-        $classAdgroups = [
-            'App\Model\RepoYssAdgroupReportCost',
-            'App\Model\RepoAdwAdgroupReportCost',
-            'App\Model\RepoYdnAdgroupReport'
-        ];
-        $classAds = [
-            'App\Model\RepoYssAdReportCost',
-            'App\Model\RepoAdwAdReportCost',
-            'App\Model\RepoYdnAdReport'
-        ];
-        $classKeywords = [
-            'App\Model\RepoYssKeywordReportCost',
-            'App\Model\RepoAdwKeywordReportCost'
-        ];
-
-        if (in_array(get_class($this), $classCampaigns)) {
-            $sessionSortName = 'campaignReport.columnSort';
-        } elseif (in_array(get_class($this), $classAdgroups)) {
-            $sessionSortName = 'adgroupReport.columnSort';
-        } elseif (in_array(get_class($this), $classAds)) {
-            $sessionSortName = 'adReport.columnSort';
-        } elseif (in_array(get_class($this), $classKeywords)) {
-            $sessionSortName = 'keywordReport.columnSort';
-        }
-
         if (!in_array($sortColumn, $arrayColumns)) {
             $sortColumn = $this->getFirstColumnSort($arrayColumns, $sortColumn);
         }
-        session([$sessionSortName => $sortColumn]);
+        session([$keyPrefix . 'columnSort' => $sortColumn]);
         return $sortColumn;
     }
 

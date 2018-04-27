@@ -233,6 +233,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -273,6 +274,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -341,9 +343,9 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
-
             $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
-            $columnSort = $this->getSortColumn($allColumns, $columnSort);
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)

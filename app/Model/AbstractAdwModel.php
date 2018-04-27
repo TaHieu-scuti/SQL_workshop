@@ -233,6 +233,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -272,6 +273,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -352,7 +354,8 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $allColumns = $this->getAllColumns(
                 DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns
             );
-            $columnSort = $this->getSortColumn($allColumns, $columnSort);
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupby(array_unique($this->groupBy))
@@ -371,6 +374,7 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $columnSort,
                 $sort,
                 $groupedByField,
+                $keyPrefix,
                 $agencyId,
                 $accountId,
                 $clientId,

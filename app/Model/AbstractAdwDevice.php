@@ -23,6 +23,7 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -147,6 +148,11 @@ abstract class AbstractAdwDevice extends AbstractAdwSubReportModel
             $campaignId,
             $adGroupId
         );
+        $allColumns = $this->getAllColumns(
+            DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns
+        );
+        $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
         return DB::table(self::TABLE_TEMPORARY)
             ->select(array_merge($aggregated, $arr))
             ->groupby($groupedByField)

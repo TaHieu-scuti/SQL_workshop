@@ -21,6 +21,7 @@ class RepoYssKeywordDevice extends AbstractYssRawExpressions
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -157,6 +158,9 @@ class RepoYssKeywordDevice extends AbstractYssRawExpressions
             $campaignId,
             $adGroupId
         );
+        $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+        $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
         return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)
