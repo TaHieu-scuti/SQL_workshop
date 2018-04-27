@@ -577,6 +577,7 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
