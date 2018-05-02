@@ -67,7 +67,7 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
                     . $i
                     . "`, 0) AS 'YSS "
                     . $campaign->campaign_name
-                    . "</br>"
+                    . "<br>"
                     . $campaign->phone_number
                     . "<br>"
                     . " CV'"
