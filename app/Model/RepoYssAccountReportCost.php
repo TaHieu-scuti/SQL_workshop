@@ -484,10 +484,11 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
             $this->updateTemporaryTableWithDailySpendingLimitForAdw($clientId, $startDay, $endDay);
         }
 
-        $selections = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
-
+        $aggregated = $this->getAggregatedForTemporaryAccount($columns, $fieldNames);
+        $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+        $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
         return DB::table(self::TEMPORARY_ACCOUNT_TABLE)
-        ->select($selections)
+        ->select($aggregated)
         ->groupBy($groupedByField)
         ->orderBy($columnSort, $sort)
         ->paginate($pagination);
