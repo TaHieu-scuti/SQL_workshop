@@ -1384,5 +1384,4 @@ abstract class AbstractReportModel extends Model
         session([$keyPrefix . 'columnSort' => $sortColumn]);
         return $sortColumn;
     }
-
 }
