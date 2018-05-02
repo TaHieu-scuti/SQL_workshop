@@ -24,6 +24,7 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -60,6 +61,7 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -125,6 +127,9 @@ class RepoYdnDayOfWeek extends AbstractYdnReportModel
                 );
             }
             $aggregated = $this->processGetAggregated($fieldNames, $groupedByField, $campaignId, $adGroupId);
+            $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
             $builder = DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)
             ->groupby($groupedByField)

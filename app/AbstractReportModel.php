@@ -577,6 +577,7 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -972,6 +973,7 @@ abstract class AbstractReportModel extends Model
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -989,6 +991,7 @@ abstract class AbstractReportModel extends Model
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -1325,5 +1328,64 @@ abstract class AbstractReportModel extends Model
             }
         }
         return $fieldNames;
+    }
+
+    protected function getAllColumns(array $arrayColumns)
+    {
+        $columns = [];
+        foreach ($arrayColumns as $expression) {
+            if (is_object($expression) && get_class($expression) === 'Illuminate\Database\Query\Expression') {
+                if (count(explode('AS', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('AS', $expression)[1]));
+                } elseif (count(explode('As', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('As', $expression)[1]));
+                } elseif (count(explode('as', $expression)) === 2) {
+                    $columns[] = $this->removeSingleQuote(trim(explode('as', $expression)[1]));
+                }
+            } else {
+                $columns[] = $expression;
+            }
+        }
+        return $columns;
+    }
+
+    private function removeSingleQuote($str)
+    {
+        //remove first single quote
+        if (substr($str, 0, 1) === "'") {
+            $str = substr($str, 1);
+        }
+        //remove last single quote
+        if (substr($str, -1) === "'") {
+            $str = substr($str, 0, -1);
+        }
+        return $str;
+    }
+
+    protected function getSortColumn($keyPrefix, $arrayColumns, $sortColumn)
+    {
+        if (!in_array($sortColumn, $arrayColumns)) {
+            $sortColumn = $this->getFirstColumnSort($arrayColumns, $sortColumn);
+        }
+        session([$keyPrefix . 'columnSort' => $sortColumn]);
+        return $sortColumn;
+    }
+
+    private function getFirstColumnSort($arrayColumns, $sortColumn)
+    {
+        $arrayIDs = [
+            'account_id',
+            'accountid',
+            'campaignID',
+            'adgroupID',
+            'keywordID',
+            'adGroupID',
+            'adID',
+            'keywordID',
+            'displayURL',
+            'description1'
+        ];
+        $fieldNames = array_diff($arrayColumns, $arrayIDs);
+        return empty($fieldNames) ? $sortColumn : array_values($fieldNames)[0];
     }
 }
