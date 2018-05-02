@@ -24,7 +24,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adgroupReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
-    const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
@@ -141,7 +140,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             );
         }
         $columns = $this->getAttributeFieldNames($dataReports);
-        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $summaryReportLayout = view(
             'layouts.summary_report',
@@ -227,7 +225,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             );
         }
         $columns = $this->getAttributeFieldNames($reports);
-        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
 
         $tableDataLayout = view(
             'layouts.table_data',

@@ -418,6 +418,7 @@ class Account extends AbstractTemporaryAccountModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,

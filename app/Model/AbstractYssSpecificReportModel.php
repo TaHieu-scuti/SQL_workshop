@@ -20,6 +20,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -63,6 +64,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -133,6 +135,8 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                 $campaignId,
                 $adGroupId
             );
+            $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
 
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select($aggregated)

@@ -8,7 +8,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 use App\Model\RepoYssPrefectureReportCost;
 use App\Http\Controllers\AbstractReportController;
-use App\Model\RepoYssAdReportCost;
 use App\Model\RepoAdwAdReportCost;
 use App\Model\RepoYdnAdReport;
 
@@ -23,7 +22,6 @@ class RepoYssAdReportController extends AbstractReportController
     const SUMMARY_REPORT = 'summaryReport';
     const SESSION_KEY_PREFIX = 'adReport.';
     const SESSION_KEY_FIELD_NAME = self::SESSION_KEY_PREFIX . 'fieldName';
-    const SESSION_KEY_ALL_FIELD_NAME = self::SESSION_KEY_PREFIX . 'allFieldName';
     const SESSION_KEY_PAGINATION = self::SESSION_KEY_PREFIX . 'pagination';
     const SESSION_KEY_GRAPH_COLUMN_NAME = self::SESSION_KEY_PREFIX . self::GRAPH_COLUMN_NAME;
     const SESSION_KEY_COLUMN_SORT = self::SESSION_KEY_PREFIX . self::COLUMN_SORT;
@@ -183,7 +181,6 @@ class RepoYssAdReportController extends AbstractReportController
         $summaryReportLayout = view('layouts.summary_report', [self::SUMMARY_REPORT => $summaryReportData])->render();
         //add more columns higher layer to fieldnames
         $columns = $this->getAttributeFieldNames($reports);
-        session([self::SESSION_KEY_ALL_FIELD_NAME => $columns]);
         $tableDataLayout = view(
             'layouts.table_data',
             [
@@ -215,9 +212,7 @@ class RepoYssAdReportController extends AbstractReportController
     public function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss') {
-            $this->model = new RepoYssAdReportCost;
-        } elseif ($engine === 'adw') {
+        if ($engine === 'adw') {
             $this->model = new RepoAdwAdReportCost;
         } elseif ($engine === 'ydn') {
             $this->model = new RepoYdnAdReport;

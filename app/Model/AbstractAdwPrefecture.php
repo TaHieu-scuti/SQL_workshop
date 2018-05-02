@@ -22,6 +22,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -57,6 +58,7 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -131,6 +133,9 @@ abstract class AbstractAdwPrefecture extends AbstractAdwSubReportModel
             $campaignId,
             $adGroupId
         );
+
+        $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+        $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
 
         return DB::table(self::TABLE_TEMPORARY)
             ->select($aggregated)

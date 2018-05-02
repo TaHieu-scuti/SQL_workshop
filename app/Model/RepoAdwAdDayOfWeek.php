@@ -25,6 +25,7 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
@@ -61,6 +62,7 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
             $columnSort,
             $sort,
             $groupedByField,
+            $keyPrefix,
             $agencyId,
             $accountId,
             $clientId,
@@ -123,6 +125,9 @@ class RepoAdwAdDayOfWeek extends AbstractAdwSubReportModel
                 $campaignId,
                 $adGroupId
             );
+            $allColumns = $this->getAllColumns(DB::table(self::TABLE_TEMPORARY)->select($aggregated)->columns);
+            $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select($aggregated)
                 ->groupby($groupedByField)

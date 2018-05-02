@@ -26,6 +26,7 @@ class RepoYssSearchqueryReportConv extends AbstractReportModel
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,

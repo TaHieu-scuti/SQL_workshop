@@ -57,6 +57,7 @@ class RepoYssPrefectureReportCost extends AbstractYssRawExpressions
         $columnSort,
         $sort,
         $groupedByField,
+        $keyPrefix,
         $agencyId = null,
         $accountId = null,
         $clientId = null,
