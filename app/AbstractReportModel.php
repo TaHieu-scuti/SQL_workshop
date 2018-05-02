@@ -1364,15 +1364,6 @@ abstract class AbstractReportModel extends Model
 
     protected function getSortColumn($keyPrefix, $arrayColumns, $sortColumn)
     {
-        if (!in_array($sortColumn, $arrayColumns)) {
-            $sortColumn = $this->getFirstColumnSort($arrayColumns, $sortColumn);
-        }
-        session([$keyPrefix . 'columnSort' => $sortColumn]);
-        return $sortColumn;
-    }
-
-    private function getFirstColumnSort($arrayColumns, $sortColumn)
-    {
         $arrayIDs = [
             'account_id',
             'accountid',
@@ -1383,9 +1374,14 @@ abstract class AbstractReportModel extends Model
             'adID',
             'keywordID',
             'displayURL',
-            'description1'
+            'description1',
+            'engine'
         ];
-        $fieldNames = array_diff($arrayColumns, $arrayIDs);
-        return empty($fieldNames) ? $sortColumn : array_values($fieldNames)[0];
+        $arrayColumns = array_diff($arrayColumns, $arrayIDs);
+        if (!in_array($sortColumn, $arrayColumns) && !empty($arrayColumns)) {
+            $sortColumn = array_values($arrayColumns)[0];
+        }
+        session([$keyPrefix . 'columnSort' => $sortColumn]);
+        return $sortColumn;
     }
 }
