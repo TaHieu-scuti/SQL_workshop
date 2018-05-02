@@ -104,6 +104,11 @@ class Agency extends Account
         $this->getAccountYdn($startDay, $endDay, self::AGENCY);
         $this->getAccountAdw($startDay, $endDay, self::AGENCY);
 
+        $allColumns = $this->getAllColumns(
+            DB::table(self::TEMPORARY_ACCOUNT_TABLE)->select(array_merge($getAggregation))->columns
+        );
+        $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
+
         $builder = DB::table(self::TEMPORARY_ACCOUNT_TABLE)
             ->select(array_merge($getAggregation))
             ->groupby('agencyName')
