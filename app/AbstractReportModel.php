@@ -163,7 +163,6 @@ abstract class AbstractReportModel extends Model
                 );
                 continue;
             }
-
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
                 $arrayCalculate = $this->groupSpecialFieldsIntoCalculateArray(
                     $arrayCalculate,
@@ -302,7 +301,9 @@ abstract class AbstractReportModel extends Model
     private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
-            if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+            if(isset($this->isSearchQueryReport)) {
+
+            } elseif (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
                 );
