@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RepoPhoneTimeUseGenerator::class);
         $this->call(RepoAdwDisplayKeywordReportCost::class);
         $this->call(RepoYssSearchQueryPostCost::class);
+        $this->call(RepoYssSearchQueryConv::class);
         $this->call(RepoAdwSearchQueryPerformanceReportCost::class);
         $this->call(RepoAdwAccountConvTableSeeder::class);
         $this->call(RepoAdwCampaignReportConvTable::class);
