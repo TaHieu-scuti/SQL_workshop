@@ -9,6 +9,7 @@ use App\Model\RepoAdwSearchQueryPerformanceReportConv;
 class RepoAdwSearchQueryPerformanceReportConvGenerator extends Seeder
 {
     const NUMBER_OF_CONVERSION_POINTS = 2;
+    const CONVERSION_NAME = 'Conversion Name ';
 
     /**
      * Run the database seeds.
@@ -45,6 +46,7 @@ class RepoAdwSearchQueryPerformanceReportConvGenerator extends Seeder
                     $searchQueryPerformanceConvReport->convRate = $searchQueryPerformanceReport->convRate;
                     $searchQueryPerformanceConvReport->conversions
                         = $searchQueryPerformanceReport->conversions / self::NUMBER_OF_CONVERSION_POINTS;
+                    $searchQueryPerformanceConvReport->conversionName = self::CONVERSION_NAME . ($i + 1);
                     $searchQueryPerformanceConvReport->totalConvValue = $searchQueryPerformanceReport->totalConvValue;
                     $searchQueryPerformanceConvReport->costAllConv = $searchQueryPerformanceReport->costAllConv;
                     $searchQueryPerformanceConvReport->costConv = $searchQueryPerformanceReport->costConv;
