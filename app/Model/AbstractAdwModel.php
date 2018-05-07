@@ -249,7 +249,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adGroupId,
             static::PAGE_ID
         );
-
         $campaignIDs = array_unique($this->conversionPoints->pluck('campaignID')->toArray());
         $adIDs = array_unique($this->conversionPoints->pluck('adID')->toArray());
         $adgroupIDs = array_unique($this->conversionPoints->pluck('adgroupID')->toArray());
@@ -282,7 +281,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adReportId,
             $keywordId
         );
-
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
             if (!in_array(static::PAGE_ID, $columns)) {
@@ -303,12 +301,12 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $columns,
                 array_merge(self::UNSET_COLUMNS, self::FIELDS_CALL_TRACKING)
             );
-
             $columns = array_keys($this->updateFieldNames($columns));
-
+            if(isset($this->isSearchQueryReport)) {
+                $columns = $this->unsetColumns($columns, ['impressionShare']);
+            }
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
-
             if ($this->isConv) {
                 $this->updateTemporaryTableWithConversion(
                     $this->conversionPoints,
