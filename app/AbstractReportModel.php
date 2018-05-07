@@ -223,6 +223,7 @@ abstract class AbstractReportModel extends Model
                 unset($fieldNames[$key]);
             }
         }
+        // dd($fieldNames);
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
@@ -238,7 +239,6 @@ abstract class AbstractReportModel extends Model
                 $arrayCalculate[] = $fieldName;
                 continue;
             }
-
             if (in_array($fieldName, array_merge(self::GROUP_SPECIAL_FIELDS, [static::GROUPED_BY_FIELD_NAME]))) {
                 $arrayCalculate = $this->groupSpecialFieldsIntoCalculateArray(
                     $arrayCalculate,
@@ -254,12 +254,10 @@ abstract class AbstractReportModel extends Model
             if ($fieldName === 'adGroup' && static::PAGE_ID === 'adID' && !empty($higherLayerSelections)) {
                 $arrayCalculate = array_merge($arrayCalculate, $higherLayerSelections);
             }
-
             if (in_array($fieldName, self::SUB_REPORT_ARRAY)) {
                 $arrayCalculate = $this->getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key);
                 continue;
             }
-
             if (in_array($fieldName, array_merge(self::AVERAGE_FIELDS, self::SUM_FIELDS))) {
                 $arrayCalculate = $this->groupAverageAndSumFieldsIntoArray(
                     $arrayCalculate,
@@ -277,6 +275,9 @@ abstract class AbstractReportModel extends Model
     private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if(isset($this->isSearchQueryReport)) {
+                return $arrayCalculate;
+            }
             if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
                     'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
@@ -302,8 +303,9 @@ abstract class AbstractReportModel extends Model
     {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
             if(isset($this->isSearchQueryReport)) {
-
-            } elseif (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
+                return $arrayCalculate;
+            }
+            if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
                 );
