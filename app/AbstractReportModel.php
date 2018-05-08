@@ -223,7 +223,6 @@ abstract class AbstractReportModel extends Model
                 unset($fieldNames[$key]);
             }
         }
-        // dd($fieldNames);
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
             if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
