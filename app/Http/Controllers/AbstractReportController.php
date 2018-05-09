@@ -762,7 +762,6 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
-
         if ($data->isEmpty()) {
                 $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
                 $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => null];
@@ -773,9 +772,14 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        if ($this->model->getTable() === 'repo_adw_search_query_performance_report_cost') {
+            array_unshift($fieldNames, 'searchTerm');
+        }
+
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
-            session(static::SESSION_KEY_FIELD_NAME),
+            $fieldNames,
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
@@ -1047,22 +1051,21 @@ abstract class AbstractReportController extends Controller
 
     public function exportSearchQueryToCsv()
     {
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
-            $fieldNames[0] = 'searchQuery';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
-            $fieldNames[0] = 'searchTerm';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
+
         $data = $this->getDataForTable();
-        $collection = $data->getCollection();
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter($data, 'search-query', $fieldNames, $aliases);
         $csvData = $exporter->export();
         return $this->responseFactory->make(
             $csvData,
