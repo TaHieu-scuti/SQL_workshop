@@ -90,4 +90,71 @@ class RepoAdwSearchQueryPerformanceReport extends AbstractAdwModel
             );
         }
     }
+
+    protected function updateTemporaryTableWithCallTracking(
+        $adGainerCampaigns,
+        $groupedByField,
+        $startDay,
+        $endDay,
+        $engine,
+        $clientId = null,
+        $accountId = null,
+        $campaignId = null,
+        $adGroupId = null,
+        $adReportId = null,
+        $keywordId = null
+    ) {
+        $utmCampaignList = array_unique($adGainerCampaigns->pluck('utm_campaign')->toArray());
+        $campaignIdAdgainer = $this->getCampaignIdAdgainer(
+            $clientId,
+            $accountId,
+            $campaignId,
+            $adGroupId,
+            $utmCampaignList
+        );
+        $phoneNumbers = array_values(array_unique($adGainerCampaigns->pluck('phone_number')->toArray()));
+        $phoneTimeUseModel = new PhoneTimeUse();
+        $phoneTimeUseTableName = $phoneTimeUseModel->getTable();
+        $campaignModel = new Campaign();
+        $campaignForPhoneTimeUse = $campaignModel->getCustomForPhoneTimeUse($campaignIdAdgainer);
+        foreach ($campaignForPhoneTimeUse as $i => $campaign) {
+            $customField = $this->getFieldName($campaign, 'adgroupid');
+
+            $builder = $phoneTimeUseModel->select(
+                [
+                    DB::raw('count(id) AS id'),
+                    $customField
+                ]
+            )
+            ->whereRaw($customField.' NOT LIKE ""')
+            ->where('source', '=', $engine)
+            ->whereRaw('traffic_type = "AD"')
+            ->where('phone_number', $phoneNumbers[$i])
+            ->where('utm_campaign', $utmCampaignList)
+            ->where(
+                function (EloquentBuilder $query) use ($startDay, $endDay, $phoneTimeUseTableName) {
+                    $this->addConditionForDate($query, $phoneTimeUseTableName, $startDay, $endDay);
+                }
+            )
+            ->groupBy($customField);
+            DB::update(
+                'update '.self::TABLE_TEMPORARY.', ('
+                .$this->getBindingSql($builder).') AS tbl set call'.$i.' = tbl.id where '
+                .self::TABLE_TEMPORARY.'.adgroupID = tbl.'.$customField
+            );
+        }
+    }
+
+    public function getCampaignIdAdgainer($account_id, $accountId, $campaignId, $adGroupId, $utmCampaignList)
+    {
+        return $this->select('campaign_id')
+            ->distinct()
+            ->where(
+                function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
+                    $this->addConditonForConversionName($query, $account_id, $accountId, $campaignId, $adGroupId);
+                }
+            )
+            ->whereIn('campaignID', $utmCampaignList)
+            ->get();
+    }
 }
