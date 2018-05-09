@@ -261,7 +261,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $adIDs,
             $adgroupIDs
         );
-
         $fieldNames = $this->checkConditionFieldName($fieldNames);
         $builder = parent::getBuilderForGetDataForTable(
             $engine,
@@ -283,7 +282,9 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
         );
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
-            if (!in_array(static::PAGE_ID, $columns)) {
+            if ($this->isSearchQueryReport && !in_array(static::PAGE_ID, $columns)) {
+                array_splice($columns, 1, 0, static::PAGE_ID);
+            } elseif (!in_array(static::PAGE_ID, $columns)) {
                 array_unshift($columns, static::PAGE_ID);
             }
 
@@ -353,7 +354,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns
             );
             $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
-
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupBy(array_unique($this->groupBy))
@@ -391,7 +391,6 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             $results = $outerQuery->get();
             return isset($results) ? $results : [];
         }
-
         return $builder;
     }
 
