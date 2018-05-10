@@ -1084,27 +1084,22 @@ abstract class AbstractReportController extends Controller
 
     public function exportSearchQueryToExcel()
     {
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
-            $fieldNames[0] = 'searchQuery';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
-            $fieldNames[0] = 'searchTerm';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
+
         $data = $this->getDataForTable();
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter($data, 'search-query', $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
