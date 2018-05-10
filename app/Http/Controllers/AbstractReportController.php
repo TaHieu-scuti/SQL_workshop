@@ -762,6 +762,7 @@ abstract class AbstractReportController extends Controller
             session(self::SESSION_KEY_AD_REPORT_ID),
             session(self::SESSION_KEY_KEYWORD_ID)
         );
+
         if ($data->isEmpty()) {
                 $data[] = ['day' => session(static::SESSION_KEY_START_DAY), 'data' => null];
                 $data[] = ['day' => session(static::SESSION_KEY_END_DAY), 'data' => null];
