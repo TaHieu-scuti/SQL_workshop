@@ -1058,6 +1058,7 @@ abstract class AbstractReportController extends Controller
             $this->model = new RepoAdwSearchQueryPerformanceReport;
         }
 
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
@@ -1090,6 +1091,7 @@ abstract class AbstractReportController extends Controller
             $this->model = new RepoAdwSearchQueryPerformanceReport;
         }
 
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
