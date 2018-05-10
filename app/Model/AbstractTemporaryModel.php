@@ -239,7 +239,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             array_push($arrayAlias, 'adgroupID');
             array_push($arrayAlias, 'adgroupName');
         }
-        array_splice($columns, 2, 0, $arrayAlias);
+        if (isset($this->isSearchQueryReport)) {
+            array_splice($columns, 3, 0, $arrayAlias);
+        } else {
+            array_splice($columns, 2, 0, $arrayAlias);
+        }
         if (session(self::SESSION_KEY_ENGINE) === 'yss' && $key = array_search('matchType', $columns)) {
             $columns[$key] = 'keywordMatchType';
         }
