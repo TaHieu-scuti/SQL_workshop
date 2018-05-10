@@ -12,6 +12,23 @@ class RepoAdwSearchQueryPerformanceReport extends AbstractAdwModel
 {
     const PAGE_ID = 'keywordID';
     const GROUPED_BY_FIELD_NAME = 'keyword';
+    const ALL_HIGHER_LAYERS =
+    [
+        [
+            'columnName' => 'campaign',
+            'tableJoin' => 'repo_adw_search_query_performance_report_cost',
+            'columnId' => 'campaignID',
+            'aliasId' => 'campaignID',
+            'aliasName' => 'campaignName'
+        ],
+        [
+            'columnName' => 'adGroup',
+            'tableJoin' => 'repo_adw_search_query_performance_report_cost',
+            'columnId' => 'adGroupID',
+            'aliasId' => 'adgroupID',
+            'aliasName' => 'adgroupName',
+        ]
+    ];
 
     protected $table = 'repo_adw_search_query_performance_report_cost';
 
