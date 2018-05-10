@@ -240,7 +240,11 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         }
         array_splice($columns, 2, 0, $arrayAlias);
         if (session(self::SESSION_KEY_ENGINE) === 'yss' && $key = array_search('matchType', $columns)) {
-            $columns[$key] = 'keywordMatchType';
+            if (in_array('searchQuery', $columns)) {
+                $columns[$key] = 'searchQueryMatchType';
+            } else {
+                $columns[$key] = 'keywordMatchType';
+            }
         }
 
         if (session(self::SESSION_KEY_ENGINE) !== 'yss' && static::PAGE_ID === 'adID' && $preFixRoute === "") {

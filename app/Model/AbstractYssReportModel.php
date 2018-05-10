@@ -14,6 +14,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
     private $conversionPoints;
     private $adGainerCampaigns;
 
+    const YSS_SEARCH_QUERY_UNNECESSARY_FIELDS = [
+        'impressionShare'
+    ];
+
     protected function getAggregated(array $fieldNames, array $higherLayerSelections = null, $tableName = '')
     {
         return $this->getAggregatedToUpdateTemporaryTable($fieldNames, $higherLayerSelections, $tableName);
@@ -242,6 +246,10 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
         $adReportId = null,
         $keywordId = null
     ) {
+        if ($this->table === 'repo_yss_searchquery_report_cost') {
+            $fieldNames = $this->unsetColumns($fieldNames, self::YSS_SEARCH_QUERY_UNNECESSARY_FIELDS);
+            array_unshift($fieldNames, 'keywordID');
+        }
         if (static::PAGE_ID === 'keywordID' && !isset($adGroupId)) {
             $fieldNames = $this->unsetColumns($fieldNames, ['adgroupID']);
         }

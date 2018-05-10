@@ -773,9 +773,17 @@ abstract class AbstractReportController extends Controller
 
     public function getDataForTable()
     {
+        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
+        $table = $this->model->getTable();
+        if ($table === 'repo_yss_searchquery_report_cost') {
+            $fieldNames[0] = 'searchQuery';
+        } elseif ($table === 'repo_adw_search_query_performance_report_cost') {
+            array_unshift($fieldNames, 'searchTerm');
+        }
+
         return $this->model->getDataForTable(
             session(self::SESSION_KEY_ENGINE),
-            session(static::SESSION_KEY_FIELD_NAME),
+            $fieldNames,
             session(static::SESSION_KEY_ACCOUNT_STATUS),
             session(static::SESSION_KEY_START_DAY),
             session(static::SESSION_KEY_END_DAY),
@@ -1050,19 +1058,20 @@ abstract class AbstractReportController extends Controller
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
-            $fieldNames[0] = 'searchQuery';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
-            $fieldNames[0] = 'searchTerm';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
+
         $data = $this->getDataForTable();
-        $collection = $data->getCollection();
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new NativePHPCsvExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new NativePHPCsvExporter($data, $reportType, $fieldNames, $aliases);
         $csvData = $exporter->export();
         return $this->responseFactory->make(
             $csvData,
@@ -1083,24 +1092,20 @@ abstract class AbstractReportController extends Controller
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
-            $fieldNames[0] = 'searchQuery';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchQuery']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
-            $fieldNames[0] = 'searchTerm';
-            session()->put([static::SESSION_KEY_GROUPED_BY_FIELD => 'searchTerm']);
-            session()->put([static::SESSION_KEY_FIELD_NAME => $fieldNames]);
         }
+
         $data = $this->getDataForTable();
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
-
-        /** @var $collection \Illuminate\Database\Eloquent\Collection */
-        $collection = $data->getCollection();
-
+        // Check if $data is an instance of \Illuminate\Support\Collection or not.
+        if (!$data instanceof \Illuminate\Support\Collection) {
+            /** @var $collection \Illuminate\Database\Eloquent\Collection */
+            $data = $data->getCollection();
+        }
+        $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $exporter = new SpoutExcelExporter($collection, $fieldNames, $aliases);
+        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
+        $exporter = new SpoutExcelExporter($data, $reportType, $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
@@ -1159,7 +1164,7 @@ abstract class AbstractReportController extends Controller
         return $this->removeUnnecessaryFields($columns);
     }
 
-    protected function removeUnnecessaryFields($columnTable)
+    private function removeUnnecessaryFields($columnTable)
     {
         if (!in_array('cost', session(static::SESSION_KEY_FIELD_NAME))
             && array_search('cost', $columnTable) !== false) {

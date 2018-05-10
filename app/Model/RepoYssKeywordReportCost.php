@@ -7,9 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
-use App\Model\AbstractYssReportModel;
 
-use Auth;
+use App\Model\AbstractYssReportModel;
 
 class RepoYssKeywordReportCost extends AbstractYssReportModel
 {
