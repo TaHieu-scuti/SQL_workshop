@@ -157,7 +157,7 @@ class RepoYssSearchqueryReportCost extends AbstractYssReportModel
     {
         $yss_keyword_search_query_conv_model = new RepoYssSearchqueryReportConv();
         $aggregation = $this->getAggregatedConversionName($column);
-        $conversionPoints = $yss_keyword_search_query_conv_model->select($aggregation)
+        return $yss_keyword_search_query_conv_model->select($aggregation)
             ->distinct()
             ->where(
                 function (EloquentBuilder $query) use ($account_id, $accountId, $campaignId, $adGroupId) {
@@ -165,7 +165,6 @@ class RepoYssSearchqueryReportCost extends AbstractYssReportModel
                 }
             )
             ->get();
-        return $conversionPoints;
     }
 
     private function getCampaignIds(
