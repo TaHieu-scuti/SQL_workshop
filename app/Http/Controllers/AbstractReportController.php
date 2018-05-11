@@ -776,7 +776,7 @@ abstract class AbstractReportController extends Controller
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         $table = $this->model->getTable();
         if ($table === 'repo_yss_searchquery_report_cost') {
-            $fieldNames[0] = 'searchQuery';
+            array_unshift($fieldNames, 'searchQuery');
         } elseif ($table === 'repo_adw_search_query_performance_report_cost') {
             array_unshift($fieldNames, 'searchTerm');
         }

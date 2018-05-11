@@ -248,7 +248,6 @@ abstract class AbstractYssReportModel extends AbstractTemporaryModel
     ) {
         if ($this->table === 'repo_yss_searchquery_report_cost') {
             $fieldNames = $this->unsetColumns($fieldNames, self::YSS_SEARCH_QUERY_UNNECESSARY_FIELDS);
-            array_unshift($fieldNames, 'keywordID');
         }
         if (static::PAGE_ID === 'keywordID' && !isset($adGroupId)) {
             $fieldNames = $this->unsetColumns($fieldNames, ['adgroupID']);
