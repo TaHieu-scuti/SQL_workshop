@@ -244,4 +244,21 @@ class RepoYssAdReportController extends AbstractReportController
         }
         return true;
     }
+
+
+    public function exportToCsv()
+    {
+        if (!session('adReport')) {
+            abort(404);
+        }
+        parent::exportToCsv();
+    }
+
+    public function exportToExcel()
+    {
+        if (!session('adReport')) {
+            abort(404);
+        }
+        parent::exportToExcel();
+    }
 }
