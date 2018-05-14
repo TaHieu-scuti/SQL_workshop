@@ -86,7 +86,7 @@ class RepoYssAdReportController extends AbstractReportController
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD, 'adType');
         }
-        if (!session('adReport')) {
+        if (!session('3')) {
             $this->initializeSession($defaultColumns);
         }
         if ($this->checkoutConditionOfAdgroupForUpdateColumn($engine)) {
@@ -243,5 +243,22 @@ class RepoYssAdReportController extends AbstractReportController
             return true; // same engine, different campaignId => update back to normal report
         }
         return true;
+    }
+
+
+    public function exportToCsv()
+    {
+        if (!session('adReport')) {
+            abort(404);
+        }
+        parent::exportToCsv();
+    }
+
+    public function exportToExcel()
+    {
+        if (!session('adReport')) {
+            abort(404);
+        }
+        parent::exportToExcel();
     }
 }
