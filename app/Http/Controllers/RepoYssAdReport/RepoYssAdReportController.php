@@ -86,7 +86,7 @@ class RepoYssAdReportController extends AbstractReportController
         } elseif ($engine === 'adw') {
             array_unshift($defaultColumns, self::MEDIA_ID, self::ADW_GROUPED_BY_FIELD, 'adType');
         }
-        if (!session('3')) {
+        if (!session('adReport')) {
             $this->initializeSession($defaultColumns);
         }
         if ($this->checkoutConditionOfAdgroupForUpdateColumn($engine)) {
