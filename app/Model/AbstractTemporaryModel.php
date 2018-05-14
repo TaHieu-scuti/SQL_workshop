@@ -61,7 +61,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'dayOfWeek',
         'prefecture',
         'device',
-        'searchQuery'
+        'searchQuery',
         'searchTerm'
     ];
 
