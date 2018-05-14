@@ -278,6 +278,9 @@ abstract class AbstractReportModel extends Model
     private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if (isset($this->isSearchQueryReport)) {
+                return $arrayCalculate;
+            }
             if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
                     'AVG(' . $tableName . '.searchImprShare) AS ' . $fieldName
@@ -302,6 +305,9 @@ abstract class AbstractReportModel extends Model
     private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
         if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+            if (isset($this->isSearchQueryReport)) {
+                return $arrayCalculate;
+            }
             if (in_array(static::GROUPED_BY_FIELD_NAME, ['keyword']) === true) {
                 $arrayCalculate[] = DB::raw(
                     'ROUND(AVG(' . $tableName . '.searchImprShare), 2) AS ' . $fieldName
