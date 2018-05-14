@@ -774,7 +774,10 @@ abstract class AbstractReportController extends Controller
     public function getDataForTable()
     {
         $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
-        if ($this->model->getTable() === 'repo_adw_search_query_performance_report_cost') {
+        $table = $this->model->getTable();
+        if ($table === 'repo_yss_searchquery_report_cost') {
+            array_unshift($fieldNames, 'searchQuery');
+        } elseif ($table === 'repo_adw_search_query_performance_report_cost') {
             array_unshift($fieldNames, 'searchTerm');
         }
 
@@ -1160,7 +1163,7 @@ abstract class AbstractReportController extends Controller
         return $this->removeUnnecessaryFields($columns);
     }
 
-    protected function removeUnnecessaryFields($columnTable)
+    private function removeUnnecessaryFields($columnTable)
     {
         if (!in_array('cost', session(static::SESSION_KEY_FIELD_NAME))
             && array_search('cost', $columnTable) !== false) {

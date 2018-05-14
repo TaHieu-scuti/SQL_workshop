@@ -79,6 +79,10 @@ abstract class AbstractReportModel extends Model
         'keywordMatchType' => 'matchType'
     ];
 
+    const YSS_SEARCH_QUERY_FIELDS_MAP = [
+        'searchQueryMatchType' => 'matchType'
+    ];
+
     const ADW_FIELDS_MAP = [
 //      'columns' => 'alias'
         self::ADW_AVERAGE_CPC => self::AVERAGE_CPC,
@@ -618,7 +622,7 @@ abstract class AbstractReportModel extends Model
         if ($groupedByField === 'keyword') {
             if ($engine === self::ADW) {
                 array_push($this->groupBy, 'matchType');
-            } elseif ($engine === self::YSS) {
+            } elseif ($engine === self::YSS && $this->table !== 'repo_yss_searchquery_report_cost') {
                 array_push($this->groupBy, 'keywordMatchType');
             }
         }
@@ -1150,7 +1154,11 @@ abstract class AbstractReportModel extends Model
         $resultFieldNames = [];
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss' || $engine === null) {
-            $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
+            if ($this->table === 'repo_yss_searchquery_report_cost') {
+                $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_SEARCH_QUERY_FIELDS_MAP);
+            } else {
+                $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
+            }
         } elseif ($engine === 'adw') {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
         } elseif ($engine === 'ydn') {
