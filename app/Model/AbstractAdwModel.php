@@ -285,7 +285,9 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
 
         if ($this->isConv || $this->isCallTracking) {
             $columns = $fieldNames;
-            if (!in_array(static::PAGE_ID, $columns)) {
+            if ($this->isSearchQueryReport && !in_array(static::PAGE_ID, $columns)) {
+                array_splice($columns, 1, 0, static::PAGE_ID);
+            } elseif (!in_array(static::PAGE_ID, $columns)) {
                 array_unshift($columns, static::PAGE_ID);
             }
 
@@ -305,6 +307,9 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
             );
 
             $columns = array_keys($this->updateFieldNames($columns));
+            if (isset($this->isSearchQueryReport)) {
+                $columns = $this->unsetColumns($columns, ['impressionShare']);
+            }
 
             DB::insert('INSERT into '.self::TABLE_TEMPORARY.' ('.implode(', ', $columns).') '
                 . $this->getBindingSql($builder));
@@ -351,11 +356,11 @@ abstract class AbstractAdwModel extends AbstractTemporaryModel
                 $campaignId,
                 $adGroupId
             );
+
             $allColumns = $this->getAllColumns(
                 DB::table(self::TABLE_TEMPORARY)->select(array_merge($aggregated, $arr))->columns
             );
             $columnSort = $this->getSortColumn($keyPrefix, $allColumns, $columnSort);
-
             $builder = DB::table(self::TABLE_TEMPORARY)
                 ->select(array_merge($aggregated, $arr))
                 ->groupBy(array_unique($this->groupBy))

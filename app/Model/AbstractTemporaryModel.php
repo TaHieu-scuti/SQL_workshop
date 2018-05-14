@@ -62,6 +62,7 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'prefecture',
         'device',
         'searchQuery'
+        'searchTerm'
     ];
 
     const FIELDS_TYPE_BIGINT = [
@@ -239,7 +240,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
             array_push($arrayAlias, 'adgroupID');
             array_push($arrayAlias, 'adgroupName');
         }
-        if ($this->table === 'repo_yss_searchquery_report_cost') {
+
+        if ($this->table === 'repo_yss_searchquery_report_cost' || isset($this->isSearchQueryReport)) {
             array_splice($columns, 3, 0, $arrayAlias);
         } else {
             array_splice($columns, 2, 0, $arrayAlias);

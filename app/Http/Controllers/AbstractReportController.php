@@ -1055,13 +1055,13 @@ abstract class AbstractReportController extends Controller
 
     public function exportSearchQueryToCsv()
     {
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
         }
 
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
@@ -1070,8 +1070,7 @@ abstract class AbstractReportController extends Controller
         }
         $fieldNames = $this->getFieldNamesForExport($data);
         $aliases = $this->translateFieldNames($fieldNames);
-        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new NativePHPCsvExporter($data, $reportType, $fieldNames, $aliases);
+        $exporter = new NativePHPCsvExporter($data, 'search-query', $fieldNames, $aliases);
         $csvData = $exporter->export();
         return $this->responseFactory->make(
             $csvData,
@@ -1089,13 +1088,13 @@ abstract class AbstractReportController extends Controller
 
     public function exportSearchQueryToExcel()
     {
-        $fieldNames = session()->get(static::SESSION_KEY_FIELD_NAME);
         if (session(static::SESSION_KEY_ENGINE) === 'yss') {
             $this->model = new RepoYssSearchqueryReportCost;
         } elseif (session(static::SESSION_KEY_ENGINE) === 'adw') {
             $this->model = new RepoAdwSearchQueryPerformanceReport;
         }
 
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
@@ -1103,9 +1102,9 @@ abstract class AbstractReportController extends Controller
             $data = $data->getCollection();
         }
         $fieldNames = $this->getFieldNamesForExport($data);
+        $fieldNames = $this->model->unsetColumns($fieldNames, [static::MEDIA_ID]);
         $aliases = $this->translateFieldNames($fieldNames);
-        $reportType = str_replace('/', '', static::SESSION_KEY_PREFIX_ROUTE);
-        $exporter = new SpoutExcelExporter($data, $reportType, $fieldNames, $aliases);
+        $exporter = new SpoutExcelExporter($data, 'search-query', $fieldNames, $aliases);
         $excelData = $exporter->export();
 
         return $this->responseFactory->make(
