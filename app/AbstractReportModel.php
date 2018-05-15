@@ -1376,7 +1376,7 @@ abstract class AbstractReportModel extends Model
         return $str;
     }
 
-    protected function getSortColumn($keyPrefix, $arrayColumns, $sortColumn)
+    protected function getSortColumn($keyPrefix, $arrayColumns, $sortColumn, $groupedByField = null)
     {
         $arrayIDs = [
             'account_id',
@@ -1391,6 +1391,13 @@ abstract class AbstractReportModel extends Model
             'description1',
             'engine'
         ];
+        if ($groupedByField === 'prefecture'
+            || $groupedByField === 'hourofday'
+            || $groupedByField === 'dayOfWeek'
+            || $groupedByField === 'device'
+       ) {
+            $arrayColumns = $this->unsetColumns($arrayColumns, ['dailySpendingLimit']);
+        }
         $arrayColumns = array_diff($arrayColumns, $arrayIDs);
         if (!in_array($sortColumn, $arrayColumns) && !empty($arrayColumns)) {
             $sortColumn = array_values($arrayColumns)[0];
