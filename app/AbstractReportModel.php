@@ -1395,7 +1395,7 @@ abstract class AbstractReportModel extends Model
             || $groupedByField === 'hourofday'
             || $groupedByField === 'dayOfWeek'
             || $groupedByField === 'device'
-       ) {
+        ) {
             $arrayColumns = $this->unsetColumns($arrayColumns, ['dailySpendingLimit']);
         }
         $arrayColumns = array_diff($arrayColumns, $arrayIDs);
