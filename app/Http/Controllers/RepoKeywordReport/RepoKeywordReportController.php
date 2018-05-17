@@ -13,7 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use DateTime;
 use Exception;
 
-class RepoKeywordReportcontroller extends AbstractReportController
+class RepoKeywordReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';
@@ -99,7 +99,7 @@ class RepoKeywordReportcontroller extends AbstractReportController
         }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
-            'yssKeywordReport.index',
+            'keywordReport.index',
             [
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
@@ -211,7 +211,7 @@ class RepoKeywordReportcontroller extends AbstractReportController
         );
     }
 
-    private function updateModel()
+    protected function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {

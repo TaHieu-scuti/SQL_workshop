@@ -139,7 +139,7 @@ class RepoAccountReportController extends AbstractReportController
 
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
-            'yssAccountReport.index',
+            'accountReport.index',
             [
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,

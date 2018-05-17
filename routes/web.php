@@ -237,40 +237,40 @@ Route::prefix('ad-report')->group(function () {
 Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/',
-        'RepoKeywordReport\RepoKeywordReportcontroller@index'
+        'RepoKeywordReport\RepoKeywordReportController@index'
     )->name('keyword-report');
     Route::post(
         '/display-graph',
-        'RepoKeywordReport\RepoKeywordReportcontroller@displayGraph'
+        'RepoKeywordReport\RepoKeywordReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoKeywordReport\RepoKeywordReportcontroller@updateTable'
+        'RepoKeywordReport\RepoKeywordReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoKeywordReport\RepoKeywordReportcontroller@exportToExcel'
+        'RepoKeywordReport\RepoKeywordReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoKeywordReport\RepoKeywordReportcontroller@exportToCsv'
+        'RepoKeywordReport\RepoKeywordReportController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoKeywordReport\RepoKeywordReportcontroller@updateSessionID'
+        'RepoKeywordReport\RepoKeywordReportController@updateSessionID'
     );
     Route::get(
         '/export_search_query_csv',
-        'RepoKeywordReport\RepoKeywordReportcontroller@exportSearchQueryToCsv'
+        'RepoKeywordReport\RepoKeywordReportController@exportSearchQueryToCsv'
     );
     Route::get(
         '/export_search_query_excel',
-        'RepoKeywordReport\RepoKeywordReportcontroller@exportSearchQueryToExcel'
+        'RepoKeywordReport\RepoKeywordReportController@exportSearchQueryToExcel'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoKeywordReport\RepoKeywordReportcontroller@getDataForLayouts'
+        'RepoKeywordReport\RepoKeywordReportController@getDataForLayouts'
     );
 });
 

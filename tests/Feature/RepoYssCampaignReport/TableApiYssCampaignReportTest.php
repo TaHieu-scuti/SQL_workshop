@@ -147,7 +147,7 @@ class TableApiYssCampaignReportTest extends TestCase
     const CUSTOM_COLUMN_SORT = 'someColumnName';
     const DEFAULT_SORT = 'desc';
     const CUSTOM_SORT = 'someSortOption';
-    const VIEW_PATH = 'yssCampaignReport.index';
+    const VIEW_PATH = 'campaignReport.index';
     const GROUPED_BY_FIELD = 'campaignName';
 
         /**

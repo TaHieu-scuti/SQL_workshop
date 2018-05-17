@@ -108,7 +108,7 @@ class RepoAdgroupReportController extends AbstractReportController
         $this->checkOldId();
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
-            'yssAdgroupReport.index',
+            'adgroupReport.index',
             [
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
@@ -253,7 +253,7 @@ class RepoAdgroupReportController extends AbstractReportController
         );
     }
 
-    private function updateModel()
+    protected function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
