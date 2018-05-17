@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
+use App\Http\Controllers\RepoAccountReport\RepoAccountReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -192,7 +192,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME,
+            RepoAccountReportController::SESSION_KEY_FIELD_NAME,
             self::DEFAULT_FIELDS
         );
     }
@@ -201,12 +201,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME,
+            RepoAccountReportController::SESSION_KEY_FIELD_NAME,
             self::CUSTOM_FIELDS
         );
     }
@@ -217,7 +217,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::DEFAULT_STATUS
         );
     }
@@ -226,12 +226,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::CUSTOM_STATUS
         );
     }
@@ -242,7 +242,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::DEFAULT_TIME_PERIOD_TITLE
         );
     }
@@ -251,13 +251,13 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
                     self::CUSTOM_TIME_PERIOD_TITLE
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -270,7 +270,7 @@ class TableApiYssAccountReportTest extends TestCase
         $startDay = (new DateTime)->modify('-90 days')->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_START_DAY,
+            RepoAccountReportController::SESSION_KEY_START_DAY,
             $startDay
         );
     }
@@ -279,12 +279,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_START_DAY,
+            RepoAccountReportController::SESSION_KEY_START_DAY,
             self::CUSTOM_START_DAY
         );
     }
@@ -297,7 +297,7 @@ class TableApiYssAccountReportTest extends TestCase
         $endDay = (new DateTime)->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_END_DAY,
+            RepoAccountReportController::SESSION_KEY_END_DAY,
             $endDay
         );
     }
@@ -306,12 +306,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_END_DAY,
+            RepoAccountReportController::SESSION_KEY_END_DAY,
             self::CUSTOM_END_DAY
         );
     }
@@ -322,7 +322,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_PAGINATION,
+            RepoAccountReportController::SESSION_KEY_PAGINATION,
             self::DEFAULT_PAGINATION
         );
     }
@@ -331,12 +331,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_PAGINATION,
+            RepoAccountReportController::SESSION_KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -347,7 +347,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT,
+            RepoAccountReportController::SESSION_KEY_COLUMN_SORT,
             self::DEFAULT_COLUMN_SORT
         );
     }
@@ -356,12 +356,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT,
+            RepoAccountReportController::SESSION_KEY_COLUMN_SORT,
             self::CUSTOM_COLUMN_SORT
         );
     }
@@ -372,7 +372,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_SORT,
+            RepoAccountReportController::SESSION_KEY_SORT,
             self::DEFAULT_SORT
         );
     }
@@ -381,12 +381,12 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_SORT,
+            RepoAccountReportController::SESSION_KEY_SORT,
             self::CUSTOM_SORT
         );
     }
@@ -403,24 +403,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::FIELD_NAMES,
+            RepoAccountReportController::FIELD_NAMES,
             self::CUSTOM_FIELDS
         );
     }
@@ -429,24 +429,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::REPORTS
+            RepoAccountReportController::REPORTS
         );
     }
 
@@ -456,7 +456,7 @@ class TableApiYssAccountReportTest extends TestCase
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::COLUMNS,
+            RepoAccountReportController::COLUMNS,
             self::DEFAULT_FIELDS
         );
     }
@@ -465,24 +465,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::COLUMN_SORT,
+            RepoAccountReportController::COLUMN_SORT,
             self::COLUMN_NAME_CLICKS
         );
     }
@@ -491,24 +491,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::SORT,
+            RepoAccountReportController::SORT,
             self::CUSTOM_SORT
         );
     }
@@ -517,24 +517,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::TIME_PERIOD_TITLE,
+            RepoAccountReportController::TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -543,24 +543,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::START_DAY,
+            RepoAccountReportController::START_DAY,
             self::JANUARY_1ST_2017
         );
     }
@@ -569,24 +569,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::END_DAY,
+            RepoAccountReportController::END_DAY,
             self::JANUARY_10TH_2017
         );
     }
@@ -595,24 +595,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::COLUMNS_FOR_LIVE_SEARCH,
+            RepoAccountReportController::COLUMNS_FOR_LIVE_SEARCH,
             self::LIVE_SEARCH_FIELDS
         );
     }
@@ -620,24 +620,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::COLUMNS_FOR_FILTER,
+            RepoAccountReportController::COLUMNS_FOR_FILTER,
             self::COLUMNS_FOR_FILTER
         );
     }
@@ -646,24 +646,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::STATUS_TITLE,
+            RepoAccountReportController::STATUS_TITLE,
             self::DEFAULT_STATUS_TITLE
         );
     }
@@ -672,23 +672,23 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
         $response->assertViewHas(
-            RepoYssAccountReportController::TOTAL_DATA_ARRAY,
+            RepoAccountReportController::TOTAL_DATA_ARRAY,
             [
                 self::COLUMN_NAME_INVALID_CLICK_RATE => '21,513.75',
                 self::COLUMN_NAME_IMPRESSION_SHARE => '20,888.02',
@@ -718,24 +718,24 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
 
         $response->assertViewHas(
-            RepoYssAccountReportController::KEY_PAGINATION,
+            RepoAccountReportController::KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -744,23 +744,23 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
         $response->assertViewHas(
-            RepoYssAccountReportController::SUMMARY_REPORT,
+            RepoAccountReportController::SUMMARY_REPORT,
             [
                 self::COLUMN_NAME_CLICKS => "5,437,708",
                 self::COLUMN_NAME_IMPRESSIONS => "2,464,084",
@@ -776,23 +776,23 @@ class TableApiYssAccountReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
-                RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAccountReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAccountReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAccountReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAccountReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAccountReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAccountReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ACCOUNT_REPORT,
+                RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ACCOUNT_REPORT);
         $response->assertViewHas(
-            RepoYssAccountReportController::GROUPED_BY_FIELD,
+            RepoAccountReportController::GROUPED_BY_FIELD,
             self::GROUPED_BY_FIELD
         );
     }
