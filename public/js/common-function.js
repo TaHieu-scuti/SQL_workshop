@@ -19,7 +19,7 @@ function getFilterDate(option)
         case 'last7days' :
             timePeriodTitle = 'Last 7 days( exclude today)';
             endDay = today.subtract(1, 'd').format("YYYY-MM-DD");
-            startDay = today.subtract(7, 'd').format("YYYY-MM-DD");
+            startDay = today.subtract(6, 'd').format("YYYY-MM-DD");
             break;
         case 'last30days' :
             timePeriodTitle = 'Last 30 days';

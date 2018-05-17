@@ -775,6 +775,9 @@ abstract class AbstractReportModel extends Model
         }
         $fieldNames = $this->unsetColumns($fieldNames, [$groupedByField]);
         $aggregations = $this->getAggregated($fieldNames);
+        if (empty($aggregations)) {
+            return [];
+        }
         $data = self::select($aggregations)
             ->where(
                 function (Builder $query) use ($startDay, $endDay) {
@@ -844,6 +847,10 @@ abstract class AbstractReportModel extends Model
             $adReportId,
             $keywordId
         );
+
+        if (empty($data)) {
+            return [];
+        }
 
         $data = $data->first();
 
