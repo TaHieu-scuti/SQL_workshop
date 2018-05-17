@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAdReport;
+namespace App\Http\Controllers\RepoAdReport;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -13,7 +13,7 @@ use App\Model\RepoYdnAdReport;
 
 use Exception;
 
-class RepoYssAdReportController extends AbstractReportController
+class RepoAdReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';
@@ -171,7 +171,7 @@ class RepoYssAdReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $this->updateSessionData($request);
         $this->updateSpecificModel();
 
@@ -209,7 +209,7 @@ class RepoYssAdReportController extends AbstractReportController
         );
     }
 
-    public function updateModel()
+    private function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'adw') {
@@ -218,18 +218,6 @@ class RepoYssAdReportController extends AbstractReportController
             $this->model = new RepoYdnAdReport;
         }
         return $engine;
-    }
-
-    private function updateTableColumns(LengthAwarePaginator $dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
     }
 
     private function checkoutConditionOfAdgroupForUpdateColumn($engine)
