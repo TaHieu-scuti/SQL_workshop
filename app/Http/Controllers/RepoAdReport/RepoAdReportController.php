@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAdReport;
+namespace App\Http\Controllers\RepoAdReport;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -13,7 +13,7 @@ use App\Model\RepoYdnAdReport;
 
 use Exception;
 
-class RepoYssAdReportController extends AbstractReportController
+class RepoAdReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';

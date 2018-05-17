@@ -204,33 +204,33 @@ Route::prefix('adgroup-report')->group(function () {
 Route::prefix('ad-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAdReport\RepoYssAdReportController@index'
+        'RepoAdReport\RepoAdReportController@index'
     )->name('ad-report');
     Route::post(
         '/display-graph',
-        'RepoYssAdReport\RepoYssAdReportController@displayGraph'
+        'RepoAdReport\RepoAdReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssAdReport\RepoYssAdReportController@updateTable'
+        'RepoAdReport\RepoAdReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAdReport\RepoYssAdReportController@exportToExcel'
+        'RepoAdReport\RepoAdReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
+        'RepoAdReport\RepoAdReportController@exportToCsv'
     );
 
     Route::post(
         '/updateSession',
-        'RepoYssAdReport\RepoYssAdReportController@updateSessionID'
+        'RepoAdReport\RepoAdReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssAdReport\RepoYssAdReportController@getDataForLayouts'
+        'RepoAdReport\RepoAdReportController@getDataForLayouts'
     );
 });
 
