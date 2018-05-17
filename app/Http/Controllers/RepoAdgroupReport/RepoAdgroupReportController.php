@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAdgroupReport;
+namespace App\Http\Controllers\RepoAdgroupReport;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,7 +14,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Exception;
 
-class RepoYssAdgroupReportController extends AbstractReportController
+class RepoAdgroupReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';

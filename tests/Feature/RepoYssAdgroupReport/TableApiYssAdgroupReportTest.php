@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\RepoYssAdgroupReport;
 
-use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
+use App\Http\Controllers\RepoAdgroupReport\RepoAdgroupReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -180,7 +180,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME,
+            RepoAdgroupReportController::SESSION_KEY_FIELD_NAME,
             self::DEFAULT_FIELDS
         );
     }
@@ -189,12 +189,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME,
+            RepoAdgroupReportController::SESSION_KEY_FIELD_NAME,
             self::CUSTOM_FIELDS
         );
     }
@@ -205,7 +205,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::DEFAULT_STATUS
         );
     }
@@ -214,12 +214,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::CUSTOM_STATUS
         );
     }
@@ -230,7 +230,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::DEFAULT_TIME_PERIOD_TITLE
         );
     }
@@ -239,13 +239,13 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
                     self::CUSTOM_TIME_PERIOD_TITLE
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -258,7 +258,7 @@ class TableApiYssAdgroupReportTest extends TestCase
         $startDay = (new DateTime)->modify('-90 days')->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_START_DAY,
+            RepoAdgroupReportController::SESSION_KEY_START_DAY,
             $startDay
         );
     }
@@ -267,12 +267,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_START_DAY,
+            RepoAdgroupReportController::SESSION_KEY_START_DAY,
             self::CUSTOM_START_DAY
         );
     }
@@ -285,7 +285,7 @@ class TableApiYssAdgroupReportTest extends TestCase
         $endDay = (new DateTime)->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_END_DAY,
+            RepoAdgroupReportController::SESSION_KEY_END_DAY,
             $endDay
         );
     }
@@ -294,12 +294,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_END_DAY,
+            RepoAdgroupReportController::SESSION_KEY_END_DAY,
             self::CUSTOM_END_DAY
         );
     }
@@ -310,7 +310,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_PAGINATION,
+            RepoAdgroupReportController::SESSION_KEY_PAGINATION,
             self::DEFAULT_PAGINATION
         );
     }
@@ -319,12 +319,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_PAGINATION,
+            RepoAdgroupReportController::SESSION_KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -335,7 +335,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT,
+            RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT,
             self::DEFAULT_COLUMN_SORT
         );
     }
@@ -344,12 +344,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT,
+            RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT,
             self::CUSTOM_COLUMN_SORT
         );
     }
@@ -360,7 +360,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_SORT,
+            RepoAdgroupReportController::SESSION_KEY_SORT,
             self::DEFAULT_SORT
         );
     }
@@ -369,12 +369,12 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertSessionHas(
-            RepoYssAdgroupReportController::SESSION_KEY_SORT,
+            RepoAdgroupReportController::SESSION_KEY_SORT,
             self::CUSTOM_SORT
         );
     }
@@ -391,24 +391,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::FIELD_NAMES,
+            RepoAdgroupReportController::FIELD_NAMES,
             self::CUSTOM_FIELDS
         );
     }
@@ -417,24 +417,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::REPORTS
+            RepoAdgroupReportController::REPORTS
         );
     }
 
@@ -444,7 +444,7 @@ class TableApiYssAdgroupReportTest extends TestCase
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::COLUMNS,
+            RepoAdgroupReportController::COLUMNS,
             self::DEFAULT_FIELDS
         );
     }
@@ -453,24 +453,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::COLUMN_SORT,
+            RepoAdgroupReportController::COLUMN_SORT,
             self::COLUMN_NAME_CLICKS
         );
     }
@@ -479,24 +479,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::TIME_PERIOD_TITLE,
+            RepoAdgroupReportController::TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -505,24 +505,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::START_DAY,
+            RepoAdgroupReportController::START_DAY,
             self::JANUARY_1ST_2017
         );
     }
@@ -531,24 +531,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::END_DAY,
+            RepoAdgroupReportController::END_DAY,
             self::JANUARY_10TH_2017
         );
     }
@@ -557,24 +557,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::COLUMNS_FOR_LIVE_SEARCH,
+            RepoAdgroupReportController::COLUMNS_FOR_LIVE_SEARCH,
             self::LIVE_SEARCH_FIELDS
         );
     }
@@ -583,24 +583,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::COLUMNS_FOR_FILTER,
+            RepoAdgroupReportController::COLUMNS_FOR_FILTER,
             self::COLUMNS_FOR_FILTER
         );
     }
@@ -609,24 +609,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::STATUS_TITLE,
+            RepoAdgroupReportController::STATUS_TITLE,
             self::DEFAULT_STATUS_TITLE
         );
     }
@@ -635,24 +635,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::TOTAL_DATA_ARRAY,
+            RepoAdgroupReportController::TOTAL_DATA_ARRAY,
             [
                 self::COLUMN_NAME_ADGROUP_BID => '1,755,917',
                 self::COLUMN_NAME_COST => '1,777,557',
@@ -680,24 +680,24 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
 
         $response->assertViewHas(
-            RepoYssAdgroupReportController::KEY_PAGINATION,
+            RepoAdgroupReportController::KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -706,23 +706,23 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
         $response->assertViewHas(
-            RepoYssAdgroupReportController::SUMMARY_REPORT,
+            RepoAdgroupReportController::SUMMARY_REPORT,
             [
                 self::COLUMN_NAME_CLICKS => "15,989,958",
                 self::COLUMN_NAME_IMPRESSIONS => "7,230,149",
@@ -737,23 +737,23 @@ class TableApiYssAdgroupReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
-                RepoYssAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoAdgroupReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoAdgroupReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoAdgroupReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoAdgroupReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoAdgroupReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoAdgroupReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoAdgroupReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_ADGROUP_REPORT,
+                RepoAdgroupReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_ADGROUP_REPORT);
         $response->assertViewHas(
-            RepoYssAdgroupReportController::GROUPED_BY_FIELD,
+            RepoAdgroupReportController::GROUPED_BY_FIELD,
             self::GROUPED_BY_FIELD
         );
     }
