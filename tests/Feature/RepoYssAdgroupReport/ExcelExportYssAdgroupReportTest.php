@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\RepoYssAdgroupReport;
 
-use App\Http\Controllers\RepoYssAdgroupReport\RepoYssAdgroupReportController;
+use App\Http\Controllers\RepoAdgroupReport\RepoAdgroupReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -68,12 +68,12 @@ class ExcelExportYssAdgroupReportTest extends TestCase
 
         $response = $this->actingAs($user)
                         ->withSession([
-                            RepoYssAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                            RepoYssAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                            RepoYssAdgroupReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
-                            RepoYssAdgroupReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
-                            RepoYssAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                            RepoYssAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                            RepoAdgroupReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                            RepoAdgroupReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                            RepoAdgroupReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoAdgroupReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
+                            RepoAdgroupReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                            RepoAdgroupReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                         ])
                         ->get('/adgroup-report/export_excel');
 

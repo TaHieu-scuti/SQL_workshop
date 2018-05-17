@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAdgroupReport;
+namespace App\Http\Controllers\RepoAdgroupReport;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,7 +14,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 
 use Exception;
 
-class RepoYssAdgroupReportController extends AbstractReportController
+class RepoAdgroupReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';
@@ -264,15 +264,6 @@ class RepoYssAdgroupReportController extends AbstractReportController
             $this->model = new RepoYdnAdgroupReport;
         }
         return $engine;
-    }
-
-    private function updateTableColumns(LengthAwarePaginator $dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
     }
 
     /* Keep the Devices/Timezone/Prefectures/DayOfWeek after reloading adgroup list

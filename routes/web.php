@@ -140,97 +140,97 @@ Route::prefix('direct-client-report')->group(function () {
 Route::prefix('campaign-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@index'
+        'RepoCampaignReport\RepoCampaignReportController@index'
     )->name('campaign-report');
     Route::post(
         '/display-graph',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
+        'RepoCampaignReport\RepoCampaignReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@updateTable'
+        'RepoCampaignReport\RepoCampaignReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToExcel'
+        'RepoCampaignReport\RepoCampaignReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
+        'RepoCampaignReport\RepoCampaignReportController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@updateSessionID'
+        'RepoCampaignReport\RepoCampaignReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@getDataForLayouts'
+        'RepoCampaignReport\RepoCampaignReportController@getDataForLayouts'
     );
 });
 
 Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
+        'RepoAdgroupReport\RepoAdgroupReportController@index'
     )->name('adgroup-report');
     Route::post(
         '/display-graph',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
+        'RepoAdgroupReport\RepoAdgroupReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateTable'
+        'RepoAdgroupReport\RepoAdgroupReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToExcel'
+        'RepoAdgroupReport\RepoAdgroupReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
+        'RepoAdgroupReport\RepoAdgroupReportController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateSessionID'
+        'RepoAdgroupReport\RepoAdgroupReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@getDataForLayouts'
+        'RepoAdgroupReport\RepoAdgroupReportController@getDataForLayouts'
     );
 });
 
 Route::prefix('ad-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAdReport\RepoYssAdReportController@index'
+        'RepoAdReport\RepoAdReportController@index'
     )->name('ad-report');
     Route::post(
         '/display-graph',
-        'RepoYssAdReport\RepoYssAdReportController@displayGraph'
+        'RepoAdReport\RepoAdReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssAdReport\RepoYssAdReportController@updateTable'
+        'RepoAdReport\RepoAdReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAdReport\RepoYssAdReportController@exportToExcel'
+        'RepoAdReport\RepoAdReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssAdReport\RepoYssAdReportController@exportToCsv'
+        'RepoAdReport\RepoAdReportController@exportToCsv'
     );
 
     Route::post(
         '/updateSession',
-        'RepoYssAdReport\RepoYssAdReportController@updateSessionID'
+        'RepoAdReport\RepoAdReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssAdReport\RepoYssAdReportController@getDataForLayouts'
+        'RepoAdReport\RepoAdReportController@getDataForLayouts'
     );
 });
 
