@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
+use App\Http\Controllers\RepoAccountReport\RepoAccountReportController;
 use App\User;
 
 use Illuminate\Foundation\Testing\TestResponse;
@@ -116,12 +116,12 @@ class GraphApiYSSAccountReportTest extends TestCase
     private function getDefaultSessionValues()
     {
         return [
-            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELD_NAMES,
-            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS,
-            RepoYssAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_IMPRESSIONS,
-            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE
+            RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELD_NAMES,
+            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS,
+            RepoAccountReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+            RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_IMPRESSIONS,
+            RepoAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+            RepoAccountReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE
         ];
     }
 
@@ -172,7 +172,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             'clicks'
         );
     }
@@ -194,7 +194,7 @@ class GraphApiYSSAccountReportTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE,
+            RepoAccountReportController::SESSION_KEY_STATUS_TITLE,
             'Hide 0'
         );
     }
@@ -212,11 +212,11 @@ class GraphApiYSSAccountReportTest extends TestCase
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
+                RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
             ])->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             self::COLUMN_NAME_IMPRESSIONS
         );
     }
@@ -238,7 +238,7 @@ class GraphApiYSSAccountReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             'someColumnName'
         );
     }
@@ -254,7 +254,7 @@ class GraphApiYSSAccountReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_STATUS_TITLE,
+            RepoAccountReportController::SESSION_KEY_STATUS_TITLE,
             'someStatusTitle'
         );
     }
@@ -274,9 +274,9 @@ class GraphApiYSSAccountReportTest extends TestCase
             );
 
         $response->assertSessionHasAll([
-            RepoYssAccountReportController::SESSION_KEY_START_DAY => '2011-09-01',
-            RepoYssAccountReportController::SESSION_KEY_END_DAY => '2011-10-01',
-            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTitle'
+            RepoAccountReportController::SESSION_KEY_START_DAY => '2011-09-01',
+            RepoAccountReportController::SESSION_KEY_END_DAY => '2011-10-01',
+            RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTitle'
         ]);
     }
 
@@ -286,15 +286,15 @@ class GraphApiYSSAccountReportTest extends TestCase
 
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
-                    RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
+                    RepoAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
+                    RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
             ])->post(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHasAll([
-            RepoYssAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
-            RepoYssAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
-            RepoYssAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+            RepoAccountReportController::SESSION_KEY_START_DAY => '2010-09-01',
+            RepoAccountReportController::SESSION_KEY_END_DAY => '2010-10-01',
+            RepoAccountReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
         ]);
     }
 
@@ -309,7 +309,7 @@ class GraphApiYSSAccountReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
             'someStatus'
         );
     }
@@ -320,11 +320,11 @@ class GraphApiYSSAccountReportTest extends TestCase
 
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => 'aStatus'
+                RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => 'aStatus'
             ])->post(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHas(
-            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS,
             'aStatus'
         );
     }
@@ -338,8 +338,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-04-01'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoAccountReportController::SESSION_KEY_END_DAY => '2017-04-01'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -361,8 +361,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoAccountReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
@@ -398,8 +398,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2016-02-01'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoAccountReportController::SESSION_KEY_END_DAY => '2016-02-01'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -436,9 +436,9 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-04-01',
-                    RepoYssAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoAccountReportController::SESSION_KEY_END_DAY => '2017-04-01',
+                    RepoAccountReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -473,8 +473,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => 'testing',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => '2017-01-05'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => 'testing',
+                    RepoAccountReportController::SESSION_KEY_END_DAY => '2017-01-05'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -504,8 +504,8 @@ class GraphApiYSSAccountReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssAccountReportController::SESSION_KEY_START_DAY => '2017-01-05',
-                    RepoYssAccountReportController::SESSION_KEY_END_DAY => 'testing'
+                    RepoAccountReportController::SESSION_KEY_START_DAY => '2017-01-05',
+                    RepoAccountReportController::SESSION_KEY_END_DAY => 'testing'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 

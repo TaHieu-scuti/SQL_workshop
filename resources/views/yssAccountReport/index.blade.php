@@ -1,7 +1,7 @@
 <?php
-use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
+use App\Http\Controllers\RepoAccountReport\RepoAccountReportController;
 
-$accountGrouped = session(RepoYssAccountReportController::SESSION_KEY_GROUPED_BY_FIELD);
+$accountGrouped = session(RepoAccountReportController::SESSION_KEY_GROUPED_BY_FIELD);
 ?>
 @extends('layouts.master')
 

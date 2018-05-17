@@ -84,7 +84,7 @@ class AgencyController extends AbstractReportController
     protected $model;
 
     /**
-     * RepoYssAccountReportController constructor.
+     * RepoAccountReportController constructor.
      *
      * @param ResponseFactory          $responseFactory
      * @param RepoYssAccountReportCost $model

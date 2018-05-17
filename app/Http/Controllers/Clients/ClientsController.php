@@ -83,7 +83,7 @@ class ClientsController extends AbstractReportController
     protected $model;
 
     /**
-     * RepoYssAccountReportController constructor.
+     * RepoAccountReportController constructor.
      *
      * @param ResponseFactory          $responseFactory
      * @param Account $model

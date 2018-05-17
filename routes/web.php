@@ -72,34 +72,34 @@ Route::prefix('agency-report')->group(function () {
 Route::prefix('account_report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAccountReport\RepoYssAccountReportController@index'
+        'RepoAccountReport\RepoAccountReportController@index'
     )->name('account_report');
     Route::post(
         '/update-table',
-        'RepoYssAccountReport\RepoYssAccountReportController@updateTable'
+        'RepoAccountReport\RepoAccountReportController@updateTable'
     );
     Route::post(
         '/display-graph',
-        'RepoYssAccountReport\RepoYssAccountReportController@displayGraph'
+        'RepoAccountReport\RepoAccountReportController@displayGraph'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAccountReport\RepoYssAccountReportController@exportToExcel'
+        'RepoAccountReport\RepoAccountReportController@exportToExcel'
     );
 
     Route::get(
         '/export_csv',
-        'RepoYssAccountReport\RepoYssAccountReportController@exportToCsv'
+        'RepoAccountReport\RepoAccountReportController@exportToCsv'
     );
 
     Route::post(
         '/updateSession',
-        'RepoYssAccountReport\RepoYssAccountReportController@updateSessionID'
+        'RepoAccountReport\RepoAccountReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssAccountReport\RepoYssAccountReportController@getDataForLayouts'
+        'RepoAccountReport\RepoAccountReportController@getDataForLayouts'
     );
 });
 

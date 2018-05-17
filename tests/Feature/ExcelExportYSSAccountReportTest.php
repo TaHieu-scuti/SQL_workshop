@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\RepoYssAccountReport\RepoYssAccountReportController;
+use App\Http\Controllers\RepoAccountReport\RepoAccountReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -73,12 +73,12 @@ class ExcelExportYSSAccountReportTest extends TestCase
 
         $response = $this->actingAs($user)
                         ->withSession([
-                            RepoYssAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                            RepoYssAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                            RepoYssAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
-                            RepoYssAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
-                            RepoYssAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                            RepoYssAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                            RepoAccountReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                            RepoAccountReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                            RepoAccountReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoAccountReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
+                            RepoAccountReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                            RepoAccountReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                         ])
                          ->get('/account_report/export_excel');
 

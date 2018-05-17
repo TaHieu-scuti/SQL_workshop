@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssAccountReport;
+namespace App\Http\Controllers\RepoAccountReport;
 
 use App\Export\Native\NativePHPCsvExporter;
 use App\Export\Spout\SpoutExcelExporter;
@@ -19,7 +19,7 @@ use Exception;
 use Auth;
 use Illuminate\Support\Facades\Lang;
 
-class RepoYssAccountReportController extends AbstractReportController
+class RepoAccountReportController extends AbstractReportController
 {
     const COLUMN_SORT = 'columnSort';
     const ACCOUNT_ID = 'account_id';
@@ -101,7 +101,7 @@ class RepoYssAccountReportController extends AbstractReportController
     protected $model;
 
     /**
-     * RepoYssAccountReportController constructor.
+     * RepoAccountReportController constructor.
      *
      * @param ResponseFactory          $responseFactory
      * @param RepoYssAccountReportCost $model
@@ -379,18 +379,6 @@ class RepoYssAccountReportController extends AbstractReportController
                 'Pragma' => 'public'
             ]
         );
-    }
-
-    private function updateTableColumns($dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
     }
 
     private function handlerSession()
