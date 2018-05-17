@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssKeywordReport;
+namespace App\Http\Controllers\RepoKeywordReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssKeywordReportCost;
@@ -13,7 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use DateTime;
 use Exception;
 
-class RepoYssKeywordReportController extends AbstractReportController
+class RepoKeywordReportcontroller extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';
@@ -174,7 +174,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $this->updateSessionData($request);
         $this->updateSpecificModel();
         $reports = $this->getDataForTable();
