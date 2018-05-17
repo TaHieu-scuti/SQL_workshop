@@ -211,7 +211,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         );
     }
 
-    public function updateModel()
+    private function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
@@ -220,18 +220,6 @@ class RepoYssKeywordReportController extends AbstractReportController
             $this->model = new RepoAdwKeywordReportCost;
         }
         return $engine;
-    }
-
-    private function updateTableColumns(LengthAwarePaginator $dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
     }
 
     private function checkoutConditionOfAdgroupForUpdateColumn($engine)
