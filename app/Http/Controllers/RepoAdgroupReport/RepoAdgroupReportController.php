@@ -253,7 +253,7 @@ class RepoAdgroupReportController extends AbstractReportController
         );
     }
 
-    private function updateModel()
+    protected function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
