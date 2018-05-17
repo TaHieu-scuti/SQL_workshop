@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssKeywordReport;
+namespace App\Http\Controllers\RepoKeywordReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssKeywordReportCost;
@@ -13,7 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use DateTime;
 use Exception;
 
-class RepoYssKeywordReportController extends AbstractReportController
+class RepoKeywordReportcontroller extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';
@@ -174,7 +174,7 @@ class RepoYssKeywordReportController extends AbstractReportController
 
     public function updateTable(Request $request)
     {
-        $engine = $this->updateModel();
+        $this->updateModel();
         $this->updateSessionData($request);
         $this->updateSpecificModel();
         $reports = $this->getDataForTable();
@@ -211,7 +211,7 @@ class RepoYssKeywordReportController extends AbstractReportController
         );
     }
 
-    public function updateModel()
+    private function updateModel()
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         if ($engine === 'yss') {
@@ -220,18 +220,6 @@ class RepoYssKeywordReportController extends AbstractReportController
             $this->model = new RepoAdwKeywordReportCost;
         }
         return $engine;
-    }
-
-    private function updateTableColumns(LengthAwarePaginator $dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
     }
 
     private function checkoutConditionOfAdgroupForUpdateColumn($engine)

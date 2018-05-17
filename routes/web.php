@@ -237,40 +237,40 @@ Route::prefix('ad-report')->group(function () {
 Route::prefix('keyword-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@index'
+        'RepoKeywordReport\RepoKeywordReportcontroller@index'
     )->name('keyword-report');
     Route::post(
         '/display-graph',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@displayGraph'
+        'RepoKeywordReport\RepoKeywordReportcontroller@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@updateTable'
+        'RepoKeywordReport\RepoKeywordReportcontroller@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@exportToExcel'
+        'RepoKeywordReport\RepoKeywordReportcontroller@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@exportToCsv'
+        'RepoKeywordReport\RepoKeywordReportcontroller@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@updateSessionID'
+        'RepoKeywordReport\RepoKeywordReportcontroller@updateSessionID'
     );
     Route::get(
         '/export_search_query_csv',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToCsv'
+        'RepoKeywordReport\RepoKeywordReportcontroller@exportSearchQueryToCsv'
     );
     Route::get(
         '/export_search_query_excel',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@exportSearchQueryToExcel'
+        'RepoKeywordReport\RepoKeywordReportcontroller@exportSearchQueryToExcel'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssKeywordReport\RepoYssKeywordReportController@getDataForLayouts'
+        'RepoKeywordReport\RepoKeywordReportcontroller@getDataForLayouts'
     );
 });
 
