@@ -381,18 +381,6 @@ class RepoAccountReportController extends AbstractReportController
         );
     }
 
-    private function updateTableColumns($dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->adgroupName)) {
-            array_unshift($tableColumns, 'adgroupName');
-        }
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
-    }
-
     private function handlerSession()
     {
         $sessionFieldNeeds = array_diff(
