@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\RepoYssCampaignReport;
 
-use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
+use App\Http\Controllers\RepoCampaignReport\RepoCampaignReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -185,7 +185,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME,
+            RepoCampaignReportController::SESSION_KEY_FIELD_NAME,
             self::DEFAULT_FIELDS
         );
     }
@@ -194,12 +194,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME,
+            RepoCampaignReportController::SESSION_KEY_FIELD_NAME,
             self::CUSTOM_FIELDS
         );
     }
@@ -210,7 +210,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::DEFAULT_STATUS
         );
     }
@@ -219,12 +219,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::CUSTOM_STATUS
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
             self::CUSTOM_STATUS
         );
     }
@@ -235,7 +235,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::DEFAULT_TIME_PERIOD_TITLE
         );
     }
@@ -244,13 +244,13 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE =>
                     self::CUSTOM_TIME_PERIOD_TITLE
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE,
+            RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -263,7 +263,7 @@ class TableApiYssCampaignReportTest extends TestCase
         $startDay = (new DateTime)->modify('-90 days')->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_START_DAY,
+            RepoCampaignReportController::SESSION_KEY_START_DAY,
             $startDay
         );
     }
@@ -272,12 +272,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_START_DAY,
+            RepoCampaignReportController::SESSION_KEY_START_DAY,
             self::CUSTOM_START_DAY
         );
     }
@@ -290,7 +290,7 @@ class TableApiYssCampaignReportTest extends TestCase
         $endDay = (new DateTime)->format('Y-m-d');
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_END_DAY,
+            RepoCampaignReportController::SESSION_KEY_END_DAY,
             $endDay
         );
     }
@@ -299,12 +299,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_END_DAY,
+            RepoCampaignReportController::SESSION_KEY_END_DAY,
             self::CUSTOM_END_DAY
         );
     }
@@ -315,7 +315,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_PAGINATION,
+            RepoCampaignReportController::SESSION_KEY_PAGINATION,
             self::DEFAULT_PAGINATION
         );
     }
@@ -324,12 +324,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_PAGINATION,
+            RepoCampaignReportController::SESSION_KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -340,7 +340,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT,
+            RepoCampaignReportController::SESSION_KEY_COLUMN_SORT,
             self::DEFAULT_COLUMN_SORT
         );
     }
@@ -349,12 +349,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::CUSTOM_COLUMN_SORT
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT,
+            RepoCampaignReportController::SESSION_KEY_COLUMN_SORT,
             self::CUSTOM_COLUMN_SORT
         );
     }
@@ -365,7 +365,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_SORT,
+            RepoCampaignReportController::SESSION_KEY_SORT,
             self::DEFAULT_SORT
         );
     }
@@ -374,12 +374,12 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_SORT,
+            RepoCampaignReportController::SESSION_KEY_SORT,
             self::CUSTOM_SORT
         );
     }
@@ -396,24 +396,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::CUSTOM_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::FIELD_NAMES,
+            RepoCampaignReportController::FIELD_NAMES,
             self::CUSTOM_FIELDS
         );
     }
@@ -422,24 +422,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::REPORTS
+            RepoCampaignReportController::REPORTS
         );
     }
 
@@ -449,7 +449,7 @@ class TableApiYssCampaignReportTest extends TestCase
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::COLUMNS,
+            RepoCampaignReportController::COLUMNS,
             self::DEFAULT_FIELDS
         );
     }
@@ -458,24 +458,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::COLUMN_SORT,
+            RepoCampaignReportController::COLUMN_SORT,
             self::COLUMN_NAME_CLICKS
         );
     }
@@ -484,24 +484,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::SORT,
+            RepoCampaignReportController::SORT,
             self::CUSTOM_SORT
         );
     }
@@ -510,24 +510,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::TIME_PERIOD_TITLE,
+            RepoCampaignReportController::TIME_PERIOD_TITLE,
             self::CUSTOM_TIME_PERIOD_TITLE
         );
     }
@@ -536,24 +536,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::START_DAY,
+            RepoCampaignReportController::START_DAY,
             self::JANUARY_1ST_2017
         );
     }
@@ -562,24 +562,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::END_DAY,
+            RepoCampaignReportController::END_DAY,
             self::JANUARY_10TH_2017
         );
     }
@@ -588,24 +588,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::COLUMNS_FOR_LIVE_SEARCH,
+            RepoCampaignReportController::COLUMNS_FOR_LIVE_SEARCH,
             self::LIVE_SEARCH_FIELDS
         );
     }
@@ -614,24 +614,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::COLUMNS_FOR_FILTER,
+            RepoCampaignReportController::COLUMNS_FOR_FILTER,
             self::COLUMNS_FOR_FILTER
         );
     }
@@ -640,24 +640,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::STATUS_TITLE,
+            RepoCampaignReportController::STATUS_TITLE,
             self::DEFAULT_STATUS_TITLE
         );
     }
@@ -666,24 +666,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD,
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::TOTAL_DATA_ARRAY,
+            RepoCampaignReportController::TOTAL_DATA_ARRAY,
             [
                 self::COLUMN_NAME_COST => '589,655',
                 self::COLUMN_NAME_IMPRESSIONS => '2,406,903',
@@ -712,24 +712,24 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
 
         $response->assertViewHas(
-            RepoYssCampaignReportController::KEY_PAGINATION,
+            RepoCampaignReportController::KEY_PAGINATION,
             self::CUSTOM_PAGINATION
         );
     }
@@ -738,23 +738,23 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
         $response->assertViewHas(
-            RepoYssCampaignReportController::SUMMARY_REPORT,
+            RepoCampaignReportController::SUMMARY_REPORT,
             [
                 self::COLUMN_NAME_CLICKS => "5,435,336",
                 self::COLUMN_NAME_IMPRESSIONS => "2,406,903",
@@ -769,23 +769,23 @@ class TableApiYssCampaignReportTest extends TestCase
     {
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
-                RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
-                RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
-                RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
-                RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
-                RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
-                RepoYssCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
-                RepoYssCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
-                RepoYssCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
+                RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => self::CUSTOM_TIME_PERIOD_TITLE,
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::DEFAULT_GRAPH_COLUMN_NAME,
+                RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE,
+                RepoCampaignReportController::SESSION_KEY_START_DAY => self::JANUARY_1ST_2017,
+                RepoCampaignReportController::SESSION_KEY_END_DAY => self::JANUARY_10TH_2017,
+                RepoCampaignReportController::SESSION_KEY_PAGINATION => self::CUSTOM_PAGINATION,
+                RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_CLICKS,
+                RepoCampaignReportController::SESSION_KEY_SORT => self::CUSTOM_SORT,
+                RepoCampaignReportController::SESSION_KEY_SUMMARY_REPORT => self::SUMMARY_REPORT,
+                RepoCampaignReportController::SESSION_KEY_PREFIX_ROUTE => self::ROUTE_CAMPAIGN_REPORT,
+                RepoCampaignReportController::SESSION_KEY_GROUPED_BY_FIELD => self::GROUPED_BY_FIELD
             ])
             ->get(self::ROUTE_CAMPAIGN_REPORT);
         $response->assertViewHas(
-            RepoYssCampaignReportController::GROUPED_BY_FIELD,
+            RepoCampaignReportController::GROUPED_BY_FIELD,
             self::GROUPED_BY_FIELD
         );
     }

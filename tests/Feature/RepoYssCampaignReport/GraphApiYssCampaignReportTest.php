@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\RepoYssCampaignReport;
 
-use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
+use App\Http\Controllers\RepoCampaignReport\RepoCampaignReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -126,12 +126,12 @@ class GraphApiYssCampaignReportTest extends TestCase
     private function getDefaultSessionValues()
     {
         return [
-            RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELD_NAMES,
-            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS,
-            RepoYssCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
-            RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_IMPRESSIONS,
-            RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
-            RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE
+            RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELD_NAMES,
+            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_ACCOUNT_STATUS,
+            RepoCampaignReportController::SESSION_KEY_PAGINATION => self::DEFAULT_PAGINATION,
+            RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::COLUMN_NAME_IMPRESSIONS,
+            RepoCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+            RepoCampaignReportController::SESSION_KEY_STATUS_TITLE => self::DEFAULT_STATUS_TITLE
         ];
     }
 
@@ -182,7 +182,7 @@ class GraphApiYssCampaignReportTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             'clicks'
         );
     }
@@ -204,7 +204,7 @@ class GraphApiYssCampaignReportTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE,
+            RepoCampaignReportController::SESSION_KEY_STATUS_TITLE,
             'Hide 0'
         );
     }
@@ -222,11 +222,11 @@ class GraphApiYssCampaignReportTest extends TestCase
         /** @var TestResponse $response */
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
+                RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => self::COLUMN_NAME_IMPRESSIONS
             ])->$method(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             self::COLUMN_NAME_IMPRESSIONS
         );
     }
@@ -248,7 +248,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
+            RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME,
             'someColumnName'
         );
     }
@@ -264,7 +264,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_STATUS_TITLE,
+            RepoCampaignReportController::SESSION_KEY_STATUS_TITLE,
             'someStatusTitle'
         );
     }
@@ -284,9 +284,9 @@ class GraphApiYssCampaignReportTest extends TestCase
             );
 
         $response->assertSessionHasAll([
-            RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2011-09-01',
-            RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2011-10-01',
-            RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTitle'
+            RepoCampaignReportController::SESSION_KEY_START_DAY => '2011-09-01',
+            RepoCampaignReportController::SESSION_KEY_END_DAY => '2011-10-01',
+            RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTitle'
         ]);
     }
 
@@ -296,15 +296,15 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2010-09-01',
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2010-10-01',
-                    RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => '2010-09-01',
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => '2010-10-01',
+                    RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
             ])->post(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHasAll([
-            RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2010-09-01',
-            RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2010-10-01',
-            RepoYssCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
+            RepoCampaignReportController::SESSION_KEY_START_DAY => '2010-09-01',
+            RepoCampaignReportController::SESSION_KEY_END_DAY => '2010-10-01',
+            RepoCampaignReportController::SESSION_KEY_TIME_PERIOD_TITLE => 'someTimePeriodTitle'
         ]);
     }
 
@@ -319,7 +319,7 @@ class GraphApiYssCampaignReportTest extends TestCase
             );
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
             'someStatus'
         );
     }
@@ -330,11 +330,11 @@ class GraphApiYssCampaignReportTest extends TestCase
 
         $response = $this->actingAs($this->getUser())
             ->withSession([
-                RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => 'aStatus'
+                RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => 'aStatus'
             ])->post(self::ROUTE_DISPLAY_GRAPH);
 
         $response->assertSessionHas(
-            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
+            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS,
             'aStatus'
         );
     }
@@ -348,8 +348,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2017-01-01',
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2017-04-01'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => '2017-04-01'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $this->assertSame(self::CORRECT_DATA_90_DAYS, $response->getContent());
@@ -370,8 +370,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => self::DATE_FIRST_DAY_2016,
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $object = [
@@ -405,8 +405,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2016-02-01'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => self::DATE_FIRST_DAY_2016,
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => '2016-02-01'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -443,9 +443,9 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2017-01-01',
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2017-04-01',
-                    RepoYssCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => '2017-01-01',
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => '2017-04-01',
+                    RepoCampaignReportController::SESSION_KEY_GRAPH_COLUMN_NAME => 'someNonExistingColumnName'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
         $response->assertStatus(500);
@@ -476,8 +476,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => 'testing',
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => '2017-01-05'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => 'testing',
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => '2017-01-05'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
@@ -507,8 +507,8 @@ class GraphApiYssCampaignReportTest extends TestCase
             ->withSession(
                 $this->getDefaultSessionValues() +
                 [
-                    RepoYssCampaignReportController::SESSION_KEY_START_DAY => '2017-01-05',
-                    RepoYssCampaignReportController::SESSION_KEY_END_DAY => 'testing'
+                    RepoCampaignReportController::SESSION_KEY_START_DAY => '2017-01-05',
+                    RepoCampaignReportController::SESSION_KEY_END_DAY => 'testing'
                 ]
             )->$method(self::ROUTE_DISPLAY_GRAPH);
 
