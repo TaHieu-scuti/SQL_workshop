@@ -266,15 +266,6 @@ class RepoAdgroupReportController extends AbstractReportController
         return $engine;
     }
 
-    private function updateTableColumns(LengthAwarePaginator $dataReports)
-    {
-        $tableColumns = session(self::SESSION_KEY_FIELD_NAME);
-        if (!empty($dataReports[0]->campaignName)) {
-            array_unshift($tableColumns, 'campaignName');
-        }
-        return $tableColumns;
-    }
-
     /* Keep the Devices/Timezone/Prefectures/DayOfWeek after reloading adgroup list
         *Display normal report after:
             * 1. Select Devices/Timezone/Prefectures/DayOfWeek,
