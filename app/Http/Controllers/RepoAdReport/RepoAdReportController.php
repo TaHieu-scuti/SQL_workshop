@@ -105,7 +105,7 @@ class RepoAdReportController extends AbstractReportController
 
     public function getDataForLayouts()
     {
-        $this->updateModel();
+        $engine = $this->updateModel();
         $this->updateSpecificModel();
 
         $dataReports = $this->getDataForTable();
