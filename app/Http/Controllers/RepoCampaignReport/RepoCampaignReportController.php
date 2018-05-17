@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\RepoYssCampaignReport;
+namespace App\Http\Controllers\RepoCampaignReport;
 
 use App\Http\Controllers\AbstractReportController;
 use App\Model\RepoYssCampaignReportCost;
@@ -10,7 +10,7 @@ use App\Model\RepoYdnCampaignReport;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
-class RepoYssCampaignReportController extends AbstractReportController
+class RepoCampaignReportController extends AbstractReportController
 {
     const GRAPH_COLUMN_NAME = 'graphColumnName';
     const COLUMN_SORT = 'columnSort';

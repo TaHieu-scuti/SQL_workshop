@@ -140,32 +140,32 @@ Route::prefix('direct-client-report')->group(function () {
 Route::prefix('campaign-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@index'
+        'RepoCampaignReport\RepoCampaignReportController@index'
     )->name('campaign-report');
     Route::post(
         '/display-graph',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@displayGraph'
+        'RepoCampaignReport\RepoCampaignReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@updateTable'
+        'RepoCampaignReport\RepoCampaignReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToExcel'
+        'RepoCampaignReport\RepoCampaignReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@exportToCsv'
+        'RepoCampaignReport\RepoCampaignReportController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@updateSessionID'
+        'RepoCampaignReport\RepoCampaignReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssCampaignReport\RepoYssCampaignReportController@getDataForLayouts'
+        'RepoCampaignReport\RepoCampaignReportController@getDataForLayouts'
     );
 });
 

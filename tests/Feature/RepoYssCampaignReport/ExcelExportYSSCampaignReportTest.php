@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\RepoYssCampaignReport;
 
-use App\Http\Controllers\RepoYssCampaignReport\RepoYssCampaignReportController;
+use App\Http\Controllers\RepoCampaignReport\RepoCampaignReportController;
 use App\User;
 
 use Tests\TestCase;
@@ -70,12 +70,12 @@ class ExcelExportYSSCampaignReportTest extends TestCase
 
         $response = $this->actingAs($user)
                         ->withSession([
-                            RepoYssCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
-                            RepoYssCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
-                            RepoYssCampaignReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
-                            RepoYssCampaignReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
-                            RepoYssCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
-                            RepoYssCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
+                            RepoCampaignReportController::SESSION_KEY_FIELD_NAME => self::DEFAULT_FIELDS,
+                            RepoCampaignReportController::SESSION_KEY_ACCOUNT_STATUS => self::DEFAULT_STATUS,
+                            RepoCampaignReportController::SESSION_KEY_START_DAY => self::CUSTOM_START_DAY,
+                            RepoCampaignReportController::SESSION_KEY_END_DAY => self::CUSTOM_END_DAY,
+                            RepoCampaignReportController::SESSION_KEY_COLUMN_SORT => self::DEFAULT_COLUMN_SORT,
+                            RepoCampaignReportController::SESSION_KEY_SORT => self::DEFAULT_SORT,
                         ])
                         ->get('/campaign-report/export_excel');
 
