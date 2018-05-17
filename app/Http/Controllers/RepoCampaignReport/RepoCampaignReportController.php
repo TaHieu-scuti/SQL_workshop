@@ -98,7 +98,7 @@ class RepoCampaignReportController extends AbstractReportController
 
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
-            'yssCampaignReport.index',
+            'campaignReport.index',
             [
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,

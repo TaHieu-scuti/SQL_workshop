@@ -154,7 +154,7 @@ class TableApiYssAccountReportTest extends TestCase
     const CUSTOM_COLUMN_SORT = 'someColumnName';
     const DEFAULT_SORT = 'desc';
     const CUSTOM_SORT = 'someSortOption';
-    const VIEW_PATH = 'yssAccountReport.index';
+    const VIEW_PATH = 'accountReport.index';
     const GROUPED_BY_FIELD = 'accountName';
 
     /**

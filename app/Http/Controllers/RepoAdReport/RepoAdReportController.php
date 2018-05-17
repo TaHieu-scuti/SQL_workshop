@@ -94,7 +94,7 @@ class RepoAdReportController extends AbstractReportController
         }
         $this->checkoutSessionFieldName();
         return $this->responseFactory->view(
-            'yssAdReport.index',
+            'adReport.index',
             [
                 self::PREFIX_ROUTE => self::SESSION_KEY_PREFIX_ROUTE,
                 self::COLUMNS_FOR_LIVE_SEARCH => self::DEFAULT_COLUMNS_GRAPH,
