@@ -172,32 +172,32 @@ Route::prefix('campaign-report')->group(function () {
 Route::prefix('adgroup-report')->group(function () {
     Route::get(
         '/',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@index'
+        'RepoAdgroupReport\RepoAdgroupReportController@index'
     )->name('adgroup-report');
     Route::post(
         '/display-graph',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@displayGraph'
+        'RepoAdgroupReport\RepoAdgroupReportController@displayGraph'
     );
     Route::post(
         '/update-table',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateTable'
+        'RepoAdgroupReport\RepoAdgroupReportController@updateTable'
     );
     Route::get(
         '/export_excel',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToExcel'
+        'RepoAdgroupReport\RepoAdgroupReportController@exportToExcel'
     );
     Route::get(
         '/export_csv',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@exportToCsv'
+        'RepoAdgroupReport\RepoAdgroupReportController@exportToCsv'
     );
     Route::post(
         '/updateSession',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@updateSessionID'
+        'RepoAdgroupReport\RepoAdgroupReportController@updateSessionID'
     );
 
     Route::get(
         '/getDataForLayouts',
-        'RepoYssAdgroupReport\RepoYssAdgroupReportController@getDataForLayouts'
+        'RepoAdgroupReport\RepoAdgroupReportController@getDataForLayouts'
     );
 });
 
