@@ -300,7 +300,7 @@ class RepoAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             abort(404);
         }
-        parent::exportToCsv();
+        return parent::exportToCsv();
     }
 
     public function exportToExcel()
@@ -308,6 +308,6 @@ class RepoAdgroupReportController extends AbstractReportController
         if (!session('adgroupReport')) {
             abort(404);
         }
-        parent::exportToExcel();
+        return parent::exportToExcel();
     }
 }
