@@ -113,8 +113,9 @@ abstract class AbstractReportModel extends Model
     ];
 
     const ALL_HIGHER_LAYERS = [];
-    const ADW = 'adw';
     const YSS = 'yss';
+    const ADW = 'adw';
+    const YDN = 'ydn';
 
     protected $casts = [
         'conversions' => 'integer',
@@ -152,7 +153,7 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
-            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === self::YDN) {
                 continue;
             }
             if ($fieldName === 'region') {
@@ -230,7 +231,7 @@ abstract class AbstractReportModel extends Model
         }
         $arrayCalculate = [];
         foreach ($fieldNames as $key => $fieldName) {
-            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+            if ($fieldName === 'impressionShare' && session(static::SESSION_KEY_ENGINE) === self::YDN) {
                 continue;
             }
 
@@ -281,7 +282,7 @@ abstract class AbstractReportModel extends Model
 
     private function pushImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
-        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === self::ADW) {
             if (isset($this->isSearchQueryReport)) {
                 return $arrayCalculate;
             }
@@ -297,7 +298,7 @@ abstract class AbstractReportModel extends Model
                     $tableName .'.contentImprShare) AS ' .$fieldName
                 );
             }
-        } elseif ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'yss') {
+        } elseif ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === self::YSS) {
             $arrayCalculate[] = DB::raw(
                 'AVG(' . $tableName . '.impressionShare) AS ' . $fieldName
             );
@@ -308,7 +309,7 @@ abstract class AbstractReportModel extends Model
 
     private function pushRoundedImpressionShareIntoCalculateArray($arrayCalculate, $tableName, $fieldName)
     {
-        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'adw') {
+        if ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === self::ADW) {
             if (isset($this->isSearchQueryReport)) {
                 return $arrayCalculate;
             }
@@ -324,7 +325,7 @@ abstract class AbstractReportModel extends Model
                     $tableName . '.contentImprShare), 2) AS ' . $fieldName
                 );
             }
-        } elseif ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === 'yss') {
+        } elseif ($fieldName === 'impressionShare' && session(self::SESSION_KEY_ENGINE) === self::YSS) {
             $arrayCalculate[] = DB::raw(
                 'ROUND(AVG(' . $tableName . '.impressionShare), 2) AS ' . $fieldName
             );
@@ -436,19 +437,19 @@ abstract class AbstractReportModel extends Model
     private function getAggregatedNameSubReport($arrayCalculate, $fieldName, $tableName, $key, $flag = "")
     {
         if ($flag !== "") {
-            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === self::YDN) {
                 $arrayCalculate[] = DB::raw($key . ' as ' . $fieldName);
             } else {
                 $arrayCalculate[] = DB::raw($tableName . '.' . $key . ' as ' . $fieldName);
             }
         } else {
-            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === 'ydn') {
+            if ($fieldName === self::DAY_OF_WEEK && session(static::SESSION_KEY_ENGINE) === self::YDN) {
                 $arrayCalculate[] = DB::raw('DAYNAME(`day`) AS '.self::DAY_OF_WEEK);
             } elseif ($fieldName === self::HOUR_OF_DAY
                 && $tableName !== 'temporary_table'
                 && (static::PAGE_ID === 'keywordID'
                     || (static::PAGE_ID === 'adID'
-                        && session(static::SESSION_KEY_ENGINE) === 'adw')
+                        && session(static::SESSION_KEY_ENGINE) === self::ADW)
                 )
             ) {
                 $arrayCalculate[] = DB::raw('hour('.$tableName . '.day) as ' . $fieldName);
@@ -512,7 +513,7 @@ abstract class AbstractReportModel extends Model
         $keywordId = null
     ) {
         if ($accountId !== null && $campaignId === null && $adGroupId === null && $adReportId === null) {
-            if ($engine === 'adw') {
+            if ($engine === self::ADW) {
                 $query->where($this->getTable().'.customerID', '=', $accountId);
             } else {
                 $query->where($this->getTable().'.accountid', '=', $accountId);
@@ -604,13 +605,13 @@ abstract class AbstractReportModel extends Model
         ) {
             $higherLayerSelections = $this->higherLayerSelections($fieldNames, $campaignId, $adGroupId);
         }
-        if ($groupedByField === 'prefecture' && $engine === 'adw') {
+        if ($groupedByField === 'prefecture' && $engine === self::ADW) {
             //replace prefecture with criteria.Name
             $key = array_search('prefecture', $fieldNames);
             $fieldNames[$key] = 'region';
         }
         $aggregations = $this->getAggregated($fieldNames, $higherLayerSelections);
-        if ($groupedByField === 'dayOfWeek' && $engine === 'ydn') {
+        if ($groupedByField === 'dayOfWeek' && $engine === self::YDN) {
             array_push($this->groupBy, DB::raw('DAYNAME(day)'));
         } else {
             array_push($this->groupBy, $groupedByField);
@@ -627,7 +628,7 @@ abstract class AbstractReportModel extends Model
             }
         }
         // merge static::FIELDS in order to display ad as requested
-        if ($engine === 'adw'
+        if ($engine === self::ADW
             && static::GROUPED_BY_FIELD_NAME === 'ad'
             && $this->preFixRoute === 'adgroup'
         ) {
@@ -642,7 +643,7 @@ abstract class AbstractReportModel extends Model
                 if ($item === self::HOUR_OF_DAY
                     && (static::PAGE_ID === 'keywordID'
                     || (static::PAGE_ID === 'adID'
-                        && $engine === 'adw')
+                        && $engine === self::ADW)
                     )
                 ) {
                     $item = DB::raw('hour('.$this->getTable() . '.day)');
@@ -652,7 +653,7 @@ abstract class AbstractReportModel extends Model
             }
         }
 
-        if ($groupedByField === 'prefecture' && $engine === 'adw') {
+        if ($groupedByField === 'prefecture' && $engine === self::ADW) {
             //remove prefecture out of groupBy
             $key = array_search($this->getTable() . '.prefecture', $groupBy);
             unset($groupBy[$key]);
@@ -665,7 +666,7 @@ abstract class AbstractReportModel extends Model
             }
         }
         $selectBy = static::FIELDS;
-        if ($engine === 'adw'
+        if ($engine === self::ADW
                 && static::GROUPED_BY_FIELD_NAME === 'ad'
                 && $this->preFixRoute === 'adgroup'
         ) {
@@ -1018,7 +1019,7 @@ abstract class AbstractReportModel extends Model
             $keywordId
         );
 
-        if ($engine === 'adw' && static::GROUPED_BY_FIELD_NAME === 'adGroup') {
+        if ($engine === self::ADW && static::GROUPED_BY_FIELD_NAME === 'adGroup') {
             return $builder;
         }
 
@@ -1160,15 +1161,15 @@ abstract class AbstractReportModel extends Model
     {
         $resultFieldNames = [];
         $engine = session(self::SESSION_KEY_ENGINE);
-        if ($engine === 'yss' || $engine === null) {
+        if ($engine === self::YSS || $engine === null) {
             if ($this->table === 'repo_yss_searchquery_report_cost') {
                 $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_SEARCH_QUERY_FIELDS_MAP);
             } else {
                 $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YSS_FIELDS_MAP);
             }
-        } elseif ($engine === 'adw') {
+        } elseif ($engine === self::ADW) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::ADW_FIELDS_MAP);
-        } elseif ($engine === 'ydn') {
+        } elseif ($engine === self::YDN) {
             $resultFieldNames = $this->setKeyFieldNames($fieldNames, self::YDN_FIELDS_MAP);
         }
         return $resultFieldNames;
@@ -1193,9 +1194,9 @@ abstract class AbstractReportModel extends Model
     {
         $engine = session(self::SESSION_KEY_ENGINE);
         $arrayMapping = [];
-        if ($engine === 'yss') {
+        if ($engine === self::YSS) {
             $arrayMapping = self::YSS_FIELDS_MAP;
-        } elseif ($engine === 'adw') {
+        } elseif ($engine === self::ADW) {
             $arrayMapping = self::ADW_FIELDS_MAP;
         }
         foreach ($arrayMapping as $key => $value) {
@@ -1228,7 +1229,7 @@ abstract class AbstractReportModel extends Model
         return $rawExpression;
     }
 
-    public function higherLayerSelections(
+    protected function higherLayerSelections(
         $fieldNames,
         $campaignId = null,
         $adGroupId = null,
@@ -1286,7 +1287,7 @@ abstract class AbstractReportModel extends Model
 
     private function addConditionNetworkQueryForADW($engine, Builder $query)
     {
-        if ($engine === 'adw') {
+        if ($engine === self::ADW) {
             if (static::GROUPED_BY_FIELD_NAME === 'keyword') {
                 $query->where($this->getTable() . '.network', 'SEARCH');
             } elseif (static::GROUPED_BY_FIELD_NAME === 'ad') {

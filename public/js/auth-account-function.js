@@ -56,7 +56,7 @@ function updateAdwApi() {
                 if (isJson(response.responseText)) {
                     let obj = JSON.parse(response.responseText);
                     for (let i in obj) {
-                        str = '#adw_form #error_' + i;
+                        let str = '#adw_form #error_' + i;
                         $(str).html('<div class="alert alert-danger">' + obj[i] + '</div>');
                     }
                 }

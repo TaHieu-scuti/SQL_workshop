@@ -111,9 +111,7 @@ class SpoutExcelExporter implements ExcelExporterInterface
                     $array = [];
                     foreach ($fieldNames as $fieldName) {
                         $data = $value->$fieldName;
-                        if (ctype_digit($data)) {
-                            $array[$fieldName] = number_format($data, 0, '', ',');
-                        } elseif ($fieldName === 'cost' && is_float($data)) {
+                        if (ctype_digit($data) || ($fieldName === 'cost' && is_float($data))) {
                             $array[$fieldName] = number_format($data, 0, '', ',');
                         } elseif (is_float($data)) {
                             $array[$fieldName] = number_format($data, 2, '.', ',');

@@ -46,7 +46,6 @@ var Script = function () {
 
         $('.summary_report').delegate('.fields', 'click', function() {
             var $active = $('.statistic .fields.active');
-            labels = $(this).data('name');
             var columnName = $(this).data('name');
             updateMorris(columnName);
             //remove and add blue dot in summary boxes
@@ -144,17 +143,13 @@ var Script = function () {
         * update table with selected status
         */
         $('.status-option li').click(function () {
-            var option = $(this).data('status');
-            var status;
-            switch(option) {
-                case 'showZero' :
-                    statusTitle = 'Show 0';
-                    status = 'showZero';
-                    break;
-                case 'hideZero' :
-                    statusTitle = 'Hide 0';
-                    status = 'hideZero';
-                    break;
+            let option = $(this).data('status');
+            let statusTitle = 'Show 0';
+            let status = 'showZero';
+
+            if (option === 'hideZero') {
+                statusTitle = 'Hide 0';
+                status = 'hideZero';
             }
 
             $.ajax({
