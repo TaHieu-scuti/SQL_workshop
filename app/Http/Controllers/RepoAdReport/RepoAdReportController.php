@@ -233,7 +233,6 @@ class RepoAdReportController extends AbstractReportController
         return true;
     }
 
-
     public function exportToCsv()
     {
         if (!session('adReport')) {

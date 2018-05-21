@@ -245,7 +245,7 @@ class RepoKeywordReportController extends AbstractReportController
         if (!session('keywordReport')) {
             abort(404);
         }
-        parent::exportToCsv();
+        return parent::exportToCsv();
     }
 
     public function exportToExcel()
@@ -253,6 +253,6 @@ class RepoKeywordReportController extends AbstractReportController
         if (!session('keywordReport')) {
             abort(404);
         }
-        parent::exportToExcel();
+        return parent::exportToExcel();
     }
 }
