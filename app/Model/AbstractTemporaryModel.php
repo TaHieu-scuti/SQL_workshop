@@ -73,7 +73,8 @@ abstract class AbstractTemporaryModel extends AbstractReportModel
         'campaignID',
         'customerID',
         'keywordID',
-        'adID'
+        'adID',
+        'hourofday'
     ];
 
     const FIX_FIELDS = [
