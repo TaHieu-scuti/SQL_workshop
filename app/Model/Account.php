@@ -488,9 +488,9 @@ class Account extends AbstractTemporaryAccountModel
     public function isDirectClient($title)
     {
         $sessionDirectClient = session(AbstractReportController::SESSION_KEY_DIRECT_CLIENT);
-        if ($title === 'Client' && $sessionDirectClient === 'DirectClient') {
-            return true;
-        } elseif ($title === 'Direct Client' && ($sessionDirectClient === 'Client' || $sessionDirectClient === null)) {
+        if (($title === 'Client' && $sessionDirectClient === 'DirectClient')
+            || ($title === 'Direct Client' && ($sessionDirectClient === 'Client' || $sessionDirectClient === null))
+        ) {
             return true;
         }
         return false;

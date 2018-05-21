@@ -193,7 +193,7 @@ abstract class AbstractYssSpecificReportModel extends AbstractYssRawExpressions
                 $campaignId,
                 $adGroupId
             );
-            $builder = DB::table(self::TABLE_TEMPORARY)->select($aggregated);
+            return DB::table(self::TABLE_TEMPORARY)->select($aggregated);
         }
 
         return $builder;

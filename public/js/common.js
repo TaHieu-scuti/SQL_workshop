@@ -485,46 +485,48 @@ $(document).ready(function(){
         }
         count--;
     }
-    if ($('span.title').attr('data-titleBreadCumbs') == '代理店'
-        || $('span.title').attr('data-titleBreadCumbs') == 'クライアント'
-        || $('span.title').attr('data-titleBreadCumbs') == 'アカウント名'
-    ) {
-        if (pageInformation.title == 'Admin') {
-            $('.site-information-guess-annotation').append('アドミン');
+    if (pageInformation !== null) {
+        if ($('span.title').attr('data-titleBreadCumbs') == '代理店'
+            || $('span.title').attr('data-titleBreadCumbs') == 'クライアント'
+            || $('span.title').attr('data-titleBreadCumbs') == 'アカウント名'
+        ) {
+            if (pageInformation.title == 'Admin') {
+                $('.site-information-guess-annotation').append('アドミン');
+            }
+            if (pageInformation.title == 'Agency') {
+                $('.site-information-guess-annotation').append('代理店');
+            }
+            if (pageInformation.title == 'Client') {
+                $('.site-information-guess-annotation').append('クライアント');
+            }
+            else if(pageInformation.title == 'Account'){
+                $('.site-information-guess-annotation').append('アカウント名');
+            }
+            else if(pageInformation.title == 'Campaign'){
+                $('.site-information-guess-annotation').append('キャンペーン');
+                $('.campaign-navigation').hide();
+            }
+            else if(pageInformation.title == 'Adgroup'){
+                $('.site-information-guess-annotation').append('広告グループ');
+                $('.campaign-navigation').hide();
+                $('.adgroup-navigation').hide();
+            }
+        } else {
+            if(pageInformation.title == 'Campaign'){
+                $('.site-information-guess-annotation').append(pageInformation.title);
+                $('.campaign-navigation').hide();
+            }
+            else if(pageInformation.title == 'Adgroup'){
+                $('.site-information-guess-annotation').append(pageInformation.title);
+                $('.campaign-navigation').hide();
+                $('.adgroup-navigation').hide();
+            }
+            else {
+                $('.site-information-guess-annotation').append(pageInformation.title);
+            }
         }
-        if (pageInformation.title == 'Agency') {
-            $('.site-information-guess-annotation').append('代理店');
-        }
-        if (pageInformation.title == 'Client') {
-            $('.site-information-guess-annotation').append('クライアント');
-        }
-        else if(pageInformation.title == 'Account'){
-            $('.site-information-guess-annotation').append('アカウント名');
-        }
-        else if(pageInformation.title == 'Campaign'){
-            $('.site-information-guess-annotation').append('キャンペーン');
-            $('.campaign-navigation').hide();
-        }
-        else if(pageInformation.title == 'Adgroup'){
-            $('.site-information-guess-annotation').append('広告グループ');
-            $('.campaign-navigation').hide();
-            $('.adgroup-navigation').hide();
-        }
-    } else {
-        if(pageInformation.title == 'Campaign'){
-            $('.site-information-guess-annotation').append(pageInformation.title);
-            $('.campaign-navigation').hide();
-        }
-        else if(pageInformation.title == 'Adgroup'){
-            $('.site-information-guess-annotation').append(pageInformation.title);
-            $('.campaign-navigation').hide();
-            $('.adgroup-navigation').hide();
-        }
-        else {
-            $('.site-information-guess-annotation').append(pageInformation.title);
-        }
+        $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
     }
-    $('.site-information-guess-specified-name').append(pageInformation.engine + ' ' +pageInformation.value);
 })
 
 function isJson(obj) {
