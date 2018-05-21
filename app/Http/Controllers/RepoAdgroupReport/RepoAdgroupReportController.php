@@ -294,20 +294,4 @@ class RepoAdgroupReportController extends AbstractReportController
         }
         return true;
     }
-
-    public function exportToCsv()
-    {
-        if (!session('adgroupReport')) {
-            abort(404);
-        }
-        return parent::exportToCsv();
-    }
-
-    public function exportToExcel()
-    {
-        if (!session('adgroupReport')) {
-            abort(404);
-        }
-        return parent::exportToExcel();
-    }
 }

@@ -258,6 +258,11 @@ abstract class AbstractReportController extends Controller
      */
     public function exportToCsv()
     {
+        if (static::SESSION_KEY_PREFIX_ROUTE === '/adgroup-report' && !session('adgroupReport')
+            || static::SESSION_KEY_PREFIX_ROUTE === '/ad-report' && !session('adReport')
+            || static::SESSION_KEY_PREFIX_ROUTE === '/keyword-report' && !session('keywordReport')) {
+            abort(404);
+        }
         $this->updateModel();
         $this->updateSpecificModel();
         $data = $this->getDataForTable();

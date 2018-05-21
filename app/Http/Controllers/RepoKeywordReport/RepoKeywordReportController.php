@@ -239,20 +239,4 @@ class RepoKeywordReportController extends AbstractReportController
     {
         return $this->model->unsetColumns($fieldNames, ['matchType']);
     }
-
-    public function exportToCsv()
-    {
-        if (!session('keywordReport')) {
-            abort(404);
-        }
-        return parent::exportToCsv();
-    }
-
-    public function exportToExcel()
-    {
-        if (!session('keywordReport')) {
-            abort(404);
-        }
-        return parent::exportToExcel();
-    }
 }

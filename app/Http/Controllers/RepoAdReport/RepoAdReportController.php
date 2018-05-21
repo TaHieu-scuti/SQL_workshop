@@ -232,20 +232,4 @@ class RepoAdReportController extends AbstractReportController
         }
         return true;
     }
-
-    public function exportToCsv()
-    {
-        if (!session('adReport')) {
-            abort(404);
-        }
-        return parent::exportToCsv();
-    }
-
-    public function exportToExcel()
-    {
-        if (!session('adReport')) {
-            abort(404);
-        }
-        return parent::exportToExcel();
-    }
 }
