@@ -129,12 +129,8 @@ class RepoAdgroupReportController extends AbstractReportController
         if ($engine == 'ydn') {
             $defaultColumns = $this->model->unsetColumns($defaultColumns, ['impressionShare']);
         }
-        //add more columns higher layer to fieldnames
-        if ($engine === 'adw'
-            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::PREFECTURE
-            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::HOUR_OF_DAY
-            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::DAY_OF_WEEK
-            && session(static::SESSION_KEY_GROUPED_BY_FIELD) !== self::DEVICE) {
+
+        if ($engine === 'adw') {
             $dataReports = new \Illuminate\Pagination\LengthAwarePaginator(
                 array_slice($dataReports->toArray(), ($this->page - 1) * 20, 20),
                 count($dataReports->toArray()),
