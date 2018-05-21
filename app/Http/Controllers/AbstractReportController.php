@@ -226,9 +226,7 @@ abstract class AbstractReportController extends Controller
     public function exportToExcel()
     {
         $this->updateModel();
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->updateModelForPrefecture();
-        }
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
@@ -261,9 +259,7 @@ abstract class AbstractReportController extends Controller
     public function exportToCsv()
     {
         $this->updateModel();
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->updateModelForPrefecture();
-        }
+        $this->updateSpecificModel();
         $data = $this->getDataForTable();
         // Check if $data is an instance of \Illuminate\Support\Collection or not.
         if (!$data instanceof \Illuminate\Support\Collection) {
