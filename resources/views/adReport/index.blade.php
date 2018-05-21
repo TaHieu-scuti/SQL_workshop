@@ -92,6 +92,6 @@ use App\Http\Controllers\RepoAdReport\RepoAdReportController;
 @stop
 
 @section('export')
-    <li><a href="{{ url('/ad-report/export_csv') }}">CSV</a></li>
-    <li><a href="{{ url('/ad-report/export_excel') }}">Excel</a></li>
+    <li class="export_data"><a data-href="{{ url('/ad-report/export_csv') }}">CSV</a></li>
+    <li class="export_data"><a data-href="{{ url('/ad-report/export_excel') }}">Excel</a></li>
 @stop

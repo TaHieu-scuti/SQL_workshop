@@ -494,7 +494,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         ->paginate($pagination);
     }
 
-    protected function insertYssDataToTemporaryTable(
+    private function insertYssDataToTemporaryTable(
         $clientId,
         $joinTableName,
         $groupedByField,
@@ -725,7 +725,7 @@ class RepoYssAccountReportCost extends AbstractAccountReportModel
         );
     }
 
-    protected function updateTemporaryTableWithPhoneTimeUseForYssAdw(
+    private function updateTemporaryTableWithPhoneTimeUseForYssAdw(
         $account_id,
         $traffic_type,
         $source,

@@ -556,3 +556,13 @@ function checkErrorAjax (response) {
         console.error(response.statusText);
     }
 }
+
+$('.export_data').click(function() {
+    let url = new URL(window.location.href);
+    let page = url.searchParams.get('page');
+    let href = $(this).find('a').data('href');
+    if (page) {
+        href = href + '?page=' + page;
+    }
+    window.location = href;
+});
