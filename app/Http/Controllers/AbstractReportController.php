@@ -845,11 +845,11 @@ abstract class AbstractReportController extends Controller
             $this->updateModelForPrefecture();
         }
 
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'hourofday') {
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::HOUR_OF_DAY) {
             $this->updateModelForTimezone();
         }
 
-        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === 'dayOfWeek') {
+        if (session(static::SESSION_KEY_GROUPED_BY_FIELD) === self::DAY_OF_WEEK) {
             $this->updateModelForDayOfWeek();
         }
 
