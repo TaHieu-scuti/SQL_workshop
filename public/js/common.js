@@ -334,6 +334,7 @@ $('.table_data_report').delegate('th', 'click', function() {
 
 $('.specific-filter-item').click(function() {
     let value = $(this).data('value');
+    $('.no-data-found-table').hide();
     $('.panel .panel-body').removeClass('active');
     $('.specific-filter-item[data-value = "'+ value +'" ]').addClass('active');
     $.ajax({
@@ -368,6 +369,7 @@ $('.specific-filter-item').click(function() {
 });
 
 $('.normal-report').click(function() {
+    $('.no-data-found-table').hide();
     $.ajax({
         url : prefixRoute + "/update-table",
         type : "POST",
