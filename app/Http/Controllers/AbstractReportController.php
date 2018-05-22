@@ -1161,7 +1161,7 @@ abstract class AbstractReportController extends Controller
 
     protected function getAttributeFieldNames($data)
     {
-        if (empty($data)) {
+        if (count($data) === 0) {
             return [];
         }
         $columns = array_keys((array) $data[0]);
