@@ -29,6 +29,6 @@
 @stop
 
 @section('export')
-    <li><a href="{{ url('/agency-report/export_csv') }}">@lang('language.CSV')</a></li>
-    <li><a href="{{ url('/agency-report/export_excel') }}">@lang('language.Excel')</a></li>
+    <li class="export_data"><a data-href="{{ url('/agency-report/export_csv') }}">@lang('language.CSV')</a></li>
+    <li class="export_data"><a data-href="{{ url('/agency-report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop

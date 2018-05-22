@@ -89,6 +89,6 @@ use App\Http\Controllers\RepoAdgroupReport\RepoAdgroupReportController;
 @stop
 
 @section('export')
-    <li><a href="{{ url('/adgroup-report/export_csv') }}">@lang('language.CSV')</a></li>
-    <li><a href="{{ url('/adgroup-report/export_excel') }}">@lang('language.Excel')</a></li>
+    <li class="export_data"><a data-href="{{ url('/adgroup-report/export_csv') }}">@lang('language.CSV')</a></li>
+    <li class="export_data"><a data-href="{{ url('/adgroup-report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop

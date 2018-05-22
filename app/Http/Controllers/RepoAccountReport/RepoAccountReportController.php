@@ -325,10 +325,7 @@ class RepoAccountReportController extends AbstractReportController
      */
     public function exportToCsv()
     {
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoAccountPrefecture;
-        }
-
+        $this->updateModel();
         /** @var $collection Array data get from table */
         $collection = $this->getDataForTable()->items();
         $fieldNames = $this->getFieldNamesForExport($collection);
@@ -356,9 +353,7 @@ class RepoAccountReportController extends AbstractReportController
      */
     public function exportToExcel()
     {
-        if (session(self::SESSION_KEY_GROUPED_BY_FIELD) === 'prefecture') {
-            $this->model = new RepoAccountPrefecture;
-        }
+        $this->updateModel();
         /** @var $collection Array data get from table */
         $collection = $this->getDataForTable()->items();
         $fieldNames = $this->getFieldNamesForExport($collection);

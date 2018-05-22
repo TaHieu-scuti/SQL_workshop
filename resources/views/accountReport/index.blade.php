@@ -57,6 +57,6 @@ $accountGrouped = session(RepoAccountReportController::SESSION_KEY_GROUPED_BY_FI
 @stop
 
 @section('export')
-    <li><a href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
-    <li><a href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
+    <li class="export_data"><a data-href="{{ url('/account_report/export_csv') }}">@lang('language.CSV')</a></li>
+    <li class="export_data"><a data-href="{{ url('/account_report/export_excel') }}">@lang('language.Excel')</a></li>
 @stop
